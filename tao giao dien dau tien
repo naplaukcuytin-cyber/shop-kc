@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phong Shop KC</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#111;
+    color:white;
+}
+.header{
+    background:#f5b400;
+    color:#111;
+    padding:20px;
+    text-align:center;
+    font-size:25px;
+    font-weight:bold;
+}
+.box{
+    margin:20px;
+    padding:20px;
+    background:#222;
+    border-radius:15px;
+}
+select,input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+}
+button{
+    width:100%;
+    padding:15px;
+    background:#f5b400;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+🔥 PHONG SHOP KC 🔥
+</div>
+
+<div class="box">
+
+<h2>Nạp KC Free Fire</h2>
+
+<p>Chọn gói KC:</p>
+
+<select>
+<option>100 KC - 20.000đ</option>
+<option>310 KC - 50.000đ</option>
+<option>520 KC - 100.000đ</option>
+</select>
+
+<input placeholder="Nhập UID Free Fire">
+
+<button>
+TẠO ĐƠN NẠP
+</button>
+
+</div>
+
+</body>
+</html>
