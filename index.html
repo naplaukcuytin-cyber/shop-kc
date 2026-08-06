@@ -4,174 +4,448 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KC FREE FIRE SHOP</title>
+<title>Shop KC Free Fire</title>
 
 <style>
+
 *{
-box-sizing:border-box;
-font-family:Arial, sans-serif;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
-margin:0;
-background:#0b0b0f;
-color:white;
+    margin:0;
+    background:#080808;
+    color:white;
+    overflow-x:hidden;
 }
 
-header{
-background:linear-gradient(90deg,#ffb300,#ff6f00);
-padding:20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+/* tuyết */
+.snow{
+    position:fixed;
+    top:-10px;
+    color:white;
+    font-size:18px;
+    animation:fall linear infinite;
+    z-index:99;
 }
 
-.logo{
-font-size:22px;
-font-weight:bold;
+@keyframes fall{
+    to{
+        transform:translateY(110vh);
+    }
 }
 
-.login{
-background:white;
-color:#ff6f00;
-padding:10px 15px;
-border-radius:20px;
-font-weight:bold;
+
+/* popup */
+
+.popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
 }
+
+.popup-box{
+    width:90%;
+    max-width:400px;
+    background:linear-gradient(145deg,#222,#111);
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    border:2px solid #ffbd00;
+    animation:zoom .4s;
+}
+
+@keyframes zoom{
+    from{
+        transform:scale(.5);
+    }
+    to{
+        transform:scale(1);
+    }
+}
+
+.popup h1{
+    color:#ffbd00;
+}
+
+.popup button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:0;
+    border-radius:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.go{
+    background:#ffbd00;
+}
+
+.close{
+    background:#333;
+    color:white;
+}
+
+
+/* header */
+
+.header{
+    background:linear-gradient(135deg,#ffbd00,#ff6200);
+    padding:30px 15px;
+    text-align:center;
+    color:#111;
+}
+
+.header h1{
+    margin:0;
+    font-size:32px;
+}
+
+.header p{
+    font-weight:bold;
+}
+
+
+/* nhạc */
+
+.music{
+    position:fixed;
+    right:15px;
+    bottom:15px;
+    z-index:200;
+}
+
+.music button{
+    background:#ffbd00;
+    border:0;
+    padding:12px 18px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+
+/* menu */
+
+.menu{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:15px;
+    background:#111;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    background:#222;
+    padding:10px 15px;
+    border-radius:20px;
+}
+
+
+/* banner */
 
 .banner{
-margin:20px;
-padding:30px;
-border-radius:20px;
-background:#17171f;
-text-align:center;
+    margin:15px;
+    padding:35px 20px;
+    border-radius:25px;
+    background:
+    linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.8)),
+    #333;
+    text-align:center;
 }
 
-.banner h1{
-color:#ffb300;
+.banner h2{
+    color:#ffbd00;
+    font-size:28px;
 }
+
+
+/* chung */
 
 .container{
-padding:20px;
+    padding:15px;
+}
+
+.title{
+    font-size:25px;
+    color:#ffbd00;
+    margin:25px 0 15px;
+    font-weight:bold;
+}
+
+
+/* sản phẩm */
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
 }
 
 .card{
-background:#17171f;
-padding:20px;
-border-radius:18px;
-margin-bottom:15px;
-border:1px solid #333;
+    background:#161616;
+    border-radius:20px;
+    padding:18px;
+    border:1px solid #333;
+    transition:.3s;
 }
 
-.card h2{
-color:#ffb300;
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#ffbd00;
 }
 
-.price{
-font-size:22px;
-font-weight:bold;
+.card h3{
+    text-align:center;
+    font-size:22px;
 }
 
-button{
-width:100%;
-padding:15px;
-border:0;
-border-radius:12px;
-background:#ffb300;
-font-size:18px;
-font-weight:bold;
+.kc{
+    text-align:center;
+    color:#00ff88;
+    font-size:20px;
+    font-weight:bold;
 }
 
-input,select{
-width:100%;
-padding:14px;
-margin:8px 0;
-border-radius:10px;
-border:0;
+.gift{
+    color:#ffbd00;
+    text-align:center;
+    margin:10px;
 }
 
-footer{
-text-align:center;
-padding:20px;
-color:#aaa;
+.card button{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:15px;
+    background:#ffbd00;
+    font-weight:bold;
 }
+
+input{
+    width:100%;
+    padding:14px;
+    margin:8px 0;
+    border-radius:12px;
+    border:none;
+    background:#222;
+    color:white;
+}
+
 </style>
-
 </head>
-
 
 <body>
 
-<header>
 
-<div class="logo">
-🔥 KC FREE FIRE SHOP
+<!-- popup -->
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<h1>🔥 KHAI TRƯƠNG 🔥</h1>
+
+<h2>SHOP KC FREE FIRE</h2>
+
+<p>
+💎 Giá tốt mỗi ngày<br>
+🎁 Ưu đãi theo mức nạp<br>
+⚡ Xử lý nhanh
+</p>
+
+<button class="go" onclick="closePopup()">
+NẠP NGAY
+</button>
+
+<button class="close" onclick="closePopup()">
+✖ Đóng quảng cáo
+</button>
+
 </div>
 
-<div class="login">
-Đăng nhập
 </div>
 
-</header>
+
+<!-- nhạc -->
+
+<div class="music">
+<button onclick="musicToggle()">
+🎵 Nhạc
+</button>
+</div>
+
+<audio id="music" loop>
+<source src="music.mp3">
+</audio>
 
 
-<div class="banner">
+<!-- header -->
 
-<h1>NẠP KC FREE FIRE NHANH CHÓNG</h1>
+<div class="header">
 
-<p>Hệ thống nạp KC tự động - Uy tín - An toàn</p>
+<h1>💎 SHOP KC FREE FIRE 💎</h1>
+
+<p>Nạp KC nhanh - Uy tín - An toàn</p>
 
 </div>
 
+
+<!-- menu -->
+
+<div class="menu">
+
+<a href="#home">Trang chủ</a>
+<a href="#kc">Nạp KC</a>
+<a href="#support">Hỗ trợ</a>
+
+</div>
+
+
+<div id="home" class="banner">
+
+<h2>
+🔥 KIM CƯƠNG GIÁ RẺ 🔥
+</h2>
+
+<p>
+Chọn gói KC phù hợp bên dưới
+</p>
+
+</div>
 
 
 <div class="container">
 
+<div class="title" id="kc">
+💎 CHỌN GÓI KIM CƯƠNG
+</div>
+
+<div class="products">
+
 
 <div class="card">
+<h3>💎 100 KC</h3>
+<div class="kc">20.000đ</div>
+<div class="gift">🎁 Tặng 50 KC</div>
+<button onclick="chonKC('100 KC - 20.000đ')">
+CHỌN GÓI
+</button>
+</div>
 
-<h2>Chọn gói KC</h2>
+
+<div class="card">
+<h3>💎 310 KC</h3>
+<div class="kc">50.000đ</div>
+<div class="gift">🎁 Tặng 150 KC</div>
+<button onclick="chonKC('310 KC - 50.000đ')">
+CHỌN GÓI
+</button>
+</div>
 
 
-<p class="price">100 KC - 20.000đ</p>
-<button>Mua ngay</button>
+<div class="card">
+<h3>💎 520 KC</h3>
+<div class="kc">100.000đ</div>
+<div class="gift">🎁 Tặng 400 KC</div>
+<button onclick="chonKC('520 KC - 100.000đ')">
+CHỌN GÓI
+</button>
+</div>
 
-<br><br>
 
-<p class="price">310 KC - 50.000đ</p>
-<button>Mua ngay</button>
+<div class="card">
+<h3>💎 1060 KC</h3>
+<div class="kc">200.000đ</div>
+<div class="gift">🎁 Tặng 1000 KC</div>
+<button onclick="chonKC('1060 KC - 200.000đ')">
+CHỌN GÓI
+</button>
+</div>
 
-<br><br>
 
-<p class="price">520 KC - 100.000đ</p>
-<button>Mua ngay</button>
+<div class="card">
+<h3>💎 2180 KC</h3>
+<div class="kc">500.000đ</div>
+<div class="gift">🎁 Tặng 2500 KC</div>
+<button onclick="chonKC('2180 KC - 500.000đ')">
+CHỌN GÓI
+</button>
+</div>
+
+
+<div class="card">
+<h3>💎 5600 KC</h3>
+<div class="kc">1.000.000đ</div>
+<div class="gift">🎁 Tặng 5000 KC</div>
+<button onclick="chonKC('5600 KC - 1.000.000đ')">
+CHỌN GÓI
+</button>
+</div>
 
 
 </div>
 
 
 
-<div class="card">
-
-<h2>Tạo đơn nạp</h2>
-
-<input placeholder="Nhập UID Free Fire">
-
-<select>
-
-<option>Chọn gói KC</option>
-
-<option>100 KC</option>
-
-<option>310 KC</option>
-
-<option>520 KC</option>
-
-</select>
+<div class="title">
+🛒 TẠO ĐƠN NẠP
+</div>
 
 
-<button>
-XÁC NHẬN NẠP
+<div class="box">
+
+
+<h2>
+Thông tin khách hàng
+</h2>
+
+
+<label>
+Gói đã chọn
+</label>
+
+<input 
+id="goi"
+placeholder="Chưa chọn gói"
+readonly>
+
+
+<label>
+UID Free Fire
+</label>
+
+<input
+id="uid"
+placeholder="Nhập UID nhân vật">
+
+
+<label>
+Tên nhân vật
+</label>
+
+<input
+id="name"
+placeholder="Nhập tên trong game">
+
+
+<label>
+Số điện thoại/Zalo
+</label>
+
+<input
+id="phone"
+placeholder="Nhập liên hệ">
+
+
+<button class="main-btn" onclick="taoDon()">
+🔥 TẠO ĐƠN NGAY
 </button>
 
 
@@ -179,28 +453,551 @@ XÁC NHẬN NẠP
 
 
 
+<div id="donhang" class="box" style="display:none">
+
+
+<h2>
+✅ XÁC NHẬN ĐƠN
+</h2>
+
+
+<p id="thongtin"></p>
+
+
+<button class="main-btn">
+THANH TOÁN QR
+</button>
+
+
+</div>
+
+
+
+<div class="title">
+🎁 KHUYẾN MÃI
+</div>
+
+
+<div class="box">
+
+<p>
+🔥 Khuyến mãi thay đổi theo từng thời điểm
+</p>
+
+<p>
+💎 Nạp càng nhiều - nhận quà càng lớn
+</p>
+
+<p>
+⚡ Xử lý nhanh sau khi xác nhận thanh toán
+</p>
+
+</div>
+
+
+
+<div class="title">
+⭐ CAM KẾT SHOP
+</div>
+
+
+<div class="products">
+
+
 <div class="card">
+<h3>⚡</h3>
+<p>
+Xử lý nhanh
+</p>
+</div>
 
-<h2>Hỗ trợ</h2>
 
-<p>☎ Liên hệ hỗ trợ 24/7</p>
+<div class="card">
+<h3>🔒</h3>
+<p>
+Bảo mật UID
+</p>
+</div>
 
-<p>⚡ Xử lý đơn nhanh chóng</p>
 
-<p>🔒 Bảo mật thông tin khách hàng</p>
+<div class="card">
+<h3>💎</h3>
+<p>
+Giá tốt
+</p>
+</div>
 
+
+<div class="card">
+<h3>🎮</h3>
+<p>
+Hỗ trợ Free Fire
+</p>
 </div>
 
 
 </div>
+
+<div class="title" id="support">
+💬 HỖ TRỢ KHÁCH HÀNG
+</div>
+
+
+<div class="box">
+
+<p>
+📱 Zalo: 0123.xxx.xxx
+</p>
+
+<p>
+💬 Facebook: Shop KC Free Fire
+</p>
+
+<p>
+⏰ Thời gian hỗ trợ: 24/7
+</p>
+
+
+<button class="main-btn">
+LIÊN HỆ NGAY
+</button>
+
+
+</div>
+
+
+
+
+<div class="title">
+💳 THANH TOÁN
+</div>
+
+
+<div class="box">
+
+<h3>
+Quét mã QR thanh toán
+</h3>
+
+
+<div class="qr">
+
+<img src="qr.png" alt="QR thanh toán">
+
+</div>
+
+
+<p>
+Sau khi thanh toán, vui lòng chờ shop kiểm tra và xử lý đơn.
+</p>
+
+</div>
+
+<div class="title">
+📢 THÔNG BÁO SHOP
+</div>
+
+
+<div class="box notice">
+
+<p>
+🔥 Shop đang có chương trình ưu đãi khai trương
+</p>
+
+<p>
+💎 Chọn đúng UID trước khi tạo đơn
+</p>
+
+<p>
+⚠️ Không cung cấp mật khẩu tài khoản cho bất kỳ ai
+</p>
+
+</div>
+
+
+
+<div class="title">
+🌟 ĐÁNH GIÁ KHÁCH HÀNG
+</div>
+
+
+<div class="reviews">
+
+
+<div class="card">
+<h3>⭐⭐⭐⭐⭐</h3>
+<p>
+"Nạp nhanh, hỗ trợ nhiệt tình"
+</p>
+</div>
+
+
+<div class="card">
+<h3>⭐⭐⭐⭐⭐</h3>
+<p>
+"Giá tốt, dễ sử dụng"
+</p>
+</div>
+
+
+<div class="card">
+<h3>⭐⭐⭐⭐⭐</h3>
+<p>
+"Giao diện đẹp, dễ nạp"
+</p>
+</div>
+
+
+</div>
+
+
+
+
+<div class="title">
+📊 THỐNG KÊ SHOP
+</div>
+
+
+<div class="products">
+
+
+<div class="card">
+<h3>
+10K+
+</h3>
+<p>
+Đơn đã xử lý
+</p>
+</div>
+
+
+<div class="card">
+<h3>
+24/7
+</h3>
+<p>
+Hỗ trợ
+</p>
+</div>
+
+
+<div class="card">
+<h3>
+99%
+</h3>
+<p>
+Hài lòng
+</p>
+</div>
+
+
+<div class="card">
+<h3>
+⚡
+</h3>
+<p>
+Nhanh chóng
+</p>
+</div>
+
+
+</div>
+
+
+
+
+<div class="box">
+
+<h2>
+⚙️ CẤU HÌNH SHOP
+</h2>
+
+
+<p>
+Tên shop: Shop KC Free Fire
+</p>
+
+
+<p>
+Sửa giá KC: tìm phần GÓI KIM CƯƠNG trong code
+</p>
+
+
+<p>
+Đổi QR: thay ảnh qr.png
+</p>
+
+
+<p>
+Đổi nhạc: thay file music.mp3
+</p>
+
+
+</div>
+
+
 
 
 <footer>
 
-© 2026 KC FREE FIRE SHOP
+💎 SHOP KC FREE FIRE 💎
+
+<br>
+
+Nạp KC nhanh - An toàn - Uy tín
+
+<br><br>
+
+© 2026
 
 </footer>
 
 
+
+<script>
+
+
+function closePopup(){
+
+document.getElementById("popup").style.display="none";
+
+}
+
+
+function chonKC(goi){
+
+document.getElementById("goi").value=goi;
+
+document.querySelector(".box").scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+
+
+function taoDon(){
+
+
+let goi=document.getElementById("goi").value;
+
+let uid=document.getElementById("uid").value;
+
+let name=document.getElementById("name").value;
+
+
+if(goi=="" || uid==""){
+
+alert("Vui lòng chọn gói và nhập UID");
+
+return;
+
+}
+
+
+
+document.getElementById("donhang").style.display="block";
+
+
+document.getElementById("thongtin").innerHTML=
+
+"Gói: "+goi+
+"<br>UID: "+uid+
+"<br>Tên: "+name;
+
+
+}
+
+
+
+</script>
+
+<style>
+
+/* bổ sung giao diện */
+
+.box{
+    background:#151515;
+    padding:20px;
+    border-radius:20px;
+    margin:15px 0;
+    border:1px solid #333;
+}
+
+
+.main-btn{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:15px;
+    background:#ffbd00;
+    color:#111;
+    font-size:18px;
+    font-weight:bold;
+}
+
+
+.qr{
+    width:220px;
+    height:220px;
+    margin:auto;
+    background:#fff;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+
+.qr img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    border-radius:15px;
+}
+
+
+.reviews{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+
+.notice{
+    border-left:5px solid #ffbd00;
+}
+
+
+footer{
+    text-align:center;
+    padding:30px;
+    color:#aaa;
+}
+
+
+
+@media(max-width:700px){
+
+.products,
+.reviews{
+    grid-template-columns:1fr;
+}
+
+.header h1{
+    font-size:25px;
+}
+
+}
+
+
+
+</style>
+
+
+
+<script>
+
+
+// tạo tuyết rơi
+
+function taoTuyet(){
+
+let snow=document.createElement("div");
+
+snow.className="snow";
+
+snow.innerHTML="❄";
+
+snow.style.left=Math.random()*100+"vw";
+
+snow.style.animationDuration=(3+Math.random()*5)+"s";
+
+snow.style.opacity=Math.random();
+
+
+document.body.appendChild(snow);
+
+
+setTimeout(()=>{
+
+snow.remove();
+
+},8000);
+
+
+}
+
+
+setInterval(taoTuyet,300);
+
+
+
+
+
+// nhạc
+
+
+let dangPhat=false;
+
+
+function musicToggle(){
+
+
+let nhac=document.getElementById("music");
+
+
+if(dangPhat){
+
+nhac.pause();
+
+dangPhat=false;
+
+
+}else{
+
+
+nhac.play();
+
+dangPhat=true;
+
+
+}
+
+
+}
+
+
+
+
+
+// tự mở nhạc nếu trình duyệt cho phép
+
+window.onload=function(){
+
+let nhac=document.getElementById("music");
+
+
+nhac.volume=0.4;
+
+
+try{
+
+nhac.play();
+
+}
+
+catch(e){}
+
+
+}
+
+
+
+</script>
+
+
+
 </body>
-</html> .
+</html>
