@@ -3,74 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phong Shop KC</title>
+
+<title>KC FREE FIRE SHOP</title>
 
 <style>
+*{
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
 body{
-    margin:0;
-    font-family:Arial;
-    background:#111;
-    color:white;
+margin:0;
+background:#0b0b0f;
+color:white;
 }
-.header{
-    background:#f5b400;
-    color:#111;
-    padding:20px;
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
+
+header{
+background:linear-gradient(90deg,#ffb300,#ff6f00);
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
-.box{
-    margin:20px;
-    padding:20px;
-    background:#222;
-    border-radius:15px;
+
+.logo{
+font-size:22px;
+font-weight:bold;
 }
-select,input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:8px;
-    border:none;
+
+.login{
+background:white;
+color:#ff6f00;
+padding:10px 15px;
+border-radius:20px;
+font-weight:bold;
 }
+
+.banner{
+margin:20px;
+padding:30px;
+border-radius:20px;
+background:#17171f;
+text-align:center;
+}
+
+.banner h1{
+color:#ffb300;
+}
+
+.container{
+padding:20px;
+}
+
+.card{
+background:#17171f;
+padding:20px;
+border-radius:18px;
+margin-bottom:15px;
+border:1px solid #333;
+}
+
+.card h2{
+color:#ffb300;
+}
+
+.price{
+font-size:22px;
+font-weight:bold;
+}
+
 button{
-    width:100%;
-    padding:15px;
-    background:#f5b400;
-    border:none;
-    border-radius:10px;
-    font-size:18px;
-    font-weight:bold;
+width:100%;
+padding:15px;
+border:0;
+border-radius:12px;
+background:#ffb300;
+font-size:18px;
+font-weight:bold;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin:8px 0;
+border-radius:10px;
+border:0;
+}
+
+footer{
+text-align:center;
+padding:20px;
+color:#aaa;
 }
 </style>
 
 </head>
 
+
 <body>
 
-<div class="header">
-🔥 SHOP KC 🔥
+<header>
+
+<div class="logo">
+🔥 KC FREE FIRE SHOP
 </div>
 
-<div class="box">
+<div class="login">
+Đăng nhập
+</div>
 
-<h2>Nạp KC Free Fire</h2>
+</header>
 
-<p>Chọn gói KC:</p>
 
-<select>
-<option>100 KC - 20.000đ</option>
-<option>310 KC - 50.000đ</option>
-<option>520 KC - 100.000đ</option>
-</select>
+<div class="banner">
+
+<h1>NẠP KC FREE FIRE NHANH CHÓNG</h1>
+
+<p>Hệ thống nạp KC tự động - Uy tín - An toàn</p>
+
+</div>
+
+
+
+<div class="container">
+
+
+<div class="card">
+
+<h2>Chọn gói KC</h2>
+
+
+<p class="price">100 KC - 20.000đ</p>
+<button>Mua ngay</button>
+
+<br><br>
+
+<p class="price">310 KC - 50.000đ</p>
+<button>Mua ngay</button>
+
+<br><br>
+
+<p class="price">520 KC - 100.000đ</p>
+<button>Mua ngay</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Tạo đơn nạp</h2>
 
 <input placeholder="Nhập UID Free Fire">
 
+<select>
+
+<option>Chọn gói KC</option>
+
+<option>100 KC</option>
+
+<option>310 KC</option>
+
+<option>520 KC</option>
+
+</select>
+
+
 <button>
-TẠO ĐƠN NẠP
+XÁC NHẬN NẠP
 </button>
 
+
 </div>
+
+
+
+<div class="card">
+
+<h2>Hỗ trợ</h2>
+
+<p>☎ Liên hệ hỗ trợ 24/7</p>
+
+<p>⚡ Xử lý đơn nhanh chóng</p>
+
+<p>🔒 Bảo mật thông tin khách hàng</p>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+© 2026 KC FREE FIRE SHOP
+
+</footer>
+
 
 </body>
 </html>
