@@ -1958,8 +1958,22 @@ createSnow,
 500
 );
 
+const bgMusic = document.getElementById("bgMusic");
+
+function playMusicOnce() {
+    bgMusic.play().catch(() => {});
+    document.removeEventListener("click", playMusicOnce);
+    document.removeEventListener("touchstart", playMusicOnce);
+}
+
+document.addEventListener("click", playMusicOnce);
+document.addEventListener("touchstart", playMusicOnce);
+
 </script>
 
+<audio id="bgMusic" loop>
+    <source src="nhac.mp3.mp3" type="audio/mpeg">
+</audio>
 
 </body>
 
