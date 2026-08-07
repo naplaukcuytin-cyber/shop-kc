@@ -657,7 +657,7 @@ NẠP QUÂN HUY
 
 
 <h2>
-💎 1000 KC
+💎 2.000 KC
 </h2>
 
 
@@ -668,10 +668,8 @@ NẠP QUÂN HUY
 
 
 <button class="btn btn-blue"
-onclick="selectKC('1000 KC - 100.000đ')">
-
-CHỌN
-
+onclick="buyKC('2.000 KC - 100.000đ')">
+MUA NGAY ✔
 </button>
 
 
@@ -687,7 +685,7 @@ CHỌN
 
 
 <h2>
-💎 3000 KC
+💎 5.000 KC
 </h2>
 
 
@@ -698,10 +696,8 @@ CHỌN
 
 
 <button class="btn btn-blue"
-onclick="selectKC('3000 KC - 300.000đ')">
-
-CHỌN
-
+onclick="buyKC('5.000 KC - 300.000đ')">
+MUA NGAY ✔
 </button>
 
 
@@ -717,7 +713,7 @@ CHỌN
 
 
 <h2>
-💎 5000 KC
+💎 8.000 KC
 </h2>
 
 
@@ -728,10 +724,8 @@ CHỌN
 
 
 <button class="btn btn-blue"
-onclick="selectKC('5000 KC - 500.000đ')">
-
-CHỌN
-
+onclick="buyKC('8.000 KC - 500.000đ')">
+MUA NGAY ✔
 </button>
 
 
@@ -747,7 +741,7 @@ CHỌN
 
 
 <h2>
-💎 10000 KC
+💎 15.000 KC
 </h2>
 
 
@@ -758,10 +752,8 @@ CHỌN
 
 
 <button class="btn btn-blue"
-onclick="selectKC('10000 KC - 1.000.000đ')">
-
-CHỌN
-
+onclick="buyKC('15.000 KC - 1.00.000đ')">
+MUA NGAY ✔
 </button>
 
 
@@ -892,8 +884,7 @@ margin:20px auto;
 ">
 
 
-<img src="qr.png"
-
+<img src="IMG_0056.jpeg"
 style="
 width:100%;
 height:100%;
@@ -1532,6 +1523,47 @@ function selectKC(goi){
 
 }
 
+function buyKC(goi){
+
+    selected = goi;
+
+
+    document
+    .getElementById("selectedKC")
+    .value = goi;
+
+
+    document
+    .getElementById("moneyPay")
+    .innerHTML =
+    "💰 Số tiền: " + goi;
+
+
+
+    transferCode = randomCode();
+
+
+    localStorage.setItem(
+        "orderCode",
+        transferCode
+    );
+
+
+    document
+    .getElementById("transferText")
+    .innerHTML =
+    transferCode;
+
+
+
+    document
+    .getElementById("qrPage")
+    .style.display="block";
+
+
+    startTimer();
+
+}
 
 
 // =====================
