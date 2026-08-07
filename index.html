@@ -894,6 +894,43 @@ object-fit:contain;
 
 </div>
 
+<h3>
+🏦 Thông tin chuyển khoản
+</h3>
+
+<div class="card">
+
+<p>🏛️ Ngân hàng:</p>
+<b id="bankNameBank">
+MOMO
+</b>
+
+
+<p>💳 Số tài khoản:</p>
+<b id="bankNumber">
+PSP2621916400000092
+
+</b>
+
+<button class="btn btn-blue" onclick="copyBank()">
+📋 Sao chép STK
+</button>
+
+
+<p>👤 Chủ tài khoản:</p>
+<b id="ownerName">
+TRUONG VAN PHONH
+</b>
+
+<button class="btn btn-blue" onclick="copyOwner()">
+📋 Sao chép tên
+</button>
+
+
+</div>
+
+
+</div>
 
 
 
@@ -1527,44 +1564,33 @@ function buyKC(goi){
 
     selected = goi;
 
-
     document
     .getElementById("selectedKC")
     .value = goi;
 
 
+    // mở trang nạp
     document
-    .getElementById("moneyPay")
-    .innerHTML =
-    "💰 Số tiền: " + goi;
-
-
-
-    transferCode = randomCode();
-
-
-    localStorage.setItem(
-        "orderCode",
-        transferCode
-    );
-
-
-    document
-    .getElementById("transferText")
-    .innerHTML =
-    transferCode;
-
-
-
-    document
-    .getElementById("qrPage")
+    .getElementById("napPage")
     .style.display="block";
 
 
-    startTimer();
+    document
+    .getElementById("wheelPage")
+    .style.display="none";
+
+
+    closeMenu();
+
+
+    // kéo xuống phần nhập UID
+    document
+    .getElementById("uid")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
 
 }
-
 
 // =====================
 // RANDOM MÃ CHUYỂN KHOẢN
@@ -2040,6 +2066,46 @@ createSnow,
 500
 );
 
+</script>
+
+function copyBank(){
+
+let text =
+document.getElementById("bankNumber").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("✅ Đã sao chép số tài khoản");
+
+}
+
+
+function copyName(){
+
+let text =
+document.getElementById("bankName").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("✅ Đã sao chép tên tài khoản");
+
+}
+
+
+function copyContetnt(){
+
+let text =
+document.getElementById("transferText").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("✅ Đã sao chép nội dung chuyển khoản");
+
+}
+
+</body>
+
+</html>
 
 
 </script>
