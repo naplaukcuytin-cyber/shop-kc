@@ -416,7 +416,7 @@ Liên Quân Mobile
 
 
 <button onclick="baoTri()">
-VÀO GAME
+NẠP QUÂN HUY
 </button>
 
 
@@ -625,9 +625,31 @@ object-fit:contain;
 
 
 
+<h3>
+⏳ Mã còn hiệu lực:
+</h3>
+
+<h1 id="time">
+10:00
+</h1>
+
+
 <p>
-Quét mã QR để thanh toán
+💳 Nội dung chuyển khoản:
 </p>
+
+<div class="card">
+
+FF + UID
+
+</div>
+
+
+<p>
+⚠️ Ghi đúng nội dung để xác nhận nhanh
+</p>
+
+
 
 
 </div>
@@ -854,6 +876,7 @@ function createOrder(){
 
 let uid=document.getElementById("uid").value;
 
+startTimer();
 
 
 if(selected==""){
@@ -924,7 +947,22 @@ window.scrollTo(0,0);
 function spinWheel(){
 
 alert(
-"🎡 CHƯA ĐỦ ĐIỀU KIỆN\n\nBạn cần nạp đủ 5.000 KC để nhận 1 lượt quay!"
+
+<p>
+🎡 Nhập mã đơn để kiểm tra lượt quay
+</p>
+
+<input 
+id="codeWheel"
+placeholder="Nhập mã đơn"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:0;
+margin-bottom:10px;
+">
+
 );
 
 }
@@ -1046,6 +1084,44 @@ setInterval(createSnow,300);
 
 
 </script>
+
+let timer;
+
+
+function startTimer(){
+
+let time=600;
+
+
+timer=setInterval(function(){
+
+
+let m=Math.floor(time/60);
+
+let s=time%60;
+
+
+document.getElementById("time").innerHTML =
+m+":"+(s<10?"0":"")+s;
+
+
+time--;
+
+
+if(time<0){
+
+clearInterval(timer);
+
+alert("Mã thanh toán hết hạn");
+
+document.getElementById("qrPage").style.display="none";
+
+}
+
+
+},1000);
+
+}
 
 <!-- NHẠC CHÀO MỪNG -->
 
