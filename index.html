@@ -374,7 +374,7 @@ Nạp nhanh - Uy tín - An toàn
 
 
 
-<button class="btn btn-blue" onclick="openWheel()">
+<button class="btn btn-blue" onclick="copyName()">
 
 🎡 Xem vòng quay
 
@@ -818,9 +818,7 @@ onclick="createOrder()">
 
 <!-- QR THANH TOÁN -->
 
-
 <div id="qrPage"
-
 style="
 display:none;
 position:fixed;
@@ -833,35 +831,12 @@ text-align:center;
 ">
 
 
-
-<button onclick="closeQR()"
-
-style="
-position:absolute;
-top:20px;
-left:20px;
-width:45px;
-height:45px;
-border-radius:50%;
-font-size:22px;
-">
-
-←
-
-</button>
+<button onclick="closeQR()">←</button>
 
 
-
-
-
-<h2 style="margin-top:70px;">
-
+<h2>
 💳 THANH TOÁN ĐƠN HÀNG
-
 </h2>
-
-
-
 
 
 <div style="
@@ -873,7 +848,6 @@ border-radius:20px;
 margin:20px auto;
 ">
 
-
 <img src="IMG_0056.jpeg"
 style="
 width:100%;
@@ -881,166 +855,97 @@ height:100%;
 object-fit:contain;
 ">
 
-
 </div>
 
-<h3>
-🏦 Thông tin chuyển khoản
-</h3>
 
 <div class="card">
 
-<p>🏛️ Ngân hàng:</p>
-<b id="bankNameBank">
+<h3>
+🏦 Ngân hàng
+</h3>
+
+<b>
 MOMO
 </b>
 
 
-<p>💳 Số tài khoản:</p>
+<h3>
+💳 Số tài khoản
+</h3>
+
 <b id="bankNumber">
 PSP2621916400000092
-
 </b>
 
-<button class="btn btn-blue" onclick="copyBank()">
-📋 Sao chép STK
-</button>
 
+<h3>
+👤 Chủ tài khoản
+</h3>
 
-<p>👤 Chủ tài khoản:</p>
 <b id="bankName">
-TRUONG VAN PHONH
+TRUONG VAN PHONG
 </b>
-
-<button class="btn btn-blue" onclick="copyOwner()">
-📋 Sao chép tên
-</button>
 
 
 </div>
 
 
+<div class="card">
+
+<h3 id="moneyPay">
+💰 Số tiền: Chưa chọn
+</h3>
+
+
+<p>
+📝 Nội dung chuyển khoản
+</p>
+
+
+<b id="transferText">
+Đang tạo mã...
+</b>
+
+
+</div>
+
+
+
+<h3>
+⏳ Mã QR còn hiệu lực
+</h3>
+
+
+<h1 id="time">
+10:00
+</h1>
 
 
 
 <div class="card">
 
-
-<h3 id="moneyPay">
-
-💰 Số tiền: Chưa chọn
-
-</h3>
-
-
-
-
-<p>
-
-📝 Nội dung chuyển khoản:
-
-</p>
-
-
-
-<div id="transferText"
-
-style="
-background:#222;
-color:#00c6ff;
-padding:15px;
-border-radius:12px;
-font-weight:bold;
-font-size:18px;
-">
-
-Đang tạo mã...
-
-
-
-
-
-</div>
-
-
-
-
-
-
-<h3>
-
-⏳ Mã QR còn hiệu lực
-
-</h3>
-
-
-
-<h1 id="time">
-
-10:00
-
-</h1>
-
-
-
-
-
-
-
-<div class="card"
-
-style="
-margin-top:15px;
-border:1px solid red;
-">
-
-
-<h3 style="color:red;">
-
+<h3 style="color:red">
 ⚠️ CẢNH BÁO
-
 </h3>
 
 
-
 <p>
-
 ✔ Chuyển đúng số tiền.
-
 </p>
 
-
-
 <p>
-
 ✔ Ghi đúng nội dung chuyển khoản.
-
 </p>
-
-
 
 <p>
-
-❌ Admin không chịu trách nhiệm nếu chuyển sai nội dung hoặc sai thông tin.
-
+❌ Admin không chịu trách nhiệm nếu chuyển sai.
 </p>
 
 
-
 </div>
 
 
-
-
 </div>
-
-
-
-
-
-
-
-
 
 <!-- VÒNG QUAY -->
 
