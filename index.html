@@ -1975,8 +1975,20 @@ document.addEventListener("touchstart", playMusicOnce);
 </script>
 
 <audio id="bgMusic" loop>
-    <source src="nhac.mp3.mp3" type="audio/mpeg">
+    <source src="nhac.mp3" type="audio/mpeg">
 </audio>
+
+<script>
+let music = document.getElementById("bgMusic");
+
+document.addEventListener("click", function startMusic(){
+    music.play();
+}, {once:true});
+
+document.addEventListener("touchstart", function startMusic(){
+    music.play();
+}, {once:true});
+</script>
 
 </body>
 
