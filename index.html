@@ -426,17 +426,15 @@ MENU
 
 </h2>
 
-<button onclick="openHuongDan()">
-📖 Hướng dẫn nạp
-</button>
-
 <button onclick="goHome()">
 
 🏠 Trang chủ
 
 </button>
 
-
+<button onclick="openHuongDan()">
+📖 Hướng dẫn nạp
+</button>
 
 <button onclick="openNap()">
 
@@ -1766,6 +1764,26 @@ function openWheel(){
 
 }
 
+function openHuongDan(){
+
+    document
+    .getElementById("huongDanPage")
+    .style.display="block";
+
+
+    document
+    .getElementById("napPage")
+    .style.display="none";
+
+
+    document
+    .getElementById("wheelPage")
+    .style.display="none";
+
+
+    closeMenu();
+
+}
 
 
 
