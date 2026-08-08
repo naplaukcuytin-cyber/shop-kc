@@ -47,7 +47,7 @@ font-weight:bold;
 display:flex;
 align-items:center;
 justify-content:center;
-z-index:99999 !important;
+z-index:99999 !important;pointer-events:auto;
 box-shadow:0 0 10px #000;
 position:fixed !important;
 cursor:pointer
@@ -62,7 +62,7 @@ cursor:pointer
 <h2>💎 SHOP KC FREE FIRE</h2>
 <p>Nạp nhanh - Uy tín - An toàn<br>🎁 Ưu đãi người chơi mới</p>
 <button class="btn btn-blue" onclick="openWheel()">🎡 Xem vòng quay</button>
-<button class="btn btn-dark" onclick="closeAds()">✖ Đóng quảng cáo</button>
+<button class="btn btn-dark" onclick="closeAds(); return false;">✖ Đóng quảng cáo</button>
 </div>
 </div>
 
@@ -214,7 +214,14 @@ let selected="";
 let transferCode="";
 let timer=null;
 
-function closeAds(){document.getElementById("ads").style.display="none"}
+function closeAds(){
+const ads=document.getElementById("ads");
+if(ads){
+ads.style.display="none";
+ads.style.visibility="hidden";
+ads.style.pointerEvents="none";
+}
+}
 function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active")}
 function closeMenu(){document.getElementById("sideMenu").classList.remove("active")}
 
@@ -285,12 +292,15 @@ closeAds();closeMenu();
 document.getElementById("wheelPage").scrollIntoView({behavior:"smooth"});
 }
 
-function openHuongDan(){alert("📖 Hướng dẫn nạp
+function openHuongDan(){
+closeMenu();
+alert("📖 Hướng dẫn nạp
 
 1. Chọn gói KC.
 2. Nhập UID.
 3. Tạo đơn.
-4. Chuyển khoản đúng thông tin.");}
+4. Chuyển khoản đúng thông tin.");
+}
 
 function spinWheel(){
 let code=document.getElementById("codeWheel").value.trim();
