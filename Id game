@@ -5,33 +5,43 @@ const ALLOWED_ORIGINS = [
 const API =
   "https://free-ff-api-src-5plp.onrender.com";
 
+
+function corsHeaders(origin) {
+
+  return {
+    "Access-Control-Allow-Origin":
+      ALLOWED_ORIGINS.includes(origin)
+        ? origin
+        : ALLOWED_ORIGINS[0],
+
+    "Access-Control-Allow-Methods":
+      "GET, OPTIONS",
+
+    "Access-Control-Allow-Headers":
+      "Content-Type",
+
+    "Content-Type":
+      "application/json; charset=UTF-8",
+
+    "Cache-Control":
+      "no-store"
+  };
+
+}
+
+
 function response(data, status, origin) {
 
   return new Response(
     JSON.stringify(data),
     {
-      status,
-      headers: {
-        "Access-Control-Allow-Origin":
-          ALLOWED_ORIGINS.includes(origin)
-            ? origin
-            : ALLOWED_ORIGINS[0],
-
-        "Access-Control-Allow-Methods":
-          "GET, OPTIONS",
-
-        "Access-Control-Allow-Headers":
-          "Content-Type",
-
-        "Content-Type":
-          "application/json; charset=UTF-8",
-
-        "Cache-Control":
-          "no-store"
-      }
+      status: status,
+      headers: corsHeaders(origin)
     }
   );
+
 }
+
 
 export default {
 
@@ -40,24 +50,24 @@ export default {
     const origin =
       request.headers.get("Origin") || "";
 
+
+    /* =========================
+       OPTIONS / CORS
+    ========================= */
+
     if (request.method === "OPTIONS") {
 
       return new Response(null, {
         status: 204,
-        headers: {
-          "Access-Control-Allow-Origin":
-            ALLOWED_ORIGINS.includes(origin)
-              ? origin
-              : ALLOWED_ORIGINS[0],
-
-          "Access-Control-Allow-Methods":
-            "GET, OPTIONS",
-
-          "Access-Control-Allow-Headers":
-            "Content-Type"
-        }
+        headers: corsHeaders(origin)
       });
+
     }
+
+
+    /* =========================
+       CHỈ CHO GET
+    ========================= */
 
     if (request.method !== "GET") {
 
@@ -69,176 +79,44 @@ export default {
         405,
         origin
       );
+
     }
+
 
     const url =
       new URL(request.url);
+
+
+    /* =========================
+       TEST WORKER
+    ========================= */
+
+    if (url.pathname === "/") {
+
+      return response(
+        {
+          success: true,
+          service: "Shop KC Free Fire",
+          status: "online",
+          endpoint: "/player"
+        },
+        200,
+        origin
+      );
+
+    }
+
+
+    /* =========================
+       PLAYER ENDPOINT
+    ========================= */
 
     if (url.pathname !== "/player") {
 
       return response(
         {
           success: false,
-          error: "NOT_FOUND"
+          error: "NOT_FOUND",
+          message: "Endpoint không tồn tại."
         },
-        404,
-        origin
-      );
-    }
-
-    const uid =
-      (url.searchParams.get("uid") || "")
-        .trim();
-
-    let region =
-      (
-        url.searchParams.get("region")
-        || "VN"
-      ).toUpperCase();
-
-    if (!/^\d{5,15}$/.test(uid)) {
-
-      return response(
-        {
-          success: false,
-          error: "INVALID_UID"
-        },
-        400,
-        origin
-      );
-    }
-
-    const regions = [
-      "VN",
-      "SG",
-      "IND",
-      "ID",
-      "BR",
-      "TH",
-      "TW",
-      "US",
-      "RU",
-      "ME",
-      "PK",
-      "BD",
-      "CIS"
-    ];
-
-    if (!regions.includes(region)) {
-      region = "VN";
-    }
-
-    try {
-
-      const apiURL =
-        API +
-        "/api/v1/account" +
-        "?region=" +
-        encodeURIComponent(region) +
-        "&uid=" +
-        encodeURIComponent(uid);
-
-      const apiResponse =
-        await fetch(apiURL, {
-          method: "GET",
-          headers: {
-            "Accept":
-              "application/json"
-          }
-        });
-
-      if (!apiResponse.ok) {
-
-        return response(
-          {
-            success: false,
-            error: "PLAYER_API_ERROR"
-          },
-          502,
-          origin
-        );
-      }
-
-      const data =
-        await apiResponse.json();
-
-      const basic =
-        data?.basicInfo ||
-        data?.basicinfo ||
-        data?.data?.basicInfo ||
-        data?.data?.basicinfo;
-
-      if (!basic) {
-
-        return response(
-          {
-            success: false,
-            error: "PLAYER_NOT_FOUND"
-          },
-          404,
-          origin
-        );
-      }
-
-      const playerUID =
-        String(
-          basic.accountId ??
-          basic.accountID ??
-          basic.uid ??
-          uid
-        );
-
-      const nickname =
-        basic.nickname ??
-        basic.nickName ??
-        basic.name ??
-        basic.playerName;
-
-      if (
-        !nickname ||
-        String(nickname).trim() === ""
-      ) {
-
-        return response(
-          {
-            success: false,
-            error: "PLAYER_NAME_NOT_FOUND"
-          },
-          404,
-          origin
-        );
-      }
-
-      return response(
-        {
-          success: true,
-          uid: playerUID,
-          name: String(nickname),
-          server: String(
-            basic.region || region
-          ),
-          level:
-            basic.level ?? null
-        },
-        200,
-        origin
-      );
-
-    } catch (error) {
-
-      console.error(
-        "PLAYER CHECK ERROR:",
-        error
-      );
-
-      return response(
-        {
-          success: false,
-          error: "SERVER_ERROR"
-        },
-        500,
-        origin
-      );
-    }
-  }
-};
+        404
