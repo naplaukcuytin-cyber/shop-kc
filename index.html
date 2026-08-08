@@ -2,8 +2,12 @@
 <html lang="vi">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Shop KC Free Fire</title>
 
@@ -54,20 +58,6 @@ color:#111;
 .btn-dark{
 background:#222;
 color:white;
-}
-
-.btn-green{
-background:#00d084;
-color:#06150d;
-}
-
-input{
-width:100%;
-padding:14px;
-border-radius:12px;
-border:0;
-outline:none;
-font-size:16px;
 }
 
 .snow{
@@ -206,57 +196,36 @@ object-fit:cover;
 border-radius:15px;
 }
 
-.verify-box{
-display:none;
-margin-top:15px;
-padding:18px;
-border-radius:18px;
-background:#10151f;
-border:1px solid #00c6ff;
-text-align:left;
-}
-
-.verify-success{
-color:#00d084;
-font-weight:bold;
-text-align:center;
-}
-
-.player-name{
-color:#00c6ff;
-font-size:21px;
-font-weight:bold;
-word-break:break-word;
-}
-
-.loading{
-display:none;
-margin-top:15px;
-padding:12px;
-border-radius:12px;
-background:#10202a;
-color:#00c6ff;
-font-weight:bold;
-text-align:center;
-}
-
-.error-box{
-display:none;
-margin-top:15px;
+input{
+width:100%;
 padding:14px;
 border-radius:12px;
-background:#351414;
-color:#ff453a;
-font-weight:bold;
+border:0;
+outline:none;
 }
 
-.confirmed-box{
-display:none;
+.verify-box{
 margin-top:15px;
 padding:15px;
 border-radius:15px;
-background:#0d2419;
-border:1px solid #00d084;
+background:#10141d;
+border:1px solid #333;
+text-align:left;
+}
+
+.verify-name{
+color:#00c6ff;
+font-size:20px;
+}
+
+.verify-ok{
+color:#00ff88;
+font-weight:bold;
+}
+
+.verify-error{
+color:#ff4444;
+font-weight:bold;
 }
 
 #qrPage{
@@ -314,35 +283,14 @@ padding:15px;
 border-radius:12px;
 font-weight:bold;
 font-size:18px;
-word-break:break-all;
 }
 
-#wheelPage,
-#huongDanPage{
+#wheelPage{
 display:none;
 }
 
-.support-btn{
-position:fixed;
-right:20px;
-bottom:20px;
-width:60px;
-height:60px;
-border-radius:50%;
-background:#00c6ff;
-color:#111;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-z-index:3000;
-cursor:pointer;
-}
-
-.notice{
-font-size:13px;
-opacity:.8;
-margin-top:8px;
+#huongDanPage{
+display:none;
 }
 
 @media(max-width:600px){
@@ -351,29 +299,32 @@ margin-top:8px;
 grid-template-columns:1fr;
 }
 
-.header{
-padding-top:75px;
-}
-
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <!-- NHẠC -->
 
 <audio id="bgMusic" loop>
+
 <source
 src="KHONG TRON VEN NUA 2026 (cm).mp3"
 type="audio/mpeg">
+
 </audio>
 
 
 <!-- QUẢNG CÁO -->
 
-<div class="popup" id="ads">
+<div
+class="popup"
+id="ads">
 
 <div class="popup-box">
 
@@ -388,7 +339,6 @@ Nạp nhanh - Uy tín - An toàn
 </p>
 
 <button
-type="button"
 class="btn btn-blue"
 onclick="openWheel()">
 
@@ -397,9 +347,8 @@ onclick="openWheel()">
 </button>
 
 <button
-type="button"
 class="btn btn-dark"
-id="closeAdsButton">
+onclick="closeAds()">
 
 ✖ Đóng quảng cáo
 
@@ -497,6 +446,8 @@ Chọn game bạn muốn sử dụng
 </div>
 
 
+<!-- FREE FIRE -->
+
 <div class="card">
 
 <img src="freefire.jpg.JPG">
@@ -523,6 +474,8 @@ NẠP KIM CƯƠNG
 
 </div>
 
+
+<!-- LIÊN QUÂN -->
 
 <div class="card">
 
@@ -561,9 +514,120 @@ id="napPage"
 style="display:none;">
 
 <div class="title">
+
 💎 NẠP KIM CƯƠNG FREE FIRE
+
 </div>
 
+
+<!-- KIỂM TRA UID -->
+
+<div
+class="card"
+id="playerCheckBox">
+
+<h3>
+🎮 KIỂM TRA TÀI KHOẢN FREE FIRE
+</h3>
+
+<p>
+Nhập UID để hệ thống kiểm tra tên nhân vật trong game.
+</p>
+
+
+<input
+id="gameUID"
+type="text"
+inputmode="numeric"
+maxlength="15"
+placeholder="Nhập UID Free Fire">
+
+
+<button
+class="btn btn-blue"
+onclick="checkFreeFirePlayer()">
+
+🔎 KIỂM TRA TÊN NHÂN VẬT
+
+</button>
+
+
+<p
+id="playerLoading"
+style="
+display:none;
+color:#00c6ff;
+font-weight:bold;
+">
+
+⏳ Đang kiểm tra tài khoản...
+
+</p>
+
+
+<div
+id="playerResult"
+class="verify-box"
+style="display:none;">
+
+<p>
+🆔 UID:
+<b id="playerUID"></b>
+</p>
+
+<p>
+👤 Tên nhân vật:
+<br>
+
+<b
+id="playerName"
+class="verify-name">
+
+</b>
+
+</p>
+
+<p>
+🌍 Server:
+<b id="playerServer"></b>
+</p>
+
+<p>
+⭐ Level:
+<b id="playerLevel"></b>
+</p>
+
+
+<p
+class="verify-ok">
+
+⚠️ Hãy kiểm tra tên thật trong game trước khi xác nhận.
+
+</p>
+
+
+<button
+class="btn btn-blue"
+onclick="confirmPlayer()">
+
+✅ ĐÚNG TÀI KHOẢN - TIẾP TỤC
+
+</button>
+
+</div>
+
+
+<p
+id="playerError"
+class="verify-error"
+style="display:none;">
+
+</p>
+
+</div>
+
+
+<!-- GÓI KC -->
 
 <div class="games">
 
@@ -654,145 +718,6 @@ MUA NGAY ✔
 </div>
 
 
-<!-- KIỂM TRA UID -->
-
-<div class="card">
-
-<h3>
-🔎 KIỂM TRA TÀI KHOẢN FREE FIRE
-</h3>
-
-<p>
-Nhập UID để hệ thống kiểm tra tên nhân vật.
-</p>
-
-<input
-id="uid"
-type="text"
-inputmode="numeric"
-maxlength="15"
-placeholder="Nhập UID Free Fire"
-autocomplete="off">
-
-
-<button
-type="button"
-class="btn btn-blue"
-onclick="checkPlayer()">
-
-🔍 KIỂM TRA TÀI KHOẢN
-
-</button>
-
-
-<div
-class="loading"
-id="playerLoading">
-
-⏳ Đang kiểm tra UID...
-
-</div>
-
-
-<div
-class="error-box"
-id="playerError">
-</div>
-
-
-<div
-class="verify-box"
-id="playerResult">
-
-<div class="verify-success">
-
-✅ TÌM THẤY TÀI KHOẢN
-
-</div>
-
-<hr>
-
-<p>
-👤 <b>Tên nhân vật:</b>
-</p>
-
-<div
-class="player-name"
-id="playerName">
-
----
-
-</div>
-
-<p>
-🆔 <b>UID:</b>
-<span id="playerUID">---</span>
-</p>
-
-<p>
-🌍 <b>Server:</b>
-<span id="playerServer">---</span>
-</p>
-
-<p>
-⭐ <b>Level:</b>
-<span id="playerLevel">---</span>
-</p>
-
-<button
-type="button"
-class="btn btn-green"
-onclick="confirmPlayer()">
-
-✅ ĐÚNG TÀI KHOẢN - TIẾP TỤC
-
-</button>
-
-</div>
-
-
-<div
-class="confirmed-box"
-id="selectedPlayer">
-
-<div
-style="
-color:#00d084;
-font-weight:bold;
-text-align:center;
-">
-
-✅ TÀI KHOẢN ĐÃ XÁC NHẬN
-
-</div>
-
-<p>
-👤 Tên game:
-<strong id="selectedPlayerName">
----
-</strong>
-</p>
-
-<p>
-🆔 UID:
-<strong id="selectedPlayerUID">
----
-</strong>
-</p>
-
-</div>
-
-
-<p class="notice">
-
-⚠️ Tên nhân vật chỉ được chấp nhận khi hệ thống
-lấy được dữ liệu từ máy chủ kiểm tra.
-
-</p>
-
-</div>
-
-
 <!-- TẠO ĐƠN -->
 
 <div class="card">
@@ -801,13 +726,24 @@ lấy được dữ liệu từ máy chủ kiểm tra.
 📝 TẠO ĐƠN NẠP
 </h3>
 
+
+<input
+id="uid"
+placeholder="UID đã xác nhận"
+readonly>
+
+
+<br>
+<br>
+
+
 <input
 id="selectedKC"
 placeholder="Chưa chọn gói"
 readonly>
 
+
 <button
-type="button"
 class="btn btn-blue"
 onclick="createOrder()">
 
@@ -826,7 +762,6 @@ onclick="createOrder()">
 id="qrPage">
 
 <button
-type="button"
 onclick="closeQR()"
 class="backQR">
 
@@ -836,41 +771,15 @@ class="backQR">
 
 
 <h2 class="qr-title">
+
 💳 THANH TOÁN ĐƠN HÀNG
+
 </h2>
-
-
-<div class="card">
-
-<h3>
-👤 Tài khoản nhận KC
-</h3>
-
-<p>
-Tên game:
-
-<strong id="payPlayerName">
----
-</strong>
-
-</p>
-
-<p>
-UID:
-
-<strong id="payPlayerUID">
----
-</strong>
-
-</p>
-
-</div>
 
 
 <div class="qr-box">
 
-<img
-src="IMG_0056.jpeg.jpg">
+<img src="IMG_0056.jpeg.jpg">
 
 </div>
 
@@ -885,6 +794,7 @@ src="IMG_0056.jpeg.jpg">
 MOMO
 </b>
 
+
 <h3>
 💳 Số tài khoản
 </h3>
@@ -893,8 +803,8 @@ MOMO
 PSP2621916400000092
 </b>
 
+
 <button
-type="button"
 class="btn btn-blue"
 onclick="copyBank()">
 
@@ -911,8 +821,8 @@ onclick="copyBank()">
 TRUONG VAN PHONG
 </b>
 
+
 <button
-type="button"
 class="btn btn-blue"
 onclick="copyOwner()">
 
@@ -926,12 +836,15 @@ onclick="copyOwner()">
 <div class="card">
 
 <h3 id="moneyPay">
+
 💰 Số tiền: Chưa chọn
+
 </h3>
 
 <p>
 📝 Nội dung chuyển khoản
 </p>
+
 
 <div
 id="transferText"
@@ -940,6 +853,7 @@ class="transfer-code">
 Đang tạo mã...
 
 </div>
+
 
 <h3>
 ⏳ Mã QR còn hiệu lực
@@ -982,45 +896,65 @@ class="container"
 id="huongDanPage">
 
 <div class="title">
+
 📖 HƯỚNG DẪN NẠP
+
 </div>
+
 
 <div class="card">
 
-<h3>Bước 1</h3>
+<h3>
+Bước 1
+</h3>
 
 <p>
 Chọn gói Kim Cương muốn nạp.
 </p>
 
-<h3>Bước 2</h3>
+
+<h3>
+Bước 2
+</h3>
 
 <p>
-Nhập chính xác UID Free Fire.
+Nhập UID Free Fire và bấm kiểm tra.
 </p>
 
-<h3>Bước 3</h3>
+
+<h3>
+Bước 3
+</h3>
 
 <p>
-Bấm KIỂM TRA TÀI KHOẢN.
+Kiểm tra đúng tên nhân vật trong game.
 </p>
 
-<h3>Bước 4</h3>
+
+<h3>
+Bước 4
+</h3>
 
 <p>
-Kiểm tra đúng tên nhân vật rồi xác nhận.
+Bấm xác nhận đúng tài khoản.
 </p>
 
-<h3>Bước 5</h3>
+
+<h3>
+Bước 5
+</h3>
 
 <p>
-Bấm TẠO ĐƠN.
+Chọn gói KC và tạo đơn.
 </p>
 
-<h3>Bước 6</h3>
+
+<h3>
+Bước 6
+</h3>
 
 <p>
-Chuyển khoản đúng số tiền và nội dung.
+Chuyển khoản đúng số tiền và đúng nội dung.
 </p>
 
 </div>
@@ -1035,8 +969,11 @@ class="container"
 id="wheelPage">
 
 <div class="title">
+
 🎡 VÒNG QUAY MAY MẮN
+
 </div>
+
 
 <div class="card">
 
@@ -1052,12 +989,13 @@ id="wheelPage">
 Nhập mã đơn để kiểm tra lượt quay.
 </p>
 
+
 <input
 id="codeWheel"
 placeholder="Nhập mã đơn">
 
+
 <button
-type="button"
 class="btn btn-blue"
 onclick="spinWheel()">
 
@@ -1075,8 +1013,11 @@ onclick="spinWheel()">
 <div class="container">
 
 <div class="title">
+
 🏆 TOP NGƯỜI NẠP NHIỀU NHẤT
+
 </div>
+
 
 <div class="card">
 
@@ -1086,11 +1027,13 @@ onclick="spinWheel()">
 💰 50.000.000đ
 </p>
 
+
 <p>
 🥈 TOP 2 - Minh ****
 <br>
 💰 30.000.000đ
 </p>
+
 
 <p>
 🥉 TOP 3 - Hải ****
@@ -1098,11 +1041,13 @@ onclick="spinWheel()">
 💰 20.000.000đ
 </p>
 
+
 <p>
 🏅 TOP 4 - Tuấn ****
 <br>
 💰 15.000.000đ
 </p>
+
 
 <p>
 🏅 TOP 5 - Nam ****
@@ -1130,6 +1075,10 @@ onclick="spinWheel()">
 </p>
 
 <p>
+⚠️ Kiểm tra đúng tên nhân vật.
+</p>
+
+<p>
 ⚠️ Không cung cấp mật khẩu tài khoản.
 </p>
 
@@ -1149,8 +1098,23 @@ onclick="spinWheel()">
 <!-- HỖ TRỢ -->
 
 <div
-class="support-btn"
-onclick="support()">
+onclick="support()"
+style="
+position:fixed;
+right:20px;
+bottom:20px;
+width:60px;
+height:60px;
+border-radius:50%;
+background:#00c6ff;
+color:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+z-index:3000;
+cursor:pointer;
+">
 
 💌
 
@@ -1159,14 +1123,25 @@ onclick="support()">
 
 <script>
 
-/* =====================================================
-   CẤU HÌNH WORKER
-   Sẽ thay ở bước tiếp theo.
-===================================================== */
+
+// =====================================================
+// CẤU HÌNH WORKER
+// =====================================================
+//
+// SAU KHI CÓ URL WORKER THẬT,
+// THAY DÒNG BÊN DƯỚI.
+//
+// Ví dụ:
+// https://shop-kc-player.xxxxx.workers.dev
+//
 
 const WORKER_URL =
-"https://naplaukcuytin-cyber.github.io/shop-kc/";
+"https://YOUR-WORKER-URL.workers.dev";
 
+
+// =====================================================
+// BIẾN
+// =====================================================
 
 let selected = "";
 
@@ -1177,19 +1152,11 @@ let timer = null;
 let verifiedPlayer = null;
 
 
-/* =====================================================
-   ĐÓNG QUẢNG CÁO
-===================================================== */
+// =====================================================
+// QUẢNG CÁO
+// =====================================================
 
-function closeAds(event){
-
-if(event){
-
-event.preventDefault();
-
-event.stopPropagation();
-
-}
+function closeAds(){
 
 const ads =
 document.getElementById("ads");
@@ -1203,44 +1170,36 @@ ads.style.display = "none";
 }
 
 
-/*
-Đăng ký riêng cho nút đóng quảng cáo.
-Không phụ thuộc onclick.
-*/
+function openWheel(){
 
-document.addEventListener(
-"DOMContentLoaded",
-function(){
+closeAds();
 
-const closeButton =
 document.getElementById(
-"closeAdsButton"
-);
+"wheelPage"
+).style.display = "block";
 
-if(closeButton){
+document.getElementById(
+"napPage"
+).style.display = "none";
 
-closeButton.addEventListener(
-"click",
-function(event){
+document.getElementById(
+"huongDanPage"
+).style.display = "none";
 
-event.preventDefault();
+closeMenu();
 
-event.stopPropagation();
-
-closeAds(event);
-
-},
-false
-);
+document.getElementById(
+"wheelPage"
+).scrollIntoView({
+behavior:"smooth"
+});
 
 }
 
-});
 
-
-/* =====================================================
-   MENU
-===================================================== */
+// =====================================================
+// MENU
+// =====================================================
 
 function toggleMenu(){
 
@@ -1262,156 +1221,116 @@ document
 }
 
 
-/* =====================================================
-   TRANG CHỦ
-===================================================== */
+// =====================================================
+// TRANG CHỦ
+// =====================================================
 
 function goHome(){
 
-document
-.getElementById("napPage")
-.style.display = "none";
+document.getElementById(
+"napPage"
+).style.display = "none";
 
-document
-.getElementById("wheelPage")
-.style.display = "none";
+document.getElementById(
+"wheelPage"
+).style.display = "none";
 
-document
-.getElementById("huongDanPage")
-.style.display = "none";
+document.getElementById(
+"huongDanPage"
+).style.display = "none";
 
 closeMenu();
 
-document
-.getElementById("home")
-.scrollIntoView({
+document.getElementById(
+"home"
+).scrollIntoView({
 behavior:"smooth"
 });
 
 }
 
 
-/* =====================================================
-   NẠP KC
-===================================================== */
+// =====================================================
+// NẠP KC
+// =====================================================
 
 function openNap(){
 
-document
-.getElementById("napPage")
-.style.display = "block";
+document.getElementById(
+"napPage"
+).style.display = "block";
 
-document
-.getElementById("wheelPage")
-.style.display = "none";
+document.getElementById(
+"wheelPage"
+).style.display = "none";
 
-document
-.getElementById("huongDanPage")
-.style.display = "none";
-
-closeAds();
+document.getElementById(
+"huongDanPage"
+).style.display = "none";
 
 closeMenu();
 
-document
-.getElementById("napPage")
-.scrollIntoView({
+document.getElementById(
+"napPage"
+).scrollIntoView({
 behavior:"smooth"
 });
 
 }
 
 
-/* =====================================================
-   CHỌN GÓI
-===================================================== */
+// =====================================================
+// CHỌN GÓI
+// =====================================================
+
+function selectKC(goi){
+
+selected = goi;
+
+document.getElementById(
+"selectedKC"
+).value = goi;
+
+}
+
 
 function buyKC(goi){
 
 selected = goi;
 
-document
-.getElementById("selectedKC")
-.value = goi;
+document.getElementById(
+"selectedKC"
+).value = goi;
 
-openNap();
+document.getElementById(
+"napPage"
+).style.display = "block";
 
-setTimeout(function(){
+document.getElementById(
+"wheelPage"
+).style.display = "none";
 
-document
-.getElementById("uid")
-.scrollIntoView({
+document.getElementById(
+"huongDanPage"
+).style.display = "none";
+
+closeMenu();
+
+
+// Nếu chưa xác nhận tài khoản,
+// đưa khách lên phần kiểm tra UID.
+
+if(!verifiedPlayer){
+
+document.getElementById(
+"playerCheckBox"
+).scrollIntoView({
 behavior:"smooth",
 block:"center"
 });
 
-},200);
-
-}
-
-
-/* =====================================================
-   GIÁ
-===================================================== */
-
-function getPrice(goi){
-
-if(goi.includes("100.000đ")){
-return 100000;
-}
-
-if(goi.includes("300.000đ")){
-return 300000;
-}
-
-if(goi.includes("500.000đ")){
-return 500000;
-}
-
-if(goi.includes("1.000.000đ")){
-return 1000000;
-}
-
-return 0;
-
-}
-
-
-/* =====================================================
-   KIỂM TRA UID
-===================================================== */
-
-async function checkPlayer(){
-
-const uid =
-document
-.getElementById("uid")
-.value
-.trim();
-
-
-verifiedPlayer = null;
-
-
-document
-.getElementById("playerResult")
-.style.display = "none";
-
-
-document
-.getElementById("selectedPlayer")
-.style.display = "none";
-
-
-document
-.getElementById("playerError")
-.style.display = "none";
-
-
-if(!/^\d{5,15}$/.test(uid)){
-
-showPlayerError(
-"❌ UID phải gồm 5-15 chữ số."
+alert(
+"⚠️ Hãy kiểm tra và xác nhận đúng tài khoản Free Fire trước."
 );
 
 return;
@@ -1419,154 +1338,233 @@ return;
 }
 
 
+// Nếu đã xác nhận,
+// đưa khách tới phần tạo đơn.
+
+document.getElementById(
+"uid"
+).scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
+
+}
+
+
+// =====================================================
+// KIỂM TRA UID FREE FIRE
+// =====================================================
+
+async function checkFreeFirePlayer(){
+
+const uidInput =
+document.getElementById(
+"gameUID"
+);
+
+const uid =
+uidInput.value.trim();
+
+
+const result =
+document.getElementById(
+"playerResult"
+);
+
+const loading =
+document.getElementById(
+"playerLoading"
+);
+
+const error =
+document.getElementById(
+"playerError"
+);
+
+
+// Xóa trạng thái cũ
+
+result.style.display =
+"none";
+
+error.style.display =
+"none";
+
+
+// Xóa tài khoản đã xác nhận
+
+verifiedPlayer =
+null;
+
+localStorage.removeItem(
+"verifiedPlayer"
+);
+
+
+// Kiểm tra UID
+
+if(!/^\d{5,15}$/.test(uid)){
+
+error.innerText =
+"⚠️ UID không hợp lệ. Vui lòng nhập đúng UID trong game.";
+
+error.style.display =
+"block";
+
+return;
+
+}
+
+
+// Kiểm tra URL Worker
+
 if(
-!WORKER_URL ||
 WORKER_URL.includes(
 "YOUR-WORKER-URL"
 )
 ){
 
-showPlayerError(
-"⚠️ Phần kiểm tra tên game chưa được kết nối. Hoàn thành bước Cloudflare Worker trước."
-);
+error.innerText =
+"⚠️ Website chưa được cấu hình Worker. Admin cần thêm URL Worker.";
+
+error.style.display =
+"block";
 
 return;
 
 }
 
 
-document
-.getElementById("playerLoading")
-.style.display = "block";
+loading.style.display =
+"block";
 
 
 try{
 
-const url =
+
+const response =
+await fetch(
 WORKER_URL +
 "/player?uid=" +
 encodeURIComponent(uid) +
-"&region=VN";
-
-
-const response =
-await fetch(url);
+"&region=VN"
+);
 
 
 const data =
 await response.json();
 
 
+loading.style.display =
+"none";
+
+
 if(
 !response.ok ||
-data.success !== true ||
-!data.uid ||
+!data.success ||
 !data.name
 ){
 
 throw new Error(
-data.error ||
-"PLAYER_NOT_FOUND"
+"Không tìm thấy tài khoản"
 );
 
 }
 
 
+// Lưu thông tin
+
 verifiedPlayer = {
 
-uid:String(data.uid),
+uid:
+String(data.uid),
 
-name:String(data.name),
+name:
+String(data.name),
 
-server:String(
-data.server || "VN"
-),
+server:
+String(data.server || "VN"),
 
-level:data.level || null
+level:
+data.level || "Không rõ"
 
 };
 
 
-document
-.getElementById("playerName")
-.textContent =
-verifiedPlayer.name;
+// Hiển thị UID
 
-
-document
-.getElementById("playerUID")
-.textContent =
+document.getElementById(
+"playerUID"
+).innerText =
 verifiedPlayer.uid;
 
 
-document
-.getElementById("playerServer")
-.textContent =
+// Hiển thị tên
+
+document.getElementById(
+"playerName"
+).innerText =
+verifiedPlayer.name;
+
+
+// Server
+
+document.getElementById(
+"playerServer"
+).innerText =
 verifiedPlayer.server;
 
 
-document
-.getElementById("playerLevel")
-.textContent =
-verifiedPlayer.level || "---";
+// Level
+
+document.getElementById(
+"playerLevel"
+).innerText =
+verifiedPlayer.level;
 
 
-document
-.getElementById("playerResult")
-.style.display = "block";
+// Hiện kết quả
+
+result.style.display =
+"block";
 
 
-document
-.getElementById("playerResult")
-.scrollIntoView({
-behavior:"smooth",
-block:"center"
-});
+// Điền UID vào đơn
 
+document.getElementById(
+"uid"
+).value =
+verifiedPlayer.uid;
 
-}catch(error){
-
-console.error(
-"CHECK PLAYER ERROR:",
-error
-);
-
-showPlayerError(
-"❌ Không tìm thấy tài khoản hoặc máy chủ kiểm tra đang bận."
-);
-
-}finally{
-
-document
-.getElementById("playerLoading")
-.style.display = "none";
 
 }
+catch(error){
 
-}
+loading.style.display =
+"none";
 
+verifiedPlayer =
+null;
 
-/* =====================================================
-   LỖI UID
-===================================================== */
-
-function showPlayerError(message){
-
-const box =
+error =
 document.getElementById(
 "playerError"
 );
 
-box.textContent = message;
+error.innerText =
+"❌ Không tìm thấy tài khoản. Hãy kiểm tra lại UID và thử lại.";
 
-box.style.display = "block";
+error.style.display =
+"block";
+
+}
 
 }
 
 
-/* =====================================================
-   XÁC NHẬN TÀI KHOẢN
-===================================================== */
+// =====================================================
+// XÁC NHẬN TÀI KHOẢN
+// =====================================================
 
 function confirmPlayer(){
 
@@ -1581,35 +1579,46 @@ return;
 }
 
 
-document
-.getElementById("selectedPlayer")
-.style.display = "block";
+localStorage.setItem(
+"verifiedPlayer",
+JSON.stringify(
+verifiedPlayer
+)
+);
 
 
-document
-.getElementById("selectedPlayerName")
-.textContent =
-verifiedPlayer.name;
+alert(
+"✅ Đã xác nhận tài khoản!\n\n" +
+"👤 " +
+verifiedPlayer.name +
+"\n" +
+"🆔 UID: " +
+verifiedPlayer.uid
+);
 
 
-document
-.getElementById("selectedPlayerUID")
-.textContent =
-verifiedPlayer.uid;
+// Cuộn xuống phần chọn gói
+
+document.getElementById(
+"selectedKC"
+).scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
 
 }
 
 
-/* =====================================================
-   RANDOM MÃ
-===================================================== */
+// =====================================================
+// RANDOM MÃ
+// =====================================================
 
 function randomCode(){
 
-const number =
+let number =
 Math.floor(
 100000 +
-Math.random() * 900000
+Math.random()*900000
 );
 
 return "KCFF" + number;
@@ -1617,28 +1626,44 @@ return "KCFF" + number;
 }
 
 
-/* =====================================================
-   TẠO ĐƠN
-===================================================== */
+// =====================================================
+// TẠO ĐƠN
+// =====================================================
 
 function createOrder(){
+
+
+// Bắt buộc phải xác nhận tài khoản
 
 if(!verifiedPlayer){
 
 alert(
-"⚠️ Bạn chưa xác nhận tài khoản Free Fire.\n\n" +
-"Nhập UID → kiểm tra tên → xác nhận tài khoản."
+"⚠️ Bạn chưa kiểm tra và xác nhận tài khoản Free Fire."
 );
+
+document.getElementById(
+"playerCheckBox"
+).scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
 
 return;
 
 }
+
+
+let uid =
+document
+.getElementById("uid")
+.value
+.trim();
 
 
 if(selected === ""){
 
 alert(
-"⚠️ Vui lòng chọn gói KC."
+"⚠️ Vui lòng chọn gói KC"
 );
 
 return;
@@ -1646,20 +1671,33 @@ return;
 }
 
 
-const price =
-getPrice(selected);
-
-
-if(price <= 0){
+if(uid === ""){
 
 alert(
-"⚠️ Không xác định được giá gói."
+"⚠️ Vui lòng kiểm tra UID"
 );
 
 return;
 
 }
 
+
+// Kiểm tra UID có đúng tài khoản đã xác nhận không
+
+if(
+uid !== verifiedPlayer.uid
+){
+
+alert(
+"⚠️ UID đã thay đổi. Vui lòng kiểm tra lại tài khoản."
+);
+
+return;
+
+}
+
+
+// Tạo mã đơn
 
 transferCode =
 randomCode();
@@ -1670,19 +1708,17 @@ localStorage.setItem(
 transferCode
 );
 
+
+// Lưu thông tin đơn
+
 localStorage.setItem(
 "orderUID",
 verifiedPlayer.uid
 );
 
 localStorage.setItem(
-"orderPlayerName",
+"orderName",
 verifiedPlayer.name
-);
-
-localStorage.setItem(
-"orderServer",
-verifiedPlayer.server
 );
 
 localStorage.setItem(
@@ -1691,35 +1727,29 @@ selected
 );
 
 
-document
-.getElementById("payPlayerName")
-.textContent =
-verifiedPlayer.name;
+// Hiển thị tiền
 
-
-document
-.getElementById("payPlayerUID")
-.textContent =
-verifiedPlayer.uid;
-
-
-document
-.getElementById("moneyPay")
-innerHTML =
+document.getElementById(
+"moneyPay"
+).innerHTML =
 "💰 Số tiền: " +
-price.toLocaleString("vi-VN") +
-"đ";
+selected;
 
 
-document
-.getElementById("transferText")
-.textContent =
+// Hiển thị mã
+
+document.getElementById(
+"transferText"
+).innerHTML =
 transferCode;
 
 
-document
-.getElementById("qrPage")
-.style.display = "block";
+// Mở trang QR
+
+document.getElementById(
+"qrPage"
+).style.display =
+"block";
 
 
 startTimer();
@@ -1727,30 +1757,30 @@ startTimer();
 }
 
 
-/* =====================================================
-   ĐÓNG QR
-===================================================== */
+// =====================================================
+// ĐÓNG QR
+// =====================================================
 
 function closeQR(){
 
-document
-.getElementById("qrPage")
-.style.display = "none";
+document.getElementById(
+"qrPage"
+).style.display =
+"none";
+
 
 if(timer){
 
 clearInterval(timer);
 
-timer = null;
-
 }
 
 }
 
 
-/* =====================================================
-   TIMER
-===================================================== */
+// =====================================================
+// TIMER
+// =====================================================
 
 function startTimer(){
 
@@ -1760,27 +1790,32 @@ clearInterval(timer);
 
 }
 
+
 let time = 600;
 
-document
-.getElementById("time")
-.textContent =
+
+document.getElementById(
+"time"
+).innerHTML =
 "10:00";
 
 
 timer =
-setInterval(function(){
+setInterval(
+function(){
 
-const min =
-Math.floor(time / 60);
+let min =
+Math.floor(
+time / 60
+);
 
-const sec =
+let sec =
 time % 60;
 
 
-document
-.getElementById("time")
-.textContent =
+document.getElementById(
+"time"
+).innerHTML =
 min +
 ":" +
 (sec < 10 ? "0" : "") +
@@ -1794,91 +1829,67 @@ if(time < 0){
 
 clearInterval(timer);
 
-timer = null;
-
 alert(
-"⏳ Mã QR đã hết hạn."
+"⏳ Mã QR đã hết hạn"
 );
 
 closeQR();
 
 }
 
-},1000);
+},
+1000
+);
 
 }
 
 
-/* =====================================================
-   HƯỚNG DẪN
-===================================================== */
+// =====================================================
+// HƯỚNG DẪN
+// =====================================================
 
 function openHuongDan(){
 
-document
-.getElementById("huongDanPage")
-.style.display = "block";
+document.getElementById(
+"huongDanPage"
+).style.display =
+"block";
 
-document
-.getElementById("napPage")
-.style.display = "none";
+document.getElementById(
+"napPage"
+).style.display =
+"none";
 
-document
-.getElementById("wheelPage")
-.style.display = "none";
+document.getElementById(
+"wheelPage"
+).style.display =
+"none";
 
 closeMenu();
 
-document
-.getElementById("huongDanPage")
-.scrollIntoView({
+document.getElementById(
+"huongDanPage"
+).scrollIntoView({
 behavior:"smooth"
 });
 
 }
 
 
-/* =====================================================
-   VÒNG QUAY
-===================================================== */
-
-function openWheel(){
-
-closeAds();
-
-document
-.getElementById("wheelPage")
-.style.display = "block";
-
-document
-.getElementById("napPage")
-.style.display = "none";
-
-document
-.getElementById("huongDanPage")
-.style.display = "none";
-
-closeMenu();
-
-document
-.getElementById("wheelPage")
-.scrollIntoView({
-behavior:"smooth"
-});
-
-}
-
+// =====================================================
+// VÒNG QUAY
+// =====================================================
 
 function spinWheel(){
 
-const code =
+let code =
 document
 .getElementById("codeWheel")
 .value
 .trim();
 
 
-const savedCode =
+let savedCode =
 localStorage.getItem(
 "orderCode"
 );
@@ -1887,8 +1898,7 @@ localStorage.getItem(
 if(savedCode === null){
 
 alert(
-"⚠️ Chưa có mã đơn.\n\n" +
-"Vui lòng tạo đơn nạp trước."
+"⚠️ Chưa có mã đơn.\n\nVui lòng tạo đơn nạp trước."
 );
 
 return;
@@ -1899,7 +1909,7 @@ return;
 if(code === ""){
 
 alert(
-"⚠️ Vui lòng nhập mã đơn."
+"⚠️ Vui lòng nhập mã đơn"
 );
 
 return;
@@ -1910,8 +1920,7 @@ return;
 if(code === savedCode){
 
 alert(
-"🎁 Mã hợp lệ!\n\n" +
-"Đang kiểm tra lượt quay."
+"🎁 Mã hợp lệ!\n\nĐang kiểm tra lượt quay."
 );
 
 }else{
@@ -1925,23 +1934,22 @@ alert(
 }
 
 
-/* =====================================================
-   LIÊN QUÂN
-===================================================== */
+// =====================================================
+// LIÊN QUÂN
+// =====================================================
 
 function baoTri(){
 
 alert(
-"⚔️ Liên Quân Mobile\n\n" +
-"Hiện đang bảo trì."
+"⚔️ Liên Quân Mobile\n\nHiện đang bảo trì."
 );
 
 }
 
 
-/* =====================================================
-   THEME
-===================================================== */
+// =====================================================
+// ĐỔI GIAO DIỆN
+// =====================================================
 
 function changeTheme(){
 
@@ -1951,11 +1959,10 @@ document
 .toggle("light");
 
 
-const theme =
-document
-.body
-.classList
-.contains("light")
+let theme =
+document.body.classList.contains(
+"light"
+)
 ?
 "light"
 :
@@ -1970,9 +1977,9 @@ theme
 }
 
 
-/* =====================================================
-   HỖ TRỢ
-===================================================== */
+// =====================================================
+// HỖ TRỢ
+// =====================================================
 
 function support(){
 
@@ -1984,98 +1991,52 @@ window.open(
 }
 
 
-/* =====================================================
-   COPY STK
-===================================================== */
+// =====================================================
+// COPY STK
+// =====================================================
 
 function copyBank(){
 
-if(
-navigator.clipboard &&
-window.isSecureContext
-){
-
-navigator.clipboard
-.writeText(
+navigator.clipboard.writeText(
 "PSP2621916400000092"
-)
-.then(function(){
-
-alert(
-"✅ Đã sao chép số tài khoản."
 );
 
-})
-.catch(function(){
-
 alert(
-"⚠️ Không thể tự sao chép."
-);
-
-});
-
-}else{
-
-alert(
-"STK: PSP2621916400000092"
+"✅ Đã sao chép số tài khoản"
 );
 
 }
 
-}
 
-
-/* =====================================================
-   COPY TÊN
-===================================================== */
+// =====================================================
+// COPY TÊN
+// =====================================================
 
 function copyOwner(){
 
-if(
-navigator.clipboard &&
-window.isSecureContext
-){
-
-navigator.clipboard
-.writeText(
+navigator.clipboard.writeText(
 "TRUONG VAN PHONG"
-)
-.then(function(){
-
-alert(
-"✅ Đã sao chép tên tài khoản."
 );
 
-})
-.catch(function(){
-
 alert(
-"⚠️ Không thể tự sao chép."
-);
-
-});
-
-}else{
-
-alert(
-"Tên: TRUONG VAN PHONG"
+"✅ Đã sao chép tên tài khoản"
 );
 
 }
 
-}
 
-
-/* =====================================================
-   THEME ĐÃ LƯU
-===================================================== */
+// =====================================================
+// LOAD THEME
+// =====================================================
 
 document.addEventListener(
 "DOMContentLoaded",
 function(){
 
-const theme =
-localStorage.getItem("theme");
+let theme =
+localStorage.getItem(
+"theme"
+);
 
 
 if(theme === "light"){
@@ -2090,13 +2051,65 @@ document
 });
 
 
-/* =====================================================
-   TUYẾT
-===================================================== */
+// =====================================================
+// LOAD TÀI KHOẢN ĐÃ XÁC NHẬN
+// =====================================================
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+try{
+
+let saved =
+localStorage.getItem(
+"verifiedPlayer"
+);
+
+
+if(saved){
+
+verifiedPlayer =
+JSON.parse(saved);
+
+
+if(
+verifiedPlayer &&
+verifiedPlayer.uid &&
+verifiedPlayer.name
+){
+
+document.getElementById(
+"uid"
+).value =
+verifiedPlayer.uid;
+
+document.getElementById(
+"gameUID"
+).value =
+verifiedPlayer.uid;
+
+}
+
+}
+
+}catch(error){
+
+verifiedPlayer =
+null;
+
+}
+
+});
+
+
+// =====================================================
+// TUYẾT
+// =====================================================
 
 function createSnow(){
 
-const snow =
+let snow =
 document.createElement("div");
 
 
@@ -2109,12 +2122,12 @@ snow.innerHTML =
 
 
 snow.style.left =
-Math.random() * 100 +
+Math.random()*100 +
 "vw";
 
 
 snow.style.animationDuration =
-(3 + Math.random() * 5) +
+(3 + Math.random()*5) +
 "s";
 
 
@@ -2123,11 +2136,14 @@ document
 .appendChild(snow);
 
 
-setTimeout(function(){
+setTimeout(
+function(){
 
 snow.remove();
 
-},8000);
+},
+8000
+);
 
 }
 
@@ -2138,9 +2154,9 @@ createSnow,
 );
 
 
-/* =====================================================
-   NHẠC
-===================================================== */
+// =====================================================
+// NHẠC
+// =====================================================
 
 const bgMusic =
 document.getElementById(
@@ -2152,20 +2168,17 @@ function startMusic(){
 
 bgMusic
 .play()
-.catch(function(){
+.catch(
+function(){}
+);
 
-});
 
-
-document
-.removeEventListener(
+document.removeEventListener(
 "click",
 startMusic
 );
 
-
-document
-.removeEventListener(
+document.removeEventListener(
 "touchstart",
 startMusic
 );
@@ -2187,4 +2200,5 @@ startMusic
 </script>
 
 </body>
+
 </html>
