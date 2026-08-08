@@ -1,58 +1,77 @@
 const ALLOWED_ORIGINS = [
-  "https://naplaukcuytin-cyber.github.io"
+  "https://naplaukcuytin-cyber.github.io",
+  "http://localhost:3000",
+  "http://127.0.0.1:5500"
 ];
 
+const API_BASE =
+  "https://free-ff-api-src-5plp.onrender.com";
+
+function cors(origin) {
+
+  const allowed =
+    ALLOWED_ORIGINS.includes(origin)
+      ? origin
+      : ALLOWED_ORIGINS[0];
+
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/json; charset=UTF-8",
+    "Cache-Control": "no-store"
+  };
+
+}
+
+
+function json(data, status, origin) {
+
+  return new Response(
+    JSON.stringify(data),
+    {
+      status: status,
+      headers: cors(origin)
+    }
+  );
+
+}
+
+
 export default {
+
   async fetch(request) {
 
-    const origin = request.headers.get("Origin") || "";
+    const origin =
+      request.headers.get("Origin") || "";
 
-    const corsHeaders = {
-      "Access-Control-Allow-Origin":
-        ALLOWED_ORIGINS.includes(origin)
-          ? origin
-          : ALLOWED_ORIGINS[0],
-
-      "Access-Control-Allow-Methods":
-        "GET, OPTIONS",
-
-      "Access-Control-Allow-Headers":
-        "Content-Type",
-
-      "Content-Type":
-        "application/json; charset=UTF-8"
-    };
-
-
-    // ==============================
-    // CORS PREFLIGHT
-    // ==============================
+    // =========================
+    // OPTIONS
+    // =========================
 
     if (request.method === "OPTIONS") {
 
       return new Response(null, {
         status: 204,
-        headers: corsHeaders
+        headers: cors(origin)
       });
 
     }
 
 
-    // ==============================
-    // CHỈ CHO GET
-    // ==============================
+    // =========================
+    // CHỈ GET
+    // =========================
 
     if (request.method !== "GET") {
 
-      return new Response(
-        JSON.stringify({
+      return json(
+        {
           success: false,
           error: "METHOD_NOT_ALLOWED"
-        }),
-        {
-          status: 405,
-          headers: corsHeaders
-        }
+        },
+        405,
+        origin
       );
 
     }
@@ -62,62 +81,57 @@ export default {
       new URL(request.url);
 
 
-    // ==============================
-    // ENDPOINT:
-    // /player?uid=123456789&region=VN
-    // ==============================
+    // =========================
+    // PLAYER
+    // =========================
 
     if (url.pathname !== "/player") {
 
-      return new Response(
-        JSON.stringify({
+      return json(
+        {
           success: false,
           error: "NOT_FOUND"
-        }),
-        {
-          status: 404,
-          headers: corsHeaders
-        }
+        },
+        404,
+        origin
       );
 
     }
 
 
     const uid =
-      url.searchParams
-        .get("uid");
+      (url.searchParams.get("uid") || "")
+      .trim();
 
 
     let region =
       (
-        url.searchParams
-          .get("region") || "VN"
+        url.searchParams.get("region")
+        || "VN"
       ).toUpperCase();
 
 
-    // ==============================
+    // =========================
     // KIỂM TRA UID
-    // ==============================
+    // =========================
 
-    if (!uid || !/^\d{5,15}$/.test(uid)) {
+    if (!/^\d{5,15}$/.test(uid)) {
 
-      return new Response(
-        JSON.stringify({
+      return json(
+        {
           success: false,
           error: "INVALID_UID"
-        }),
-        {
-          status: 400,
-          headers: corsHeaders
-        }
+        },
+        400,
+        origin
       );
 
     }
 
 
-    // ==============================
-    // CHỈ CHO PHÉP REGION HỢP LỆ
-    // ==============================
+    // =========================
+    // REGION
+    // =========================
 
     const allowedRegions = [
       "VN",
@@ -145,12 +159,12 @@ export default {
 
     try {
 
-      // =====================================
-      // THIRD-PARTY FREE FIRE API
-      // =====================================
+      // =========================
+      // GỌI FREE FIRE API
+      // =========================
 
       const apiURL =
-        "https://free-ff-api-src-5plp.onrender.com" +
+        API_BASE +
         "/api/v1/account" +
         "?region=" +
         encodeURIComponent(region) +
@@ -158,170 +172,187 @@ export default {
         encodeURIComponent(uid);
 
 
-      const apiResponse =
-        await fetch(apiURL, {
-          method: "GET",
-
-          headers: {
-            "Accept":
-              "application/json",
-
-            "User-Agent":
-              "ShopKC-FreeFire-PlayerCheck"
-          },
-
-          cf: {
-            cacheTtl: 60,
-            cacheEverything: true
-          }
-        });
-
-
-      if (!apiResponse.ok) {
-
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: "PLAYER_API_ERROR"
-          }),
+      const response =
+        await fetch(
+          apiURL,
           {
-            status: 502,
-            headers: corsHeaders
+            method: "GET",
+            headers: {
+              "Accept": "application/json"
+            }
           }
+        );
+
+
+      // =========================
+      // API LỖI
+      // =========================
+
+      if (!response.ok) {
+
+        return json(
+          {
+            success: false,
+            error: "PLAYER_API_ERROR",
+            status: response.status
+          },
+          502,
+          origin
         );
 
       }
 
 
-      const data =
-        await apiResponse.json();
+      let data;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        return json(
+          {
+            success: false,
+            error: "INVALID_API_RESPONSE"
+          },
+          502,
+          origin
+        );
+
+      }
 
 
-      // =====================================
-      // API TRẢ DỮ LIỆU BASIC INFO
-      // =====================================
+      // =========================
+      // TÌM BASIC INFO
+      // =========================
 
       const basic =
-        data.basicInfo ||
-        data.basicinfo ||
-        data.data?.basicInfo ||
-        data.data?.basicinfo;
+        data?.basicInfo ||
+        data?.basicinfo ||
+        data?.data?.basicInfo ||
+        data?.data?.basicinfo;
 
 
       if (!basic) {
 
-        return new Response(
-          JSON.stringify({
+        return json(
+          {
             success: false,
             error: "PLAYER_NOT_FOUND"
-          }),
-          {
-            status: 404,
-            headers: corsHeaders
-          }
+          },
+          404,
+          origin
         );
 
       }
 
 
+      // =========================
+      // UID
+      // =========================
+
       const playerUID =
         String(
-          basic.accountId ||
-          basic.accountID ||
-          basic.uid ||
+          basic.accountId ??
+          basic.accountID ??
+          basic.uid ??
           uid
         );
 
 
+      // =========================
+      // TÊN NHÂN VẬT
+      // =========================
+
       const nickname =
-        basic.nickname ||
-        basic.nickName ||
-        basic.name;
+        basic.nickname ??
+        basic.nickName ??
+        basic.name ??
+        basic.playerName ??
+        basic.playerNickname;
 
 
-      if (!nickname) {
+      if (
+        nickname === undefined ||
+        nickname === null ||
+        String(nickname).trim() === ""
+      ) {
 
-        return new Response(
-          JSON.stringify({
+        return json(
+          {
             success: false,
             error: "PLAYER_NAME_NOT_FOUND"
-          }),
-          {
-            status: 404,
-            headers: corsHeaders
-          }
+          },
+          404,
+          origin
         );
 
       }
 
+
+      // =========================
+      // SERVER
+      // =========================
 
       const playerRegion =
         basic.region ||
         region;
 
 
+      // =========================
+      // LEVEL
+      // =========================
+
       const level =
-        basic.level ||
+        basic.level ??
         null;
 
 
-      // =====================================
-      // CHỈ TRẢ DỮ LIỆU CẦN THIẾT
-      // =====================================
+      // =========================
+      // KẾT QUẢ
+      // =========================
 
-      const result = {
-
-        success: true,
-
-        uid:
-          playerUID,
-
-        name:
-          String(nickname),
-
-        server:
-          String(playerRegion),
-
-        level:
-          level
-
-      };
-
-
-      return new Response(
-        JSON.stringify(result),
+      return json(
         {
-          status: 200,
-          headers: {
-            ...corsHeaders,
+          success: true,
 
-            "Cache-Control":
-              "public, max-age=60"
-          }
-        }
+          uid: playerUID,
+
+          name:
+            String(nickname),
+
+          server:
+            String(playerRegion),
+
+          level:
+            level
+        },
+        200,
+        origin
       );
 
 
     } catch (error) {
 
       console.error(
-        "PLAYER CHECK ERROR:",
+        "FREE FIRE PLAYER ERROR:",
         error
       );
 
 
-      return new Response(
-        JSON.stringify({
+      return json(
+        {
           success: false,
           error: "SERVER_ERROR"
-        }),
-        {
-          status: 500,
-          headers: corsHeaders
-        }
+        },
+        500,
+        origin
       );
 
     }
 
   }
+
 };
