@@ -1,42 +1,37 @@
 const ALLOWED_ORIGINS = [
-  "https://naplaukcuytin-cyber.github.io",
-  "http://localhost:3000",
-  "http://127.0.0.1:5500"
+  "https://naplaukcuytin-cyber.github.io"
 ];
 
-const API_BASE =
+const API =
   "https://free-ff-api-src-5plp.onrender.com";
 
-function cors(origin) {
-
-  const allowed =
-    ALLOWED_ORIGINS.includes(origin)
-      ? origin
-      : ALLOWED_ORIGINS[0];
-
-  return {
-    "Access-Control-Allow-Origin": allowed,
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json; charset=UTF-8",
-    "Cache-Control": "no-store"
-  };
-
-}
-
-
-function json(data, status, origin) {
+function response(data, status, origin) {
 
   return new Response(
     JSON.stringify(data),
     {
-      status: status,
-      headers: cors(origin)
+      status,
+      headers: {
+        "Access-Control-Allow-Origin":
+          ALLOWED_ORIGINS.includes(origin)
+            ? origin
+            : ALLOWED_ORIGINS[0],
+
+        "Access-Control-Allow-Methods":
+          "GET, OPTIONS",
+
+        "Access-Control-Allow-Headers":
+          "Content-Type",
+
+        "Content-Type":
+          "application/json; charset=UTF-8",
+
+        "Cache-Control":
+          "no-store"
+      }
     }
   );
-
 }
-
 
 export default {
 
@@ -45,27 +40,28 @@ export default {
     const origin =
       request.headers.get("Origin") || "";
 
-    // =========================
-    // OPTIONS
-    // =========================
-
     if (request.method === "OPTIONS") {
 
       return new Response(null, {
         status: 204,
-        headers: cors(origin)
+        headers: {
+          "Access-Control-Allow-Origin":
+            ALLOWED_ORIGINS.includes(origin)
+              ? origin
+              : ALLOWED_ORIGINS[0],
+
+          "Access-Control-Allow-Methods":
+            "GET, OPTIONS",
+
+          "Access-Control-Allow-Headers":
+            "Content-Type"
+        }
       });
-
     }
-
-
-    // =========================
-    // CHỈ GET
-    // =========================
 
     if (request.method !== "GET") {
 
-      return json(
+      return response(
         {
           success: false,
           error: "METHOD_NOT_ALLOWED"
@@ -73,21 +69,14 @@ export default {
         405,
         origin
       );
-
     }
-
 
     const url =
       new URL(request.url);
 
-
-    // =========================
-    // PLAYER
-    // =========================
-
     if (url.pathname !== "/player") {
 
-      return json(
+      return response(
         {
           success: false,
           error: "NOT_FOUND"
@@ -95,14 +84,11 @@ export default {
         404,
         origin
       );
-
     }
-
 
     const uid =
       (url.searchParams.get("uid") || "")
-      .trim();
-
+        .trim();
 
     let region =
       (
@@ -110,14 +96,9 @@ export default {
         || "VN"
       ).toUpperCase();
 
-
-    // =========================
-    // KIỂM TRA UID
-    // =========================
-
     if (!/^\d{5,15}$/.test(uid)) {
 
-      return json(
+      return response(
         {
           success: false,
           error: "INVALID_UID"
@@ -125,15 +106,9 @@ export default {
         400,
         origin
       );
-
     }
 
-
-    // =========================
-    // REGION
-    // =========================
-
-    const allowedRegions = [
+    const regions = [
       "VN",
       "SG",
       "IND",
@@ -149,84 +124,43 @@ export default {
       "CIS"
     ];
 
-
-    if (!allowedRegions.includes(region)) {
-
+    if (!regions.includes(region)) {
       region = "VN";
-
     }
-
 
     try {
 
-      // =========================
-      // GỌI FREE FIRE API
-      // =========================
-
       const apiURL =
-        API_BASE +
+        API +
         "/api/v1/account" +
         "?region=" +
         encodeURIComponent(region) +
         "&uid=" +
         encodeURIComponent(uid);
 
-
-      const response =
-        await fetch(
-          apiURL,
-          {
-            method: "GET",
-            headers: {
-              "Accept": "application/json"
-            }
+      const apiResponse =
+        await fetch(apiURL, {
+          method: "GET",
+          headers: {
+            "Accept":
+              "application/json"
           }
-        );
+        });
 
+      if (!apiResponse.ok) {
 
-      // =========================
-      // API LỖI
-      // =========================
-
-      if (!response.ok) {
-
-        return json(
+        return response(
           {
             success: false,
-            error: "PLAYER_API_ERROR",
-            status: response.status
+            error: "PLAYER_API_ERROR"
           },
           502,
           origin
         );
-
       }
 
-
-      let data;
-
-      try {
-
-        data =
-          await response.json();
-
-      } catch {
-
-        return json(
-          {
-            success: false,
-            error: "INVALID_API_RESPONSE"
-          },
-          502,
-          origin
-        );
-
-      }
-
-
-      // =========================
-      // TÌM BASIC INFO
-      // =========================
+      const data =
+        await apiResponse.json();
 
       const basic =
         data?.basicInfo ||
@@ -234,10 +168,9 @@ export default {
         data?.data?.basicInfo ||
         data?.data?.basicinfo;
 
-
       if (!basic) {
 
-        return json(
+        return response(
           {
             success: false,
             error: "PLAYER_NOT_FOUND"
@@ -245,13 +178,7 @@ export default {
           404,
           origin
         );
-
       }
-
-
-      // =========================
-      // UID
-      // =========================
 
       const playerUID =
         String(
@@ -261,26 +188,18 @@ export default {
           uid
         );
 
-
-      // =========================
-      // TÊN NHÂN VẬT
-      // =========================
-
       const nickname =
         basic.nickname ??
         basic.nickName ??
         basic.name ??
-        basic.playerName ??
-        basic.playerNickname;
-
+        basic.playerName;
 
       if (
-        nickname === undefined ||
-        nickname === null ||
+        !nickname ||
         String(nickname).trim() === ""
       ) {
 
-        return json(
+        return response(
           {
             success: false,
             error: "PLAYER_NAME_NOT_FOUND"
@@ -288,61 +207,31 @@ export default {
           404,
           origin
         );
-
       }
 
-
-      // =========================
-      // SERVER
-      // =========================
-
-      const playerRegion =
-        basic.region ||
-        region;
-
-
-      // =========================
-      // LEVEL
-      // =========================
-
-      const level =
-        basic.level ??
-        null;
-
-
-      // =========================
-      // KẾT QUẢ
-      // =========================
-
-      return json(
+      return response(
         {
           success: true,
-
           uid: playerUID,
-
-          name:
-            String(nickname),
-
-          server:
-            String(playerRegion),
-
+          name: String(nickname),
+          server: String(
+            basic.region || region
+          ),
           level:
-            level
+            basic.level ?? null
         },
         200,
         origin
       );
 
-
     } catch (error) {
 
       console.error(
-        "FREE FIRE PLAYER ERROR:",
+        "PLAYER CHECK ERROR:",
         error
       );
 
-
-      return json(
+      return response(
         {
           success: false,
           error: "SERVER_ERROR"
@@ -350,9 +239,6 @@ export default {
         500,
         origin
       );
-
     }
-
   }
-
 };
