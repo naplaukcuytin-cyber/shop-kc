@@ -1,0 +1,327 @@
+const ALLOWED_ORIGINS = [
+  "https://naplaukcuytin-cyber.github.io"
+];
+
+export default {
+  async fetch(request) {
+
+    const origin = request.headers.get("Origin") || "";
+
+    const corsHeaders = {
+      "Access-Control-Allow-Origin":
+        ALLOWED_ORIGINS.includes(origin)
+          ? origin
+          : ALLOWED_ORIGINS[0],
+
+      "Access-Control-Allow-Methods":
+        "GET, OPTIONS",
+
+      "Access-Control-Allow-Headers":
+        "Content-Type",
+
+      "Content-Type":
+        "application/json; charset=UTF-8"
+    };
+
+
+    // ==============================
+    // CORS PREFLIGHT
+    // ==============================
+
+    if (request.method === "OPTIONS") {
+
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders
+      });
+
+    }
+
+
+    // ==============================
+    // CHỈ CHO GET
+    // ==============================
+
+    if (request.method !== "GET") {
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "METHOD_NOT_ALLOWED"
+        }),
+        {
+          status: 405,
+          headers: corsHeaders
+        }
+      );
+
+    }
+
+
+    const url =
+      new URL(request.url);
+
+
+    // ==============================
+    // ENDPOINT:
+    // /player?uid=123456789&region=VN
+    // ==============================
+
+    if (url.pathname !== "/player") {
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "NOT_FOUND"
+        }),
+        {
+          status: 404,
+          headers: corsHeaders
+        }
+      );
+
+    }
+
+
+    const uid =
+      url.searchParams
+        .get("uid");
+
+
+    let region =
+      (
+        url.searchParams
+          .get("region") || "VN"
+      ).toUpperCase();
+
+
+    // ==============================
+    // KIỂM TRA UID
+    // ==============================
+
+    if (!uid || !/^\d{5,15}$/.test(uid)) {
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "INVALID_UID"
+        }),
+        {
+          status: 400,
+          headers: corsHeaders
+        }
+      );
+
+    }
+
+
+    // ==============================
+    // CHỈ CHO PHÉP REGION HỢP LỆ
+    // ==============================
+
+    const allowedRegions = [
+      "VN",
+      "SG",
+      "IND",
+      "ID",
+      "BR",
+      "TH",
+      "TW",
+      "US",
+      "RU",
+      "ME",
+      "PK",
+      "BD",
+      "CIS"
+    ];
+
+
+    if (!allowedRegions.includes(region)) {
+
+      region = "VN";
+
+    }
+
+
+    try {
+
+      // =====================================
+      // THIRD-PARTY FREE FIRE API
+      // =====================================
+
+      const apiURL =
+        "https://free-ff-api-src-5plp.onrender.com" +
+        "/api/v1/account" +
+        "?region=" +
+        encodeURIComponent(region) +
+        "&uid=" +
+        encodeURIComponent(uid);
+
+
+      const apiResponse =
+        await fetch(apiURL, {
+          method: "GET",
+
+          headers: {
+            "Accept":
+              "application/json",
+
+            "User-Agent":
+              "ShopKC-FreeFire-PlayerCheck"
+          },
+
+          cf: {
+            cacheTtl: 60,
+            cacheEverything: true
+          }
+        });
+
+
+      if (!apiResponse.ok) {
+
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "PLAYER_API_ERROR"
+          }),
+          {
+            status: 502,
+            headers: corsHeaders
+          }
+        );
+
+      }
+
+
+      const data =
+        await apiResponse.json();
+
+
+      // =====================================
+      // API TRẢ DỮ LIỆU BASIC INFO
+      // =====================================
+
+      const basic =
+        data.basicInfo ||
+        data.basicinfo ||
+        data.data?.basicInfo ||
+        data.data?.basicinfo;
+
+
+      if (!basic) {
+
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "PLAYER_NOT_FOUND"
+          }),
+          {
+            status: 404,
+            headers: corsHeaders
+          }
+        );
+
+      }
+
+
+      const playerUID =
+        String(
+          basic.accountId ||
+          basic.accountID ||
+          basic.uid ||
+          uid
+        );
+
+
+      const nickname =
+        basic.nickname ||
+        basic.nickName ||
+        basic.name;
+
+
+      if (!nickname) {
+
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "PLAYER_NAME_NOT_FOUND"
+          }),
+          {
+            status: 404,
+            headers: corsHeaders
+          }
+        );
+
+      }
+
+
+      const playerRegion =
+        basic.region ||
+        region;
+
+
+      const level =
+        basic.level ||
+        null;
+
+
+      // =====================================
+      // CHỈ TRẢ DỮ LIỆU CẦN THIẾT
+      // =====================================
+
+      const result = {
+
+        success: true,
+
+        uid:
+          playerUID,
+
+        name:
+          String(nickname),
+
+        server:
+          String(playerRegion),
+
+        level:
+          level
+
+      };
+
+
+      return new Response(
+        JSON.stringify(result),
+        {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+
+            "Cache-Control":
+              "public, max-age=60"
+          }
+        }
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "PLAYER CHECK ERROR:",
+        error
+      );
+
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "SERVER_ERROR"
+        }),
+        {
+          status: 500,
+          headers: corsHeaders
+        }
+      );
+
+    }
+
+  }
+};
