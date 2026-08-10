@@ -18,19 +18,19 @@
         body { background-color: #ffffff; color: var(--text-main); padding-bottom: 50px; }
         .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 12px; }
 
-        /* HEADER CHUẨN NAPTHE.VN */
+        /* HEADER */
         .header { background: #ffffff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; }
         .header-left { display: flex; align-items: center; gap: 10px; }
         .garena-logo { width: 38px; height: auto; }
         .header-title { font-size: 0.85rem; font-weight: 700; color: #222; line-height: 1.2; }
         .header-title span { display: block; font-weight: 400; color: #555; font-size: 0.8rem; }
         
-        .user-box { display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f0f0f0; padding: 4px 10px; border-radius: 20px; }
+        .user-box { display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f0f0f0; padding: 4px 12px; border-radius: 20px; }
         .user-avatar { width: 26px; height: 26px; background: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: bold; }
-        .user-name { font-size: 0.78rem; font-weight: 700; color: #333; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-name { font-size: 0.78rem; font-weight: 700; color: #333; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* BANNER SHOPEEPAY MÀU ĐỎ CHỦ ĐẠO */
-        .banner-wrap { width: 100%; background: linear-gradient(135deg, #d31018 0%, #b0060d 100%); padding: 12px 14px; color: #fff; overflow: hidden; }
+        /* BANNER SHOPEEPAY */
+        .banner-wrap { width: 100%; background: linear-gradient(135deg, #d31018 0%, #b0060d 100%); padding: 12px 14px; color: #fff; }
         .banner-text h2 { font-size: 1.15rem; font-weight: 900; color: #fff; line-height: 1.1; }
         .banner-text h2 span { color: #ffe600; font-size: 1.3rem; }
         .banner-sub { font-size: 0.7rem; opacity: 0.9; margin-top: 4px; }
@@ -157,8 +157,8 @@
                 <span>Đăng nhập bằng tài khoản:</span>
                 <div class="social-icons">
                     <button class="social-btn gr" onclick="openAuthModal('login')">G</button>
-                    <button class="social-btn gg" onclick="loginSocial('Google')">G+</button>
-                    <button class="social-btn fb" onclick="loginSocial('Facebook')">f</button>
+                    <button class="social-btn gg" onclick="openAuthModal('login')">G+</button>
+                    <button class="social-btn fb" onclick="openAuthModal('login')">f</button>
                 </div>
             </div>
         </div>
@@ -198,8 +198,8 @@
             <!-- FORM ĐĂNG NHẬP -->
             <form id="form-login" onsubmit="submitLogin(event)">
                 <div class="form-group">
-                    <label>Tài khoản / Email / SĐT</label>
-                    <input type="text" id="login-user" placeholder="Nhập tên đăng nhập" required>
+                    <label>Tài khoản</label>
+                    <input type="text" id="login-user" placeholder="Nhập tên tài khoản" required>
                 </div>
                 <div class="form-group">
                     <label>Mật khẩu</label>
@@ -215,14 +215,14 @@
                     <input type="text" id="reg-name" placeholder="Ví dụ: Player123" required>
                 </div>
                 <div class="form-group">
-                    <label>Tài khoản đăng nhập</label>
-                    <input type="text" id="reg-user" placeholder="Tạo tên đăng nhập" required>
+                    <label>Tên tài khoản</label>
+                    <input type="text" id="reg-user" placeholder="Tạo tên tài khoản mới" required>
                 </div>
                 <div class="form-group">
                     <label>Mật khẩu</label>
-                    <input type="password" id="reg-pass" placeholder="Tạo mật khẩu mới" required>
+                    <input type="password" id="reg-pass" placeholder="Tạo mật khẩu" required>
                 </div>
-                <button type="submit" class="btn-full">TẠO TÀI KHOẢN</button>
+                <button type="submit" class="btn-full">TẠO TÀI KHOẢN MỚI</button>
             </form>
         </div>
     </div>
@@ -246,6 +246,11 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderPrices();
+            // Tự động kiểm tra nếu khách đã từng đăng nhập trước đó
+            const lastSession = localStorage.getItem('current_logged_user');
+            if (lastSession) {
+                setLoggedInUser(lastSession);
+            }
         });
 
         function renderPrices() {
@@ -263,7 +268,7 @@
             renderPrices();
         }
 
-        /* XỬ LÝ POPUP ĐĂNG NHẬP / ĐĂNG KÝ */
+        /* POPUP ĐĂNG NHẬP / ĐĂNG KÝ */
         function openAuthModal(type) {
             document.getElementById('auth-modal').style.display = 'flex';
             switchTab(type);
@@ -287,53 +292,71 @@
             }
         }
 
+        /* XỬ LÝ ĐĂNG KÝ TÀI KHOẢN MỚI */
         function submitRegister(e) {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const user = document.getElementById('reg-user').value;
-            const pass = document.getElementById('reg-pass').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const user = document.getElementById('reg-user').value.trim().toLowerCase();
+            const pass = document.getElementById('reg-pass').value.trim();
 
-            localStorage.setItem('user_' + user, JSON.stringify({ name: name, pass: pass }));
+            // Kiểm tra xem tài khoản đã được ai đăng ký chưa
+            if (localStorage.getItem('acc_' + user)) {
+                alert('Tên tài khoản này đã tồn tại! Vui lòng chọn tên tài khoản khác.');
+                return;
+            }
+
+            // Lưu tài khoản & mật khẩu
+            const accountData = { name: name, user: user, pass: pass };
+            localStorage.setItem('acc_' + user, JSON.stringify(accountData));
+
             alert('Đăng ký tài khoản thành công! Bây giờ bạn có thể đăng nhập.');
+            
+            // Tự động điền tài khoản vừa tạo sang form đăng nhập
+            document.getElementById('login-user').value = user;
+            document.getElementById('login-pass').value = '';
             switchTab('login');
         }
 
+        /* XỬ LÝ ĐĂNG NHẬP CHÍNH XÁC MẬT KHẨU */
         function submitLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value.trim();
 
-            const savedUser = localStorage.getItem('user_' + user);
-            if (savedUser) {
-                const userData = JSON.parse(savedUser);
-                if (userData.pass === pass) {
-                    setLoggedInUser(userData.name);
-                    closeAuthModal();
-                    alert('Đăng nhập thành công!');
-                    return;
-                }
+            // Lấy dữ liệu tài khoản từ bộ nhớ
+            const savedData = localStorage.getItem('acc_' + user);
+
+            if (!savedData) {
+                alert('Tài khoản không tồn tại! Vui lòng chọn tab "Đăng Ký" để tạo tài khoản mới.');
+                return;
             }
-            setLoggedInUser(user);
+
+            const account = JSON.parse(savedData);
+
+            // Bắt buộc trùng khớp mật khẩu 100%
+            if (account.pass !== pass) {
+                alert('Sai mật khẩu! Vui lòng kiểm tra lại mật khẩu đã đăng ký.');
+                return;
+            }
+
+            // Đăng nhập thành công
+            setLoggedInUser(account.name);
+            localStorage.setItem('current_logged_user', account.name); // Nhớ phiên đăng nhập
             closeAuthModal();
+            alert('Đăng nhập thành công! Chào mừng ' + account.name);
         }
 
-        function loginSocial(provider) {
-            const randomUser = provider + "_" + Math.floor(1000 + Math.random() * 9000);
-            setLoggedInUser(randomUser);
-            alert(`Đăng nhập thành công qua tài khoản ${provider}!`);
-        }
-
-        function setLoggedInUser(name) {
-            document.getElementById('user-name-display').textContent = name;
-            document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+        function setLoggedInUser(displayName) {
+            document.getElementById('user-name-display').textContent = displayName;
+            document.getElementById('user-avatar').textContent = displayName.charAt(0).toUpperCase();
             document.getElementById('user-avatar').style.background = '#e41e26';
-            document.getElementById('player-uid').value = name;
+            document.getElementById('player-uid').value = displayName;
         }
 
         function checkLogin() {
             const uid = document.getElementById('player-uid').value.trim();
             if (!uid || uid.length < 5) {
-                alert('Vui lòng nhập UID tài khoản hợp lệ!');
+                alert('Vui lòng nhập UID hoặc Tài khoản hợp lệ!');
                 return;
             }
             document.getElementById('copy-memo').textContent = `NAPKC ${uid}`;
