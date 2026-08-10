@@ -24,15 +24,12 @@
         /* HEADER */
         .header-nav { background: #ffffff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-radius: 30px; margin: 12px auto; width: calc(100% - 24px); max-width: 456px; box-shadow: 0 4px 20px rgba(108, 92, 231, 0.08); }
         .header-logo { display: flex; align-items: center; gap: 8px; }
-        .header-logo img { height: 26px; }
         .btn-header-login { background: linear-gradient(90deg, #0284c7 0%, #6c5ce7 100%); color: #fff; padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25); transition: 0.2s; }
-        .btn-header-login:active { transform: scale(0.96); }
 
         /* BANNER */
         .banner-card { position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
         .banner-card img { width: 100%; display: block; border-radius: 24px; }
 
-        /* MARQUEE RUNNING TEXT */
         .marquee-box { background: #fff; border-radius: 20px; padding: 8px 14px; margin-bottom: 16px; font-size: 0.78rem; font-weight: 700; color: #0284c7; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
 
         /* CARD WRAPPER */
@@ -46,7 +43,7 @@
         .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 0.85rem; font-weight: 600; }
 
         .filter-tags { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 14px; padding-bottom: 4px; }
-        .tag-item { background: #f1f5f9; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; color: #64748b; white-space: nowrap; cursor: pointer; }
+        .tag-item { background: #f1f5f9; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; color: #64748b; white-space: nowrap; cursor: pointer; transition: 0.2s; }
         .tag-item.active { background: linear-gradient(90deg, #6c5ce7, #00cec9); color: #fff; box-shadow: 0 2px 8px rgba(108, 92, 231, 0.25); }
 
         .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -57,12 +54,21 @@
         .game-card-sub { font-size: 0.7rem; color: #94a3b8; font-weight: 700; margin-top: 2px; }
         .badge-select { position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; background: #00cec9; border-radius: 50%; }
 
-        /* STEP 1: AUTHENTICATION */
+        /* STEP BADGES & HEADERS */
         .step-badge { background: #f1f0fe; color: #6c5ce7; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
         .step-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .step-header-title { font-size: 0.95rem; font-weight: 800; color: #1e293b; }
         .sync-tag { font-size: 0.7rem; color: #94a3b8; font-weight: 700; }
 
+        /* BƯỚC 1: BẢNG GIÁ NẠP */
+        .topup-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .topup-card { background: #fff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 16px 10px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
+        .topup-card.active { border-color: #00cec9; background: #f0fdfa; box-shadow: 0 4px 15px rgba(0, 206, 201, 0.15); }
+        .topup-kc { font-size: 0.92rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .topup-price { font-size: 0.75rem; font-weight: 800; color: #64748b; }
+        .topup-price span { font-size: 0.88rem; color: #1e293b; font-weight: 800; }
+
+        /* BƯỚC 2: NHẬP UID */
         .login-tab-switch { display: flex; background: #f1f5f9; padding: 4px; border-radius: 16px; margin-bottom: 14px; }
         .tab-btn { flex: 1; padding: 10px; text-align: center; border-radius: 12px; font-size: 0.78rem; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.2s; }
         .tab-btn.active { background: linear-gradient(90deg, #6c5ce7 0%, #00d2d3 100%); color: #fff; box-shadow: 0 2px 10px rgba(108, 92, 231, 0.25); }
@@ -71,24 +77,21 @@
         .input-uid-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 0.88rem; font-weight: 600; color: #334155; }
 
         .btn-confirm { width: 100%; padding: 14px; background: linear-gradient(90deg, #6c5ce7 0%, #00cec9 100%); color: #fff; border: none; border-radius: 16px; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3); display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-confirm:active { transform: scale(0.98); }
 
-        /* STEP 2: PAYMENT METHODS (GARENA & QR BANK ONLY) */
-        .pay-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        /* BƯỚC 3: PHƯƠNG THỨC THANH TOÁN & BẢNG QR */
+        .pay-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
         .pay-card { background: #fff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 16px 12px; text-align: center; position: relative; cursor: pointer; transition: 0.2s; }
         .pay-card.active { border-color: #00cec9; background: #f0fdfa; box-shadow: 0 4px 15px rgba(0, 206, 201, 0.15); }
         .pay-tag { font-size: 0.65rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 10px; position: absolute; top: 8px; left: 8px; }
         .pay-img-box { height: 42px; display: flex; align-items: center; justify-content: center; margin: 10px 0 6px; }
-        .pay-img-box img { max-height: 36px; max-width: 100px; }
         .pay-name { font-size: 0.85rem; font-weight: 800; color: #1e293b; }
 
-        /* STEP 3: DIAMOND PACKAGES */
-        .topup-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .topup-card { background: #fff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 16px 10px; text-align: center; cursor: pointer; position: relative; transition: 0.2s; }
-        .topup-card.active { border-color: #00cec9; background: #f0fdfa; box-shadow: 0 4px 15px rgba(0, 206, 201, 0.15); }
-        .topup-kc { font-size: 0.92rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .topup-price { font-size: 0.75rem; font-weight: 800; color: #64748b; }
-        .topup-price span { font-size: 0.88rem; color: #1e293b; font-weight: 800; }
+        /* KHUNG THANH TOÁN XÁC NHẬN (HIỆN KHI NHẬP UID) */
+        .checkout-box { display: none; background: #fff; border: 2px solid #00cec9; border-radius: 20px; padding: 18px; text-align: center; margin-top: 14px; box-shadow: 0 8px 25px rgba(0,206,201,0.12); }
+        .qr-img-wrap { width: 200px; height: 200px; border: 1px solid #cbd5e1; padding: 6px; border-radius: 14px; margin: 12px auto; }
+        .qr-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        .checkout-info { background: #f8fafc; border-radius: 12px; padding: 12px; text-align: left; font-size: 0.82rem; line-height: 1.8; margin-bottom: 12px; border: 1px solid #e2e8f0; }
+        .copy-btn { width: 100%; padding: 12px; background: #10b981; color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; }
 
         /* FOOTER INFO */
         .footer-info { background: #fff; border-radius: var(--border-radius); padding: 20px 16px; text-align: left; font-size: 0.72rem; color: #64748b; line-height: 1.6; border: 1px solid #edf2f7; }
@@ -101,20 +104,19 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-card { background: #fff; width: 92%; max-width: 400px; border-radius: 24px; padding: 22px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .close-btn { position: absolute; top: 16px; right: 18px; font-size: 20px; font-weight: bold; color: #94a3b8; cursor: pointer; }
-        
         .form-group { margin-bottom: 14px; text-align: left; }
         .form-group label { display: block; font-size: 0.75rem; font-weight: 800; color: #475569; margin-bottom: 6px; }
-        .form-group input { width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.88rem; font-weight: 600; outline: none; transition: 0.2s; }
-        .form-group input:focus { border-color: #6c5ce7; box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15); }
-
-        /* THANH ĐO MẬT KHẨU MẠNH / YẾU */
+        .form-group input { width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.88rem; font-weight: 600; outline: none; }
+        
         .pass-strength-wrapper { margin-top: 6px; }
         .pass-strength-bar { height: 6px; width: 100%; background: #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; }
         .pass-strength-fill { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; }
         .pass-strength-text { font-size: 0.7rem; font-weight: 800; margin-top: 4px; display: block; }
 
-        .btn-modal { width: 100%; padding: 14px; background: linear-gradient(90deg, #6c5ce7, #00cec9); color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.92rem; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.25); }
+        .btn-modal { width: 100%; padding: 14px; background: linear-gradient(90deg, #6c5ce7, #00cec9); color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.92rem; cursor: pointer; margin-top: 6px; }
         .error-msg { color: #ef4444; font-size: 0.72rem; font-weight: 700; margin-top: 4px; display: none; }
+        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #10b981; color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; transition: 0.3s; z-index: 99; }
+        .toast.show { bottom: 20px; }
     </style>
 </head>
 <body>
@@ -144,44 +146,32 @@
             <div class="card-main-title">CHỌN GAME THANH TOÁN</div>
             
             <div class="search-box">
-                🔍 <input type="text" placeholder="Tìm kiếm trò chơi...">
+                🔍 <input type="text" id="search-input" placeholder="Tìm kiếm trò chơi..." oninput="searchGame()">
             </div>
 
             <div class="filter-tags">
-                <div class="tag-item active">Tất cả 6</div>
-                <div class="tag-item">Garena 1</div>
-                <div class="tag-item">Thể thao / FC 2</div>
+                <div class="tag-item active" id="tag-all" onclick="filterGames('all')">Tất cả 6</div>
+                <div class="tag-item" id="tag-garena" onclick="filterGames('garena')">Garena 3</div>
+                <div class="tag-item" id="tag-sports" onclick="filterGames('sports')">Thể thao / FC 3</div>
             </div>
 
-            <div class="game-grid">
-                <div class="game-card active">
-                    <span class="badge-select"></span>
-                    <img src="https://ff.garena.vn/static/images/logo.png" alt="Free Fire">
-                    <div class="game-card-title">Free Fire</div>
-                    <div class="game-card-sub" style="color:#00cec9; font-weight:bold;">✓ ĐANG CHỌN</div>
-                </div>
-                <div class="game-card">
-                    <img src="https://lienquan.garena.vn/files/skin/v3/images/logo.png" alt="Liên Quân">
-                    <div class="game-card-title">Liên Quân Mobile</div>
-                    <div class="game-card-sub">Bấm nạp</div>
-                </div>
-                <div class="game-card">
-                    <img src="https://fconline.garena.vn/wp-content/uploads/2023/09/fco-logo.png" alt="FC Mobile">
-                    <div class="game-card-title">FC Mobile VN</div>
-                    <div class="game-card-sub">Bấm nạp</div>
-                </div>
-                <div class="game-card">
-                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968260.png" alt="Nạp Sò">
-                    <div class="game-card-title">Nạp Sò</div>
-                    <div class="game-card-sub">Bấm nạp</div>
-                </div>
-            </div>
+            <div class="game-grid" id="game-grid-box"></div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" id="step-price-card">
             <div class="step-header-flex">
-                <span class="step-badge">• BƯỚC 1</span>
-                <span class="step-header-title">XÁC THỰC NHÂN VẬT G...</span>
+                <span class="step-badge" style="background:#fef3c7; color:#d97706;">• BƯỚC 1</span>
+                <span class="step-header-title">CHỌN GÓI NẠP & MỆNH GIÁ</span>
+                <span class="sync-tag" style="background:#fef3c7; color:#d97706; padding:2px 8px; border-radius:10px;">+100% QUÀ</span>
+            </div>
+
+            <div class="topup-grid" id="topup-grid-box"></div>
+        </div>
+
+        <div class="section-card" id="step-id-card">
+            <div class="step-header-flex">
+                <span class="step-badge">• BƯỚC 2</span>
+                <span class="step-header-title">NHẬP ID GAME (XÁC THỰC)</span>
                 <span class="sync-tag">ĐỒNG BỘ 24/7</span>
             </div>
 
@@ -191,48 +181,53 @@
             </div>
 
             <div class="input-uid-box">
-                👤 <input type="tel" id="player-uid" placeholder="Nhập mã UID tài khoản của bạn..." maxlength="14">
+                👤 <input type="tel" id="player-uid" placeholder="Nhập mã UID / ID Game của bạn..." maxlength="14">
             </div>
 
-            <button class="btn-confirm" onclick="checkUID()">
-                XÁC NHẬN ➔
+            <button class="btn-confirm" onclick="goToCheckout()">
+                XÁC NHẬN KẾT NỐI ➔
             </button>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" id="step-pay-card">
             <div class="step-header-flex">
-                <span class="step-badge" style="background:#e0f2fe; color:#0284c7;">• BƯỚC 2</span>
-                <span class="step-header-title">PHƯƠNG THỨC THAN...</span>
+                <span class="step-badge" style="background:#e0f2fe; color:#0284c7;">• BƯỚC 3</span>
+                <span class="step-header-title">TRANG THANH TOÁN</span>
                 <span class="sync-tag" style="color:#10b981; font-weight:800;">TỰ ĐỘNG 24/7</span>
             </div>
 
             <div class="pay-grid">
-                <div class="pay-card active" id="pay-garena" onclick="selectPayMethod('garena')">
-                    <span class="pay-tag">KHUYẾN MÃI +100%</span>
-                    <div class="pay-img-box">
-                        <svg width="36" height="36" viewBox="0 0 100 100" fill="#e41e26"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm22 65L50 82 28 65V35l22-17 22 17v30z"/></svg>
-                    </div>
-                    <div class="pay-name">Thẻ Garena</div>
-                </div>
-
-                <div class="pay-card" id="pay-qr" onclick="selectPayMethod('qr')">
+                <div class="pay-card active" id="pay-qr" onclick="selectPayMethod('qr')">
                     <span class="pay-tag" style="background:#fef3c7; color:#d97706;">QUÉT QR TỰ ĐỘNG</span>
                     <div class="pay-img-box">
                         <img src="https://img.vietqr.io/image/970436-123456789-compact2.png" alt="QR Bank" style="max-height:36px; border-radius:6px;">
                     </div>
                     <div class="pay-name">Chuyển Khoản QR Bank</div>
                 </div>
-            </div>
-        </div>
 
-        <div class="section-card">
-            <div class="step-header-flex">
-                <span class="step-badge" style="background:#fef3c7; color:#d97706;">• BƯỚC 3</span>
-                <span class="step-header-title">GÓI NẠP & MỆNH GIÁ</span>
-                <span class="sync-tag" style="background:#fef3c7; color:#d97706; padding:2px 8px; border-radius:10px;">+100% QUÀ</span>
+                <div class="pay-card" id="pay-garena" onclick="selectPayMethod('garena')">
+                    <span class="pay-tag">KHUYẾN MÃI +100%</span>
+                    <div class="pay-img-box">
+                        <svg width="36" height="36" viewBox="0 0 100 100" fill="#e41e26"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm22 65L50 82 28 65V35l22-17 22 17v30z"/></svg>
+                    </div>
+                    <div class="pay-name">Thẻ Garena</div>
+                </div>
             </div>
 
-            <div class="topup-grid" id="topup-grid-box"></div>
+            <div class="checkout-box" id="checkout-box-details">
+                <h4 style="font-size:0.95rem; font-weight:800; color:#1e293b;">MÃ QR THANH TOÁN ĐƠN HÀNG</h4>
+                <div class="qr-img-wrap">
+                    <img src="qr-payment.jpg" alt="Mã QR Thanh Toán" id="qr-img-display">
+                </div>
+                <div class="checkout-info">
+                    <div>Game nạp: <strong id="pay-game-title" style="color:#6c5ce7;">Free Fire</strong></div>
+                    <div>Gói nạp: <strong id="pay-package-title">💎 2.830 Kim Cương (50.000 đ)</strong></div>
+                    <div>Số tài khoản: <strong>PSP2621916400000092</strong></div>
+                    <div>Chủ TK: <strong>TRUONG VAN PHONG</strong></div>
+                    <div>Nội dung CK: <strong id="copy-memo" style="color:#ef4444;">NAPKC ...</strong></div>
+                </div>
+                <button class="copy-btn" onclick="copyMemo()">SAO CHÉP NỘI DUNG CHUYỂN TIỀN</button>
+            </div>
         </div>
 
         <div class="footer-info">
@@ -300,7 +295,20 @@
         </div>
     </div>
 
+    <div id="toast" class="toast">Đã sao chép nội dung chuyển tiền!</div>
+
     <script>
+        /* DANH SÁCH GAME CÓ CHÂN DANH MỤC */
+        const ALL_GAMES = [
+            { id: 1, name: 'Free Fire', category: 'garena', img: 'https://ff.garena.vn/static/images/logo.png' },
+            { id: 2, name: 'Liên Quân Mobile', category: 'garena', img: 'https://lienquan.garena.vn/files/skin/v3/images/logo.png' },
+            { id: 3, name: 'FC Online / FC Mobile', category: 'sports', img: 'https://fconline.garena.vn/wp-content/uploads/2023/09/fco-logo.png' },
+            { id: 4, name: 'Nạp Sò Garena', category: 'garena', img: 'https://cdn-icons-png.flaticon.com/512/5968/5968260.png' },
+            { id: 5, name: 'eFootball VN', category: 'sports', img: 'https://cdn-icons-png.flaticon.com/512/888/888857.png' },
+            { id: 6, name: 'NBA 2K Mobile', category: 'sports', img: 'https://cdn-icons-png.flaticon.com/512/1041/1041168.png' }
+        ];
+
+        /* DANH SÁCH BẢNG GIÁ TIỀN & KIM CƯƠNG */
         const PACKAGES = [
             { price: '50.000 đ', kc: '2.830' },
             { price: '100.000 đ', kc: '5.660' },
@@ -308,14 +316,73 @@
             { price: '500.000 đ', kc: '28.300' }
         ];
 
+        let selectedGame = ALL_GAMES[0];
         let selectedPrice = PACKAGES[0];
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderGames('all');
             renderPrices();
             const lastSession = localStorage.getItem('current_logged_user');
             if (lastSession) setLoggedInUser(lastSession);
         });
 
+        /* RENDER DANH SÁCH GAME */
+        function renderGames(filterCategory) {
+            const grid = document.getElementById('game-grid-box');
+            let filteredList = ALL_GAMES;
+
+            if (filterCategory !== 'all') {
+                filteredList = ALL_GAMES.filter(g => g.category === filterCategory);
+            }
+
+            grid.innerHTML = filteredList.map(g => `
+                <div class="game-card ${g.id === selectedGame.id ? 'active' : ''}" onclick="selectGame(${g.id})">
+                    ${g.id === selectedGame.id ? '<span class="badge-select"></span>' : ''}
+                    <img src="${g.img}" alt="${g.name}">
+                    <div class="game-card-title">${g.name}</div>
+                    <div class="game-card-sub" style="${g.id === selectedGame.id ? 'color:#00cec9; font-weight:bold;' : ''}">
+                        ${g.id === selectedGame.id ? '✓ ĐANG CHỌN' : 'Bấm nạp'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* LỌC GAME THEO DANH MỤC */
+        function filterGames(category) {
+            document.querySelectorAll('.filter-tags .tag-item').forEach(el => el.classList.remove('active'));
+            if(category === 'all') document.getElementById('tag-all').classList.add('active');
+            if(category === 'garena') document.getElementById('tag-garena').classList.add('active');
+            if(category === 'sports') document.getElementById('tag-sports').classList.add('active');
+            
+            renderGames(category);
+        }
+
+        /* TÌM KIẾM GAME */
+        function searchGame() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const grid = document.getElementById('game-grid-box');
+            const filtered = ALL_GAMES.filter(g => g.name.toLowerCase().includes(query));
+
+            grid.innerHTML = filtered.map(g => `
+                <div class="game-card ${g.id === selectedGame.id ? 'active' : ''}" onclick="selectGame(${g.id})">
+                    ${g.id === selectedGame.id ? '<span class="badge-select"></span>' : ''}
+                    <img src="${g.img}" alt="${g.name}">
+                    <div class="game-card-title">${g.name}</div>
+                    <div class="game-card-sub" style="${g.id === selectedGame.id ? 'color:#00cec9; font-weight:bold;' : ''}">
+                        ${g.id === selectedGame.id ? '✓ ĐANG CHỌN' : 'Bấm nạp'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectGame(id) {
+            selectedGame = ALL_GAMES.find(g => g.id === id);
+            renderGames('all');
+            // Cuộn mượt tới Bước chọn giá tiền
+            document.getElementById('step-price-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* RENDER BẢNG GIÁ TIỀN */
         function renderPrices() {
             const box = document.getElementById('topup-grid-box');
             box.innerHTML = PACKAGES.map((p, idx) => `
@@ -329,6 +396,27 @@
         function choosePrice(idx) {
             selectedPrice = PACKAGES[idx];
             renderPrices();
+            // Tự động cuộn xuống bước nhập ID Game
+            document.getElementById('step-id-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* CHUYỂN SANG BƯỚC THANH TOÁN QUÉT QR */
+        function goToCheckout() {
+            const uid = document.getElementById('player-uid').value.trim();
+            if (!uid || uid.length < 5) {
+                alert('Vui lòng nhập UID hoặc ID Game hợp lệ!');
+                return;
+            }
+
+            // Điền thông tin giao dịch sang khung thanh toán
+            document.getElementById('pay-game-title').textContent = selectedGame.name;
+            document.getElementById('pay-package-title').textContent = `💎 ${selectedPrice.kc} Kim Cương (${selectedPrice.price})`;
+            document.getElementById('copy-memo').textContent = `NAPKC ${uid}`;
+
+            // Hiện khung thanh toán và cuộn tới
+            const checkoutBox = document.getElementById('checkout-box-details');
+            checkoutBox.style.display = 'block';
+            document.getElementById('step-pay-card').scrollIntoView({ behavior: 'smooth' });
         }
 
         function selectPayMethod(type) {
@@ -342,29 +430,26 @@
             }
         }
 
-        function checkUID() {
-            const uid = document.getElementById('player-uid').value.trim();
-            if (!uid || uid.length < 5) {
-                alert('Vui lòng nhập mã UID hợp lệ!');
-                return;
-            }
-            alert(`Đã kết nối thành công UID Nhân Vật: ${uid}`);
+        function copyMemo() {
+            const txt = document.getElementById('copy-memo').textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 2000);
+            });
         }
 
-        /* CHECK TÊN TÀI KHOẢN > 10 KÝ TỰ */
+        /* LOGIC TÀI KHOẢN > 10 KÝ TỰ & ĐỘ MẠNH PASS */
         function validateUserLength() {
             const val = document.getElementById('reg-user').value.trim();
             const err = document.getElementById('reg-user-err');
             if (val.length > 0 && val.length <= 10) {
                 err.style.display = 'block';
-                return false;
             } else {
                 err.style.display = 'none';
-                return true;
             }
         }
 
-        /* KIỂM TRA ĐỘ MẠNH / YẾU CỦA MẬT KHẨU */
         function checkPasswordStrength() {
             const pass = document.getElementById('reg-pass').value;
             const fill = document.getElementById('strength-fill');
@@ -386,23 +471,23 @@
 
             if (score <= 2) {
                 fill.style.width = '33%';
-                fill.style.backgroundColor = '#ef4444'; // Đỏ (Yếu)
+                fill.style.backgroundColor = '#ef4444';
                 text.textContent = 'Độ mạnh mật khẩu: YẾU 🔴';
                 text.style.color = '#ef4444';
             } else if (score <= 4) {
                 fill.style.width = '66%';
-                fill.style.backgroundColor = '#f59e0b'; // Cam (Trung Bình)
+                fill.style.backgroundColor = '#f59e0b';
                 text.textContent = 'Độ mạnh mật khẩu: TRUNG BÌNH 🟡';
                 text.style.color = '#f59e0b';
             } else {
                 fill.style.width = '100%';
-                fill.style.backgroundColor = '#10b981'; // Xanh (Mạnh)
+                fill.style.backgroundColor = '#10b981';
                 text.textContent = 'Độ mạnh mật khẩu: MẠNH 🟢';
                 text.style.color = '#10b981';
             }
         }
 
-        /* LOGIC MODAL ĐĂNG NHẬP / ĐĂNG KÝ */
+        /* POPUP ĐĂNG NHẬP / ĐĂNG KÝ */
         function openAuthModal(type) {
             document.getElementById('auth-modal').style.display = 'flex';
             switchTab(type);
@@ -447,7 +532,7 @@
             }
 
             localStorage.setItem('acc_' + user, JSON.stringify({ name, user, pass }));
-            alert('Đăng ký thành công! Hãy đăng nhập ngay.');
+            alert('Đăng ký thành công!');
             document.getElementById('login-user').value = user;
             switchTab('login');
         }
@@ -461,8 +546,6 @@
                 document.getElementById('login-user-err').style.display = 'block';
                 alert('Tên tài khoản phải dài hơn 10 ký tự!');
                 return;
-            } else {
-                document.getElementById('login-user-err').style.display = 'none';
             }
 
             const savedData = localStorage.getItem('acc_' + user);
