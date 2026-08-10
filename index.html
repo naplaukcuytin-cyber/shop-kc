@@ -49,6 +49,7 @@
 
         .btn-header-login { background: #e41e26; color: #fff; padding: 8px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; border: none; cursor: pointer; }
         .btn-admin-access { background: #8b5cf6; color: #fff; padding: 6px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; border: none; cursor: pointer; margin-left: 4px; display: none; }
+        .btn-logout-head { background: #64748b; color: #fff; border: none; padding: 4px 8px; border-radius: 10px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
 
         /* MENU SIDEBAR 3 GẠCH CỐ ĐỊNH */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; backdrop-filter: blur(3px); }
@@ -93,8 +94,8 @@
         .admin-panel { display: none; background: #fff; border-radius: 20px; padding: 16px; border: 2px solid #8b5cf6; margin-bottom: 16px; }
         .admin-panel h3 { font-size: 0.9rem; font-weight: 800; color: #8b5cf6; margin-bottom: 10px; }
         .admin-item { background: #f8fafc; padding: 10px; border-radius: 12px; margin-bottom: 8px; font-size: 0.78rem; border: 1px solid #cbd5e1; }
-        .btn-action-approve { background: #10b981; color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-weight: 800; cursor: pointer; margin-right: 4px; }
-        .btn-action-reject { background: #ef4444; color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-weight: 800; cursor: pointer; }
+        .btn-action-approve { background: #10b981; color: #fff; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-right: 4px; }
+        .btn-action-reject { background: #ef4444; color: #fff; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 800; cursor: pointer; }
 
         /* MODAL POPUPS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
@@ -146,6 +147,7 @@
                     <span id="header-user-name">Khách</span>
                     <span class="balance-badge" id="header-user-balance">0 đ</span>
                     <button class="btn-deposit-head" onclick="openDepositModal()">+ NẠP</button>
+                    <button class="btn-logout-head" onclick="logout()">Thoát</button>
                 </div>
                 <button class="btn-header-login" id="btn-login-trigger" onclick="openAuthModal('login')">🔑 ĐĂNG NHẬP</button>
                 <button class="btn-admin-access" id="btn-admin-panel" onclick="toggleAdminPanel()">⚙️ ADMIN</button>
@@ -159,22 +161,31 @@
             <h3>⚙️ TRANG QUẢN TRỊ ADMIN (TOÀN QUYỀN HỆ THỐNG)</h3>
             
             <div style="background:#f1f5f9; padding:10px; border-radius:12px; margin-bottom:12px;">
-                <label style="font-size:0.75rem; font-weight:800;">⚙️ ĐIỀU CHỈNH HỆ SỐ ƯU ĐÃI NẠP (MẶC ĐỊNH GẤP 10):</label>
+                <label style="font-size:0.75rem; font-weight:800;">⚙️ CHỈNH HỆ SỐ NẠP ƯU ĐÃI (MẶC ĐỊNH X10):</label>
                 <div style="display:flex; gap:8px; margin-top:6px;">
                     <input type="number" id="admin-rate-multiplier" value="10" style="width:70px; padding:6px; border-radius:8px; border:1px solid #cbd5e1; font-weight:800;" min="1">
                     <button onclick="updateMultiplier()" style="background:#8b5cf6; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; cursor:pointer;">LƯU TỈ LỆ</button>
                 </div>
             </div>
 
+            <div style="background:#f1f5f9; padding:10px; border-radius:12px; margin-bottom:12px;">
+                <label style="font-size:0.75rem; font-weight:800;">➕ CỘNG / TRỪ TIỀN TRỰC TIẾP CHUYỂN CHO KHÁCH:</label>
+                <div style="display:flex; gap:6px; margin-top:6px; flex-direction:column;">
+                    <input type="text" id="admin-target-user" placeholder="Nhập Username khách..." style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.8rem;">
+                    <input type="number" id="admin-target-amount" placeholder="Số tiền (+ cộng, - trừ)..." style="padding:8px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.8rem;">
+                    <button onclick="adminDirectChangeBalance()" style="background:#10b981; color:#fff; border:none; padding:8px; border-radius:8px; font-weight:800; cursor:pointer;">THỰC HIỆN CỘNG/TRỪ TIỀN</button>
+                </div>
+            </div>
+
             <p style="font-size:0.75rem; font-weight:800; color:#475569; margin-bottom:6px;">💳 Yêu cầu Nạp Số Dư VNĐ từ khách:</p>
             <div id="admin-deposit-requests"><p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p></div>
 
-            <p style="font-size:0.75rem; font-weight:800; color:#475569; margin-top:12px; margin-bottom:6px;">🛒 Đơn Mua Gói Game mới nhất:</p>
+            <p style="font-size:0.75rem; font-weight:800; color:#475569; margin-top:12px; margin-bottom:6px;">🛒 Đơn Mua Gói Game mới nhất từ khách:</p>
             <div id="admin-order-requests"><p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p></div>
         </div>
 
         <div class="banner-card">
-            <img src="https://ff.garena.vn/static/images/banner.jpg" onerror="this.src='https://via.placeholder.com/480x160/e41e26/ffffff?text=KHUYEN+MAI+GAPI+10+KIM+CUONG+DAP+TRA'" alt="Banner">
+            <img src="https://ff.garena.vn/static/images/banner.jpg" onerror="this.src='https://via.placeholder.com/480x160/e41e26/ffffff?text=KHUYEN+MAI+GAP+10+KIM+CUONG'" alt="Banner">
         </div>
 
         <div class="marquee-box">
@@ -295,7 +306,7 @@
     </div>
 
     <script>
-        let multiplier = 10; // Hệ số nhân ưu đãi gấp 10
+        let multiplier = 10; // Hệ số nhân ưu đãi mặc định X10
 
         const BASE_GAMES_LIST = [
             { id: 1, name: 'Free Fire', unitSymbol: '💎', unitName: 'Kim Cương', img: 'https://ff.garena.vn/static/images/logo.png', baseRates: [
@@ -322,7 +333,9 @@
         let GAMES_LIST = [];
         let currentSelectedGame = null;
         let currentSelectedRate = null;
-        let currentUser = null;
+        
+        // BẢO BẢO: MẶC ĐỊNH LÀ NULL KHI MỚI MỞ TRANG (KHÔNG BỊ LỖI LỰA CHỌN ADMIN TỰ ĐỘNG)
+        let currentUser = JSON.parse(localStorage.getItem('logged_user_session')) || null;
         let tempDepositMemo = '';
         let tempDepositAmount = 0;
 
@@ -331,7 +344,7 @@
             renderGameGrid();
             renderPriceGrid();
             checkSession();
-            loadGlobalSystemData();
+            updateAdminView();
         });
 
         function buildGamesWithMultiplier() {
@@ -421,7 +434,7 @@
             const msg = document.getElementById('user-check-msg');
             if (u.length < 6) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tài khoản phải trên 6 ký tự!';
+                msg.textContent = '✖️ Tài khoản phải từ 6 ký tự trở lên!';
             } else {
                 msg.style.color = '#10b981';
                 msg.textContent = '✔️ Tên tài khoản hợp lệ!';
@@ -433,30 +446,36 @@
             const msg = document.getElementById('pass-check-msg');
             if (p.length < 6) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Mật khẩu YẾU! (Thử lại với mật khẩu dài hơn)';
+                msg.textContent = '✖️ Mật khẩu YẾU! (Cần từ 6 ký tự)';
             } else if (p.length >= 6 && /[A-Z]/.test(p) && /[0-9]/.test(p)) {
                 msg.style.color = '#10b981';
                 msg.textContent = '✔️ Mật khẩu RẤT MẠNH!';
             } else {
                 msg.style.color = '#f59e0b';
-                msg.textContent = '⚠️ Mật khẩu TRUNG BÌNH (Thêm số và chữ hoa)';
+                msg.textContent = '⚠️ Mật khẩu TRUNG BÌNH (Thêm chữ hoa và số)';
             }
         }
 
-        /* ĐĂNG NHẬP / ĐĂNG KÝ ADMIN CHÍNH THỨC */
+        /* QUẢN LÝ PHIÊN ĐĂNG NHẬP CHẮC CHẮN */
         function checkSession() {
-            const saved = localStorage.getItem('logged_user_session');
-            if (saved) {
-                currentUser = JSON.parse(saved);
+            if (currentUser) {
                 document.getElementById('btn-login-trigger').style.display = 'none';
                 document.getElementById('user-logged-box').style.display = 'flex';
-                document.getElementById('header-user-name').textContent = currentUser.fullname;
-                document.getElementById('header-user-balance').textContent = `${currentUser.balance.toLocaleString('vi-VN')} đ`;
+                document.getElementById('header-user-name').textContent = currentUser.fullname || currentUser.username;
+                document.getElementById('header-user-balance').textContent = `${(currentUser.balance || 0).toLocaleString('vi-VN')} đ`;
 
-                // ĐÚNG TÀI KHOẢN VÀ MẬT KHẨU ADMIN BẠN CUNG CẤP
+                // CHỈ CHO HIỆN NÚT ADMIN VỚI TÀI KHOẢN phong23112007
                 if (currentUser.username === 'phong23112007') {
                     document.getElementById('btn-admin-panel').style.display = 'inline-block';
+                } else {
+                    document.getElementById('btn-admin-panel').style.display = 'none';
+                    document.getElementById('admin-panel-box').style.display = 'none';
                 }
+            } else {
+                document.getElementById('btn-login-trigger').style.display = 'block';
+                document.getElementById('user-logged-box').style.display = 'none';
+                document.getElementById('btn-admin-panel').style.display = 'none';
+                document.getElementById('admin-panel-box').style.display = 'none';
             }
         }
 
@@ -466,27 +485,27 @@
             const p = document.getElementById('login-password').value.trim();
             const msg = document.getElementById('login-status-msg');
 
-            // ĐĂNG NHẬP ADMIN BẠN YÊU CẦU: phong23112007 / Muathu12345
+            // ĐĂNG NHẬP ADMIN CHÍNH THỨC
             if (u === 'phong23112007' && p === 'Muathu12345') {
                 currentUser = { username: u, fullname: 'ADMINISTRATOR', balance: 999999999 };
                 localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
                 msg.style.color = '#10b981';
                 msg.textContent = '✔️ Đăng nhập ADMIN thành công!';
-                setTimeout(() => { closeAuthModal(); checkSession(); updateAdminView(); }, 800);
+                setTimeout(() => { closeAuthModal(); checkSession(); updateAdminView(); }, 600);
                 return;
             }
 
             const storedAcc = localStorage.getItem('acc_db_' + u.toLowerCase());
             if (!storedAcc) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng đăng ký.';
+                msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng Đăng ký.';
                 return;
             }
 
             const acc = JSON.parse(storedAcc);
             if (acc.password !== p) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Mật khẩu sai! Vui lòng thử lại.';
+                msg.textContent = '✖️ Sai mật khẩu! Vui lòng thử lại.';
                 return;
             }
 
@@ -494,7 +513,7 @@
             localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
             msg.style.color = '#10b981';
             msg.textContent = '✔️ Đăng nhập thành công!';
-            setTimeout(() => { closeAuthModal(); checkSession(); }, 800);
+            setTimeout(() => { closeAuthModal(); checkSession(); }, 600);
         }
 
         function handleRegister(e) {
@@ -506,30 +525,37 @@
 
             if (u.length < 6) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tên tài khoản phải trên 6 ký tự!';
+                msg.textContent = '✖️ Tên tài khoản phải từ 6 ký tự trở lên!';
                 return;
             }
 
             if (p.length < 6) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Mật khẩu quá YẾU! Vui lòng thử lại mật khẩu khác.';
+                msg.textContent = '✖️ Mật khẩu YẾU! Vui lòng đặt mật khẩu dài hơn.';
                 return;
             }
 
-            if (localStorage.getItem('acc_db_' + u)) {
+            if (localStorage.getItem('acc_db_' + u) || u === 'phong23112007') {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tên tài khoản này đã tồn tại!';
+                msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
                 return;
             }
 
             const newAcc = { username: u, password: p, fullname: name, balance: 0 };
             localStorage.setItem('acc_db_' + u, JSON.stringify(newAcc));
             msg.style.color = '#10b981';
-            msg.textContent = '✔️ Đăng ký thành công! Hãy bấm chuyển sang Đăng Nhập.';
-            setTimeout(() => switchAuthTab('login'), 1200);
+            msg.textContent = '✔️ Đăng ký thành công! Hãy bấm Đăng Nhập.';
+            setTimeout(() => switchAuthTab('login'), 1000);
         }
 
-        /* LỆNH NẠP TIỀN & ĐỒNG BỘ LOCALSTORAGE CẢ SHOP */
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('logged_user_session');
+            checkSession();
+            alert('Đã đăng xuất tài khoản thành công!');
+        }
+
+        /* LỆNH NẠP TIỀN VÀO SỐ DƯ */
         function openDepositModal() {
             if (!currentUser) {
                 alert('Vui lòng Đăng nhập trước khi nạp tiền!');
@@ -565,7 +591,7 @@
             const newReq = {
                 id: Date.now(),
                 user: currentUser.username,
-                fullname: currentUser.fullname,
+                fullname: currentUser.fullname || currentUser.username,
                 amount: tempDepositAmount,
                 memo: tempDepositMemo,
                 status: 'Chờ duyệt',
@@ -579,13 +605,13 @@
 
             closeDepositModal();
             updateAdminView();
-            alert('Lệnh nạp tiền đã được gửi lên Admin! Vui lòng chờ kiểm tra và duyệt tiền.');
+            alert('Đã gửi đơn nạp tiền lên Admin! Vui lòng chờ Admin kiểm tra và duyệt tiền vào ví.');
         }
 
         /* MUA GÓI GAME BẰNG SỐ DƯ */
         function buyGamePackage() {
             if (!currentUser) {
-                alert('Vui lòng Đăng nhập để mua gói nạp!');
+                alert('Vui lòng Đăng nhập để thực hiện mua gói game!');
                 openAuthModal('login');
                 return;
             }
@@ -596,8 +622,8 @@
                 return;
             }
 
-            if (currentUser.balance < currentSelectedRate.price) {
-                alert(`Số dư VNĐ không đủ! Bạn cần ${currentSelectedRate.priceText} để mua gói này. Hãy bấm nút [NẠP TIỀN].`);
+            if ((currentUser.balance || 0) < currentSelectedRate.price) {
+                alert(`Số dư VNĐ không đủ! Bạn cần ${currentSelectedRate.priceText} để mua gói này. Hãy bấm nút [+ NẠP].`);
                 openDepositModal();
                 return;
             }
@@ -612,7 +638,7 @@
             let sysOrders = JSON.parse(localStorage.getItem('sys_order_requests') || '[]');
             sysOrders.unshift({
                 id: Date.now(),
-                user: currentUser.fullname,
+                user: currentUser.fullname || currentUser.username,
                 uid: uid,
                 game: currentSelectedGame.name,
                 package: currentSelectedRate.amount,
@@ -622,10 +648,10 @@
             });
             localStorage.setItem('sys_order_requests', JSON.stringify(sysOrders));
 
-            saveUserHistory(`Mua gói ${currentSelectedGame.name} (UID: ${uid})`, `-${currentSelectedRate.priceText}`, '🟢 Đã thanh toán thành công');
+            saveUserHistory(`Mua gói ${currentSelectedGame.name} (UID: ${uid})`, `-${currentSelectedRate.priceText}`, '🟢 Đã thanh toán');
 
             updateAdminView();
-            alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Admin đang tiến hành nạp vào UID: ${uid} cho bạn.`);
+            alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý chuyển quà vào UID: ${uid}.`);
         }
 
         function saveUserHistory(title, amount, status) {
@@ -634,7 +660,7 @@
             localStorage.setItem('history_' + currentUser.username, JSON.stringify(histories));
         }
 
-        /* DUYỆT ĐƠN DÀNH CHO ADMIN PHONG23112007 */
+        /* CHỨC NĂNG DÀNH CHO ADMIN PHONG23112007 */
         function approveDeposit(reqId) {
             let sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
             const req = sysDeposits.find(r => r.id === reqId);
@@ -642,11 +668,11 @@
                 req.status = 'Đã duyệt';
                 localStorage.setItem('sys_deposit_requests', JSON.stringify(sysDeposits));
 
-                // Cấp tiền thực sự cho tài khoản người dùng
+                // Cộng tiền thực sự cho tài khoản khách
                 const accData = localStorage.getItem('acc_db_' + req.user);
                 if (accData) {
                     let acc = JSON.parse(accData);
-                    acc.balance += req.amount;
+                    acc.balance = (acc.balance || 0) + req.amount;
                     localStorage.setItem('acc_db_' + req.user, JSON.stringify(acc));
 
                     if (currentUser && currentUser.username === req.user) {
@@ -656,7 +682,7 @@
                     }
                 }
                 updateAdminView();
-                alert(`Đã duyệt và cấp ${req.amount.toLocaleString('vi-VN')} VNĐ cho tài khoản ${req.fullname}!`);
+                alert(`Đã duyệt và cấp +${req.amount.toLocaleString('vi-VN')} VNĐ cho khách ${req.fullname}!`);
             }
         }
 
@@ -671,11 +697,37 @@
             }
         }
 
-        function loadGlobalSystemData() {
-            updateAdminView();
+        function adminDirectChangeBalance() {
+            const targetU = document.getElementById('admin-target-user').value.trim().toLowerCase();
+            const amount = parseInt(document.getElementById('admin-target-amount').value);
+
+            if(!targetU) return alert('Vui lòng nhập username của khách!');
+            if(isNaN(amount)) return alert('Vui lòng nhập số tiền (+ hoặc -)!');
+
+            const accData = localStorage.getItem('acc_db_' + targetU);
+            if(!accData) return alert('Không tìm thấy tài khoản khách này!');
+
+            let acc = JSON.parse(accData);
+            acc.balance = (acc.balance || 0) + amount;
+            if(acc.balance < 0) acc.balance = 0;
+
+            localStorage.setItem('acc_db_' + targetU, JSON.stringify(acc));
+
+            // Nếu Admin đang sửa cho đúng tài khoản đang xem
+            if (currentUser && currentUser.username === targetU) {
+                currentUser.balance = acc.balance;
+                localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
+                checkSession();
+            }
+
+            alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho tài khoản [${targetU}]! Số dư mới: ${acc.balance.toLocaleString('vi-VN')} đ.`);
+            document.getElementById('admin-target-user').value = '';
+            document.getElementById('admin-target-amount').value = '';
         }
 
         function updateAdminView() {
+            if (!currentUser || currentUser.username !== 'phong23112007') return;
+
             const sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
             const depBox = document.getElementById('admin-deposit-requests');
             
@@ -712,7 +764,7 @@
             }
         }
 
-        /* CÁC NÚT ĐIỀU HƯỚNG VÀ MODAL POPUP */
+        /* NÚT ĐIỀU HƯỚNG VÀ MODALS */
         function toggleAdminPanel() {
             const p = document.getElementById('admin-panel-box');
             p.style.display = p.style.display === 'block' ? 'none' : 'block';
