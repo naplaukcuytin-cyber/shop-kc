@@ -25,6 +25,8 @@
         .header-nav { background: #ffffff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-radius: 30px; margin: 12px auto; width: calc(100% - 24px); max-width: 456px; box-shadow: 0 4px 20px rgba(108, 92, 231, 0.08); }
         .header-logo { display: flex; align-items: center; gap: 8px; }
         .btn-header-login { background: linear-gradient(90deg, #0284c7 0%, #6c5ce7 100%); color: #fff; padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25); transition: 0.2s; }
+        
+        .btn-admin-access { background: #10b981; color: #fff; padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; border: none; cursor: pointer; margin-left: 6px; display: none; }
 
         /* BANNER */
         .banner-card { position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
@@ -86,7 +88,6 @@
         .pay-img-box { height: 42px; display: flex; align-items: center; justify-content: center; margin: 10px 0 6px; }
         .pay-name { font-size: 0.85rem; font-weight: 800; color: #1e293b; }
 
-        /* KHUNG THANH TOÁN XÁC NHẬN (HIỆN KHI NHẬP UID) */
         .checkout-box { display: none; background: #fff; border: 2px solid #00cec9; border-radius: 20px; padding: 18px; text-align: center; margin-top: 14px; box-shadow: 0 8px 25px rgba(0,206,201,0.12); }
         .qr-img-wrap { width: 200px; height: 200px; border: 1px solid #cbd5e1; padding: 6px; border-radius: 14px; margin: 12px auto; }
         .qr-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
@@ -117,6 +118,11 @@
         .error-msg { color: #ef4444; font-size: 0.72rem; font-weight: 700; margin-top: 4px; display: none; }
         .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #10b981; color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; transition: 0.3s; z-index: 99; }
         .toast.show { bottom: 20px; }
+
+        /* KHUNG DASHBOARD ADMIN (CHỈ BẬT KHI LÀ ADMIN) */
+        .admin-panel { display: none; background: #fff; border-radius: 20px; padding: 16px; border: 2px solid #10b981; margin-bottom: 16px; }
+        .admin-panel h3 { font-size: 0.95rem; font-weight: 800; color: #10b981; margin-bottom: 10px; }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 10px; font-size: 0.78rem; font-weight: 700; margin-bottom: 6px; }
     </style>
 </head>
 <body>
@@ -126,19 +132,34 @@
             <svg width="24" height="24" viewBox="0 0 100 100" fill="#e41e26"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm22 65L50 82 28 65V35l22-17 22 17v30z"/></svg>
             <span style="font-weight: 800; font-size: 0.9rem; color:#1e293b;">Garena</span>
         </div>
-        <button class="btn-header-login" onclick="openAuthModal('login')">
-            <span id="user-display-name">🔑 ĐĂNG NHẬP</span>
-        </button>
+        <div>
+            <button class="btn-header-login" onclick="openAuthModal('login')">
+                <span id="user-display-name">🔑 ĐĂNG NHẬP</span>
+            </button>
+            <button class="btn-admin-access" id="btn-admin-panel" onclick="toggleAdminPanel()">⚙️ ADMIN</button>
+        </div>
     </div>
 
     <main class="container">
+
+        <div class="admin-panel" id="admin-panel-box">
+            <h3>⚙️ TRANG QUẢN TRỊ VIÊN (ADMIN DASHBOARD)</h3>
+            <p style="font-size:0.75rem; color:#64748b; margin-bottom:10px;">Thay đổi thông báo sự kiện nhanh:</p>
+            <input type="text" id="admin-announcement" placeholder="Nhập nội dung sự kiện mới..." style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:10px; font-size:0.8rem; margin-bottom:8px;">
+            <button onclick="updateAnnouncement()" style="padding:8px 16px; background:#10b981; color:#fff; border:none; border-radius:10px; font-weight:800; font-size:0.78rem; cursor:pointer; margin-bottom:12px;">CẬP NHẬT SỰ KIỆN</button>
+            
+            <h4 style="font-size:0.85rem; font-weight:800; color:#1e293b; margin-bottom:6px;">Lịch sử đơn nạp mới nhất:</h4>
+            <div id="admin-orders-list">
+                <div class="admin-item"><span>Chưa có giao dịch mới</span></div>
+            </div>
+        </div>
 
         <div class="banner-card">
             <img src="https://ff.garena.vn/static/images/banner.jpg" onerror="this.src='https://via.placeholder.com/480x170/6c5ce7/ffffff?text=NAPTHEX.COM+-+GARENA+CHINH+THUC'" alt="Banner">
         </div>
 
         <div class="marquee-box">
-            📢 <span>SỰ KIỆN NẠP ƯU ĐÃI BẢO MẬT 24/7 - X3 KIM CƯƠNG TOÀN MÁY CHỦ</span>
+            📢 <span id="marquee-text-content">SỰ KIỆN NẠP ƯU ĐÃI BẢO MẬT 24/7 - X3 KIM CƯƠNG TOÀN MÁY CHỦ</span>
         </div>
 
         <div class="section-card">
@@ -298,7 +319,12 @@
     <div id="toast" class="toast">Đã sao chép nội dung chuyển tiền!</div>
 
     <script>
-        /* DANH SÁCH GAME CÓ CHÂN DANH MỤC */
+        /* TÀI KHOẢN ADMIN MẶC ĐỊNH */
+        const ADMIN_ACCOUNT = {
+            user: 'admin1234567',
+            pass: 'Admin@123456'
+        };
+
         const ALL_GAMES = [
             { id: 1, name: 'Free Fire', category: 'garena', img: 'https://ff.garena.vn/static/images/logo.png' },
             { id: 2, name: 'Liên Quân Mobile', category: 'garena', img: 'https://lienquan.garena.vn/files/skin/v3/images/logo.png' },
@@ -308,7 +334,6 @@
             { id: 6, name: 'NBA 2K Mobile', category: 'sports', img: 'https://cdn-icons-png.flaticon.com/512/1041/1041168.png' }
         ];
 
-        /* DANH SÁCH BẢNG GIÁ TIỀN & KIM CƯƠNG */
         const PACKAGES = [
             { price: '50.000 đ', kc: '2.830' },
             { price: '100.000 đ', kc: '5.660' },
@@ -318,15 +343,20 @@
 
         let selectedGame = ALL_GAMES[0];
         let selectedPrice = PACKAGES[0];
+        let ordersList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             renderGames('all');
             renderPrices();
             const lastSession = localStorage.getItem('current_logged_user');
-            if (lastSession) setLoggedInUser(lastSession);
+            if (lastSession) {
+                setLoggedInUser(lastSession);
+                if(lastSession === 'ADMIN') {
+                    document.getElementById('btn-admin-panel').style.display = 'inline-block';
+                }
+            }
         });
 
-        /* RENDER DANH SÁCH GAME */
         function renderGames(filterCategory) {
             const grid = document.getElementById('game-grid-box');
             let filteredList = ALL_GAMES;
@@ -347,17 +377,14 @@
             `).join('');
         }
 
-        /* LỌC GAME THEO DANH MỤC */
         function filterGames(category) {
             document.querySelectorAll('.filter-tags .tag-item').forEach(el => el.classList.remove('active'));
             if(category === 'all') document.getElementById('tag-all').classList.add('active');
             if(category === 'garena') document.getElementById('tag-garena').classList.add('active');
             if(category === 'sports') document.getElementById('tag-sports').classList.add('active');
-            
             renderGames(category);
         }
 
-        /* TÌM KIẾM GAME */
         function searchGame() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             const grid = document.getElementById('game-grid-box');
@@ -378,11 +405,9 @@
         function selectGame(id) {
             selectedGame = ALL_GAMES.find(g => g.id === id);
             renderGames('all');
-            // Cuộn mượt tới Bước chọn giá tiền
             document.getElementById('step-price-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* RENDER BẢNG GIÁ TIỀN */
         function renderPrices() {
             const box = document.getElementById('topup-grid-box');
             box.innerHTML = PACKAGES.map((p, idx) => `
@@ -396,11 +421,9 @@
         function choosePrice(idx) {
             selectedPrice = PACKAGES[idx];
             renderPrices();
-            // Tự động cuộn xuống bước nhập ID Game
             document.getElementById('step-id-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* CHUYỂN SANG BƯỚC THANH TOÁN QUÉT QR */
         function goToCheckout() {
             const uid = document.getElementById('player-uid').value.trim();
             if (!uid || uid.length < 5) {
@@ -408,12 +431,14 @@
                 return;
             }
 
-            // Điền thông tin giao dịch sang khung thanh toán
             document.getElementById('pay-game-title').textContent = selectedGame.name;
             document.getElementById('pay-package-title').textContent = `💎 ${selectedPrice.kc} Kim Cương (${selectedPrice.price})`;
             document.getElementById('copy-memo').textContent = `NAPKC ${uid}`;
 
-            // Hiện khung thanh toán và cuộn tới
+            // Lưu đơn nạp vào Admin Dashboard
+            ordersList.unshift({ uid, game: selectedGame.name, price: selectedPrice.price, time: new Date().toLocaleTimeString() });
+            renderAdminOrders();
+
             const checkoutBox = document.getElementById('checkout-box-details');
             checkoutBox.style.display = 'block';
             document.getElementById('step-pay-card').scrollIntoView({ behavior: 'smooth' });
@@ -439,7 +464,127 @@
             });
         }
 
-        /* LOGIC TÀI KHOẢN > 10 KÝ TỰ & ĐỘ MẠNH PASS */
+        /* LOGIC TÀI KHOẢN ADMIN & HỆ THỐNG */
+        function toggleAdminPanel() {
+            const panel = document.getElementById('admin-panel-box');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateAnnouncement() {
+            const text = document.getElementById('admin-announcement').value.trim();
+            if(text) {
+                document.getElementById('marquee-text-content').textContent = text;
+                alert('Đã cập nhật thông báo sự kiện mới!');
+            }
+        }
+
+        function renderAdminOrders() {
+            const box = document.getElementById('admin-orders-list');
+            if(ordersList.length === 0) {
+                box.innerHTML = `<div class="admin-item">Chưa có giao dịch mới</div>`;
+                return;
+            }
+            box.innerHTML = ordersList.map(o => `
+                <div class="admin-item">
+                    <span>UID: <strong>${o.uid}</strong> (${o.game})</span>
+                    <span style="color:#10b981;">${o.price} - ${o.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function submitLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            // Kiểm tra xem có phải tài khoản Admin hay không
+            if (user === ADMIN_ACCOUNT.user && pass === ADMIN_ACCOUNT.pass) {
+                setLoggedInUser('ADMIN');
+                localStorage.setItem('current_logged_user', 'ADMIN');
+                document.getElementById('btn-admin-panel').style.display = 'inline-block';
+                closeAuthModal();
+                alert('Đăng nhập thành công với quyền ADMIN!');
+                return;
+            }
+
+            if (user.length <= 10) {
+                document.getElementById('login-user-err').style.display = 'block';
+                alert('Tên tài khoản phải dài hơn 10 ký tự!');
+                return;
+            }
+
+            const savedData = localStorage.getItem('acc_' + user.toLowerCase());
+            if (!savedData) {
+                alert('Tài khoản không tồn tại! Vui lòng Đăng Ký.');
+                return;
+            }
+
+            const account = JSON.parse(savedData);
+            if (account.pass !== pass) {
+                alert('Sai mật khẩu!');
+                return;
+            }
+
+            setLoggedInUser(account.name);
+            localStorage.setItem('current_logged_user', account.name);
+            closeAuthModal();
+            alert('Đăng nhập thành công!');
+        }
+
+        function submitRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const user = document.getElementById('reg-user').value.trim().toLowerCase();
+            const pass = document.getElementById('reg-pass').value.trim();
+
+            if (user.length <= 10) {
+                alert('Tên tài khoản phải dài hơn 10 ký tự!');
+                return;
+            }
+
+            if (localStorage.getItem('acc_' + user)) {
+                alert('Tài khoản này đã tồn tại!');
+                return;
+            }
+
+            localStorage.setItem('acc_' + user, JSON.stringify({ name, user, pass }));
+            alert('Đăng ký thành công!');
+            document.getElementById('login-user').value = user;
+            switchTab('login');
+        }
+
+        function openAuthModal(type) {
+            document.getElementById('auth-modal').style.display = 'flex';
+            switchTab(type);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+
+        function switchTab(type) {
+            if(type === 'login') {
+                document.getElementById('tab-login').style.color = '#6c5ce7';
+                document.getElementById('tab-login').style.borderBottom = '3px solid #6c5ce7';
+                document.getElementById('tab-register').style.color = '#94a3b8';
+                document.getElementById('tab-register').style.borderBottom = 'none';
+                document.getElementById('form-login').style.display = 'block';
+                document.getElementById('form-register').style.display = 'none';
+            } else {
+                document.getElementById('tab-register').style.color = '#6c5ce7';
+                document.getElementById('tab-register').style.borderBottom = '3px solid #6c5ce7';
+                document.getElementById('tab-login').style.color = '#94a3b8';
+                document.getElementById('tab-login').style.borderBottom = 'none';
+                document.getElementById('form-login').style.display = 'none';
+                document.getElementById('form-register').style.display = 'block';
+            }
+        }
+
+        function setLoggedInUser(displayName) {
+            document.getElementById('user-display-name').textContent = displayName.toUpperCase();
+            document.getElementById('player-uid').value = displayName;
+        }
+
         function validateUserLength() {
             const val = document.getElementById('reg-user').value.trim();
             const err = document.getElementById('reg-user-err');
@@ -485,90 +630,6 @@
                 text.textContent = 'Độ mạnh mật khẩu: MẠNH 🟢';
                 text.style.color = '#10b981';
             }
-        }
-
-        /* POPUP ĐĂNG NHẬP / ĐĂNG KÝ */
-        function openAuthModal(type) {
-            document.getElementById('auth-modal').style.display = 'flex';
-            switchTab(type);
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').style.display = 'none';
-        }
-
-        function switchTab(type) {
-            if(type === 'login') {
-                document.getElementById('tab-login').style.color = '#6c5ce7';
-                document.getElementById('tab-login').style.borderBottom = '3px solid #6c5ce7';
-                document.getElementById('tab-register').style.color = '#94a3b8';
-                document.getElementById('tab-register').style.borderBottom = 'none';
-                document.getElementById('form-login').style.display = 'block';
-                document.getElementById('form-register').style.display = 'none';
-            } else {
-                document.getElementById('tab-register').style.color = '#6c5ce7';
-                document.getElementById('tab-register').style.borderBottom = '3px solid #6c5ce7';
-                document.getElementById('tab-login').style.color = '#94a3b8';
-                document.getElementById('tab-login').style.borderBottom = 'none';
-                document.getElementById('form-login').style.display = 'none';
-                document.getElementById('form-register').style.display = 'block';
-            }
-        }
-
-        function submitRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value.trim();
-            const user = document.getElementById('reg-user').value.trim().toLowerCase();
-            const pass = document.getElementById('reg-pass').value.trim();
-
-            if (user.length <= 10) {
-                alert('Tên tài khoản phải dài hơn 10 ký tự!');
-                return;
-            }
-
-            if (localStorage.getItem('acc_' + user)) {
-                alert('Tài khoản này đã tồn tại!');
-                return;
-            }
-
-            localStorage.setItem('acc_' + user, JSON.stringify({ name, user, pass }));
-            alert('Đăng ký thành công!');
-            document.getElementById('login-user').value = user;
-            switchTab('login');
-        }
-
-        function submitLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('login-user').value.trim().toLowerCase();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            if (user.length <= 10) {
-                document.getElementById('login-user-err').style.display = 'block';
-                alert('Tên tài khoản phải dài hơn 10 ký tự!');
-                return;
-            }
-
-            const savedData = localStorage.getItem('acc_' + user);
-            if (!savedData) {
-                alert('Tài khoản không tồn tại! Vui lòng Đăng Ký.');
-                return;
-            }
-
-            const account = JSON.parse(savedData);
-            if (account.pass !== pass) {
-                alert('Sai mật khẩu!');
-                return;
-            }
-
-            setLoggedInUser(account.name);
-            localStorage.setItem('current_logged_user', account.name);
-            closeAuthModal();
-            alert('Đăng nhập thành công!');
-        }
-
-        function setLoggedInUser(displayName) {
-            document.getElementById('user-display-name').textContent = displayName.toUpperCase();
-            document.getElementById('player-uid').value = displayName;
         }
     </script>
 </body>
