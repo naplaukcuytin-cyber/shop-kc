@@ -1,1207 +1,295 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#090b12">
-  <meta name="description" content="Shopkcuytin - Nạp Kim Cương Free Fire nhanh chóng, tiện lợi.">
-  <title>Shopkcuytin - Nạp Kim Cương Free Fire</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #080a10;
-      --bg2: #10131d;
-      --card: #151925;
-      --card2: #1b1f2d;
-      --white: #ffffff;
-      --text: #f5f7fb;
-      --muted: #9da5b5;
-      --red: #ff3040;
-      --orange: #ff7a00;
-      --yellow: #ffb000;
-      --green: #22c55e;
-      --border: rgba(255,255,255,.09);
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 10% 0%, rgba(255,48,64,.16), transparent 28%),
-        radial-gradient(circle at 90% 10%, rgba(255,122,0,.13), transparent 28%),
-        linear-gradient(180deg, #080a10 0%, #0d111b 45%, #111827 100%);
-      min-height: 100vh;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .container {
-      width: min(1080px, calc(100% - 28px));
-      margin: auto;
-    }
-
-    /* HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(8,10,16,.88);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav {
-      min-height: 66px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .logo {
-      color: #fff;
-      font-weight: 1000;
-      font-size: 22px;
-      letter-spacing: -.8px;
-    }
-
-    .logo span {
-      background: linear-gradient(90deg, #ff3040, #ff9d00);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .status {
-      padding: 8px 12px;
-      border-radius: 999px;
-      color: #b7f7cb;
-      background: rgba(34,197,94,.10);
-      border: 1px solid rgba(34,197,94,.2);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    /* HERO */
-    .hero {
-      padding: 25px 0 18px;
-    }
-
-    .hero-box {
-      position: relative;
-      overflow: hidden;
-      padding: 30px 22px;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at 90% 20%, rgba(255,180,0,.28), transparent 22%),
-        linear-gradient(135deg, #e51d35, #ff5a00 55%, #ff9700);
-      box-shadow: 0 25px 70px rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-
-    .hero-box::after {
-      content: "";
-      position: absolute;
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      right: -100px;
-      bottom: -110px;
-      background: rgba(255,255,255,.1);
-    }
-
-    .hero-tag {
-      position: relative;
-      z-index: 2;
-      display: inline-block;
-      margin-bottom: 13px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.18);
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .hero h1 {
-      position: relative;
-      z-index: 2;
-      font-size: clamp(34px, 9vw, 60px);
-      line-height: 1;
-      letter-spacing: -2px;
-      margin-bottom: 14px;
-    }
-
-    .hero p {
-      position: relative;
-      z-index: 2;
-      max-width: 650px;
-      color: rgba(255,255,255,.9);
-      line-height: 1.6;
-      font-size: 15px;
-    }
-
-    /* FEATURES */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 10px;
-      margin: 14px 0 25px;
-    }
-
-    .feature {
-      padding: 15px;
-      border-radius: 17px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid var(--border);
-    }
-
-    .feature-icon {
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
-
-    .feature strong {
-      display: block;
-      font-size: 13px;
-    }
-
-    .feature span {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 3px;
-    }
-
-    /* SECTION */
-    .section {
-      padding: 12px 0 28px;
-    }
-
-    .section-title {
-      margin-bottom: 15px;
-    }
-
-    .section-title h2 {
-      font-size: 23px;
-      font-weight: 950;
-    }
-
-    .section-title p {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* PACKAGES */
-    .packages {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 13px;
-    }
-
-    .package {
-      position: relative;
-      overflow: hidden;
-      text-align: left;
-      color: var(--text);
-      background: linear-gradient(180deg, #191d29, #11141e);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      min-height: 155px;
-      transition: .2s ease;
-    }
-
-    .package:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255,80,60,.55);
-    }
-
-    .package.selected {
-      border: 2px solid var(--red);
-      box-shadow: 0 0 0 4px rgba(255,48,64,.1);
-    }
-
-    .package.vip {
-      background:
-        radial-gradient(circle at 90% 0%, rgba(255,176,0,.18), transparent 35%),
-        linear-gradient(180deg,#211d12,#14120e);
-    }
-
-    .popular {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      background: linear-gradient(90deg,#ff3040,#ff7a00);
-      color: #fff;
-      padding: 5px 8px;
-      border-radius: 999px;
-      font-size: 9px;
-      font-weight: 950;
-    }
-
-    .diamond {
-      font-size: 28px;
-      margin-bottom: 7px;
-    }
-
-    .kc {
-      font-size: 20px;
-      font-weight: 950;
-    }
-
-    .price {
-      color: #ff806c;
-      font-size: 18px;
-      font-weight: 950;
-      margin-top: 8px;
-    }
-
-    .select-text {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 12px;
-    }
-
-    /* FORM */
-    .box {
-      background: rgba(21,25,37,.94);
-      border: 1px solid var(--border);
-      border-radius: 23px;
-      padding: 19px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.16);
-    }
-
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 850;
-      margin-bottom: 9px;
-    }
-
-    input {
-      width: 100%;
-      color: #fff;
-      background: #0d111b;
-      border: 1px solid #303646;
-      border-radius: 14px;
-      padding: 15px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: var(--red);
-      box-shadow: 0 0 0 3px rgba(255,48,64,.1);
-    }
-
-    .selected-info {
-      margin: 13px 0;
-      padding: 13px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid var(--border);
-      color: #dce1ea;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .btn {
-      width: 100%;
-      border: 0;
-      border-radius: 15px;
-      padding: 16px;
-      font-weight: 950;
-      transition: .18s;
-    }
-
-    .btn:active {
-      transform: scale(.985);
-    }
-
-    .btn-primary {
-      color: #fff;
-      background: linear-gradient(135deg, #ff3040, #ff7a00);
-      box-shadow: 0 12px 30px rgba(255,60,30,.2);
-    }
-
-    .btn-dark {
-      margin-top: 10px;
-      color: #fff;
-      background: #252a38;
-    }
-
-    /* PAYMENT */
-    #paymentSection {
-      animation: fadeUp .35s ease;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .order-summary {
-      background: linear-gradient(135deg,rgba(255,48,64,.1),rgba(255,122,0,.07));
-      border: 1px solid rgba(255,80,60,.2);
-      border-radius: 17px;
-      padding: 15px;
-      line-height: 1.8;
-      margin-bottom: 15px;
-    }
-
-    .payment-note {
-      padding: 13px;
-      border-radius: 14px;
-      background: rgba(255,176,0,.08);
-      border: 1px solid rgba(255,176,0,.18);
-      color: #ffd98a;
-      font-size: 12px;
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-
-    .qr-wrap {
-      background: #fff;
-      border-radius: 20px;
-      padding: 13px;
-      width: min(100%,390px);
-      margin: 0 auto 18px;
-    }
-
-    .qr-wrap img {
-      width: 100%;
-      display: block;
-      border-radius: 10px;
-    }
-
-    .qr-caption {
-      color: #111827;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 900;
-      padding-top: 8px;
-    }
-
-    .bank-info {
-      margin: 14px 0;
-    }
-
-    .bank-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 13px 0;
-      border-bottom: 1px dashed #303646;
-      font-size: 13px;
-    }
-
-    .bank-row:last-child {
-      border-bottom: 0;
-    }
-
-    .bank-row span {
-      color: var(--muted);
-    }
-
-    .bank-row strong {
-      text-align: right;
-      word-break: break-word;
-    }
-
-    .copy-content {
-      color: #ff9a86 !important;
-    }
-
-    .copy-btn {
-      border: 0;
-      background: #2a3040;
-      color: #fff;
-      padding: 7px 9px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 850;
-      margin-left: 5px;
-    }
-
-    .success {
-      margin-top: 11px;
-      padding: 12px;
-      border-radius: 13px;
-      background: rgba(34,197,94,.1);
-      border: 1px solid rgba(34,197,94,.2);
-      color: #86efac;
-      font-size: 13px;
-    }
-
-    /* FAQ */
-    .faq {
-      display: grid;
-      gap: 9px;
-    }
-
-    details {
-      background: rgba(255,255,255,.045);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 14px;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    details p {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 12px;
-      padding-top: 10px;
-    }
-
-    /* FOOTER */
-    footer {
-      margin-top: 25px;
-      padding: 30px 0 45px;
-      background: #070910;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* MOBILE */
-    @media (max-width: 650px) {
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      .feature {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px;
-      }
-
-      .feature-icon {
-        margin: 0;
-      }
-
-      .packages {
-        grid-template-columns: repeat(2,1fr);
-      }
-
-      .package {
-        min-height: 145px;
-      }
-
-      .status {
-        font-size: 10px;
-        padding: 7px 9px;
-      }
-    }
-
-    @media (max-width: 390px) {
-      .container {
-        width: min(100% - 20px,1080px);
-      }
-
-      .packages {
-        gap: 9px;
-      }
-
-      .package {
-        padding: 14px;
-      }
-
-      .kc {
-        font-size: 17px;
-      }
-
-      .price {
-        font-size: 15px;
-      }
-
-      .hero-box {
-        padding: 25px 18px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHOPKCUYTIN - Trang Nạp Game Chính Thức</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --garena-red: #e41e26;
+            --garena-red-hover: #c8131a;
+            --bg-light: #f4f5f7;
+            --card-white: #ffffff;
+            --text-dark: #222222;
+            --text-gray: #666666;
+            --border-color: #e1e4e8;
+            --gold-price: #d97706;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 40px; }
+        .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 12px; }
+
+        /* HEADER */
+        .header { background: #fff; border-bottom: 2px solid var(--garena-red); padding: 12px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { text-decoration: none; font-size: 1.4rem; font-weight: 900; }
+        .logo-red { color: var(--garena-red); }
+        .logo-sub { color: #333; }
+        .header-status { font-size: 0.8rem; color: #10b981; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .header-status .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; }
+
+        /* BANNER */
+        .banner-section { margin-top: 15px; }
+        .banner-box { background: linear-gradient(135deg, #e41e26 0%, #ff6b00 100%); color: #fff; padding: 20px; border-radius: 8px; text-align: center; }
+        .banner-box .badge { background: #fff; color: var(--garena-red); font-size: 0.7rem; font-weight: 900; padding: 3px 8px; border-radius: 4px; }
+        .banner-box h2 { font-size: 1.2rem; margin: 8px 0 4px; }
+        .banner-box p { font-size: 0.85rem; opacity: 0.9; }
+
+        /* CARD SECTION */
+        .section-card { background: var(--card-white); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-top: 15px; }
+        .card-title { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .step-num { background: var(--garena-red); color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+        .card-title h3 { font-size: 1rem; color: #333; }
+
+        /* GAME SELECTOR */
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        @media(min-width: 600px) { .game-grid { grid-template-columns: repeat(5, 1fr); } }
+        .game-card { border: 2px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fff; }
+        .game-card:hover, .game-card.active { border-color: var(--garena-red); box-shadow: 0 4px 12px rgba(228, 30, 38, 0.15); }
+        .game-avatar { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; margin-bottom: 6px; }
+        .game-name { font-size: 0.8rem; font-weight: 700; color: #333; }
+
+        /* PACKAGE SELECTOR */
+        .package-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 10px; }
+        @media(min-width: 600px) { .package-grid { grid-template-columns: repeat(3, 1fr); } }
+        .pkg-card { border: 2px solid var(--border-color); border-radius: 8px; padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .pkg-card:hover, .pkg-card.active { border-color: var(--garena-red); background: #fff5f5; }
+        .pkg-amount { font-weight: 700; font-size: 1.05rem; color: #111; }
+        .pkg-price { color: var(--garena-red); font-weight: 900; font-size: 1.1rem; }
+
+        /* INPUT CARD */
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .form-group label { font-size: 0.9rem; font-weight: 700; }
+        .form-group input { padding: 12px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 1rem; font-weight: 700; outline: none; }
+        .form-group input:focus { border-color: var(--garena-red); }
+        .error-msg { color: var(--garena-red); font-size: 0.8rem; display: none; }
+        .required { color: var(--garena-red); }
+
+        /* BUTTONS */
+        .btn { width: 100%; padding: 14px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-primary { background: var(--garena-red); color: #fff; font-size: 1rem; }
+        .btn-primary:hover { background: var(--garena-red-hover); }
+        .btn-secondary { background: #e5e7eb; color: #374151; margin-top: 8px; }
+        .btn-copy { background: #2563eb; color: #fff; margin-top: 12px; }
+
+        /* PAYMENT SECTION */
+        .payment-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media(min-width: 600px) { .payment-grid { grid-template-columns: 260px 1fr; } }
+        .qr-container { text-align: center; background: #fafafa; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .qr-wrapper { background: #fff; padding: 8px; border-radius: 6px; display: inline-block; margin: 8px 0; border: 1px solid #ddd; }
+        .qr-wrapper img { width: 180px; height: 180px; display: block; object-fit: contain; }
+        .qr-note { font-size: 0.75rem; color: var(--text-gray); }
+
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .text-red { color: var(--garena-red); }
+        .text-price { color: var(--gold-price); font-size: 1.1rem; }
+        .divider { border: 0; height: 1px; background: var(--border-color); margin: 12px 0; }
+        .bank-box { background: #fff5f5; border: 1px dashed var(--garena-red); padding: 10px; border-radius: 6px; font-size: 0.85rem; }
+        .bank-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .bank-row.highlight { color: var(--garena-red); font-size: 0.95rem; }
+
+        /* TOAST & FOOTER */
+        .toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #10b981; color: #fff; padding: 10px 20px; border-radius: 20px; font-weight: 700; transition: bottom 0.3s; z-index: 999; }
+        .toast.show { bottom: 20px; }
+        .footer { text-align: center; font-size: 0.8rem; color: var(--text-gray); margin-top: 30px; }
+    </style>
 </head>
-
 <body>
 
-<header>
-  <div class="container nav">
-    <div class="logo">SHOP<span>KCUYTIN</span></div>
-    <div class="status">● ĐANG HOẠT ĐỘNG</div>
-  </div>
-</header>
-
-<main class="container">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-box">
-      <div class="hero-tag">🔥 SHOP NẠP KC FREE FIRE</div>
-
-      <h1>
-        NẠP KIM CƯƠNG<br>
-        FREE FIRE
-      </h1>
-
-      <p>
-        Chọn gói Kim Cương, nhập ID người chơi và thanh toán bằng QR.
-        Nhanh chóng, giao diện dễ sử dụng trên điện thoại.
-      </p>
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <div class="features">
-
-    <div class="feature">
-      <div class="feature-icon">⚡</div>
-      <div>
-        <strong>Nhanh chóng</strong>
-        <span>Xử lý đơn thuận tiện</span>
-      </div>
-    </div>
-
-    <div class="feature">
-      <div class="feature-icon">🔒</div>
-      <div>
-        <strong>Thanh toán an toàn</strong>
-        <span>Không cần mật khẩu game</span>
-      </div>
-    </div>
-
-    <div class="feature">
-      <div class="feature-icon">📱</div>
-      <div>
-        <strong>Tối ưu điện thoại</strong>
-        <span>Dễ sử dụng trên iPhone</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- CHỌN GÓI -->
-  <section class="section" id="orderSection">
-
-    <div class="section-title">
-      <h2>💎 Chọn gói Kim Cương</h2>
-      <p>Chọn gói phù hợp với nhu cầu của bạn.</p>
-    </div>
-
-    <div class="packages" id="packages"></div>
-
-  </section>
-
-  <!-- NHẬP ID -->
-  <section class="section">
-
-    <div class="box">
-
-      <div class="section-title">
-        <h2>🎮 Nhập ID người chơi</h2>
-        <p>Không cần mật khẩu tài khoản Free Fire.</p>
-      </div>
-
-      <label for="playerId">
-        ID Free Fire
-      </label>
-
-      <input
-        id="playerId"
-        type="text"
-        inputmode="numeric"
-        autocomplete="off"
-        placeholder="Nhập ID Free Fire của bạn"
-      >
-
-      <div class="selected-info" id="selectedInfo">
-        Chưa chọn gói Kim Cương.
-      </div>
-
-      <button
-        class="btn btn-primary"
-        id="continueBtn"
-      >
-        TIẾP TỤC THANH TOÁN
-      </button>
-
-    </div>
-
-  </section>
-
-  <!-- THANH TOÁN -->
-  <section
-    class="section hidden"
-    id="paymentSection"
-  >
-
-    <div class="section-title">
-      <h2>💳 Thanh toán đơn hàng</h2>
-      <p>Kiểm tra thông tin trước khi chuyển khoản.</p>
-    </div>
-
-    <div class="box">
-
-      <!-- ORDER -->
-      <div class="order-summary" id="orderSummary"></div>
-
-      <!-- NOTE -->
-      <div class="payment-note">
-        ⚠️ <strong>Lưu ý:</strong>
-        Vui lòng chuyển đúng số tiền và đúng nội dung chuyển khoản.
-        Website không tự động xác nhận giao dịch ngân hàng.
-      </div>
-
-      <!-- QR -->
-      <div class="qr-wrap">
-
-        <img
-          src="qr-payment.jpg"
-          alt="QR thanh toán"
-          onerror="this.style.display='none';document.getElementById('qrError').classList.remove('hidden');"
-        >
-
-        <div
-          id="qrError"
-          class="hidden"
-          style="color:#111827;text-align:center;padding:30px 10px;font-weight:800;"
-        >
-          Không tìm thấy ảnh QR.<br>
-          Hãy upload file <b>qr-payment.jpg</b> vào cùng thư mục với index.html.
+    <!-- HEADER GARENA -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <span class="logo-red">SHOPKCUYTIN</span><span class="logo-sub">.VN</span>
+            </a>
+            <div class="header-status">
+                <span class="dot"></span> Tự Động 24/7
+            </div>
         </div>
+    </header>
 
-        <div class="qr-caption">
-          📲 Quét mã QR để thanh toán
+    <!-- BANNER SỰ KIỆN -->
+    <div class="banner-section container">
+        <div class="banner-box">
+            <span class="badge">SỰ KIỆN GIỚI HẠN</span>
+            <h2>NẠP GAME X10 TÀI NGUYÊN DUY NHẤT HÔM NAY</h2>
+            <p>Ưu đãi X10 Kim Cương / Quân Huy / FC / CP trên toàn hệ thống</p>
         </div>
-
-      </div>
-
-      <!-- BANK -->
-      <div class="bank-info">
-
-        <div class="bank-row">
-          <span>Ngân hàng</span>
-          <strong>PSP</strong>
-        </div>
-
-        <div class="bank-row">
-          <span>Số tài khoản</span>
-          <strong>PSP2621916400000092</strong>
-        </div>
-
-        <div class="bank-row">
-          <span>Người nhận</span>
-          <strong>TRUONG VAN PHONG</strong>
-        </div>
-
-        <div class="bank-row">
-          <span>Số tiền</span>
-          <strong id="paymentAmount">0đ</strong>
-        </div>
-
-        <div class="bank-row">
-          <span>Nội dung</span>
-
-          <strong class="copy-content">
-            <span id="transferContent">NAPKC</span>
-
-            <button
-              class="copy-btn"
-              id="copyBtn"
-              type="button"
-            >
-              COPY
-            </button>
-          </strong>
-
-        </div>
-
-      </div>
-
-      <div
-        id="copySuccess"
-        class="success hidden"
-      >
-        ✓ Đã sao chép nội dung chuyển khoản.
-      </div>
-
-      <button
-        class="btn btn-primary"
-        id="copyMainBtn"
-        type="button"
-      >
-        📋 SAO CHÉP NỘI DUNG CHUYỂN KHOẢN
-      </button>
-
-      <button
-        class="btn btn-dark"
-        id="backBtn"
-        type="button"
-      >
-        ← QUAY LẠI CHỌN GÓI
-      </button>
-
     </div>
 
-  </section>
-
-  <!-- FAQ -->
-  <section class="section">
-
-    <div class="section-title">
-      <h2>❓ Câu hỏi thường gặp</h2>
-    </div>
-
-    <div class="faq">
-
-      <details>
-        <summary>Nạp KC cần cung cấp mật khẩu Free Fire không?</summary>
-        <p>
-          Không. Website chỉ yêu cầu ID người chơi để tạo thông tin đơn hàng.
-        </p>
-      </details>
-
-      <details>
-        <summary>Tôi nhập sai ID thì sao?</summary>
-        <p>
-          Hãy kiểm tra kỹ ID trước khi chuyển khoản. Nếu chưa thanh toán,
-          bạn có thể quay lại và sửa ID.
-        </p>
-      </details>
-
-      <details>
-        <summary>Thanh toán bằng cách nào?</summary>
-        <p>
-          Chọn gói KC, nhập ID, sau đó quét mã QR hoặc chuyển khoản theo
-          thông tin được hiển thị trên trang thanh toán.
-        </p>
-      </details>
-
-    </div>
-
-  </section>
-
-</main>
-
-<footer>
-  <div class="container">
-    <strong style="color:#fff;">SHOPKCUYTIN</strong><br>
-    Nạp Kim Cương Free Fire<br>
-    Không yêu cầu mật khẩu tài khoản game.
-  </div>
-</footer>
-
-
-<script>
-  /* =========================
-     BẢNG GIÁ SHOP
-  ========================= */
-
-  const packages = [
-    {
-      name: "110 KC",
-      price: 20000
-    },
-    {
-      name: "230 KC",
-      price: 40000
-    },
-    {
-      name: "520 KC",
-      price: 90000
-    },
-    {
-      name: "1.060 KC",
-      price: 180000
-    },
-    {
-      name: "2.180 KC",
-      price: 350000
-    },
-    {
-      name: "5.600 KC",
-      price: 850000
-    },
-    {
-      name: "11.500 KC",
-      price: 1650000
-    },
-    {
-      name: "23.500 KC",
-      price: 3200000
-    },
-    {
-      name: "50.000 KC VIP",
-      price: 6500000
-    }
-  ];
-
-
-  /* =========================
-     BIẾN
-  ========================= */
-
-  let selectedPackage = null;
-
-
-  /* =========================
-     FORMAT TIỀN
-  ========================= */
-
-  function formatMoney(number) {
-
-    return new Intl.NumberFormat("vi-VN").format(number) + "đ";
-
-  }
-
-
-  /* =========================
-     TẠO CARD GÓI KC
-  ========================= */
-
-  const packagesContainer =
-    document.getElementById("packages");
-
-
-  packages.forEach((item, index) => {
-
-    const card = document.createElement("button");
-
-    card.type = "button";
-
-    card.className =
-      "package" +
-      (index === packages.length - 1 ? " vip" : "");
-
-
-    if (index === 3) {
-
-      card.innerHTML +=
-        `<div class="popular">PHỔ BIẾN</div>`;
-
-    }
-
-
-    card.innerHTML += `
-
-      <div class="diamond">💎</div>
-
-      <div class="kc">
-        ${item.name}
-      </div>
-
-      <div class="price">
-        ${formatMoney(item.price)}
-      </div>
-
-      <div class="select-text">
-        Nhấn để chọn gói →
-      </div>
-
-    `;
-
-
-    card.addEventListener("click", function () {
-
-      document
-        .querySelectorAll(".package")
-        .forEach(el =>
-          el.classList.remove("selected")
-        );
-
-
-      card.classList.add("selected");
-
-
-      selectedPackage = item;
-
-
-      document.getElementById("selectedInfo").innerHTML = `
-
-        <strong>✓ Gói đã chọn:</strong><br>
-
-        ${item.name}
-        —
-        <strong>
-          ${formatMoney(item.price)}
-        </strong>
-
-      `;
-
-    });
-
-
-    packagesContainer.appendChild(card);
-
-  });
-
-
-  /* =========================
-     INPUT ID
-  ========================= */
-
-  const playerId =
-    document.getElementById("playerId");
-
-
-  playerId.addEventListener("input", function () {
-
-    this.value =
-      this.value.replace(/\D/g, "");
-
-  });
-
-
-  /* =========================
-     TIẾP TỤC THANH TOÁN
-  ========================= */
-
-  document
-    .getElementById("continueBtn")
-    .addEventListener("click", function () {
-
-      const id =
-        playerId.value.trim();
-
-
-      if (!selectedPackage) {
-
-        alert(
-          "Vui lòng chọn một gói Kim Cương."
-        );
-
-        return;
-
-      }
-
-
-      if (!id) {
-
-        alert(
-          "Vui lòng nhập ID Free Fire."
-        );
-
-        playerId.focus();
-
-        return;
-
-      }
-
-
-      if (!/^\d{5,15}$/.test(id)) {
-
-        alert(
-          "ID Free Fire phải gồm 5 đến 15 chữ số."
-        );
-
-        playerId.focus();
-
-        return;
-
-      }
-
-
-      /*
-        Nội dung chuyển khoản
-        được tạo tự động từ ID.
-      */
-
-      const transferContent =
-        "NAPKC " + id;
-
-
-      document.getElementById(
-        "orderSummary"
-      ).innerHTML = `
-
-        <strong>Gói KC:</strong>
-        ${selectedPackage.name}
-        <br>
-
-        <strong>ID người chơi:</strong>
-        ${id}
-        <br>
-
-        <strong>Tổng tiền:</strong>
-        ${formatMoney(selectedPackage.price)}
-
-      `;
-
-
-      document.getElementById(
-        "paymentAmount"
-      ).textContent =
-        formatMoney(selectedPackage.price);
-
-
-      document.getElementById(
-        "transferContent"
-      ).textContent =
-        transferContent;
-
-
-      document
-        .getElementById("paymentSection")
-        .classList.remove("hidden");
-
-
-      document
-        .getElementById("paymentSection")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+    <main class="container main-content">
+
+        <!-- BƯỚC 1: CHỌN GAME -->
+        <section class="section-card">
+            <div class="card-title">
+                <span class="step-num">1</span>
+                <h3>CHỌN GAME CẦN NẠP</h3>
+            </div>
+            <div class="game-grid" id="game-selector"></div>
+        </section>
+
+        <!-- BƯỚC 2: CHỌN GÓI NẠP -->
+        <section class="section-card">
+            <div class="card-title">
+                <span class="step-num">2</span>
+                <h3>CHỌN GÓI NẠP X10 (ƯU ĐÃI)</h3>
+            </div>
+            <div class="package-grid" id="package-selector"></div>
+        </section>
+
+        <!-- BƯỚC 3: NHẬP ID TÀI KHOẢN -->
+        <section class="section-card">
+            <div class="card-title">
+                <span class="step-num">3</span>
+                <h3>NHẬP ID TÀI KHOẢN / ID GAME</h3>
+            </div>
+            <div class="form-group">
+                <label for="game-id">ID Game / ID Tài khoản <span class="required">*</span></label>
+                <input type="tel" id="game-id" placeholder="Nhập ID số (Ví dụ: 123456789)" maxlength="12" autocomplete="off">
+                <span class="error-msg" id="id-error"></span>
+            </div>
+            <button class="btn btn-primary" onclick="proceedToPayment()">TIẾP TỤC THANH TOÁN ›</button>
+        </section>
+
+        <!-- BƯỚC 4: THANH TOÁN -->
+        <section class="section-card payment-card" id="payment-section" style="display: none;">
+            <div class="card-title">
+                <span class="step-num">4</span>
+                <h3>XÁC NHẬN THANH TOÁN</h3>
+            </div>
+
+            <div class="payment-grid">
+                <!-- MÃ QR -->
+                <div class="qr-container">
+                    <h4>MÃ QR THANH TOÁN</h4>
+                    <div class="qr-wrapper">
+                        <img id="qr-img" src="qr-payment.jpg" alt="Mã QR Thanh Toán">
+                    </div>
+                    <p class="qr-note">Hỗ trợ MoMo / VietQR / Napas247</p>
+                </div>
+
+                <!-- CHI TIẾT -->
+                <div class="payment-details">
+                    <div class="info-row"><span class="label">Trò chơi:</span> <strong id="pay-game-name">-</strong></div>
+                    <div class="info-row"><span class="label">Gói nhận:</span> <strong id="pay-pkg-name" class="text-red">-</strong></div>
+                    <div class="info-row"><span class="label">ID Khách hàng:</span> <strong id="pay-game-id">-</strong></div>
+                    <div class="info-row"><span class="label">Số tiền:</span> <strong id="pay-price" class="text-price">0đ</strong></div>
+
+                    <hr class="divider">
+
+                    <div class="bank-box">
+                        <div class="bank-row"><span>Số tài khoản:</span> <strong>PSP2621916400000092</strong></div>
+                        <div class="bank-row"><span>Tên người nhận:</span> <strong>TRUONG VAN PHONG</strong></div>
+                        <div class="bank-row highlight"><span>Nội dung CK:</span> <strong id="transfer-code">NAPKC ...</strong></div>
+                    </div>
+
+                    <button class="btn btn-copy" onclick="copyContent()">SAO CHÉP NỘI DUNG CHUYỂN KHOẢN</button>
+                    <button class="btn btn-secondary" onclick="backToSelect()">‹ Chọn lại gói nạp</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="toast" class="toast">Đã sao chép nội dung!</div>
+
+    <footer class="footer">
+        <p>© 2026 SHOPKCUYTIN.VN - Hệ thống nạp game uy tín hàng đầu Việt Nam.</p>
+    </footer>
+
+    <script>
+        const GAMES = [
+            { id: 'ff', name: 'Free Fire', img: 'https://cdn-icons-png.flaticon.com/512/3408/3408506.png', unit: 'Kim Cương',
+              pkgs: [ { id: 1, amount: '2.800 KC (X10)', price: 50000 }, { id: 2, amount: '5.800 KC (X10)', price: 100000 }, { id: 3, amount: '32.000 KC (VIP)', price: 500000 } ] },
+            { id: 'lq', name: 'Liên Quân', img: 'https://cdn-icons-png.flaticon.com/512/1041/1041022.png', unit: 'Quân Huy',
+              pkgs: [ { id: 1, amount: '1.100 QH (X10)', price: 50000 }, { id: 2, amount: '2.300 QH (X10)', price: 100000 }, { id: 3, amount: '12.500 QH (VIP)', price: 500000 } ] },
+            { id: 'fco', name: 'FC Online', img: 'https://cdn-icons-png.flaticon.com/512/1165/1165187.png', unit: 'FC',
+              pkgs: [ { id: 1, amount: '1.200 FC (X10)', price: 50000 }, { id: 2, amount: '2.500 FC (X10)', price: 100000 }, { id: 3, amount: '13.500 FC (VIP)', price: 500000 } ] },
+            { id: 'cod', name: 'Call of Duty', img: 'https://cdn-icons-png.flaticon.com/512/808/808439.png', unit: 'CP',
+              pkgs: [ { id: 1, amount: '1.600 CP (X10)', price: 50000 }, { id: 2, amount: '3.300 CP (X10)', price: 100000 }, { id: 3, amount: '18.000 CP (VIP)', price: 500000 } ] },
+            { id: 'zs', name: 'ZingSpeed', img: 'https://cdn-icons-png.flaticon.com/512/743/743131.png', unit: 'KC ZS',
+              pkgs: [ { id: 1, amount: '2.600 KC (X10)', price: 50000 }, { id: 2, amount: '5.500 KC (X10)', price: 100000 }, { id: 3, amount: '30.000 KC (VIP)', price: 500000 } ] }
+        ];
+
+        let selectedGame = GAMES[0];
+        let selectedPkg = GAMES[0].pkgs[0];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGames();
+            renderPackages();
         });
 
-    });
+        function renderGames() {
+            const el = document.getElementById('game-selector');
+            el.innerHTML = GAMES.map(g => `
+                <div class="game-card ${g.id === selectedGame.id ? 'active' : ''}" onclick="selectGame('${g.id}')">
+                    <img class="game-avatar" src="${g.img}" alt="${g.name}">
+                    <div class="game-name">${g.name}</div>
+                </div>
+            `).join('');
+        }
 
+        function selectGame(id) {
+            selectedGame = GAMES.find(g => g.id === id);
+            selectedPkg = selectedGame.pkgs[0];
+            renderGames();
+            renderPackages();
+        }
 
-  /* =========================
-     COPY
-  ========================= */
+        function renderPackages() {
+            const el = document.getElementById('package-selector');
+            el.innerHTML = selectedGame.pkgs.map(p => `
+                <div class="pkg-card ${p.id === selectedPkg.id ? 'active' : ''}" onclick="selectPkg(${p.id})">
+                    <span class="pkg-amount">${p.amount}</span>
+                    <span class="pkg-price">${p.price.toLocaleString('vi-VN')}đ</span>
+                </div>
+            `).join('');
+        }
 
-  async function copyTransferContent() {
+        function selectPkg(id) {
+            selectedPkg = selectedGame.pkgs.find(p => p.id === id);
+            renderPackages();
+        }
 
-    const text =
-      document
-        .getElementById("transferContent")
-        .textContent
-        .trim();
+        function proceedToPayment() {
+            const input = document.getElementById('game-id');
+            const err = document.getElementById('id-error');
+            const val = input.value.trim();
 
+            if (!val || val.length < 5) {
+                err.textContent = 'Vui lòng nhập ID hợp lệ (tối thiểu 5 số)!';
+                err.style.display = 'block';
+                input.focus();
+                return;
+            }
+            err.style.display = 'none';
 
-    try {
+            document.getElementById('pay-game-name').textContent = selectedGame.name;
+            document.getElementById('pay-pkg-name').textContent = selectedPkg.amount;
+            document.getElementById('pay-game-id').textContent = val;
+            document.getElementById('pay-price').textContent = selectedPkg.price.toLocaleString('vi-VN') + 'đ';
 
-      await navigator.clipboard.writeText(text);
+            const content = `NAPKC ${val}`;
+            document.getElementById('transfer-code').textContent = content;
 
-    } catch (error) {
+            document.getElementById('payment-section').style.display = 'block';
+            document.getElementById('payment-section').scrollIntoView({ behavior: 'smooth' });
+        }
 
-      const textarea =
-        document.createElement("textarea");
+        function copyContent() {
+            const txt = document.getElementById('transfer-code').textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 2000);
+            });
+        }
 
-      textarea.value = text;
-
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
-
-      document.body.appendChild(textarea);
-
-      textarea.focus();
-      textarea.select();
-
-      document.execCommand("copy");
-
-      textarea.remove();
-
-    }
-
-
-    const success =
-      document.getElementById("copySuccess");
-
-
-    success.classList.remove("hidden");
-
-
-    setTimeout(() => {
-
-      success.classList.add("hidden");
-
-    }, 2500);
-
-  }
-
-
-  document
-    .getElementById("copyBtn")
-    .addEventListener(
-      "click",
-      copyTransferContent
-    );
-
-
-  document
-    .getElementById("copyMainBtn")
-    .addEventListener(
-      "click",
-      copyTransferContent
-    );
-
-
-  /* =========================
-     QUAY LẠI
-  ========================= */
-
-  document
-    .getElementById("backBtn")
-    .addEventListener("click", function () {
-
-      document
-        .getElementById("paymentSection")
-        .classList.add("hidden");
-
-
-      document
-        .getElementById("orderSection")
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-    });
-
-
-  /* =========================
-     CHẶN ENTER SUBMIT KHÔNG CẦN THIẾT
-  ========================= */
-
-  playerId.addEventListener("keydown", function(event) {
-
-    if (event.key === "Enter") {
-
-      event.preventDefault();
-
-      document
-        .getElementById("continueBtn")
-        .click();
-
-    }
-
-  });
-
-</script>
-
+        function backToSelect() {
+            document.getElementById('payment-section').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
