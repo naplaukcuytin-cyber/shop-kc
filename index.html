@@ -1047,11 +1047,11 @@
     measurementId: "G-7ECY0PYP74"
   };
 
-<!-- 1. Hai dòng thư viện phải nằm TRÊN CÙNG -->
+<!-- 1. Hai dòng thư viện Firebase bắt buộc phải nằm trên cùng -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-  <!-- 2. Thẻ script chứa toàn bộ cấu hình và code xử lý -->
+  <!-- 2. Đoạn mã cấu hình và xử lý sự kiện -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
@@ -1063,22 +1063,24 @@
       measurementId: "G-7ECY0PYP74"
     };
 
-    // Khởi tạo ứng dụng
+    // Khởi tạo Firebase
     firebase.initializeApp(firebaseConfig);
-
-    // Khởi tạo Database Firestore để lưu dữ liệu
     const db = firebase.firestore();
-
     console.log("Kết nối Firebase thành công!");
 
     window.onload = function() {
-      syncAdminData();
+      if (typeof syncAdminData === 'function') syncAdminData();
       const savedUser = localStorage.getItem('session_user_permanent');
-      if(savedUser) currentUser = savedUser;
-      selectGame(null, 'Free Fire');
-      updateUI();
-      setInterval(checkAdminApproval, 2000);
+      if (savedUser && typeof currentUser !== 'undefined') {
+        currentUser = savedUser;
+      }
+      if (typeof selectGame === 'function') selectGame(null, 'Free Fire');
+      if (typeof updateUI === 'function') updateUI();
+      if (typeof checkAdminApproval === 'function') {
+        setInterval(checkAdminApproval, 2000);
+      }
     };
   </script>
+
 </body>
 </html>
