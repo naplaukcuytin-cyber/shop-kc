@@ -1047,29 +1047,38 @@
     measurementId: "G-7ECY0PYP74"
   };
 
-  // Khởi tạo ứng dụng
-  firebase.initializeApp(firebaseConfig);
-  
-  // Khởi tạo Database Firestore để lưu dữ liệu
-  const db = firebase.firestore();
-  
-  console.log("Kết nối Firebase thành công!");
+<!-- 1. Hai dòng thư viện phải nằm TRÊN CÙNG -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- 2. Thẻ script chứa toàn bộ cấu hình và code xử lý -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
+      authDomain: "garena-store-db.firebaseapp.com",
+      projectId: "garena-store-db",
+      storageBucket: "garena-store-db.firebasestorage.app",
+      messagingSenderId: "1037363068665",
+      appId: "1:1037363068665:web:48c8f90cc0bbf375726c28",
+      measurementId: "G-7ECY0PYP74"
+    };
+
+    // Khởi tạo ứng dụng
+    firebase.initializeApp(firebaseConfig);
+
+    // Khởi tạo Database Firestore để lưu dữ liệu
+    const db = firebase.firestore();
+
+    console.log("Kết nối Firebase thành công!");
 
     window.onload = function() {
       syncAdminData();
       const savedUser = localStorage.getItem('session_user_permanent');
       if(savedUser) currentUser = savedUser;
-      
       selectGame(null, 'Free Fire');
       updateUI();
-
       setInterval(checkAdminApproval, 2000);
     };
-
   </script>
-
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"> </script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"> </script>
-
 </body>
 </html>
