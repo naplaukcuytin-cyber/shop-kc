@@ -306,7 +306,16 @@
     </div>
 
     <script>
-        let multiplier = 10; // Hệ số nhân ưu đãi mặc định X10
+        // CẤU HÌNH CÁC KHÓA BỘ NHỚ LƯU TRỮ ĐỒNG BỘ
+        const STORAGE_KEYS = {
+            USERS: 'garena_users',
+            CURRENT_USER: 'garena_current_user',
+            DEPOSITS: 'garena_deposits',
+            ORDERS: 'garena_orders',
+            RATE: 'garena_rate'
+        };
+
+        let multiplier = parseInt(localStorage.getItem(STORAGE_KEYS.RATE)) || 10;
 
         const BASE_GAMES_LIST = [
             { id: 1, name: 'Free Fire', unitSymbol: '💎', unitName: 'Kim Cương', img: 'https://ff.garena.vn/static/images/logo.png', baseRates: [
@@ -334,30 +343,33 @@
         let currentSelectedGame = null;
         let currentSelectedRate = null;
         
-        // BẢO BẢO: MẶC ĐỊNH LÀ NULL KHI MỚI MỞ TRANG (KHÔNG BỊ LỖI LỰA CHỌN ADMIN TỰ ĐỘNG)
-        let currentUser = JSON.parse(localStorage.getItem('logged_user_session')) || null;
+        let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
         let tempDepositMemo = '';
         let tempDepositAmount = 0;
 
+        // Khởi tạo hệ thống
         document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem(STORAGE_KEYS.DEPOSITS)) localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify([]));
+            if (!localStorage.getItem(STORAGE_KEYS.ORDERS)) localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
+            if (!localStorage.getItem(STORAGE_KEYS.USERS)) localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify({}));
+
             buildGamesWithMultiplier();
             renderGameGrid();
             renderPriceGrid();
             checkSession();
-            updateAdminView();
+            renderAdminPanel();
+            renderClientHistory();
         });
 
         function buildGamesWithMultiplier() {
-            GAMES_LIST = BASE_GAMES_LIST.map(g => {
-                return {
-                    ...g,
-                    rates: g.baseRates.map(r => ({
-                        price: r.price,
-                        priceText: r.priceText,
-                        amount: `${(r.baseAmount * multiplier).toLocaleString('vi-VN')} ${g.unitName}`
-                    }))
-                };
-            });
+            GAMES_LIST = BASE_GAMES_LIST.map(g => ({
+                ...g,
+                rates: g.baseRates.map(r => ({
+                    price: r.price,
+                    priceText: r.priceText,
+                    amount: `${(r.baseAmount * multiplier).toLocaleString('vi-VN')} ${g.unitName}`
+                }))
+            }));
             currentSelectedGame = GAMES_LIST[0];
             currentSelectedRate = GAMES_LIST[0].rates[0];
         }
@@ -366,6 +378,7 @@
             const val = parseInt(document.getElementById('admin-rate-multiplier').value);
             if(val && val >= 1) {
                 multiplier = val;
+                localStorage.setItem(STORAGE_KEYS.RATE, multiplier.toString());
                 buildGamesWithMultiplier();
                 renderPriceGrid();
                 alert(`Đã cập nhật hệ số nhân ưu đãi gấp ${multiplier} lần!`);
@@ -428,7 +441,6 @@
             }
         }
 
-        /* KIỂM TRA ĐỘ MẠNH MẬT KHẨU VÀ ĐỘ DÀI TÀI KHOẢN */
         function checkRegUsername() {
             const u = document.getElementById('reg-username').value.trim();
             const msg = document.getElementById('user-check-msg');
@@ -456,15 +468,15 @@
             }
         }
 
-        /* QUẢN LÝ PHIÊN ĐĂNG NHẬP CHẮC CHẮN */
+        /* QUẢN LÝ PHIÊN ĐĂNG NHẬP */
         function checkSession() {
+            currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER));
             if (currentUser) {
                 document.getElementById('btn-login-trigger').style.display = 'none';
                 document.getElementById('user-logged-box').style.display = 'flex';
                 document.getElementById('header-user-name').textContent = currentUser.fullname || currentUser.username;
                 document.getElementById('header-user-balance').textContent = `${(currentUser.balance || 0).toLocaleString('vi-VN')} đ`;
 
-                // CHỈ CHO HIỆN NÚT ADMIN VỚI TÀI KHOẢN phong23112007
                 if (currentUser.username === 'phong23112007') {
                     document.getElementById('btn-admin-panel').style.display = 'inline-block';
                 } else {
@@ -485,24 +497,23 @@
             const p = document.getElementById('login-password').value.trim();
             const msg = document.getElementById('login-status-msg');
 
-            // ĐĂNG NHẬP ADMIN CHÍNH THỨC
             if (u === 'phong23112007' && p === 'Muathu12345') {
                 currentUser = { username: u, fullname: 'ADMINISTRATOR', balance: 999999999 };
-                localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
+                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
                 msg.style.color = '#10b981';
                 msg.textContent = '✔️ Đăng nhập ADMIN thành công!';
-                setTimeout(() => { closeAuthModal(); checkSession(); updateAdminView(); }, 600);
+                setTimeout(() => { closeAuthModal(); checkSession(); renderAdminPanel(); }, 600);
                 return;
             }
 
-            const storedAcc = localStorage.getItem('acc_db_' + u.toLowerCase());
-            if (!storedAcc) {
+            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+            if (!users[u.toLowerCase()]) {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng Đăng ký.';
                 return;
             }
 
-            const acc = JSON.parse(storedAcc);
+            const acc = users[u.toLowerCase()];
             if (acc.password !== p) {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Sai mật khẩu! Vui lòng thử lại.';
@@ -510,10 +521,10 @@
             }
 
             currentUser = acc;
-            localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
+            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
             msg.style.color = '#10b981';
             msg.textContent = '✔️ Đăng nhập thành công!';
-            setTimeout(() => { closeAuthModal(); checkSession(); }, 600);
+            setTimeout(() => { closeAuthModal(); checkSession(); renderClientHistory(); }, 600);
         }
 
         function handleRegister(e) {
@@ -535,14 +546,17 @@
                 return;
             }
 
-            if (localStorage.getItem('acc_db_' + u) || u === 'phong23112007') {
+            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+            if (users[u] || u === 'phong23112007') {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
                 return;
             }
 
             const newAcc = { username: u, password: p, fullname: name, balance: 0 };
-            localStorage.setItem('acc_db_' + u, JSON.stringify(newAcc));
+            users[u] = newAcc;
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            
             msg.style.color = '#10b981';
             msg.textContent = '✔️ Đăng ký thành công! Hãy bấm Đăng Nhập.';
             setTimeout(() => switchAuthTab('login'), 1000);
@@ -550,12 +564,13 @@
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem('logged_user_session');
+            localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
             checkSession();
+            renderClientHistory();
             alert('Đã đăng xuất tài khoản thành công!');
         }
 
-        /* LỆNH NẠP TIỀN VÀO SỐ DƯ */
+        /* TẠO ĐƠN NẠP TIỀN BÊN KHÁCH */
         function openDepositModal() {
             if (!currentUser) {
                 alert('Vui lòng Đăng nhập trước khi nạp tiền!');
@@ -586,25 +601,24 @@
         }
 
         function submitDepositOrder() {
-            let sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
+            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
             
             const newReq = {
-                id: Date.now(),
-                user: currentUser.username,
+                id: tempDepositMemo,
+                username: currentUser.username,
                 fullname: currentUser.fullname || currentUser.username,
                 amount: tempDepositAmount,
                 memo: tempDepositMemo,
-                status: 'Chờ duyệt',
-                time: new Date().toLocaleTimeString()
+                status: 'pending',
+                time: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
             };
 
             sysDeposits.unshift(newReq);
-            localStorage.setItem('sys_deposit_requests', JSON.stringify(sysDeposits));
-
-            saveUserHistory(`Nạp tiền vào Số dư (${tempDepositMemo})`, `+${tempDepositAmount.toLocaleString('vi-VN')} đ`, '🟡 Đang chờ Admin duyệt');
+            localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
 
             closeDepositModal();
-            updateAdminView();
+            renderAdminPanel();
+            renderClientHistory();
             alert('Đã gửi đơn nạp tiền lên Admin! Vui lòng chờ Admin kiểm tra và duyệt tiền vào ví.');
         }
 
@@ -629,13 +643,18 @@
             }
 
             currentUser.balance -= currentSelectedRate.price;
-            localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
-            if(currentUser.username !== 'phong23112007') {
-                localStorage.setItem('acc_db_' + currentUser.username, JSON.stringify(currentUser));
+            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+            
+            if (currentUser.username !== 'phong23112007') {
+                let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+                if (users[currentUser.username]) {
+                    users[currentUser.username].balance = currentUser.balance;
+                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                }
             }
             checkSession();
 
-            let sysOrders = JSON.parse(localStorage.getItem('sys_order_requests') || '[]');
+            let sysOrders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS)) || [];
             sysOrders.unshift({
                 id: Date.now(),
                 user: currentUser.fullname || currentUser.username,
@@ -644,112 +663,77 @@
                 package: currentSelectedRate.amount,
                 price: currentSelectedRate.priceText,
                 status: 'Đã thanh toán - Chờ Admin phát quà',
-                time: new Date().toLocaleTimeString()
+                time: new Date().toLocaleTimeString('vi-VN')
             });
-            localStorage.setItem('sys_order_requests', JSON.stringify(sysOrders));
+            localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(sysOrders));
 
-            saveUserHistory(`Mua gói ${currentSelectedGame.name} (UID: ${uid})`, `-${currentSelectedRate.priceText}`, '🟢 Đã thanh toán');
-
-            updateAdminView();
+            renderAdminPanel();
+            renderClientHistory();
             alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý chuyển quà vào UID: ${uid}.`);
         }
 
-        function saveUserHistory(title, amount, status) {
-            let histories = JSON.parse(localStorage.getItem('history_' + currentUser.username) || '[]');
-            histories.unshift({ title, amount, status });
-            localStorage.setItem('history_' + currentUser.username, JSON.stringify(histories));
-        }
+        /* HIỂN THỊ LỊCH SỬ DÀNH CHO KHÁCH HÀNG */
+        function renderClientHistory() {
+            const box = document.getElementById('user-history-content');
+            if (!box) return;
 
-        /* CHỨC NĂNG DÀNH CHO ADMIN PHONG23112007 */
-        function approveDeposit(reqId) {
-            let sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
-            const req = sysDeposits.find(r => r.id === reqId);
-            if (req) {
-                req.status = 'Đã duyệt';
-                localStorage.setItem('sys_deposit_requests', JSON.stringify(sysDeposits));
-
-                // Cộng tiền thực sự cho tài khoản khách
-                const accData = localStorage.getItem('acc_db_' + req.user);
-                if (accData) {
-                    let acc = JSON.parse(accData);
-                    acc.balance = (acc.balance || 0) + req.amount;
-                    localStorage.setItem('acc_db_' + req.user, JSON.stringify(acc));
-
-                    if (currentUser && currentUser.username === req.user) {
-                        currentUser.balance = acc.balance;
-                        localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
-                        checkSession();
-                    }
-                }
-                updateAdminView();
-                alert(`Đã duyệt và cấp +${req.amount.toLocaleString('vi-VN')} VNĐ cho khách ${req.fullname}!`);
-            }
-        }
-
-        function rejectDeposit(reqId) {
-            let sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
-            const req = sysDeposits.find(r => r.id === reqId);
-            if (req) {
-                req.status = 'Đã hủy';
-                localStorage.setItem('sys_deposit_requests', JSON.stringify(sysDeposits));
-                updateAdminView();
-                alert(`Đã từ chối đơn nạp ${req.memo}.`);
-            }
-        }
-
-        function adminDirectChangeBalance() {
-            const targetU = document.getElementById('admin-target-user').value.trim().toLowerCase();
-            const amount = parseInt(document.getElementById('admin-target-amount').value);
-
-            if(!targetU) return alert('Vui lòng nhập username của khách!');
-            if(isNaN(amount)) return alert('Vui lòng nhập số tiền (+ hoặc -)!');
-
-            const accData = localStorage.getItem('acc_db_' + targetU);
-            if(!accData) return alert('Không tìm thấy tài khoản khách này!');
-
-            let acc = JSON.parse(accData);
-            acc.balance = (acc.balance || 0) + amount;
-            if(acc.balance < 0) acc.balance = 0;
-
-            localStorage.setItem('acc_db_' + targetU, JSON.stringify(acc));
-
-            // Nếu Admin đang sửa cho đúng tài khoản đang xem
-            if (currentUser && currentUser.username === targetU) {
-                currentUser.balance = acc.balance;
-                localStorage.setItem('logged_user_session', JSON.stringify(currentUser));
-                checkSession();
+            if (!currentUser) {
+                box.innerHTML = `<p style="color:#64748b; text-align:center;">Vui lòng đăng nhập để xem lịch sử.</p>`;
+                return;
             }
 
-            alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho tài khoản [${targetU}]! Số dư mới: ${acc.balance.toLocaleString('vi-VN')} đ.`);
-            document.getElementById('admin-target-user').value = '';
-            document.getElementById('admin-target-amount').value = '';
+            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
+            let myDeposits = sysDeposits.filter(d => d.username === currentUser.username);
+
+            if (myDeposits.length === 0) {
+                box.innerHTML = `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
+                return;
+            }
+
+            box.innerHTML = myDeposits.map(h => {
+                let st = '';
+                if(h.status === 'pending') st = '<span style="color:orange; font-weight:800;">🟡 Đang chờ Admin duyệt</span>';
+                else if(h.status === 'approved') st = '<span style="color:#10b981; font-weight:800;">🟢 Đã duyệt thành công</span>';
+                else st = '<span style="color:#ef4444; font-weight:800;">🔴 Đã bị từ chối</span>';
+
+                return `
+                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                        <div style="font-weight:700;">Nạp tiền vào Số Dư (${h.memo || h.id})</div>
+                        <div style="display:flex; justify-content:space-between; margin-top:2px;">
+                            <span style="color:#e41e26; font-weight:800;">+${h.amount.toLocaleString('vi-VN')} đ</span>
+                            ${st}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function updateAdminView() {
+        /* ĐỒNG BỘ HIỂN THỊ DÀNH CHO ADMIN REAL-TIME */
+        function renderAdminPanel() {
+            checkSession();
             if (!currentUser || currentUser.username !== 'phong23112007') return;
 
-            const sysDeposits = JSON.parse(localStorage.getItem('sys_deposit_requests') || '[]');
+            const sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
             const depBox = document.getElementById('admin-deposit-requests');
-            
-            if (sysDeposits.length === 0) {
+            const pendingList = sysDeposits.filter(d => d.status === 'pending');
+
+            if (pendingList.length === 0) {
                 depBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p>`;
             } else {
-                depBox.innerHTML = sysDeposits.map(r => `
+                depBox.innerHTML = pendingList.map(r => `
                     <div class="admin-item">
-                        <div>Khách: <strong>${r.fullname}</strong> (${r.user}) | Số tiền: <strong style="color:#e41e26;">${r.amount.toLocaleString('vi-VN')} đ</strong></div>
-                        <div>Nội dung: <strong style="color:#8b5cf6;">${r.memo}</strong> (${r.time})</div>
-                        <div style="margin-top:4px;">Trạng thái: <strong>${r.status}</strong></div>
-                        ${r.status === 'Chờ duyệt' ? `
-                            <div style="margin-top:6px;">
-                                <button class="btn-action-approve" onclick="approveDeposit(${r.id})">✔ DUYỆT & CẤP TIỀN</button>
-                                <button class="btn-action-reject" onclick="rejectDeposit(${r.id})">✖ HỦY ĐƠN</button>
-                            </div>
-                        ` : ''}
+                        <div>Khách: <strong>${r.fullname || r.username}</strong> (${r.username})</div>
+                        <div>Số tiền: <strong style="color:#e41e26;">${r.amount.toLocaleString('vi-VN')} đ</strong></div>
+                        <div>Mã CK: <strong style="color:#8b5cf6;">${r.memo || r.id}</strong> (${r.time})</div>
+                        <div style="margin-top:6px;">
+                            <button class="btn-action-approve" onclick="approveDeposit('${r.id}')">✔ DUYỆT & CẤP TIỀN</button>
+                            <button class="btn-action-reject" onclick="rejectDeposit('${r.id}')">✖ HỦY ĐƠN</button>
+                        </div>
                     </div>
                 `).join('');
             }
 
-            const sysOrders = JSON.parse(localStorage.getItem('sys_order_requests') || '[]');
+            const sysOrders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS)) || [];
             const ordBox = document.getElementById('admin-order-requests');
             if (sysOrders.length === 0) {
                 ordBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p>`;
@@ -764,7 +748,72 @@
             }
         }
 
-        /* NÚT ĐIỀU HƯỚNG VÀ MODALS */
+        /* CHỨC NĂNG DUYỆT ĐƠN ADMIN */
+        function approveDeposit(reqId) {
+            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
+            const req = sysDeposits.find(r => r.id === reqId);
+            
+            if (req) {
+                req.status = 'approved';
+                localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
+
+                let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+                if (users[req.username]) {
+                    users[req.username].balance = (users[req.username].balance || 0) + req.amount;
+                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                }
+
+                alert(`Đã duyệt và cấp +${req.amount.toLocaleString('vi-VN')} VNĐ cho khách ${req.username}!`);
+                renderAdminPanel();
+                renderClientHistory();
+            }
+        }
+
+        function rejectDeposit(reqId) {
+            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
+            const req = sysDeposits.find(r => r.id === reqId);
+            if (req) {
+                req.status = 'rejected';
+                localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
+                renderAdminPanel();
+                renderClientHistory();
+                alert(`Đã từ chối đơn nạp ${req.id}.`);
+            }
+        }
+
+        function adminDirectChangeBalance() {
+            const targetU = document.getElementById('admin-target-user').value.trim().toLowerCase();
+            const amount = parseInt(document.getElementById('admin-target-amount').value);
+
+            if(!targetU) return alert('Vui lòng nhập username của khách!');
+            if(isNaN(amount)) return alert('Vui lòng nhập số tiền (+ hoặc -)!');
+
+            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+            if(!users[targetU]) return alert('Không tìm thấy tài khoản khách này!');
+
+            users[targetU].balance = (users[targetU].balance || 0) + amount;
+            if(users[targetU].balance < 0) users[targetU].balance = 0;
+
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+
+            alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho khách [${targetU}]!`);
+            document.getElementById('admin-target-user').value = '';
+            document.getElementById('admin-target-amount').value = '';
+            renderAdminPanel();
+        }
+
+        /* BỘ TỰ ĐỘNG ĐỒNG BỘ NẠP/NHẬN TIỀN (CHẠY MỖI 1 GIÂY & SỰ KIỆN STORAGE) */
+        setInterval(() => {
+            renderAdminPanel();
+            renderClientHistory();
+        }, 1000);
+
+        window.addEventListener('storage', () => {
+            renderAdminPanel();
+            renderClientHistory();
+        });
+
+        /* ĐIỀU HƯỚNG BẢNG & MODAL */
         function toggleAdminPanel() {
             const p = document.getElementById('admin-panel-box');
             p.style.display = p.style.display === 'block' ? 'none' : 'block';
@@ -775,7 +824,6 @@
         }
         function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
         function closeDepositModal() { document.getElementById('deposit-modal').style.display = 'none'; }
-        
         function openHistoryModal() {
             closeSidebar();
             if(!currentUser) {
@@ -784,22 +832,7 @@
                 return;
             }
             document.getElementById('history-modal').style.display = 'flex';
-            const box = document.getElementById('user-history-content');
-            const histories = JSON.parse(localStorage.getItem('history_' + currentUser.username) || '[]');
-            
-            if (histories.length === 0) {
-                box.innerHTML = `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
-            } else {
-                box.innerHTML = histories.map(h => `
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
-                        <div style="font-weight:700;">${h.title}</div>
-                        <div style="display:flex; justify-content:space-between; margin-top:2px;">
-                            <span style="color:#e41e26; font-weight:800;">${h.amount}</span>
-                            <span>${h.status}</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
+            renderClientHistory();
         }
         function closeHistoryModal() { document.getElementById('history-modal').style.display = 'none'; }
 
