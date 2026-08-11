@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Trung Tâm Nạp Game Realtime</title>
+  <title>Trung Tâm Nạp Game Realtime - Hệ Thống Đầy Đủ</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -27,22 +27,8 @@
       --border-color: #333333;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Roboto', sans-serif; 
-      transition: background 0.3s, color 0.3s;
-      touch-action: pan-x pan-y;
-    }
-    
-    body { 
-      background-color: var(--bg-color); 
-      color: var(--text-color); 
-      min-height: 100vh; 
-      padding-bottom: 50px; 
-      user-select: none;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; transition: background 0.3s, color 0.3s; touch-action: pan-x pan-y; }
+    body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding-bottom: 50px; user-select: none; }
 
     @keyframes led-glow {
       0%   { border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
@@ -62,16 +48,13 @@
     header {
       background-color: var(--card-bg);
       padding: 12px 20px;
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: sticky; top: 0; z-index: 100;
     }
     .brand { display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 1.1rem; color: var(--primary-red); }
     .btn { padding: 8px 14px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; }
     
-    /* Khung hiển thị thông tin user & Số dư VNĐ */
     .user-info-box {
       display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.04); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem;
     }
@@ -119,10 +102,19 @@
 
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 15px; }
     .modal.active { display: flex; }
-    .modal-content { background: var(--card-bg); width: 100%; max-width: 400px; padding: 25px; border-radius: 12px; position: relative; }
+    .modal-content { background: var(--card-bg); width: 100%; max-width: 450px; padding: 25px; border-radius: 12px; position: relative; }
 
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
     .overlay.active { display: block; }
+
+    /* Admin Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+    th, td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
+    th { background: rgba(0,0,0,0.05); }
+    .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: white; }
+    .badge-pending { background: #ff9500; }
+    .badge-success { background: #34c759; }
+    .badge-danger { background: #ff3b30; }
   </style>
 </head>
 <body>
@@ -178,6 +170,12 @@
     </div>
     <div class="menu-item" onclick="openDepositPage('card')">
       <i class="fa-solid fa-ticket" style="color:#ff9500;"></i> Nạp Thẻ Garena / Thẻ Cào
+    </div>
+
+    <!-- MỤC QUẢN TRỊ ADMIN -->
+    <div class="section-title">QUẢN TRỊ HỆ THỐNG</div>
+    <div class="menu-item" onclick="openAdminPanel()">
+      <i class="fa-solid fa-user-shield" style="color:#ff3b30;"></i> Trang Admin Quản Lý
     </div>
 
     <div class="section-title">PHẦN TRÒ CHƠI</div>
@@ -263,14 +261,14 @@
         </div>
 
         <button class="btn" style="width:100%; background:#ff9500; color:white; justify-content:center; padding:12px; margin-top:10px;" onclick="buyPackage()">
-          Thanh Toán Đơn Hàng
+          Thanh Toán Bằng Số Dư Ví
         </button>
       </div>
     </div>
 
   </div>
 
-  <!-- Modal Chứa Trang Nạp Tiền (Chống Lỗi 404 Cực Kỳ Chuẩn) -->
+  <!-- Modal Chứa Trang Nạp Tiền -->
   <div class="modal" id="depositModal" style="z-index: 3000;">
     <div class="modal-content led-border" style="max-width:550px; width:95%; max-height:90vh; overflow-y:auto;">
       <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.2rem;" onclick="closeDepositModal()"></i>
@@ -324,11 +322,11 @@
         <div class="form-group">
           <label>Chọn Mệnh Giá Thẻ</label>
           <select class="form-control" id="cardValueSelect">
-            <option value="20000">20.000 VNĐ (113 Kim Cương / 40 Sò)</option>
-            <option value="50000">50.000 VNĐ (283 Kim Cương / 100 Sò)</option>
-            <option value="100000">100.000 VNĐ (566 Kim Cương / 200 Sò)</option>
-            <option value="200000">200.000 VNĐ (1.150 Kim Cương / 400 Sò)</option>
-            <option value="500000">500.000 VNĐ (2.900 Kim Cương / 1.000 Sò)</option>
+            <option value="20000">20.000 VNĐ</option>
+            <option value="50000">50.000 VNĐ</option>
+            <option value="100000">100.000 VNĐ</option>
+            <option value="200000">200.000 VNĐ</option>
+            <option value="500000">500.000 VNĐ</option>
           </select>
         </div>
 
@@ -337,6 +335,44 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Modal Admin Panel Quản Lý -->
+  <div class="modal" id="adminModal" style="z-index: 3500;">
+    <div class="modal-content" style="max-width:700px; width:95%; max-height:90vh; overflow-y:auto;">
+      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.2rem;" onclick="closeAdminPanel()"></i>
+      <h3 style="margin-bottom:15px; text-align:center; color:var(--primary-red);"><i class="fa-solid fa-user-shield"></i> TRANG QUẢN TRỊ ADMIN</h3>
+
+      <!-- Bảng Cộng/Trừ Tiền Trực Tiếp -->
+      <div style="background:rgba(0,0,0,0.03); padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border-color);">
+        <h4>Cộng / Trừ Tiền Ví User</h4>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <input type="text" class="form-control" id="adminUserTarget" placeholder="Tên tài khoản user...">
+          <input type="number" class="form-control" id="adminAmountTarget" placeholder="Số tiền (VD: 50000)">
+          <button class="btn" style="background:#34c759; color:white;" onclick="adminAdjustBalance()">Thực hiện</button>
+        </div>
+      </div>
+
+      <!-- Bảng Duyệt Thẻ Cào -->
+      <h4>Danh Sách Thẻ Nạp Chờ Duyệt</h4>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Loại Thẻ</th>
+              <th>Seri / Mã Thẻ</th>
+              <th>Mệnh Giá</th>
+              <th>Trạng Thái</th>
+              <th>Hành Động</th>
+            </tr>
+          </thead>
+          <tbody id="adminCardTable">
+            <!-- Nội dung tự động load -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -369,7 +405,7 @@
     let selectedPackageData = null;
     let currentUser = null;
 
-    // Carousel Slide
+    // Slide Carousel
     let currentSlide = 0;
     const track = document.getElementById('carouselTrack');
     setInterval(() => {
@@ -386,7 +422,7 @@
       document.getElementById('overlay').classList.remove('active');
     }
 
-    // MỞ TRANG/KUNG NẠP TIỀN KHÔNG BỊ LỖI 404
+    // Modal Nạp tiền
     function openDepositPage(tab) {
       closeSidebar();
       switchTab(tab);
@@ -424,9 +460,14 @@
       document.getElementById('qrResult').style.display = 'block';
     }
 
+    // Xử lý nạp thẻ & lưu dữ liệu cho Admin duyệt
     function processCardDeposit() {
+      if(!currentUser) { alert("Vui lòng đăng nhập trước khi nạp thẻ!"); return; }
+      
+      const cardType = document.getElementById('cardTypeSelect').value;
       const seri = document.getElementById('cardSeriInput').value.trim();
       const pin = document.getElementById('cardPinInput').value.trim();
+      const value = parseInt(document.getElementById('cardValueSelect').value);
 
       if(!seri) { alert("Vui lòng nhập số Seri thẻ!"); return; }
       if(pin.length < 14 || pin.length > 16 || isNaN(pin)) {
@@ -434,10 +475,117 @@
         return;
       }
 
-      alert("⏳ Thẻ đã gửi thành công! Vui lòng chờ Admin phê duyệt.");
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      cards.push({
+        id: Date.now(),
+        user: currentUser,
+        type: cardType,
+        seri: seri,
+        pin: pin,
+        value: value,
+        status: 'pending'
+      });
+      localStorage.setItem('sys_cards', JSON.stringify(cards));
+
+      alert("⏳ Thẻ đã gửi thành công! Vui lòng chờ Admin kiểm tra và phê duyệt.");
       document.getElementById('cardSeriInput').value = '';
       document.getElementById('cardPinInput').value = '';
       closeDepositModal();
+    }
+
+    // TÍNH NĂNG ADMIN
+    function openAdminPanel() {
+      closeSidebar();
+      if(currentUser !== 'admin') {
+        alert("🔒 Bạn cần đăng nhập tài khoản ADMIN để truy cập! (Mặc định: admin / admin123)");
+        openAuthModal();
+        return;
+      }
+      renderAdminCards();
+      document.getElementById('adminModal').classList.add('active');
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('adminModal').classList.remove('active');
+    }
+
+    function renderAdminCards() {
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      const tbody = document.getElementById('adminCardTable');
+      tbody.innerHTML = '';
+
+      if(cards.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Chưa có thẻ nào gửi lên.</td></tr>';
+        return;
+      }
+
+      cards.forEach(card => {
+        let statusBadge = `<span class="badge badge-pending">Chờ duyệt</span>`;
+        if(card.status === 'success') statusBadge = `<span class="badge badge-success">Thành công</span>`;
+        if(card.status === 'failed') statusBadge = `<span class="badge badge-danger">Từ chối</span>`;
+
+        let actions = '-';
+        if(card.status === 'pending') {
+          actions = `
+            <button onclick="approveCard(${card.id})" style="background:#34c759; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Duyệt</button>
+            <button onclick="rejectCard(${card.id})" style="background:#ff3b30; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hủy</button>
+          `;
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${card.user}</b></td>
+            <td>${card.type}</td>
+            <td>S:${card.seri}<br>M:${card.pin}</td>
+            <td>${card.value.toLocaleString()}đ</td>
+            <td>${statusBadge}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function approveCard(cardId) {
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      const card = cards.find(c => c.id === cardId);
+      if(card && card.status === 'pending') {
+        card.status = 'success';
+        localStorage.setItem('sys_cards', JSON.stringify(cards));
+
+        // Cộng tiền cho user
+        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+        balances[card.user] = (balances[card.user] || 0) + card.value;
+        localStorage.setItem('sys_balances', JSON.stringify(balances));
+
+        alert(`✅ Đã duyệt thẻ ${card.value.toLocaleString()}đ cho tài khoản ${card.user}!`);
+        renderAdminCards();
+        updateUIState();
+      }
+    }
+
+    function rejectCard(cardId) {
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      const card = cards.find(c => c.id === cardId);
+      if(card && card.status === 'pending') {
+        card.status = 'failed';
+        localStorage.setItem('sys_cards', JSON.stringify(cards));
+        alert(`❌ Đã từ chối thẻ của ${card.user}!`);
+        renderAdminCards();
+      }
+    }
+
+    function adminAdjustBalance() {
+      const targetUser = document.getElementById('adminUserTarget').value.trim();
+      const amount = parseInt(document.getElementById('adminAmountTarget').value);
+
+      if(!targetUser || isNaN(amount)) { alert("Vui lòng nhập đúng Tên user và Số tiền!"); return; }
+
+      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+      balances[targetUser] = (balances[targetUser] || 0) + amount;
+      localStorage.setItem('sys_balances', JSON.stringify(balances));
+
+      alert(`✅ Đã cập nhật số dư cho ${targetUser}. Số dư mới: ${balances[targetUser].toLocaleString()} VNĐ`);
+      updateUIState();
     }
 
     function toggleAppTheme() {
@@ -457,7 +605,21 @@
       const uid = document.getElementById('playerUID').value.trim();
       if(!uid) { alert("Vui lòng nhập ID Game / UID!"); return; }
       if(!selectedPackageData) { alert("Vui lòng chọn gói Kim Cương!"); return; }
-      alert("Đã ghi nhận đơn hàng cho UID: " + uid + ". Vui lòng nạp tiền vào ví để thanh toán!");
+
+      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+      const currentBal = balances[currentUser] || 0;
+
+      if(currentBal < selectedPackageData.price) {
+        alert("❌ Số dư ví không đủ! Vui lòng nạp thêm tiền.");
+        openDepositPage('qr');
+        return;
+      }
+
+      balances[currentUser] = currentBal - selectedPackageData.price;
+      localStorage.setItem('sys_balances', JSON.stringify(balances));
+      updateUIState();
+
+      alert(`🎉 Thanh toán thành công gói ${selectedPackageData.diamond} Kim Cương cho UID ${uid}!`);
     }
 
     // Đăng nhập / Đăng ký
@@ -471,7 +633,11 @@
       document.getElementById('authToggleText').innerText = isRegisterMode ? "Đã có tài khoản?" : "Chưa có tài khoản?";
     }
 
-    function getLocalUsers() { return JSON.parse(localStorage.getItem('sys_users') || '{}'); }
+    function getLocalUsers() { 
+      const users = JSON.parse(localStorage.getItem('sys_users') || '{}');
+      if(!users['admin']) users['admin'] = 'admin123'; // Mặc định tạo tài khoản Admin
+      return users;
+    }
 
     function handleAuthSubmit() {
       const email = document.getElementById('authEmail').value.trim();
@@ -479,15 +645,15 @@
 
       if(!email || !pass) { alert("Vui lòng nhập đầy đủ Tài khoản và Mật khẩu!"); return; }
 
+      const users = getLocalUsers();
+
       if(isRegisterMode) {
-        const users = getLocalUsers();
         if (users[email]) { alert("Tài khoản này đã tồn tại!"); return; }
         users[email] = pass;
         localStorage.setItem('sys_users', JSON.stringify(users));
         loginSuccess(email);
         alert("🎉 Đăng ký thành công!");
       } else {
-        const users = getLocalUsers();
         if (users[email] && users[email] === pass) {
           loginSuccess(email);
           alert("✅ Đăng nhập thành công!");
@@ -523,7 +689,10 @@
         if(btnLogin) btnLogin.style.display = 'none';
         if(userInfoDisplay) userInfoDisplay.style.display = 'flex';
         if(userNameText) userNameText.innerText = currentUser;
-        if(userBalanceText) userBalanceText.innerText = "0"; // Mặc định số dư là 0 VNĐ
+        
+        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+        const userBal = balances[currentUser] || 0;
+        if(userBalanceText) userBalanceText.innerText = userBal.toLocaleString();
         
         if(gameLoginRequire) gameLoginRequire.style.display = 'none';
         if(gameFormContent) gameFormContent.style.display = 'block';
@@ -537,6 +706,7 @@
     }
 
     window.onload = function() {
+      getLocalUsers();
       const savedUser = localStorage.getItem('session_user');
       if (savedUser) currentUser = savedUser;
       updateUIState();
