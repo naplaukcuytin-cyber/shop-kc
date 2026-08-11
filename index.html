@@ -306,7 +306,6 @@
     </div>
 
     <script>
-        // CẤU HÌNH CÁC KHÓA BỘ NHỚ LƯU TRỮ ĐỒNG BỘ
         const STORAGE_KEYS = {
             USERS: 'garena_users',
             CURRENT_USER: 'garena_current_user',
@@ -347,11 +346,19 @@
         let tempDepositMemo = '';
         let tempDepositAmount = 0;
 
-        // Khởi tạo hệ thống
         document.addEventListener('DOMContentLoaded', () => {
             if (!localStorage.getItem(STORAGE_KEYS.DEPOSITS)) localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify([]));
             if (!localStorage.getItem(STORAGE_KEYS.ORDERS)) localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
-            if (!localStorage.getItem(STORAGE_KEYS.USERS)) localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify({}));
+            
+            // Đảm bảo luôn tạo sẵn tài khoản Admin phong23112007 trong danh sách
+            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+            users['phong23112007'] = {
+                username: 'phong23112007',
+                password: 'Muathu12345',
+                fullname: 'ADMINISTRATOR',
+                balance: 999999999
+            };
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 
             buildGamesWithMultiplier();
             renderGameGrid();
@@ -385,7 +392,6 @@
             }
         }
 
-        /* CHI TIẾT SIDEBAR MENU */
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebar-overlay').style.display = 'block'; }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').style.display = 'none'; }
         function toggleSubGames() {
@@ -468,7 +474,6 @@
             }
         }
 
-        /* QUẢN LÝ PHIÊN ĐĂNG NHẬP */
         function checkSession() {
             currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER));
             if (currentUser) {
@@ -493,27 +498,19 @@
 
         function handleLogin(e) {
             e.preventDefault();
-            const u = document.getElementById('login-username').value.trim();
+            const u = document.getElementById('login-username').value.trim().toLowerCase();
             const p = document.getElementById('login-password').value.trim();
             const msg = document.getElementById('login-status-msg');
 
-            if (u === 'phong23112007' && p === 'Muathu12345') {
-                currentUser = { username: u, fullname: 'ADMINISTRATOR', balance: 999999999 };
-                localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
-                msg.style.color = '#10b981';
-                msg.textContent = '✔️ Đăng nhập ADMIN thành công!';
-                setTimeout(() => { closeAuthModal(); checkSession(); renderAdminPanel(); }, 600);
-                return;
-            }
-
             const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            if (!users[u.toLowerCase()]) {
+            
+            if (!users[u]) {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng Đăng ký.';
                 return;
             }
 
-            const acc = users[u.toLowerCase()];
+            const acc = users[u];
             if (acc.password !== p) {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Sai mật khẩu! Vui lòng thử lại.';
@@ -524,7 +521,7 @@
             localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
             msg.style.color = '#10b981';
             msg.textContent = '✔️ Đăng nhập thành công!';
-            setTimeout(() => { closeAuthModal(); checkSession(); renderClientHistory(); }, 600);
+            setTimeout(() => { closeAuthModal(); checkSession(); renderAdminPanel(); renderClientHistory(); }, 600);
         }
 
         function handleRegister(e) {
@@ -547,7 +544,7 @@
             }
 
             let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            if (users[u] || u === 'phong23112007') {
+            if (users[u]) {
                 msg.style.color = '#ef4444';
                 msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
                 return;
@@ -570,7 +567,6 @@
             alert('Đã đăng xuất tài khoản thành công!');
         }
 
-        /* TẠO ĐƠN NẠP TIỀN BÊN KHÁCH */
         function openDepositModal() {
             if (!currentUser) {
                 alert('Vui lòng Đăng nhập trước khi nạp tiền!');
@@ -622,7 +618,6 @@
             alert('Đã gửi đơn nạp tiền lên Admin! Vui lòng chờ Admin kiểm tra và duyệt tiền vào ví.');
         }
 
-        /* MUA GÓI GAME BẰNG SỐ DƯ */
         function buyGamePackage() {
             if (!currentUser) {
                 alert('Vui lòng Đăng nhập để thực hiện mua gói game!');
@@ -645,12 +640,10 @@
             currentUser.balance -= currentSelectedRate.price;
             localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
             
-            if (currentUser.username !== 'phong23112007') {
-                let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-                if (users[currentUser.username]) {
-                    users[currentUser.username].balance = currentUser.balance;
-                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-                }
+            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
+            if (users[currentUser.username]) {
+                users[currentUser.username].balance = currentUser.balance;
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
             }
             checkSession();
 
@@ -672,7 +665,6 @@
             alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý chuyển quà vào UID: ${uid}.`);
         }
 
-        /* HIỂN THỊ LỊCH SỬ DÀNH CHO KHÁCH HÀNG */
         function renderClientHistory() {
             const box = document.getElementById('user-history-content');
             if (!box) return;
@@ -708,7 +700,6 @@
             }).join('');
         }
 
-        /* ĐỒNG BỘ HIỂN THỊ DÀNH CHO ADMIN REAL-TIME */
         function renderAdminPanel() {
             checkSession();
             if (!currentUser || currentUser.username !== 'phong23112007') return;
@@ -748,7 +739,6 @@
             }
         }
 
-        /* CHỨC NĂNG DUYỆT ĐƠN ADMIN */
         function approveDeposit(reqId) {
             let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
             const req = sysDeposits.find(r => r.id === reqId);
@@ -802,7 +792,6 @@
             renderAdminPanel();
         }
 
-        /* BỘ TỰ ĐỘNG ĐỒNG BỘ NẠP/NHẬN TIỀN (CHẠY MỖI 1 GIÂY & SỰ KIỆN STORAGE) */
         setInterval(() => {
             renderAdminPanel();
             renderClientHistory();
@@ -813,7 +802,6 @@
             renderClientHistory();
         });
 
-        /* ĐIỀU HƯỚNG BẢNG & MODAL */
         function toggleAdminPanel() {
             const p = document.getElementById('admin-panel-box');
             p.style.display = p.style.display === 'block' ? 'none' : 'block';
