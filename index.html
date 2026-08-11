@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Dịch Vụ Game & Nạp Thẻ</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 1. KẾT NỐI THƯ VIỆN FIREBASE SDK (V8 CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         :root {
             --primary-red: #e41e26;
@@ -18,7 +23,7 @@
         body { background-color: var(--bg-body); color: var(--text-dark); padding-bottom: 40px; }
         .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 12px; }
 
-        /* HEADER NAV CỐ ĐỊNH TRƯỢT THEO MÀN HÌNH */
+        /* HEADER NAV CỐ ĐỊNH */
         .header-sticky-wrapper {
             position: sticky;
             top: 0;
@@ -51,7 +56,7 @@
         .btn-admin-access { background: #8b5cf6; color: #fff; padding: 6px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; border: none; cursor: pointer; margin-left: 4px; display: none; }
         .btn-logout-head { background: #64748b; color: #fff; border: none; padding: 4px 8px; border-radius: 10px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
 
-        /* MENU SIDEBAR 3 GẠCH CỐ ĐỊNH */
+        /* SIDEBAR MENU */
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; backdrop-filter: blur(3px); }
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #fff; z-index: 1000; transition: left 0.3s ease; padding: 20px 16px; overflow-y: auto; }
         .sidebar.active { left: 0; }
@@ -67,7 +72,7 @@
         .banner-card img { width: 100%; display: block; }
         .marquee-box { background: #fff; border-radius: 16px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.78rem; font-weight: 800; color: #e41e26; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
 
-        /* CARD SECTIONS */
+        /* SECTIONS */
         .section-card { background: var(--card-bg); border-radius: var(--border-radius); padding: 18px 16px; margin-bottom: 14px; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         .card-header-title { font-size: 0.72rem; font-weight: 800; color: #e41e26; text-transform: uppercase; margin-bottom: 4px; }
         .card-main-title { font-size: 1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; }
@@ -97,7 +102,7 @@
         .btn-action-approve { background: #10b981; color: #fff; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-right: 4px; }
         .btn-action-reject { background: #ef4444; color: #fff; border: none; padding: 6px 10px; border-radius: 8px; font-weight: 800; cursor: pointer; }
 
-        /* MODAL POPUPS */
+        /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
         .modal-card { background: #fff; width: 92%; max-width: 400px; border-radius: 24px; padding: 20px; position: relative; }
         .close-btn { position: absolute; top: 16px; right: 18px; font-size: 18px; font-weight: bold; color: #94a3b8; cursor: pointer; }
@@ -106,7 +111,6 @@
         .form-group input { width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.88rem; font-weight: 600; outline: none; }
         .security-warning { background: #fef2f2; border: 1px solid #fca5a5; color: #b91c1c; font-size: 0.72rem; font-weight: 700; padding: 8px 10px; border-radius: 10px; margin-bottom: 12px; line-height: 1.4; }
         .btn-modal { width: 100%; padding: 12px; background: #e41e26; color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.88rem; cursor: pointer; }
-
         .pass-strength { font-size: 0.72rem; font-weight: 800; margin-top: 4px; display: block; }
     </style>
 </head>
@@ -157,8 +161,9 @@
 
     <main class="container">
 
+        <!-- ADMIN PANEL -->
         <div class="admin-panel" id="admin-panel-box">
-            <h3>⚙️ TRANG QUẢN TRỊ ADMIN (TOÀN QUYỀN HỆ THỐNG)</h3>
+            <h3>⚙️ TRANG QUẢN TRỊ ADMIN (REALTIME FIREBASE)</h3>
             
             <div style="background:#f1f5f9; padding:10px; border-radius:12px; margin-bottom:12px;">
                 <label style="font-size:0.75rem; font-weight:800;">⚙️ CHỈNH HỆ SỐ NẠP ƯU ĐÃI (MẶC ĐỊNH X10):</label>
@@ -178,10 +183,10 @@
             </div>
 
             <p style="font-size:0.75rem; font-weight:800; color:#475569; margin-bottom:6px;">💳 Yêu cầu Nạp Số Dư VNĐ từ khách:</p>
-            <div id="admin-deposit-requests"><p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p></div>
+            <div id="admin-deposit-requests"><p style="font-size:0.72rem; color:#64748b;">Đang tải dữ liệu từ Firebase...</p></div>
 
             <p style="font-size:0.75rem; font-weight:800; color:#475569; margin-top:12px; margin-bottom:6px;">🛒 Đơn Mua Gói Game mới nhất từ khách:</p>
-            <div id="admin-order-requests"><p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p></div>
+            <div id="admin-order-requests"><p style="font-size:0.72rem; color:#64748b;">Đang tải dữ liệu từ Firebase...</p></div>
         </div>
 
         <div class="banner-card">
@@ -220,6 +225,7 @@
 
     </main>
 
+    <!-- MODAL AUTH -->
     <div class="modal-overlay" id="auth-modal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeAuthModal()">✕</span>
@@ -267,6 +273,7 @@
         </div>
     </div>
 
+    <!-- MODAL DEPOSIT -->
     <div class="modal-overlay" id="deposit-modal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeDepositModal()">✕</span>
@@ -295,6 +302,7 @@
         </div>
     </div>
 
+    <!-- MODAL HISTORY -->
     <div class="modal-overlay" id="history-modal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeHistoryModal()">✕</span>
@@ -305,17 +313,25 @@
         </div>
     </div>
 
+    <!-- 2. SCRIPT XỬ LÝ DỮ LIỆU ĐÁM MÂY FIREBASE REALTIME -->
     <script>
-        const STORAGE_KEYS = {
-            USERS: 'garena_users',
-            CURRENT_USER: 'garena_current_user',
-            DEPOSITS: 'garena_deposits',
-            ORDERS: 'garena_orders',
-            RATE: 'garena_rate'
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQ29HuNZ64Zb-nvkktuKS0yOhLt-_uZ_o",
+            authDomain: "web-nap-game.firebaseapp.com",
+            databaseURL: "https://web-nap-game-default-rtdb.firebaseio.com",
+            projectId: "web-nap-game",
+            storageBucket: "web-nap-game.firebasestorage.app",
+            messagingSenderId: "660979036189",
+            appId: "1:660979036189:web:667799b50159bf914dd6f4",
+            measurementId: "G-M7CVEZV97N"
         };
 
-        let multiplier = parseInt(localStorage.getItem(STORAGE_KEYS.RATE)) || 10;
+        // Khởi tạo kết nối Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
+        let multiplier = 10;
         const BASE_GAMES_LIST = [
             { id: 1, name: 'Free Fire', unitSymbol: '💎', unitName: 'Kim Cương', img: 'https://ff.garena.vn/static/images/logo.png', baseRates: [
                 { price: 50000, priceText: '50.000 đ', baseAmount: 283 },
@@ -341,31 +357,32 @@
         let GAMES_LIST = [];
         let currentSelectedGame = null;
         let currentSelectedRate = null;
-        
-        let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
+        let currentUser = JSON.parse(localStorage.getItem('garena_current_user')) || null;
         let tempDepositMemo = '';
         let tempDepositAmount = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (!localStorage.getItem(STORAGE_KEYS.DEPOSITS)) localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify([]));
-            if (!localStorage.getItem(STORAGE_KEYS.ORDERS)) localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
-            
-            // Đảm bảo luôn tạo sẵn tài khoản Admin phong23112007 trong danh sách
-            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            users['phong23112007'] = {
+            // Tải hệ số multiplier từ Firebase
+            db.ref('settings/multiplier').on('value', snap => {
+                if (snap.exists()) multiplier = snap.val();
+                buildGamesWithMultiplier();
+                renderPriceGrid();
+            });
+
+            // Luôn đảm bảo tài khoản Admin tồn tại trên Firebase Database
+            db.ref('users/phong23112007').set({
                 username: 'phong23112007',
                 password: 'Muathu12345',
                 fullname: 'ADMINISTRATOR',
                 balance: 999999999
-            };
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            });
 
             buildGamesWithMultiplier();
             renderGameGrid();
             renderPriceGrid();
-            checkSession();
-            renderAdminPanel();
-            renderClientHistory();
+            listenCurrentUser();
+            listenAdminData();
+            listenHistoryData();
         });
 
         function buildGamesWithMultiplier() {
@@ -384,11 +401,8 @@
         function updateMultiplier() {
             const val = parseInt(document.getElementById('admin-rate-multiplier').value);
             if(val && val >= 1) {
-                multiplier = val;
-                localStorage.setItem(STORAGE_KEYS.RATE, multiplier.toString());
-                buildGamesWithMultiplier();
-                renderPriceGrid();
-                alert(`Đã cập nhật hệ số nhân ưu đãi gấp ${multiplier} lần!`);
+                db.ref('settings/multiplier').set(val);
+                alert(`Đã cập nhật hệ số nhân ưu đãi gấp ${val} lần trên toàn hệ thống!`);
             }
         }
 
@@ -470,24 +484,29 @@
                 msg.textContent = '✔️ Mật khẩu RẤT MẠNH!';
             } else {
                 msg.style.color = '#f59e0b';
-                msg.textContent = '⚠️ Mật khẩu TRUNG BÌNH (Thêm chữ hoa và số)';
+                msg.textContent = '⚠️ Mật khẩu TRUNG BÌNH';
             }
         }
 
-        function checkSession() {
-            currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER));
+        function listenCurrentUser() {
             if (currentUser) {
-                document.getElementById('btn-login-trigger').style.display = 'none';
-                document.getElementById('user-logged-box').style.display = 'flex';
-                document.getElementById('header-user-name').textContent = currentUser.fullname || currentUser.username;
-                document.getElementById('header-user-balance').textContent = `${(currentUser.balance || 0).toLocaleString('vi-VN')} đ`;
+                db.ref('users/' + currentUser.username).on('value', snap => {
+                    if (snap.exists()) {
+                        currentUser = snap.val();
+                        localStorage.setItem('garena_current_user', JSON.stringify(currentUser));
+                        document.getElementById('btn-login-trigger').style.display = 'none';
+                        document.getElementById('user-logged-box').style.display = 'flex';
+                        document.getElementById('header-user-name').textContent = currentUser.fullname || currentUser.username;
+                        document.getElementById('header-user-balance').textContent = `${(currentUser.balance || 0).toLocaleString('vi-VN')} đ`;
 
-                if (currentUser.username === 'phong23112007') {
-                    document.getElementById('btn-admin-panel').style.display = 'inline-block';
-                } else {
-                    document.getElementById('btn-admin-panel').style.display = 'none';
-                    document.getElementById('admin-panel-box').style.display = 'none';
-                }
+                        if (currentUser.username === 'phong23112007') {
+                            document.getElementById('btn-admin-panel').style.display = 'inline-block';
+                        } else {
+                            document.getElementById('btn-admin-panel').style.display = 'none';
+                            document.getElementById('admin-panel-box').style.display = 'none';
+                        }
+                    }
+                });
             } else {
                 document.getElementById('btn-login-trigger').style.display = 'block';
                 document.getElementById('user-logged-box').style.display = 'none';
@@ -502,26 +521,26 @@
             const p = document.getElementById('login-password').value.trim();
             const msg = document.getElementById('login-status-msg');
 
-            const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            
-            if (!users[u]) {
-                msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng Đăng ký.';
-                return;
-            }
+            db.ref('users/' + u).once('value', snap => {
+                if (!snap.exists()) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = '✖️ Tài khoản không tồn tại! Vui lòng Đăng ký.';
+                    return;
+                }
 
-            const acc = users[u];
-            if (acc.password !== p) {
-                msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Sai mật khẩu! Vui lòng thử lại.';
-                return;
-            }
+                const acc = snap.val();
+                if (acc.password !== p) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = '✖️ Sai mật khẩu! Vui lòng thử lại.';
+                    return;
+                }
 
-            currentUser = acc;
-            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
-            msg.style.color = '#10b981';
-            msg.textContent = '✔️ Đăng nhập thành công!';
-            setTimeout(() => { closeAuthModal(); checkSession(); renderAdminPanel(); renderClientHistory(); }, 600);
+                currentUser = acc;
+                localStorage.setItem('garena_current_user', JSON.stringify(currentUser));
+                msg.style.color = '#10b981';
+                msg.textContent = '✔️ Đăng nhập thành công!';
+                setTimeout(() => { closeAuthModal(); listenCurrentUser(); }, 600);
+            });
         }
 
         function handleRegister(e) {
@@ -543,27 +562,26 @@
                 return;
             }
 
-            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            if (users[u]) {
-                msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
-                return;
-            }
+            db.ref('users/' + u).once('value', snap => {
+                if (snap.exists()) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
+                    return;
+                }
 
-            const newAcc = { username: u, password: p, fullname: name, balance: 0 };
-            users[u] = newAcc;
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-            
-            msg.style.color = '#10b981';
-            msg.textContent = '✔️ Đăng ký thành công! Hãy bấm Đăng Nhập.';
-            setTimeout(() => switchAuthTab('login'), 1000);
+                const newAcc = { username: u, password: p, fullname: name, balance: 0 };
+                db.ref('users/' + u).set(newAcc);
+                
+                msg.style.color = '#10b981';
+                msg.textContent = '✔️ Đăng ký thành công! Hãy bấm Đăng Nhập.';
+                setTimeout(() => switchAuthTab('login'), 1000);
+            });
         }
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-            checkSession();
-            renderClientHistory();
+            localStorage.removeItem('garena_current_user');
+            listenCurrentUser();
             alert('Đã đăng xuất tài khoản thành công!');
         }
 
@@ -597,25 +615,21 @@
         }
 
         function submitDepositOrder() {
-            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
-            
+            const newReqKey = db.ref('deposits').push().key;
             const newReq = {
-                id: tempDepositMemo,
+                id: newReqKey,
+                memoCode: tempDepositMemo,
                 username: currentUser.username,
                 fullname: currentUser.fullname || currentUser.username,
                 amount: tempDepositAmount,
-                memo: tempDepositMemo,
                 status: 'pending',
                 time: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
             };
 
-            sysDeposits.unshift(newReq);
-            localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
+            db.ref('deposits/' + newReqKey).set(newReq);
 
             closeDepositModal();
-            renderAdminPanel();
-            renderClientHistory();
-            alert('Đã gửi đơn nạp tiền lên Admin! Vui lòng chờ Admin kiểm tra và duyệt tiền vào ví.');
+            alert('Đã gửi đơn nạp tiền lên Admin trên Firebase! Vui lòng chờ Admin duyệt.');
         }
 
         function buyGamePackage() {
@@ -632,143 +646,95 @@
             }
 
             if ((currentUser.balance || 0) < currentSelectedRate.price) {
-                alert(`Số dư VNĐ không đủ! Bạn cần ${currentSelectedRate.priceText} để mua gói này. Hãy bấm nút [+ NẠP].`);
+                alert(`Số dư VNĐ không đủ! Bạn cần ${currentSelectedRate.priceText} để mua gói này. Hãy bấm [+ NẠP].`);
                 openDepositModal();
                 return;
             }
 
-            currentUser.balance -= currentSelectedRate.price;
-            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
-            
-            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            if (users[currentUser.username]) {
-                users[currentUser.username].balance = currentUser.balance;
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-            }
-            checkSession();
+            const newBalance = currentUser.balance - currentSelectedRate.price;
+            db.ref('users/' + currentUser.username + '/balance').set(newBalance);
 
-            let sysOrders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS)) || [];
-            sysOrders.unshift({
-                id: Date.now(),
+            const orderKey = db.ref('orders').push().key;
+            db.ref('orders/' + orderKey).set({
+                id: orderKey,
                 user: currentUser.fullname || currentUser.username,
+                username: currentUser.username,
                 uid: uid,
                 game: currentSelectedGame.name,
                 package: currentSelectedRate.amount,
                 price: currentSelectedRate.priceText,
                 status: 'Đã thanh toán - Chờ Admin phát quà',
-                time: new Date().toLocaleTimeString('vi-VN')
+                time: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
             });
-            localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(sysOrders));
 
-            renderAdminPanel();
-            renderClientHistory();
-            alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý chuyển quà vào UID: ${uid}.`);
+            alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý quà vào UID: ${uid}.`);
         }
 
-        function renderClientHistory() {
-            const box = document.getElementById('user-history-content');
-            if (!box) return;
-
-            if (!currentUser) {
-                box.innerHTML = `<p style="color:#64748b; text-align:center;">Vui lòng đăng nhập để xem lịch sử.</p>`;
-                return;
-            }
-
-            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
-            let myDeposits = sysDeposits.filter(d => d.username === currentUser.username);
-
-            if (myDeposits.length === 0) {
-                box.innerHTML = `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
-                return;
-            }
-
-            box.innerHTML = myDeposits.map(h => {
-                let st = '';
-                if(h.status === 'pending') st = '<span style="color:orange; font-weight:800;">🟡 Đang chờ Admin duyệt</span>';
-                else if(h.status === 'approved') st = '<span style="color:#10b981; font-weight:800;">🟢 Đã duyệt thành công</span>';
-                else st = '<span style="color:#ef4444; font-weight:800;">🔴 Đã bị từ chối</span>';
-
-                return `
-                    <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
-                        <div style="font-weight:700;">Nạp tiền vào Số Dư (${h.memo || h.id})</div>
-                        <div style="display:flex; justify-content:space-between; margin-top:2px;">
-                            <span style="color:#e41e26; font-weight:800;">+${h.amount.toLocaleString('vi-VN')} đ</span>
-                            ${st}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderAdminPanel() {
-            checkSession();
-            if (!currentUser || currentUser.username !== 'phong23112007') return;
-
-            const sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
-            const depBox = document.getElementById('admin-deposit-requests');
-            const pendingList = sysDeposits.filter(d => d.status === 'pending');
-
-            if (pendingList.length === 0) {
-                depBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p>`;
-            } else {
-                depBox.innerHTML = pendingList.map(r => `
-                    <div class="admin-item">
-                        <div>Khách: <strong>${r.fullname || r.username}</strong> (${r.username})</div>
-                        <div>Số tiền: <strong style="color:#e41e26;">${r.amount.toLocaleString('vi-VN')} đ</strong></div>
-                        <div>Mã CK: <strong style="color:#8b5cf6;">${r.memo || r.id}</strong> (${r.time})</div>
-                        <div style="margin-top:6px;">
-                            <button class="btn-action-approve" onclick="approveDeposit('${r.id}')">✔ DUYỆT & CẤP TIỀN</button>
-                            <button class="btn-action-reject" onclick="rejectDeposit('${r.id}')">✖ HỦY ĐƠN</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            const sysOrders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS)) || [];
-            const ordBox = document.getElementById('admin-order-requests');
-            if (sysOrders.length === 0) {
-                ordBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p>`;
-            } else {
-                ordBox.innerHTML = sysOrders.map(o => `
-                    <div class="admin-item">
-                        <div>Khách: <strong>${o.user}</strong> | UID: <strong style="color:#0284c7;">${o.uid}</strong></div>
-                        <div>Mua: <strong>${o.game} - ${o.package}</strong> (${o.price})</div>
-                        <div style="color:#10b981; font-weight:800; margin-top:2px;">${o.status}</div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function approveDeposit(reqId) {
-            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
-            const req = sysDeposits.find(r => r.id === reqId);
-            
-            if (req) {
-                req.status = 'approved';
-                localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
-
-                let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-                if (users[req.username]) {
-                    users[req.username].balance = (users[req.username].balance || 0) + req.amount;
-                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+        function listenAdminData() {
+            // Lắng nghe realtime danh sách nạp tiền
+            db.ref('deposits').on('value', snap => {
+                const depBox = document.getElementById('admin-deposit-requests');
+                if (!snap.exists()) {
+                    depBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p>`;
+                    return;
                 }
 
-                alert(`Đã duyệt và cấp +${req.amount.toLocaleString('vi-VN')} VNĐ cho khách ${req.username}!`);
-                renderAdminPanel();
-                renderClientHistory();
-            }
+                const deposits = snap.val();
+                let html = '';
+                Object.keys(deposits).reverse().forEach(k => {
+                    const r = deposits[k];
+                    if (r.status === 'pending') {
+                        html += `
+                            <div class="admin-item">
+                                <div>Khách: <strong>${r.fullname}</strong> (${r.username})</div>
+                                <div>Số tiền: <strong style="color:#e41e26;">${r.amount.toLocaleString('vi-VN')} đ</strong></div>
+                                <div>Mã CK: <strong style="color:#8b5cf6;">${r.memoCode}</strong> (${r.time})</div>
+                                <div style="margin-top:6px;">
+                                    <button class="btn-action-approve" onclick="approveDeposit('${r.id}', '${r.username}', ${r.amount})">✔ DUYỆT & CẤP TIỀN</button>
+                                    <button class="btn-action-reject" onclick="rejectDeposit('${r.id}')">✖ HỦY ĐƠN</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                depBox.innerHTML = html || `<p style="font-size:0.72rem; color:#64748b;">Không có đơn nạp chờ duyệt nào.</p>`;
+            });
+
+            // Lắng nghe realtime danh sách đơn mua game
+            db.ref('orders').on('value', snap => {
+                const ordBox = document.getElementById('admin-order-requests');
+                if (!snap.exists()) {
+                    ordBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p>`;
+                    return;
+                }
+
+                const orders = snap.val();
+                let html = '';
+                Object.keys(orders).reverse().forEach(k => {
+                    const o = orders[k];
+                    html += `
+                        <div class="admin-item">
+                            <div>Khách: <strong>${o.user}</strong> | UID: <strong style="color:#0284c7;">${o.uid}</strong></div>
+                            <div>Mua: <strong>${o.game} - ${o.package}</strong> (${o.price})</div>
+                            <div style="color:#10b981; font-weight:800; margin-top:2px;">${o.status}</div>
+                        </div>
+                    `;
+                });
+                ordBox.innerHTML = html;
+            });
+        }
+
+        function approveDeposit(reqId, targetUsername, amount) {
+            db.ref('deposits/' + reqId + '/status').set('approved');
+            db.ref('users/' + targetUsername + '/balance').transaction(currentBal => {
+                return (currentBal || 0) + amount;
+            });
+            alert(`Đã duyệt +${amount.toLocaleString('vi-VN')} VNĐ cho khách ${targetUsername}!`);
         }
 
         function rejectDeposit(reqId) {
-            let sysDeposits = JSON.parse(localStorage.getItem(STORAGE_KEYS.DEPOSITS)) || [];
-            const req = sysDeposits.find(r => r.id === reqId);
-            if (req) {
-                req.status = 'rejected';
-                localStorage.setItem(STORAGE_KEYS.DEPOSITS, JSON.stringify(sysDeposits));
-                renderAdminPanel();
-                renderClientHistory();
-                alert(`Đã từ chối đơn nạp ${req.id}.`);
-            }
+            db.ref('deposits/' + reqId + '/status').set('rejected');
+            alert(`Đã từ chối đơn nạp ${reqId}.`);
         }
 
         function adminDirectChangeBalance() {
@@ -778,29 +744,56 @@
             if(!targetU) return alert('Vui lòng nhập username của khách!');
             if(isNaN(amount)) return alert('Vui lòng nhập số tiền (+ hoặc -)!');
 
-            let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || {};
-            if(!users[targetU]) return alert('Không tìm thấy tài khoản khách này!');
+            db.ref('users/' + targetU).once('value', snap => {
+                if(!snap.exists()) return alert('Không tìm thấy tài khoản khách này trên Firebase!');
+                
+                db.ref('users/' + targetU + '/balance').transaction(cur => {
+                    let newB = (cur || 0) + amount;
+                    return newB < 0 ? 0 : newB;
+                });
 
-            users[targetU].balance = (users[targetU].balance || 0) + amount;
-            if(users[targetU].balance < 0) users[targetU].balance = 0;
-
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-
-            alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho khách [${targetU}]!`);
-            document.getElementById('admin-target-user').value = '';
-            document.getElementById('admin-target-amount').value = '';
-            renderAdminPanel();
+                alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho khách [${targetU}]!`);
+                document.getElementById('admin-target-user').value = '';
+                document.getElementById('admin-target-amount').value = '';
+            });
         }
 
-        setInterval(() => {
-            renderAdminPanel();
-            renderClientHistory();
-        }, 1000);
+        function listenHistoryData() {
+            if (!currentUser) return;
+            db.ref('deposits').on('value', snap => {
+                const box = document.getElementById('user-history-content');
+                if (!box || !currentUser) return;
 
-        window.addEventListener('storage', () => {
-            renderAdminPanel();
-            renderClientHistory();
-        });
+                if (!snap.exists()) {
+                    box.innerHTML = `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
+                    return;
+                }
+
+                const deposits = snap.val();
+                let html = '';
+                Object.keys(deposits).reverse().forEach(k => {
+                    const h = deposits[k];
+                    if (h.username === currentUser.username) {
+                        let st = '';
+                        if(h.status === 'pending') st = '<span style="color:orange; font-weight:800;">🟡 Đang chờ Admin duyệt</span>';
+                        else if(h.status === 'approved') st = '<span style="color:#10b981; font-weight:800;">🟢 Đã duyệt thành công</span>';
+                        else st = '<span style="color:#ef4444; font-weight:800;">🔴 Đã bị từ chối</span>';
+
+                        html += `
+                            <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
+                                <div style="font-weight:700;">Nạp tiền vào Số Dư (${h.memoCode})</div>
+                                <div style="display:flex; justify-content:space-between; margin-top:2px;">
+                                    <span style="color:#e41e26; font-weight:800;">+${h.amount.toLocaleString('vi-VN')} đ</span>
+                                    ${st}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                box.innerHTML = html || `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
+            });
+        }
 
         function toggleAdminPanel() {
             const p = document.getElementById('admin-panel-box');
@@ -820,7 +813,7 @@
                 return;
             }
             document.getElementById('history-modal').style.display = 'flex';
-            renderClientHistory();
+            listenHistoryData();
         }
         function closeHistoryModal() { document.getElementById('history-modal').style.display = 'none'; }
 
