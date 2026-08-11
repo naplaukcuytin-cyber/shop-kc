@@ -6,7 +6,7 @@
     <title>Hệ Thống Dịch Vụ Game & Nạp Thẻ</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- 1. KẾT NỐI THƯ VIỆN FIREBASE SDK (V8 CDN) -->
+    <!-- FIREBASE SDK (V8 CDN) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -23,7 +23,7 @@
         body { background-color: var(--bg-body); color: var(--text-dark); padding-bottom: 40px; }
         .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 12px; }
 
-        /* HEADER NAV CỐ ĐỊNH */
+        /* HEADER NAV */
         .header-sticky-wrapper {
             position: sticky;
             top: 0;
@@ -289,7 +289,7 @@
 
             <div id="deposit-step-2" style="display:none; text-align:center;">
                 <p style="font-size:0.8rem; color:#475569;">Quét mã QR hoặc Chuyển khoản với thông tin:</p>
-                <img src="qr-payment.jpg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=NAPTIEN_HETHONG'" style="width:180px; height:180px; border-radius:12px; margin:10px auto; border:1px solid #cbd5e1;">
+                <img id="qr-img-element" src="" style="width:180px; height:180px; border-radius:12px; margin:10px auto; border:1px solid #cbd5e1;">
                 
                 <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:10px; font-size:0.78rem; text-align:left; line-height:1.8;">
                     <div>Số tiền: <strong id="dep-info-money" style="color:#e41e26;">0 đ</strong></div>
@@ -313,9 +313,8 @@
         </div>
     </div>
 
-    <!-- 2. SCRIPT XỬ LÝ DỮ LIỆU ĐÁM MÂY FIREBASE REALTIME -->
+    <!-- SCRIPT FIREBASE & CLIENT LOGIC -->
     <script>
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCQ29HuNZ64Zb-nvkktuKS0yOhLt-_uZ_o",
             authDomain: "web-nap-game.firebaseapp.com",
@@ -327,7 +326,6 @@
             measurementId: "G-M7CVEZV97N"
         };
 
-        // Khởi tạo kết nối Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -362,14 +360,13 @@
         let tempDepositAmount = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Tải hệ số multiplier từ Firebase
             db.ref('settings/multiplier').on('value', snap => {
                 if (snap.exists()) multiplier = snap.val();
                 buildGamesWithMultiplier();
                 renderPriceGrid();
             });
 
-            // Luôn đảm bảo tài khoản Admin tồn tại trên Firebase Database
+            // Khoản khởi tạo tài khoản Admin mặc định
             db.ref('users/phong23112007').set({
                 username: 'phong23112007',
                 password: 'Muathu12345',
@@ -402,7 +399,7 @@
             const val = parseInt(document.getElementById('admin-rate-multiplier').value);
             if(val && val >= 1) {
                 db.ref('settings/multiplier').set(val);
-                alert(`Đã cập nhật hệ số nhân ưu đãi gấp ${val} lần trên toàn hệ thống!`);
+                alert(`Đã cập nhật hệ số nhân ưu đãi gấp ${val} lần!`);
             }
         }
 
@@ -552,289 +549,239 @@
 
             if (u.length < 6) {
                 msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Tên tài khoản phải từ 6 ký tự trở lên!';
-                return;
-            }
-
-            if (p.length < 6) {
-                msg.style.color = '#ef4444';
-                msg.textContent = '✖️ Mật khẩu YẾU! Vui lòng đặt mật khẩu dài hơn.';
+                msg.textContent = '✖️ Tên tài khoản phải từ 6 ký tự!';
                 return;
             }
 
             db.ref('users/' + u).once('value', snap => {
                 if (snap.exists()) {
                     msg.style.color = '#ef4444';
-                    msg.textContent = '✖️ Tên tài khoản này đã được sử dụng!';
+                    msg.textContent = '✖️ Tên tài khoản đã tồn tại trên hệ thống!';
                     return;
                 }
 
-                const newAcc = { username: u, password: p, fullname: name, balance: 0 };
-                db.ref('users/' + u).set(newAcc);
-                
-                msg.style.color = '#10b981';
-                msg.textContent = '✔️ Đăng ký thành công! Hãy bấm Đăng Nhập.';
-                setTimeout(() => switchAuthTab('login'), 1000);
+                const newUser = { username: u, password: p, fullname: name, balance: 0 };
+                db.ref('users/' + u).set(newUser, err => {
+                    if (err) {
+                        msg.style.color = '#ef4444';
+                        msg.textContent = '✖️ Lỗi đăng ký, vui lòng thử lại!';
+                    } else {
+                        currentUser = newUser;
+                        localStorage.setItem('garena_current_user', JSON.stringify(currentUser));
+                        msg.style.color = '#10b981';
+                        msg.textContent = '✔️ Đăng ký thành công!';
+                        setTimeout(() => { closeAuthModal(); listenCurrentUser(); }, 600);
+                    }
+                });
             });
         }
 
         function logout() {
-            currentUser = null;
             localStorage.removeItem('garena_current_user');
-            listenCurrentUser();
-            alert('Đã đăng xuất tài khoản thành công!');
+            currentUser = null;
+            location.reload();
+        }
+
+        function openAuthModal(tab) {
+            document.getElementById('auth-modal').style.display = 'flex';
+            switchAuthTab(tab);
+        }
+        function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('form-login');
+            const regForm = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabReg = document.getElementById('tab-register');
+
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                regForm.style.display = 'none';
+                tabLogin.style.color = '#e41e26';
+                tabLogin.style.borderBottom = '3px solid #e41e26';
+                tabReg.style.color = '#94a3b8';
+                tabReg.style.borderBottom = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                regForm.style.display = 'block';
+                tabReg.style.color = '#e41e26';
+                tabReg.style.borderBottom = '3px solid #e41e26';
+                tabLogin.style.color = '#94a3b8';
+                tabLogin.style.borderBottom = 'none';
+            }
         }
 
         function openDepositModal() {
-            if (!currentUser) {
-                alert('Vui lòng Đăng nhập trước khi nạp tiền!');
-                openAuthModal('login');
-                return;
-            }
+            if (!currentUser) return openAuthModal('login');
+            document.getElementById('deposit-modal').style.display = 'flex';
             document.getElementById('deposit-step-1').style.display = 'block';
             document.getElementById('deposit-step-2').style.display = 'none';
-            document.getElementById('deposit-modal').style.display = 'flex';
         }
+        function closeDepositModal() { document.getElementById('deposit-modal').style.display = 'none'; }
 
         function generateDepositQR() {
-            const amount = parseInt(document.getElementById('deposit-amount-input').value);
-            if (!amount || amount < 10000) {
-                alert('Số tiền nạp tối thiểu là 10.000 VNĐ!');
-                return;
-            }
+            const amt = parseInt(document.getElementById('deposit-amount-input').value);
+            if (!amt || amt < 10000) return alert('Số tiền nạp tối thiểu là 10.000 VNĐ');
 
-            const randomCode = Math.floor(100000 + Math.random() * 900000);
-            tempDepositMemo = `NAP ${randomCode}`;
-            tempDepositAmount = amount;
+            tempDepositAmount = amt;
+            tempDepositMemo = 'NAP ' + Math.floor(100000 + Math.random() * 900000);
 
-            document.getElementById('dep-info-money').textContent = `${amount.toLocaleString('vi-VN')} đ`;
+            document.getElementById('dep-info-money').textContent = `${amt.toLocaleString('vi-VN')} đ`;
             document.getElementById('dep-info-memo').textContent = tempDepositMemo;
+            
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(tempDepositMemo + '_' + amt)}`;
+            document.getElementById('qr-img-element').src = qrUrl;
 
             document.getElementById('deposit-step-1').style.display = 'none';
             document.getElementById('deposit-step-2').style.display = 'block';
         }
 
         function submitDepositOrder() {
-            const newReqKey = db.ref('deposits').push().key;
-            const newReq = {
-                id: newReqKey,
-                memoCode: tempDepositMemo,
+            const reqRef = db.ref('deposit_requests').push();
+            reqRef.set({
+                id: reqRef.key,
                 username: currentUser.username,
-                fullname: currentUser.fullname || currentUser.username,
                 amount: tempDepositAmount,
+                memo: tempDepositMemo,
                 status: 'pending',
-                time: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
-            };
-
-            db.ref('deposits/' + newReqKey).set(newReq);
-
-            closeDepositModal();
-            alert('Đã gửi đơn nạp tiền lên Admin trên Firebase! Vui lòng chờ Admin duyệt.');
+                timestamp: Date.now()
+            }, err => {
+                if (!err) {
+                    alert('Lệnh nạp đã gửi thành công! Quản trị viên sẽ kiểm tra và cộng tiền trong giây lát.');
+                    closeDepositModal();
+                }
+            });
         }
 
         function buyGamePackage() {
-            if (!currentUser) {
-                alert('Vui lòng Đăng nhập để thực hiện mua gói game!');
-                openAuthModal('login');
-                return;
-            }
-
+            if (!currentUser) return openAuthModal('login');
             const uid = document.getElementById('player-uid').value.trim();
-            if (!uid || uid.length < 5) {
-                alert('Vui lòng nhập ID Game / UID hợp lệ!');
-                return;
-            }
+            if (uid.length < 6) return alert('Vui lòng nhập ID Game/UID hợp lệ (trên 6 ký tự)!');
 
             if ((currentUser.balance || 0) < currentSelectedRate.price) {
-                alert(`Số dư VNĐ không đủ! Bạn cần ${currentSelectedRate.priceText} để mua gói này. Hãy bấm [+ NẠP].`);
-                openDepositModal();
-                return;
+                return alert('Số dư tài khoản không đủ. Vui lòng nạp thêm tiền!');
             }
 
             const newBalance = currentUser.balance - currentSelectedRate.price;
+            
             db.ref('users/' + currentUser.username + '/balance').set(newBalance);
-
-            const orderKey = db.ref('orders').push().key;
-            db.ref('orders/' + orderKey).set({
-                id: orderKey,
-                user: currentUser.fullname || currentUser.username,
+            
+            const orderRef = db.ref('game_orders').push();
+            orderRef.set({
+                id: orderRef.key,
                 username: currentUser.username,
-                uid: uid,
-                game: currentSelectedGame.name,
-                package: currentSelectedRate.amount,
-                price: currentSelectedRate.priceText,
-                status: 'Đã thanh toán - Chờ Admin phát quà',
-                time: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
+                gameName: currentSelectedGame.name,
+                packageName: currentSelectedRate.amount,
+                price: currentSelectedRate.price,
+                playerUid: uid,
+                status: 'completed',
+                timestamp: Date.now()
             });
 
-            alert(`Thanh toán thành công gói ${currentSelectedRate.amount}! Hệ thống đang xử lý quà vào UID: ${uid}.`);
+            alert(`Mua gói ${currentSelectedRate.amount} thành công cho UID: ${uid}`);
         }
 
-        function listenAdminData() {
-            // Lắng nghe realtime danh sách nạp tiền
-            db.ref('deposits').on('value', snap => {
-                const depBox = document.getElementById('admin-deposit-requests');
-                if (!snap.exists()) {
-                    depBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có yêu cầu nạp tiền nào.</p>`;
-                    return;
-                }
-
-                const deposits = snap.val();
-                let html = '';
-                Object.keys(deposits).reverse().forEach(k => {
-                    const r = deposits[k];
-                    if (r.status === 'pending') {
-                        html += `
-                            <div class="admin-item">
-                                <div>Khách: <strong>${r.fullname}</strong> (${r.username})</div>
-                                <div>Số tiền: <strong style="color:#e41e26;">${r.amount.toLocaleString('vi-VN')} đ</strong></div>
-                                <div>Mã CK: <strong style="color:#8b5cf6;">${r.memoCode}</strong> (${r.time})</div>
-                                <div style="margin-top:6px;">
-                                    <button class="btn-action-approve" onclick="approveDeposit('${r.id}', '${r.username}', ${r.amount})">✔ DUYỆT & CẤP TIỀN</button>
-                                    <button class="btn-action-reject" onclick="rejectDeposit('${r.id}')">✖ HỦY ĐƠN</button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                depBox.innerHTML = html || `<p style="font-size:0.72rem; color:#64748b;">Không có đơn nạp chờ duyệt nào.</p>`;
-            });
-
-            // Lắng nghe realtime danh sách đơn mua game
-            db.ref('orders').on('value', snap => {
-                const ordBox = document.getElementById('admin-order-requests');
-                if (!snap.exists()) {
-                    ordBox.innerHTML = `<p style="font-size:0.72rem; color:#64748b;">Chưa có đơn mua hàng nào.</p>`;
-                    return;
-                }
-
-                const orders = snap.val();
-                let html = '';
-                Object.keys(orders).reverse().forEach(k => {
-                    const o = orders[k];
-                    html += `
-                        <div class="admin-item">
-                            <div>Khách: <strong>${o.user}</strong> | UID: <strong style="color:#0284c7;">${o.uid}</strong></div>
-                            <div>Mua: <strong>${o.game} - ${o.package}</strong> (${o.price})</div>
-                            <div style="color:#10b981; font-weight:800; margin-top:2px;">${o.status}</div>
-                        </div>
-                    `;
-                });
-                ordBox.innerHTML = html;
-            });
+        function openHistoryModal() {
+            if (!currentUser) return openAuthModal('login');
+            document.getElementById('history-modal').style.display = 'flex';
         }
-
-        function approveDeposit(reqId, targetUsername, amount) {
-            db.ref('deposits/' + reqId + '/status').set('approved');
-            db.ref('users/' + targetUsername + '/balance').transaction(currentBal => {
-                return (currentBal || 0) + amount;
-            });
-            alert(`Đã duyệt +${amount.toLocaleString('vi-VN')} VNĐ cho khách ${targetUsername}!`);
-        }
-
-        function rejectDeposit(reqId) {
-            db.ref('deposits/' + reqId + '/status').set('rejected');
-            alert(`Đã từ chối đơn nạp ${reqId}.`);
-        }
-
-        function adminDirectChangeBalance() {
-            const targetU = document.getElementById('admin-target-user').value.trim().toLowerCase();
-            const amount = parseInt(document.getElementById('admin-target-amount').value);
-
-            if(!targetU) return alert('Vui lòng nhập username của khách!');
-            if(isNaN(amount)) return alert('Vui lòng nhập số tiền (+ hoặc -)!');
-
-            db.ref('users/' + targetU).once('value', snap => {
-                if(!snap.exists()) return alert('Không tìm thấy tài khoản khách này trên Firebase!');
-                
-                db.ref('users/' + targetU + '/balance').transaction(cur => {
-                    let newB = (cur || 0) + amount;
-                    return newB < 0 ? 0 : newB;
-                });
-
-                alert(`Đã ${amount >= 0 ? 'CỘNG' : 'TRỪ'} ${Math.abs(amount).toLocaleString('vi-VN')} VNĐ cho khách [${targetU}]!`);
-                document.getElementById('admin-target-user').value = '';
-                document.getElementById('admin-target-amount').value = '';
-            });
-        }
+        function closeHistoryModal() { document.getElementById('history-modal').style.display = 'none'; }
 
         function listenHistoryData() {
             if (!currentUser) return;
-            db.ref('deposits').on('value', snap => {
-                const box = document.getElementById('user-history-content');
-                if (!box || !currentUser) return;
-
+            db.ref('game_orders').orderByChild('username').equalTo(currentUser.username).on('value', snap => {
+                const container = document.getElementById('user-history-content');
                 if (!snap.exists()) {
-                    box.innerHTML = `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
+                    container.innerHTML = '<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>';
                     return;
                 }
-
-                const deposits = snap.val();
                 let html = '';
-                Object.keys(deposits).reverse().forEach(k => {
-                    const h = deposits[k];
-                    if (h.username === currentUser.username) {
-                        let st = '';
-                        if(h.status === 'pending') st = '<span style="color:orange; font-weight:800;">🟡 Đang chờ Admin duyệt</span>';
-                        else if(h.status === 'approved') st = '<span style="color:#10b981; font-weight:800;">🟢 Đã duyệt thành công</span>';
-                        else st = '<span style="color:#ef4444; font-weight:800;">🔴 Đã bị từ chối</span>';
-
-                        html += `
-                            <div style="padding:8px 0; border-bottom:1px solid #e2e8f0;">
-                                <div style="font-weight:700;">Nạp tiền vào Số Dư (${h.memoCode})</div>
-                                <div style="display:flex; justify-content:space-between; margin-top:2px;">
-                                    <span style="color:#e41e26; font-weight:800;">+${h.amount.toLocaleString('vi-VN')} đ</span>
-                                    ${st}
-                                </div>
-                            </div>
-                        `;
-                    }
+                snap.forEach(child => {
+                    const item = child.val();
+                    html += `
+                        <div style="background:#f8fafc; padding:8px 10px; border-radius:10px; margin-bottom:6px; border:1px solid #e2e8f0;">
+                            <div><strong>${item.gameName}</strong> - <span style="color:#e41e26;">${item.packageName}</span></div>
+                            <div style="color:#64748b; font-size:0.72rem;">UID: ${item.playerUid} | Giá: ${item.price.toLocaleString('vi-VN')}đ</div>
+                            <div style="color:#10b981; font-weight:700; font-size:0.7rem;">Trạng thái: Hoàn thành</div>
+                        </div>
+                    `;
                 });
-
-                box.innerHTML = html || `<p style="color:#64748b; text-align:center;">Chưa có giao dịch phát sinh.</p>`;
+                container.innerHTML = html;
             });
         }
 
         function toggleAdminPanel() {
-            const p = document.getElementById('admin-panel-box');
-            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+            const panel = document.getElementById('admin-panel-box');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
-        function openAuthModal(type) {
-            document.getElementById('auth-modal').style.display = 'flex';
-            switchAuthTab(type);
-        }
-        function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
-        function closeDepositModal() { document.getElementById('deposit-modal').style.display = 'none'; }
-        function openHistoryModal() {
-            closeSidebar();
-            if(!currentUser) {
-                alert('Vui lòng Đăng nhập để xem lịch sử!');
-                openAuthModal('login');
-                return;
-            }
-            document.getElementById('history-modal').style.display = 'flex';
-            listenHistoryData();
-        }
-        function closeHistoryModal() { document.getElementById('history-modal').style.display = 'none'; }
 
-        function switchAuthTab(type) {
-            document.getElementById('login-status-msg').textContent = '';
-            document.getElementById('reg-status-msg').textContent = '';
-            if(type === 'login') {
-                document.getElementById('tab-login').style.color = '#e41e26';
-                document.getElementById('tab-login').style.borderBottom = '3px solid #e41e26';
-                document.getElementById('tab-register').style.color = '#94a3b8';
-                document.getElementById('tab-register').style.borderBottom = 'none';
-                document.getElementById('form-login').style.display = 'block';
-                document.getElementById('form-register').style.display = 'none';
-            } else {
-                document.getElementById('tab-register').style.color = '#e41e26';
-                document.getElementById('tab-register').style.borderBottom = '3px solid #e41e26';
-                document.getElementById('tab-login').style.color = '#94a3b8';
-                document.getElementById('tab-login').style.borderBottom = 'none';
-                document.getElementById('form-login').style.display = 'none';
-                document.getElementById('form-register').style.display = 'block';
-            }
+        function listenAdminData() {
+            db.ref('deposit_requests').on('value', snap => {
+                const box = document.getElementById('admin-deposit-requests');
+                if (!snap.exists()) {
+                    box.innerHTML = '<p style="font-size:0.72rem; color:#64748b;">Không có yêu cầu nạp tiền nào.</p>';
+                    return;
+                }
+                let html = '';
+                snap.forEach(child => {
+                    const req = child.val();
+                    if (req.status === 'pending') {
+                        html += `
+                            <div class="admin-item">
+                                <div>Khách: <strong>${req.username}</strong> | Số tiền: <strong style="color:#10b981;">${req.amount.toLocaleString('vi-VN')}đ</strong></div>
+                                <div>Nội dung: <code>${req.memo}</code></div>
+                                <div style="margin-top:6px;">
+                                    <button class="btn-action-approve" onclick="approveDeposit('${req.id}', '${req.username}', ${req.amount})">Duyệt</button>
+                                    <button class="btn-action-reject" onclick="rejectDeposit('${req.id}')">Hủy</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                box.innerHTML = html || '<p style="font-size:0.72rem; color:#64748b;">Không có yêu cầu chờ duyệt.</p>';
+            });
+
+            db.ref('game_orders').limitToLast(10).on('value', snap => {
+                const box = document.getElementById('admin-order-requests');
+                if (!snap.exists()) {
+                    box.innerHTML = '<p style="font-size:0.72rem; color:#64748b;">Chưa có đơn hàng.</p>';
+                    return;
+                }
+                let html = '';
+                snap.forEach(child => {
+                    const ord = child.val();
+                    html += `
+                        <div class="admin-item">
+                            <div>Khách: <strong>${ord.username}</strong> - ${ord.gameName} (${ord.packageName})</div>
+                            <div>UID: <code>${ord.playerUid}</code> | Giá: ${ord.price.toLocaleString('vi-VN')}đ</div>
+                        </div>
+                    `;
+                });
+                box.innerHTML = html;
+            });
+        }
+
+        function approveDeposit(reqId, username, amount) {
+            db.ref('users/' + username + '/balance').transaction(curr => (curr || 0) + amount);
+            db.ref('deposit_requests/' + reqId + '/status').set('approved');
+            alert(`Đã duyệt +${amount.toLocaleString('vi-VN')}đ cho ${username}`);
+        }
+
+        function rejectDeposit(reqId) {
+            db.ref('deposit_requests/' + reqId + '/status').set('rejected');
+        }
+
+        function adminDirectChangeBalance() {
+            const targetUser = document.getElementById('admin-target-user').value.trim().toLowerCase();
+            const amount = parseInt(document.getElementById('admin-target-amount').value);
+
+            if (!targetUser || isNaN(amount)) return alert('Vui lòng nhập Username và Số tiền hợp lệ!');
+
+            db.ref('users/' + targetUser).once('value', snap => {
+                if (!snap.exists()) return alert('Người dùng không tồn tại!');
+                db.ref('users/' + targetUser + '/balance').transaction(curr => (curr || 0) + amount);
+                alert(`Đã điều chỉnh thành công ${amount.toLocaleString('vi-VN')}đ cho tài khoản ${targetUser}`);
+            });
         }
     </script>
 </body>
