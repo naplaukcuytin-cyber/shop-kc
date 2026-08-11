@@ -1030,42 +1030,16 @@
         showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
       }, 3000);
     }
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+window.onload = function() { 
+      syncAdminData(); 
+      const savedUser = localStorage.getItem('session_user_permanent'); 
+      if(savedUser) currentUser = savedUser; 
+       
+      selectGame(null, 'Free Fire'); 
+      updateUI(); 
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
-    authDomain: "garena-store-db.firebaseapp.com",
-    projectId: "garena-store-db",
-    storageBucket: "garena-store-db.firebasestorage.app",
-    messagingSenderId: "1037363068665",
-    appId: "1:1037363068665:web:48c8f90cc0bbf375726c28",
-    measurementId: "G-7ECY0PYP74"
-  };
-
-  try {
-    firebase.initializeApp(firebaseConfig);
-    window.db = firebase.firestore();
-    console.log("Kết nối Firebase thành công!");
-  } catch (e) {
-    console.error("Lỗi khởi tạo Firebase:", e);
-  }
-
-  window.onload = function() {
-    try { if (typeof syncAdminData === 'function') syncAdminData(); } catch(e) {}
-    try {
-      const savedUser = localStorage.getItem('session_user_permanent');
-      if (savedUser && typeof currentUser !== 'undefined') currentUser = savedUser;
-    } catch(e) {}
-    try { if (typeof selectGame === 'function') selectGame(null, 'Free Fire'); } catch(e) {}
-    try { if (typeof updateUI === 'function') updateUI(); } catch(e) {}
-    try {
-      if (typeof checkAdminApproval === 'function') {
-        setInterval(checkAdminApproval, 2000);
-      }
-    } catch(e) {}
-  };
-</script>
-</body>
+      setInterval(checkAdminApproval, 2000); 
+    }; 
+  </script> 
+</body> 
 </html>
