@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- KHÓA PHÓNG TO THU NHỎ TRÊN WEB (USER-SCALABLE=NO) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Trung Tâm Nạp Game & Thẻ Garena</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
@@ -34,8 +35,23 @@
       --border-color: #333333;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; transition: background 0.3s, color 0.3s; }
-    body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding-bottom: 50px; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Roboto', sans-serif; 
+      transition: background 0.3s, color 0.3s;
+      /* Khóa thao tác phóng to trên màn hình cảm ứng */
+      touch-action: pan-x pan-y;
+    }
+    
+    body { 
+      background-color: var(--bg-color); 
+      color: var(--text-color); 
+      min-height: 100vh; 
+      padding-bottom: 50px; 
+      user-select: none; /* Khóa bôi đen thu nhỏ UI */
+    }
 
     /* ================= 2. HIỆU ỨNG LED RGB 7 MÀU CHẠY QUANH ================= */
     @keyframes led-glow {
@@ -82,12 +98,19 @@
       display: flex; align-items: center; gap: 8px; font-weight: bold; color: var(--text-color);
     }
 
-    /* ================= 4. LAYOUT MAIN & CAROUSEL ================= */
+    /* ================= 4. LAYOUT MAIN, BANNER & KHUNG GAME ================= */
     .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
     .carousel-container { position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 12px; }
     .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
     .carousel-slide { min-width: 100%; }
     .carousel-slide img { width: 100%; height: 180px; object-fit: cover; }
+
+    /* DANH MỤC GAME TRANG CHỦ */
+    .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .game-card { background: var(--card-bg); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
+    .game-card:hover { transform: translateY(-3px); border-color: var(--primary-red); }
+    .game-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; background: #ddd; }
+    .game-card span { font-size: 0.85rem; font-weight: bold; display: block; }
 
     .card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
@@ -100,12 +123,11 @@
     .price-item { border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     .price-item.selected { border-color: var(--primary-red); background: rgba(255,59,48,0.1); }
 
-    /* ================= 5. MODAL CỬA SỔ & MÀN HÌNH CHỜ DUYỆT ================= */
+    /* ================= 5. MODALS & MÀN HÌNH PENDING ================= */
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 15px; }
     .modal.active { display: flex; }
     .modal-content { background: var(--card-bg); width: 100%; max-width: 400px; padding: 25px; border-radius: 12px; position: relative; }
 
-    /* Pending Overlay (Màn hình xoay chờ xử lý) */
     .pending-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); color: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
     .pending-modal.active { display: flex; }
     .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #ff9500; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
@@ -151,7 +173,6 @@
 
     <hr style="border-color:var(--border-color); margin: 10px 0;">
 
-    <!-- PHẦN NẠP TIỀN -->
     <div class="section-title">Phần Nạp Tiền</div>
     <div class="menu-item" onclick="switchTab('qr')">
       <i class="fa-solid fa-qrcode" style="color:#34c759;"></i> Nạp qua QR / Banking
@@ -160,7 +181,6 @@
       <i class="fa-solid fa-ticket" style="color:#ff9500;"></i> Nạp Thẻ Garena / Thẻ Cào
     </div>
 
-    <!-- PHẦN TRÒ CHƠI -->
     <div class="section-title">Phần Trò Chơi</div>
     <div class="menu-item" onclick="closeSidebar()">
       <i class="fa-solid fa-fire" style="color:#ff3b30;"></i> Free Fire
@@ -185,13 +205,34 @@
       </div>
     </div>
 
+    <!-- KHU VỰC DANH MỤC ẢNH GAME TRANG CHỦ (BẠN CHỈ CẦN THAY TÊN FILE ẢNH VÀO SRC) -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-gamepad" style="color:var(--primary-red);"></i> TRÒ CHƠI NỔI BẬT</div>
+      <div class="game-grid">
+        <div class="game-card">
+          <!-- Thay TEN_ANH_FREEFIRE.jpg vào src bên dưới -->
+          <img src="TEN_ANH_FREEFIRE.jpg" alt="Free Fire" onerror="this.src='https://via.placeholder.com/150x100/ff3b30/fff?text=Free+Fire'">
+          <span>Free Fire</span>
+        </div>
+        <div class="game-card">
+          <!-- Thay TEN_ANH_LIENQUAN.jpg vào src bên dưới -->
+          <img src="TEN_ANH_LIENQUAN.jpg" alt="Liên Quân" onerror="this.src='https://via.placeholder.com/150x100/007aff/fff?text=Lien+Quan'">
+          <span>Liên Quân Mobile</span>
+        </div>
+        <div class="game-card">
+          <!-- Thay TEN_ANH_FCMOBILE.jpg vào src bên dưới -->
+          <img src="TEN_ANH_FCMOBILE.jpg" alt="FC Mobile" onerror="this.src='https://via.placeholder.com/150x100/34c759/fff?text=FC+Mobile'">
+          <span>FC Mobile</span>
+        </div>
+      </div>
+    </div>
+
     <!-- KHU VỰC NẠP TIỀN VỚI VIỀN LED CHẠY QUANH -->
     <div class="card led-border">
       <div class="card-title">
         <i class="fa-solid fa-wallet" style="color:var(--primary-red);"></i> TRUNG TÂM NẠP TIỀN
       </div>
 
-      <!-- Tab Buttons Switcher -->
       <div style="display:flex; gap:10px; margin-bottom:20px;">
         <button class="btn" id="btnTabQR" style="flex:1; background:var(--primary-red); color:white;" onclick="switchTab('qr')">Nạp QR Online</button>
         <button class="btn" id="btnTabCard" style="flex:1; background:rgba(0,0,0,0.05); color:var(--text-color);" onclick="switchTab('card')">Thẻ Garena / Cào</button>
@@ -251,40 +292,50 @@
       </div>
     </div>
 
-    <!-- KHU VỰC ĐẶT MUA GÓI NẠP GAME -->
+    <!-- KHU VỰC ĐẶT MUA GÓI NẠP GAME (BẮT BUỘC ĐĂNG NHẬP / ĐĂNG KÝ MỚI NHẬP ĐƯỢC ID) -->
     <div class="card">
-      <div class="card-title"><i class="fa-solid fa-gamepad"></i> DỊCH VỤ NẠP GAME QUY ĐỔI</div>
+      <div class="card-title"><i class="fa-solid fa-cart-shopping"></i> DỊCH VỤ NẠP GAME QUY ĐỔI</div>
       
-      <div class="form-group">
-        <label>Nhập ID Game / UID Khách Hàng</label>
-        <input type="text" class="form-control" id="playerUID" placeholder="Ví dụ: 16791135458977357765">
+      <!-- KHUNG BÁO CHƯA ĐĂNG NHẬP -->
+      <div id="gameLoginRequire" style="text-align:center; padding: 20px; background: rgba(255,59,48,0.05); border: 1px dashed var(--primary-red); border-radius: 8px;">
+        <i class="fa-solid fa-lock" style="font-size:2rem; color:var(--primary-red); margin-bottom:10px;"></i>
+        <p style="font-weight:bold; margin-bottom:10px;">Bạn cần Đăng Nhập hoặc Đăng Ký trước khi nhập ID Game!</p>
+        <button class="btn" style="background:var(--primary-red); color:white;" onclick="openAuthModal()">Đăng Nhập / Đăng Ký Ngay</button>
       </div>
 
-      <div class="form-group">
-        <label>Chọn Gói Kim Cương Nạp</label>
-        <div class="price-list">
-          <div class="price-item" onclick="selectPackage(this, 113, 20000)">
-            <span>💎 113 Kim Cương</span>
-            <strong style="color:var(--primary-red)">20.000đ</strong>
-          </div>
-          <div class="price-item" onclick="selectPackage(this, 283, 50000)">
-            <span>💎 283 Kim Cương</span>
-            <strong style="color:var(--primary-red)">50.000đ</strong>
-          </div>
-          <div class="price-item" onclick="selectPackage(this, 566, 100000)">
-            <span>💎 566 Kim Cương</span>
-            <strong style="color:var(--primary-red)">100.000đ</strong>
-          </div>
-          <div class="price-item" onclick="selectPackage(this, 1150, 200000)">
-            <span>💎 1.150 Kim Cương</span>
-            <strong style="color:var(--primary-red)">200.000đ</strong>
+      <!-- KHUNG NHẬP ID GAME (ẨN KHI CHƯA ĐĂNG NHẬP) -->
+      <div id="gameFormContent" style="display:none;">
+        <div class="form-group">
+          <label>Nhập ID Game / UID Khách Hàng</label>
+          <input type="text" class="form-control" id="playerUID" placeholder="Ví dụ: 16791135458977357765">
+        </div>
+
+        <div class="form-group">
+          <label>Chọn Gói Kim Cương Nạp</label>
+          <div class="price-list">
+            <div class="price-item" onclick="selectPackage(this, 113, 20000)">
+              <span>💎 113 Kim Cương</span>
+              <strong style="color:var(--primary-red)">20.000đ</strong>
+            </div>
+            <div class="price-item" onclick="selectPackage(this, 283, 50000)">
+              <span>💎 283 Kim Cương</span>
+              <strong style="color:var(--primary-red)">50.000đ</strong>
+            </div>
+            <div class="price-item" onclick="selectPackage(this, 566, 100000)">
+              <span>💎 566 Kim Cương</span>
+              <strong style="color:var(--primary-red)">100.000đ</strong>
+            </div>
+            <div class="price-item" onclick="selectPackage(this, 1150, 200000)">
+              <span>💎 1.150 Kim Cương</span>
+              <strong style="color:var(--primary-red)">200.000đ</strong>
+            </div>
           </div>
         </div>
-      </div>
 
-      <button class="btn" style="width:100%; background:#ff9500; color:white; justify-content:center; padding:12px; margin-top:10px;" onclick="buyPackage()">
-        Thanh Toán Đơn Hàng
-      </button>
+        <button class="btn" style="width:100%; background:#ff9500; color:white; justify-content:center; padding:12px; margin-top:10px;" onclick="buyPackage()">
+          Thanh Toán Đơn Hàng
+        </button>
+      </div>
     </div>
 
   </div>
@@ -328,7 +379,7 @@
     <button onclick="closePendingModal()" style="margin-top:20px; background:transparent; border:1px solid #fff; color:#fff; padding:8px 20px; border-radius:6px; cursor:pointer;">Đóng cửa sổ</button>
   </div>
 
-  <!-- JAVASCRIPT LOGIC REALTME & FIREBASE -->
+  <!-- JAVASCRIPT LOGIC REALTIME & FIREBASE -->
   <script>
     // 1. Cấu hình Firebase
     const firebaseConfig = {
@@ -351,7 +402,7 @@
     let selectedPackageData = null;
     let currentUser = null;
 
-    // Carousel Slider
+    // Auto Banner
     let currentSlide = 0;
     const track = document.getElementById('carouselTrack');
     setInterval(() => {
@@ -456,7 +507,7 @@
         })
       }).catch(err => console.log("Mail notification sent."));
 
-      // 3. Mở màn hình CHỜ XỬ LÝ (Không báo thành công)
+      // 3. Mở màn hình CHỜ XỬ LÝ (Không báo thành công ngay)
       document.getElementById('pTransId').innerText = transID;
       document.getElementById('pType').innerText = cardType + " - " + Number(val).toLocaleString() + "đ";
       document.getElementById('pendingModal').classList.add('active');
@@ -483,7 +534,7 @@
       alert("Đã ghi nhận đơn hàng cho UID: " + uid + ". Vui lòng nạp tiền để hoàn tất!");
     }
 
-    /* ================= FIREBASE AUTH LOGIC (BẢO TỒN NGUYÊN BẢN) ================= */
+    /* ================= FIREBASE AUTH LOGIC ================= */
     function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
 
@@ -524,15 +575,24 @@
       });
     }
 
+    // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP ĐỂ MỞ/KHÓA KHUNG NHẬP ID GAME
     auth.onAuthStateChanged(user => {
       if (user) {
         currentUser = user;
         document.getElementById('btnLogout').style.display = 'inline-flex';
         document.getElementById('btnLogin').style.display = 'none';
+        
+        // Mở khung nhập ID Game khi đã đăng nhập
+        document.getElementById('gameLoginRequire').style.display = 'none';
+        document.getElementById('gameFormContent').style.display = 'block';
       } else {
         currentUser = null;
         document.getElementById('btnLogout').style.display = 'none';
         document.getElementById('btnLogin').style.display = 'inline-flex';
+        
+        // Khóa khung nhập ID Game khi chưa đăng nhập
+        document.getElementById('gameLoginRequire').style.display = 'block';
+        document.getElementById('gameFormContent').style.display = 'none';
       }
     });
   </script>
