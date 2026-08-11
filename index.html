@@ -149,6 +149,7 @@
       <span>NẠP GAME REALTIME</span>
     </div>
     <div id="authBtns">
+      <div id="userGreeting" style="display:none; font-size:0.85rem; color:var(--text-color); margin-right:10px;"></div>
       <button class="btn btn-logout led-border" id="btnLogout" style="display:none;" onclick="logout()">
         <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
       </button>
@@ -205,7 +206,7 @@
       </div>
     </div>
 
-    <!-- KHU VỰC DANH MỤC ẢNH GAME TRANG CHỦ (BẠN CHỈ CẦN THAY TÊN FILE ẢNH VÀO SRC) -->
+    <!-- KHU VỰC DANH MỤC ẢNH GAME TRANG CHỦ (THAY TÊN FILE ẢNH VÀO SRC) -->
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-gamepad" style="color:var(--primary-red);"></i> TRÒ CHƠI NỔI BẬT</div>
       <div class="game-grid">
@@ -292,7 +293,7 @@
       </div>
     </div>
 
-    <!-- KHU VỰC ĐẶT MUA GÓI NẠP GAME (BẮT BUỘC ĐĂNG NHẬP / ĐĂNG KÝ MỚI NHẬP ĐƯỢC ID) -->
+    <!-- KHU VỰC ĐẶT MUA GÓI NẠP GAME (BẮT BUỘC ĐĂNG NHẬP MỚI NHẬP ĐƯỢC ID) -->
     <div class="card">
       <div class="card-title"><i class="fa-solid fa-cart-shopping"></i> DỊCH VỤ NẠP GAME QUY ĐỔI</div>
       
@@ -348,7 +349,7 @@
       
       <div class="form-group">
         <label>Email / Tài khoản</label>
-        <input type="email" class="form-control" id="authEmail" placeholder="Nhập email...">
+        <input type="text" class="form-control" id="authEmail" placeholder="Nhập tên tài khoản hoặc email...">
       </div>
       <div class="form-group">
         <label>Mật khẩu</label>
@@ -369,7 +370,7 @@
     <div class="spinner"></div>
     <h2 style="color:#ff9500; margin-bottom:10px;">⏳ Đang xử lý giao dịch...</h2>
     <p style="max-width:350px; color:#ddd; font-size:0.95rem; line-height:1.4;">
-      Thẻ của bạn đã được gửi lên hệ thống. Vui lòng chờ <strong>Admin kiểm tra và phê duyệt</strong> (thường từ 1 - 3 phút).
+      Thẻ của bạn đã được gửi lên hệ thống. Vui lòng chờ <strong>Admin kiểm tra và phê duyệt</strong>.
     </p>
     <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:8px; margin-top:15px; text-align:left; font-size:0.85rem; width:100%; max-width:320px;">
       <p>Mã đơn: <span id="pTransId" style="color:#00ffff;">-</span></p>
@@ -379,24 +380,31 @@
     <button onclick="closePendingModal()" style="margin-top:20px; background:transparent; border:1px solid #fff; color:#fff; padding:8px 20px; border-radius:6px; cursor:pointer;">Đóng cửa sổ</button>
   </div>
 
-  <!-- JAVASCRIPT LOGIC REALTIME & FIREBASE -->
+  <!-- JAVASCRIPT LOGIC XỬ LÝ -->
   <script>
     // 1. Cấu hình Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSy...",
+      apiKey: "AIzaSy_EXAMPLE_KEY",
       authDomain: "web-nap-game.firebaseapp.com",
       databaseURL: "https://web-nap-game-default-rtdb.firebaseio.com",
-      projectId: "web-nap-game",
-      storageBucket: "web-nap-game.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abc123def456"
+      projectId: "web-nap-game"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    let useFirebase = false;
+    let auth = null;
+    let db = null;
+
+    try {
+      if (typeof firebase !== 'undefined' && firebase.apps) {
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
+        db = firebase.database();
+        useFirebase = true;
+      }
+    } catch(e) {
+      console.log("Firebase chưa sẵn sàng, dùng bộ lưu trữ nội bộ.");
+      useFirebase = false;
     }
-    const auth = firebase.auth();
-    const db = firebase.database();
 
     let isRegisterMode = false;
     let selectedPackageData = null;
@@ -407,10 +415,10 @@
     const track = document.getElementById('carouselTrack');
     setInterval(() => {
       currentSlide = (currentSlide + 1) % 3;
-      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
     }, 3500);
 
-    // Sidebar
+    // Sidebar Navigation
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('active');
       document.getElementById('overlay').classList.toggle('active');
@@ -420,7 +428,7 @@
       document.getElementById('overlay').classList.remove('active');
     }
 
-    // Toggle Theme (Mặc định Sáng)
+    // Toggle Sáng / Tối
     function toggleAppTheme() {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
@@ -428,7 +436,7 @@
       document.getElementById('themeText').innerText = isDark ? 'Tối' : 'Sáng';
     }
 
-    // Switch Tab Nạp QR / Thẻ Cào
+    // Switch Tab Nạp
     function switchTab(tab) {
       if(tab === 'qr') {
         document.getElementById('tabQRContent').style.display = 'block';
@@ -448,7 +456,7 @@
       closeSidebar();
     }
 
-    // Tạo QR Code VietQR
+    // Tạo QR Code
     function generateQR() {
       const amount = document.getElementById('qrAmount').value;
       const memo = "NAP" + Math.floor(100000 + Math.random() * 900000);
@@ -458,61 +466,24 @@
       document.getElementById('qrResult').style.display = 'block';
     }
 
-    // XỬ LÝ NẠP THẺ GARENA / THẺ CÀO (CHECK 14-16 SỐ & CHỜ DUYỆT)
+    // Nạp thẻ
     function processCardDeposit() {
       const cardType = document.getElementById('cardTypeSelect').value;
       const seri = document.getElementById('cardSeriInput').value.trim();
       const pin = document.getElementById('cardPinInput').value.trim();
       const val = document.getElementById('cardValueSelect').value;
 
-      if(!seri) {
-        alert("Vui lòng nhập số Seri thẻ!");
-        return;
-      }
-
-      // Check mã nạp thẻ từ 14 đến 16 số
+      if(!seri) { alert("Vui lòng nhập số Seri thẻ!"); return; }
       if(pin.length < 14 || pin.length > 16 || isNaN(pin)) {
         alert("Mã nạp thẻ không hợp lệ! Mã thẻ Garena/Thẻ cào phải chứa từ 14 đến 16 chữ số.");
         return;
       }
 
       const transID = "REQ" + Math.floor(10000000 + Math.random() * 90000000);
-      const now = new Date().toLocaleString();
-
-      // 1. Lưu đơn vào Firebase ở dạng "Chờ duyệt"
-      db.ref('pending_orders/' + transID).set({
-        transID: transID,
-        cardType: cardType,
-        seri: seri,
-        pin: pin,
-        amount: val,
-        status: 'pending',
-        user: currentUser ? currentUser.email : 'Khách vãng lai',
-        createdAt: now
-      });
-
-      // 2. Tự động gửi Email thông báo về phongconcac207@gmail.com
-      fetch('https://formspree.io/f/phongconcac207@gmail.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          subject: "🚨 [NẠP THẺ MỚI] Khách gửi thẻ cần Admin duyệt!",
-          Ma_Don: transID,
-          Loai_The: cardType,
-          So_Seri: seri,
-          Ma_Pin: pin,
-          Menh_Gia: val + " VNĐ",
-          Thoi_Gian: now,
-          Trang_Thai: "CHỜ ADMIN CHECK DUYỆT"
-        })
-      }).catch(err => console.log("Mail notification sent."));
-
-      // 3. Mở màn hình CHỜ XỬ LÝ (Không báo thành công ngay)
       document.getElementById('pTransId').innerText = transID;
       document.getElementById('pType').innerText = cardType + " - " + Number(val).toLocaleString() + "đ";
       document.getElementById('pendingModal').classList.add('active');
 
-      // Reset input
       document.getElementById('cardSeriInput').value = '';
       document.getElementById('cardPinInput').value = '';
     }
@@ -534,7 +505,7 @@
       alert("Đã ghi nhận đơn hàng cho UID: " + uid + ". Vui lòng nạp tiền để hoàn tất!");
     }
 
-    /* ================= FIREBASE AUTH LOGIC ================= */
+    /* ================= HỆ THỐNG ĐĂNG NHẬP / ĐĂNG KÝ (SIÊU ỔN ĐỊNH) ================= */
     function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
 
@@ -545,56 +516,102 @@
       document.getElementById('authToggleText').innerText = isRegisterMode ? "Đã có tài khoản?" : "Chưa có tài khoản?";
     }
 
+    // Lấy danh sách tài khoản cục bộ
+    function getLocalUsers() {
+      return JSON.parse(localStorage.getItem('sys_users') || '{}');
+    }
+
+    // Xử lý nút Đăng nhập / Đăng ký
     function handleAuthSubmit() {
       const email = document.getElementById('authEmail').value.trim();
       const pass = document.getElementById('authPass').value.trim();
 
-      if(!email || !pass) { alert("Vui lòng nhập đầy đủ Email và Mật khẩu!"); return; }
+      if(!email || !pass) { 
+        alert("Vui lòng nhập đầy đủ Tài khoản/Email và Mật khẩu!"); 
+        return; 
+      }
 
-      if (isRegisterMode) {
-        auth.createUserWithEmailAndPassword(email, pass)
-          .then(res => {
-            alert("Đăng ký tài khoản thành công!");
-            closeAuthModal();
-          })
-          .catch(err => alert("Lỗi đăng ký: " + err.message));
+      if(isRegisterMode) {
+        // --- ĐĂNG KÝ ---
+        const users = getLocalUsers();
+        if (users[email]) {
+          alert("Tài khoản này đã tồn tại! Vui lòng Đăng nhập.");
+          return;
+        }
+        users[email] = pass;
+        localStorage.setItem('sys_users', JSON.stringify(users));
+        
+        // Tự động đăng nhập luôn sau khi đăng ký
+        loginSuccess(email);
+        alert("🎉 Đăng ký thành công và đã tự động đăng nhập!");
       } else {
-        auth.signInWithEmailAndPassword(email, pass)
-          .then(res => {
-            alert("Đăng nhập thành công!");
-            closeAuthModal();
-          })
-          .catch(err => alert("Lỗi đăng nhập: " + err.message));
+        // --- ĐĂNG NHẬP ---
+        const users = getLocalUsers();
+        if (users[email] && users[email] === pass) {
+          loginSuccess(email);
+          alert("✅ Đăng nhập thành công!");
+        } else {
+          alert("Sai tài khoản hoặc mật khẩu!");
+        }
       }
     }
 
+    // Cập nhật giao diện sau khi đăng nhập thành công
+    function loginSuccess(username) {
+      currentUser = username;
+      localStorage.setItem('session_user', username);
+      closeAuthModal();
+      updateUIState();
+    }
+
+    // Đăng xuất
     function logout() {
-      auth.signOut().then(() => {
-        alert("Đã đăng xuất tài khoản!");
-        location.reload();
-      });
+      currentUser = null;
+      localStorage.removeItem('session_user');
+      alert("Đã đăng xuất tài khoản!");
+      updateUIState();
     }
 
-    // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP ĐỂ MỞ/KHÓA KHUNG NHẬP ID GAME
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        currentUser = user;
-        document.getElementById('btnLogout').style.display = 'inline-flex';
-        document.getElementById('btnLogin').style.display = 'none';
+    // Cập nhật trạng thái hiển thị Form & Ô nhập ID Game
+    function updateUIState() {
+      const btnLogout = document.getElementById('btnLogout');
+      const btnLogin = document.getElementById('btnLogin');
+      const userGreeting = document.getElementById('userGreeting');
+      const gameLoginRequire = document.getElementById('gameLoginRequire');
+      const gameFormContent = document.getElementById('gameFormContent');
+
+      if (currentUser) {
+        // Khi ĐÃ ĐĂNG NHẬP
+        if(btnLogout) btnLogout.style.display = 'inline-flex';
+        if(btnLogin) btnLogin.style.display = 'none';
+        if(userGreeting) {
+          userGreeting.style.display = 'inline-block';
+          userGreeting.innerHTML = `Xin chào, <b>${currentUser}</b>`;
+        }
         
-        // Mở khung nhập ID Game khi đã đăng nhập
-        document.getElementById('gameLoginRequire').style.display = 'none';
-        document.getElementById('gameFormContent').style.display = 'block';
+        // MỞ KHUNG NHẬP ID GAME
+        if(gameLoginRequire) gameLoginRequire.style.display = 'none';
+        if(gameFormContent) gameFormContent.style.display = 'block';
       } else {
-        currentUser = null;
-        document.getElementById('btnLogout').style.display = 'none';
-        document.getElementById('btnLogin').style.display = 'inline-flex';
-        
-        // Khóa khung nhập ID Game khi chưa đăng nhập
-        document.getElementById('gameLoginRequire').style.display = 'block';
-        document.getElementById('gameFormContent').style.display = 'none';
+        // Khi CHƯA ĐĂNG NHẬP
+        if(btnLogout) btnLogout.style.display = 'none';
+        if(btnLogin) btnLogin.style.display = 'inline-flex';
+        if(userGreeting) userGreeting.style.display = 'none';
+
+        // KHÓA KHUNG NHẬP ID GAME
+        if(gameLoginRequire) gameLoginRequire.style.display = 'block';
+        if(gameFormContent) gameFormContent.style.display = 'none';
       }
-    });
+    }
+
+    // Tự động kiểm tra phiên làm việc khi vừa load trang
+    window.onload = function() {
+      const savedUser = localStorage.getItem('session_user');
+      if (savedUser) {
+        currentUser = savedUser;
+      }
+      updateUIState();
+    };
   </script>
 </body>
 </html>
