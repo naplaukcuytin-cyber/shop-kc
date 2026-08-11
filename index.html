@@ -244,7 +244,7 @@
     </div>
 
     <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openDepositModal('qr')">
-      <i class="fa-solid fa-qrcode" style="color:#2e7d32;"></i> Nạp Ví Qua QR Banking
+      <i class="fa-solid fa-qrcode" style="color:#2e7d32;"></i> Nạp Ví Qua QR / Banking / MoMo
     </div>
     <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openDepositModal('card')">
       <i class="fa-solid fa-credit-card" style="color:#ff9500;"></i> Nạp Ví Qua Thẻ Cào / Garena
@@ -253,15 +253,14 @@
 
   <div class="container">
 
-    <!-- Banner Slide Carousel Lướt Tự Động -->
+    <!-- Banner Slide Carousel -->
     <div class="banner-wrapper">
       <div class="slider-track" id="sliderTrack">
         <div class="slide-item"><img src="https://via.placeholder.com/600x180/8b0000/ffffff?text=NAPTHEX.COM+-+SU+KIEN+UU+DAI+HOT" alt="Banner 1"></div>
-        <div class="slide-item"><img src="https://via.placeholder.com/600x180/004080/ffffff?text=X10+GIA+TRI+NAP+CHINH+THUC" alt="Banner 2"></div>
+        <div class="slide-item"><img src="https://via.placeholder.com/600x180/004080/ffffff?text=KHUYEN+MAI+GARA+NAP+X15+TAI+NGUYEN" alt="Banner 2"></div>
       </div>
     </div>
 
-    <!-- Thanh Điều Hướng Slider -->
     <div class="slider-controls">
       <div style="display:flex; align-items:center; gap:6px;">
         <span style="color:#2e7d32;">🟢</span> SỰ KIỆN NẠP BẢO MẬT 24/7
@@ -276,6 +275,12 @@
       </div>
     </div>
 
+    <!-- Thông báo Ưu đãi Mức nạp từ Admin -->
+    <div style="background:#fff3cd; border:1px solid #ffeba2; padding:12px 15px; border-radius:16px; margin-bottom:15px; color:#856404; font-size:0.85rem;">
+      <i class="fa-solid fa-bullhorn" style="margin-right:5px; color:#d39e00;"></i>
+      <b>THÔNG BÁO TỪ HỆ THỐNG:</b> <span id="adminAnnouncement">Áp dụng chương trình ưu đãi mức nạp từ 50,000đ trở lên nhận x15 lần số tài nguyên (Kim cương, Quân huy...)!</span>
+    </div>
+
     <!-- Khung Danh Mục Trò Chơi Nạp Thẻ -->
     <div class="main-card">
       <div class="section-header">
@@ -286,24 +291,22 @@
         </div>
       </div>
 
-      <!-- Ô Tìm Kiếm Game -->
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass" style="color:#8a8d91;"></i>
         <input type="text" id="searchInput" placeholder="Tìm kiếm trò chơi..." oninput="filterGames()">
       </div>
 
-      <!-- Các Tab Lọc Game Hoạt Động 100% -->
       <div class="filter-tabs">
         <button class="tab-btn active" onclick="setTab(this, 'all')">Tất cả <span class="count">8</span></button>
         <button class="tab-btn" onclick="setTab(this, 'garena')">Garena <span class="count">4</span></button>
         <button class="tab-btn" onclick="setTab(this, 'fc')">Thể thao / FC <span class="count">3</span></button>
       </div>
 
-      <!-- Danh Sách Game Grid -->
       <div class="game-grid" id="gameGrid">
         
         <div class="game-card-item selected" data-category="garena" onclick="selectGame(this, 'Free Fire')">
           <span class="badge-auto">AUTO</span>
+          <!-- Dễ dàng thay link ảnh game của bạn tại src dưới đây -->
           <img class="game-thumb" src="https://via.placeholder.com/70/ff3b30/fff?text=FF" alt="Free Fire">
           <div class="game-name">Free Fire</div>
           <div class="game-status-btn">✔ ĐANG CHỌN</div>
@@ -376,7 +379,7 @@
           <input type="text" class="form-control" id="gameUID" placeholder="Ví dụ: 16791135458977">
         </div>
 
-        <label style="font-size:0.85rem; font-weight:600;">Chọn Gói Quy Đổi (Đã nhân gấp 10x)</label>
+        <label style="font-size:0.85rem; font-weight:600;">Chọn Gói Quy Đổi (Áp dụng hệ số x15 từ Admin)</label>
         <div class="price-grid" id="priceGridArea">
           <!-- Render tự động tùy theo Game -->
         </div>
@@ -395,28 +398,41 @@
 
   </div>
 
-  <!-- Modal Nạp Tiền Vào Ví (Tách riêng Thẻ Cào & Thẻ Garena) -->
+  <!-- Modal Nạp Tiền Vào Ví -->
   <div class="modal" id="depositModal">
     <div class="modal-content">
       <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('depositModal')"></i>
       <h3 style="text-align:center; color:#0084ff; margin-bottom:15px;">NẠP TIỀN VÀO TÀI KHOẢN</h3>
       
       <div style="display:flex; gap:6px; margin-bottom:15px; overflow-x:auto;">
-        <button class="tab-btn active" id="btnTabQR" onclick="switchDepTab('qr')">QR Banking</button>
+        <button class="tab-btn active" id="btnTabQR" onclick="switchDepTab('qr')">QR / Banking / MoMo</button>
         <button class="tab-btn" id="btnTabCard" onclick="switchDepTab('card')">Thẻ Điện Thoại</button>
         <button class="tab-btn" id="btnTabGarena" onclick="switchDepTab('garena')">Thẻ Garena</button>
       </div>
 
-      <!-- Tab QR -->
+      <!-- Tab QR / Ngân Hàng / MoMo -->
       <div id="qrArea">
         <div class="form-group">
           <label>Nhập Số Tiền Cần Nạp (VNĐ)</label>
           <input type="number" class="form-control" id="qrAmount" value="50000">
         </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="createQR()">Tạo Mã QR</button>
-        <div id="qrImgBox" style="text-align:center; margin-top:15px; display:none;">
-          <img id="qrImg" src="" style="width:200px; border-radius:10px;">
-          <p style="margin-top:5px; font-weight:bold; color:#ff9500;">Nội dung chuyển khoản: <span id="qrMemo"></span></p>
+        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="createQR()">Tạo Thông Tin Chuyển Khoản</button>
+        
+        <div id="qrImgBox" style="margin-top:15px; display:none; background:#f8f9fa; padding:15px; border-radius:12px; border:1px dashed #0084ff;">
+          <!-- Nơi bạn dán link ảnh QR của bạn -->
+          <div style="text-align:center;">
+            <img id="qrImg" src="CHON_ANH_QR_CUA_BAN_TAI_DAY" alt="Mã QR Thanh Toán" style="max-width:200px; border-radius:10px; border:1px solid #ddd; display:inline-block;">
+          </div>
+          <div style="margin-top:12px; font-size:0.88rem; line-height:1.6;">
+            <div><b>Ngân hàng/Ví:</b> PSP / MOMO</div>
+            <div><b>Chủ tài khoản:</b> <span style="color:#d32f2f; font-weight:bold;">TRUONG VAN PHONG</span></div>
+            <div><b>Số tài khoản:</b> <span style="color:#0084ff; font-weight:bold;">PSP2621916400000092</span></div>
+            <div><b>Nội dung chuyển khoản:</b> <span id="qrMemo" style="color:#2e7d32; font-weight:bold; background:#e8f5e9; padding:2px 6px; border-radius:4px;"></span></div>
+          </div>
+          
+          <button class="btn-login-main" style="width:100%; justify-content:center; margin-top:12px; background:#2e7d32;" onclick="confirmBankTransferSent()">
+            <i class="fa-solid fa-check-circle"></i> ĐÃ CHUYỂN KHOẢN
+          </button>
         </div>
       </div>
 
@@ -430,26 +446,30 @@
         </div>
         <div class="form-group">
           <label>Số Seri</label>
-          <input type="text" class="form-control" id="cardSeri">
+          <input type="text" class="form-control" id="cardSeri" placeholder="Nhập số Seri...">
         </div>
         <div class="form-group">
           <label>Mã Thẻ (Pin)</label>
-          <input type="text" class="form-control" id="cardPin">
+          <input type="text" class="form-control" id="cardPin" placeholder="Nhập mã thẻ...">
         </div>
         <div class="form-group">
           <label>Mệnh Giá</label>
           <select class="form-control" id="cardVal">
-            <option value="20000">20.000 VNĐ</option>
             <option value="50000">50.000 VNĐ</option>
             <option value="100000">100.000 VNĐ</option>
             <option value="200000">200.000 VNĐ</option>
+            <option value="500000">500.000 VNĐ</option>
           </select>
         </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitCard('Thẻ Điện Thoại')">Gửi Thẻ Nạp</button>
+        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitCard('Thẻ Điện Thoại')">Gửi Thẻ Cho Admin Duyệt</button>
       </div>
 
       <!-- Tab Thẻ Garena -->
       <div id="garenaCardArea" style="display:none;">
+        <div class="form-group">
+          <label>Số Seri (Nếu có)</label>
+          <input type="text" class="form-control" id="garSeri" placeholder="Nhập số Seri...">
+        </div>
         <div class="form-group">
           <label>Mã Thẻ Garena (Pin)</label>
           <input type="text" class="form-control" id="garPin" placeholder="Nhập mã thẻ Garena...">
@@ -457,14 +477,13 @@
         <div class="form-group">
           <label>Mệnh Giá</label>
           <select class="form-control" id="garVal">
-            <option value="20000">20.000 VNĐ</option>
             <option value="50000">50.000 VNĐ</option>
             <option value="100000">100.000 VNĐ</option>
             <option value="200000">200.000 VNĐ</option>
             <option value="500000">500.000 VNĐ</option>
           </select>
         </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitGarenaCard()">Nạp Thẻ Garena</button>
+        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitGarenaCard()">Gửi Thẻ Garena Cho Admin Duyệt</button>
       </div>
 
     </div>
@@ -476,6 +495,14 @@
       <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('adminModal')"></i>
       <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">TRANG QUẢN TRỊ ADMIN BẢO MẬT</h3>
 
+      <!-- Khung Cài Đặt Thông Báo & Mức Nạp -->
+      <div style="background:#fff3cd; padding:12px; border-radius:10px; margin-bottom:15px;">
+        <label><b>Chỉnh Sửa Thông Báo Mức Nạp Khách Hàng:</b></label>
+        <textarea class="form-control" id="admNoticeInput" style="margin-top:5px;" rows="2"></textarea>
+        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:8px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo Mức Nạp</button>
+      </div>
+
+      <!-- Khung Cộng / Trừ Tiền -->
       <div style="background:#f0f2f5; padding:12px; border-radius:10px; margin-bottom:15px;">
         <label><b>Cộng / Trừ Tiền Số Dư Khách Hàng:</b></label>
         <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:5px;">
@@ -483,10 +510,10 @@
         <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
       </div>
 
-      <h4>Danh Sách Yêu Cầu Chờ Duyệt:</h4>
+      <h4>Danh Sách Yêu Cầu Chờ Duyệt (Thẻ / Chuyển Khoản):</h4>
       <table>
         <thead>
-          <tr><th>Khách</th><th>Loại/Mã</th><th>M.Giá</th><th>Thao Tác</th></tr>
+          <tr><th>Khách</th><th>Loại/Mã/Seri</th><th>M.Giá</th><th>Thao Tác</th></tr>
         </thead>
         <tbody id="admCardTable"></tbody>
       </table>
@@ -522,20 +549,21 @@
     let currentUser = null;
     let isRegister = false;
     let adminClickCounter = 0;
+    let currentGeneratedMemo = '';
 
-    // Cấu hình đơn vị quy đổi nhân 10x chuẩn theo Game
+    // Mức quy đổi x15 lần chuẩn theo Game
     const gameConfig = {
-      'Free Fire': { unit: 'Kim Cương', rates: [{p:20000, v:'1.130'}, {p:50000, v:'2.830'}, {p:100000, v:'5.660'}, {p:200000, v:'11.500'}] },
-      'Liên Quân Mobile': { unit: 'Quân Huy', rates: [{p:20000, v:'1.100'}, {p:50000, v:'2.800'}, {p:100000, v:'5.700'}, {p:200000, v:'11.800'}] },
-      'FC Mobile VN': { unit: 'FC Point', rates: [{p:20000, v:'1.000'}, {p:50000, v:'2.500'}, {p:100000, v:'5.200'}, {p:200000, v:'11.000'}] },
-      'FC Online (VN)': { unit: 'FC Coin', rates: [{p:20000, v:'1.000'}, {p:50000, v:'2.500'}, {p:100000, v:'5.200'}, {p:200000, v:'11.000'}] },
-      'FC Online M (VN)': { unit: 'MC Coin', rates: [{p:20000, v:'1.000'}, {p:50000, v:'2.500'}, {p:100000, v:'5.200'}, {p:200000, v:'11.000'}] },
-      'Delta Force': { unit: 'KNB', rates: [{p:20000, v:'1.200'}, {p:50000, v:'3.000'}, {p:100000, v:'6.000'}, {p:200000, v:'12.500'}] },
-      'Nạp Sò': { unit: 'Sò Garena', rates: [{p:20000, v:'400'}, {p:50000, v:'1.000'}, {p:100000, v:'2.000'}, {p:200000, v:'4.000'}] },
-      'Cái thế tranh hùng': { unit: 'Xu Vàng', rates: [{p:20000, v:'1.000'}, {p:50000, v:'2.500'}, {p:100000, v:'5.000'}, {p:200000, v:'10.500'}] }
+      'Free Fire': { unit: 'Kim Cương', rates: [{p:50000, v:'4.250'}, {p:100000, v:'8.500'}, {p:200000, v:'17.250'}, {p:500000, v:'45.000'}] },
+      'Liên Quân Mobile': { unit: 'Quân Huy', rates: [{p:50000, v:'4.200'}, {p:100000, v:'8.550'}, {p:200000, v:'17.700'}, {p:500000, v:'45.000'}] },
+      'FC Mobile VN': { unit: 'FC Point', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'FC Online (VN)': { unit: 'FC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'FC Online M (VN)': { unit: 'MC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'Delta Force': { unit: 'KNB', rates: [{p:50000, v:'4.500'}, {p:100000, v:'9.000'}, {p:200000, v:'18.750'}, {p:500000, v:'48.000'}] },
+      'Nạp Sò': { unit: 'Sò Garena', rates: [{p:50000, v:'1.500'}, {p:100000, v:'3.000'}, {p:200000, v:'6.000'}, {p:500000, v:'15.000'}] },
+      'Cái thế tranh hùng': { unit: 'Xu Vàng', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.500'}, {p:200000, v:'15.750'}, {p:500000, v:'40.000'}] }
     };
 
-    // Khóa Pinch Zoom trên iOS/Android
+    // Khóa Zoom
     document.addEventListener('touchmove', function(event) {
       if (event.scale !== 1) { event.preventDefault(); }
     }, { passive: false });
@@ -550,7 +578,7 @@
     function prevSlide() { currentSlide = (currentSlide - 1 + 2) % 2; updateSlider(); }
     setInterval(nextSlide, 4000);
 
-    // Sidebar & Accordion
+    // Sidebar
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('active');
       document.getElementById('overlay').classList.toggle('active');
@@ -559,13 +587,10 @@
       document.getElementById('sidebar').classList.remove('active');
       document.getElementById('overlay').classList.remove('active');
     }
-    function toggleAccordion(id) {
-      document.getElementById(id).classList.toggle('open');
-    }
-
+    function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    // Tab Lọc Game Hoạt Động 100%
+    // Tab Lọc Game
     function setTab(btn, category) {
       document.querySelectorAll('.filter-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -573,11 +598,7 @@
       const items = document.querySelectorAll('.game-card-item');
       items.forEach(item => {
         const cat = item.getAttribute('data-category');
-        if (category === 'all' || cat === category) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
+        item.style.display = (category === 'all' || cat === category) ? 'block' : 'none';
       });
     }
 
@@ -608,9 +629,7 @@
       closeSidebar();
       const items = document.querySelectorAll('.game-card-item');
       items.forEach(item => {
-        if(item.querySelector('.game-name').innerText === gameName) {
-          selectGame(item, gameName);
-        }
+        if(item.querySelector('.game-name').innerText === gameName) { selectGame(item, gameName); }
       });
     }
 
@@ -636,7 +655,7 @@
       selectedPriceObj = { price, label };
     }
 
-    // Đăng nhập / Đăng ký Vĩnh Viễn
+    // Auth
     function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
     function toggleAuthMode() {
       isRegister = !isRegister;
@@ -690,6 +709,12 @@
         document.getElementById('requireLoginNotice').style.display = 'block';
         document.getElementById('payForm').style.display = 'none';
       }
+
+      const ann = localStorage.getItem('sys_announcement');
+      if(ann) {
+        document.getElementById('adminAnnouncement').innerText = ann;
+        document.getElementById('admNoticeInput').value = ann;
+      }
     }
 
     // Nạp tiền
@@ -711,10 +736,21 @@
 
     function createQR() {
       const amt = document.getElementById('qrAmount').value;
-      const memo = "NAP" + Math.floor(100000 + Math.random() * 900000);
-      document.getElementById('qrImg').src = `https://img.vietqr.io/image/MB-0333333333-compact2.png?amount=${amt}&addInfo=${memo}`;
-      document.getElementById('qrMemo').innerText = memo;
+      currentGeneratedMemo = "NAP" + Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('qrMemo').innerText = currentGeneratedMemo;
       document.getElementById('qrImgBox').style.display = 'block';
+    }
+
+    function confirmBankTransferSent() {
+      if(!currentUser) { alert("Vui lòng đăng nhập trước!"); return; }
+      const val = parseInt(document.getElementById('qrAmount').value);
+
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      cards.push({ id: Date.now(), user: currentUser, type: 'Chuyển Khoản / QR', seri: 'BANK', pin: currentGeneratedMemo, val, status: 'pending' });
+      localStorage.setItem('sys_cards', JSON.stringify(cards));
+
+      alert("Đã xác nhận đã chuyển khoản! Vui lòng chờ Admin đối soát duyệt.");
+      closeModal('depositModal');
     }
 
     function submitCard(typeStr) {
@@ -729,26 +765,27 @@
       cards.push({ id: Date.now(), user: currentUser, type: typeStr, seri, pin, val, status: 'pending' });
       localStorage.setItem('sys_cards', JSON.stringify(cards));
 
-      alert("Đã gửi thẻ! Vui lòng chờ Admin phê duyệt.");
+      alert("Đã gửi mã thẻ lên hệ thống! Vui lòng chờ Admin duyệt.");
       closeModal('depositModal');
     }
 
     function submitGarenaCard() {
       if(!currentUser) { alert("Vui lòng đăng nhập trước!"); return; }
+      const seri = document.getElementById('garSeri').value.trim() || 'GARENA';
       const pin = document.getElementById('garPin').value.trim();
       const val = parseInt(document.getElementById('garVal').value);
 
       if(!pin) { alert("Vui lòng nhập Mã Thẻ Garena!"); return; }
 
       const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      cards.push({ id: Date.now(), user: currentUser, type: 'Thẻ Garena', seri: 'GARENA', pin, val, status: 'pending' });
+      cards.push({ id: Date.now(), user: currentUser, type: 'Thẻ Garena', seri, pin, val, status: 'pending' });
       localStorage.setItem('sys_cards', JSON.stringify(cards));
 
-      alert("Đã gửi Thẻ Garena! Vui lòng chờ Admin duyệt.");
+      alert("Đã gửi Thẻ Garena lên hệ thống! Vui lòng chờ Admin duyệt.");
       closeModal('depositModal');
     }
 
-    // Ẩn Admin - Bấm Logo Garena 5 lần liên tiếp để mở Admin
+    // Admin - Bấm 5 lần vào Logo Garena
     function secretAdminClick() {
       adminClickCounter++;
       if(adminClickCounter >= 5) {
@@ -773,7 +810,7 @@
           tbody.innerHTML += `
             <tr>
               <td>${c.user}</td>
-              <td>${c.type}<br>Mã: ${c.pin}</td>
+              <td>${c.type}<br><b>Pin:</b> ${c.pin}<br><b>Seri:</b> ${c.seri}</td>
               <td>${c.val.toLocaleString()}đ</td>
               <td>
                 <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="approveCard(${c.id})">Duyệt</button>
@@ -795,11 +832,10 @@
         balances[c.user] = (balances[c.user] || 0) + c.val;
         localStorage.setItem('sys_balances', JSON.stringify(balances));
 
-        alert("Đã duyệt thẻ thành công!");
+        alert("Đã duyệt nạp thành công!");
         renderAdminCards();
         updateUI();
         
-        // Đặt cờ báo cho bên phía khách hiển thị tích xanh
         localStorage.setItem('last_approved_user', c.user);
         checkAdminApproval();
       }
@@ -818,7 +854,14 @@
       updateUI();
     }
 
-    // Kiểm tra và hiển thị Thông báo duyệt tích xanh cho Khách
+    function adminSaveAnnouncement() {
+      const txt = document.getElementById('admNoticeInput').value.trim();
+      if(!txt) return;
+      localStorage.setItem('sys_announcement', txt);
+      alert("Đã cập nhật thông báo mức nạp mới!");
+      updateUI();
+    }
+
     function checkAdminApproval() {
       const approvedUser = localStorage.getItem('last_approved_user');
       if(approvedUser && approvedUser === currentUser) {
@@ -844,7 +887,6 @@
         return;
       }
 
-      // Trừ tiền & Chuyển sang màn hình Đang xử lý
       balances[currentUser] = curBal - selectedPriceObj.price;
       localStorage.setItem('sys_balances', JSON.stringify(balances));
       updateUI();
@@ -860,14 +902,12 @@
     }
 
     window.onload = function() {
-      // Tải lại tài khoản đã lưu vĩnh viễn
       const savedUser = localStorage.getItem('session_user_permanent');
       if(savedUser) currentUser = savedUser;
       
       selectGame(null, 'Free Fire');
       updateUI();
 
-      // Kiểm tra định kỳ thông báo duyệt thành công từ Admin
       setInterval(checkAdminApproval, 2000);
     };
   </script>
