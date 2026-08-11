@@ -1032,38 +1032,64 @@
     }
 <script>
 window.onload = function() {
-  syncAdminData();
+  try {
+    syncAdminData();
+  } catch (e) {
+    console.error("syncAdminData:", e);
+  }
 
-  const savedUser = localStorage.getItem('session_user_permanent');
-  if (savedUser) currentUser = savedUser;
+  try {
+    const savedUser = localStorage.getItem('session_user_permanent');
+    if (savedUser) currentUser = savedUser;
+  } catch (e) {
+    console.error("session:", e);
+  }
 
-  selectGame(null, 'Free Fire');
-  updateUI();
+  try {
+    selectGame(null, 'Free Fire');
+  } catch (e) {
+    console.error("selectGame:", e);
+  }
 
-  setInterval(checkAdminApproval, 2000);
+  try {
+    updateUI();
+  } catch (e) {
+    console.error("updateUI:", e);
+  }
+
+  try {
+    setInterval(function() {
+      if (typeof checkAdminApproval === 'function') {
+        checkAdminApproval();
+      }
+    }, 2000);
+  } catch (e) {
+    console.error("approval:", e);
+  }
 };
 </script>
 
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
-  authDomain: "garena-store-db.firebaseapp.com",
-  projectId: "garena-store-db",
-  storageBucket: "garena-store-db.firebasestorage.app",
-  messagingSenderId: "1037363068665",
-  appId: "1:1037363068665:web:48c8f90cc0bbf375726c28",
-  measurementId: "G-7ECY0PYP74"
+  apiKey: "AIzaSyCgBlvrdj_ETfnGAgk6-ws2zekQTcp5iQI",
+  authDomain: "cai-lon-a88bc.firebaseapp.com",
+  projectId: "cai-lon-a88bc",
+  storageBucket: "cai-lon-a88bc.firebasestorage.app",
+  messagingSenderId: "509743606954",
+  appId: "1:509743606954:web:620120eb6b9b0e2e34f4d3",
+  measurementId: "G-925MG9G715"
 };
 
 try {
   firebase.initializeApp(firebaseConfig);
   window.db = firebase.firestore();
-  console.log("Firebase đã kết nối!");
+  console.log("✅ Firebase đã kết nối!");
 } catch (error) {
-  console.error("Firebase lỗi:", error);
+  console.error("❌ Firebase lỗi:", error);
 }
 </script>
 
