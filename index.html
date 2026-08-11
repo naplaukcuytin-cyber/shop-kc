@@ -1030,22 +1030,6 @@
         showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
       }, 3000);
     }
-
-<!-- 1. Thêm thư viện Firebase (Bản Compat để chạy trực tiếp trên file HTML) -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-<!-- 2. Khởi tạo Firebase với cấu hình của bạn -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
-    authDomain: "garena-store-db.firebaseapp.com",
-    projectId: "garena-store-db",
-    storageBucket: "garena-store-db.firebasestorage.app",
-    messagingSenderId: "1037363068665",
-    appId: "1:1037363068665:web:48c8f90cc0bbf375726c28",
-    measurementId: "G-7ECY0PYP74"
-  };
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -1060,19 +1044,27 @@
     measurementId: "G-7ECY0PYP74"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  console.log("Kết nối Firebase thành công!");
+  try {
+    firebase.initializeApp(firebaseConfig);
+    window.db = firebase.firestore();
+    console.log("Kết nối Firebase thành công!");
+  } catch (e) {
+    console.error("Lỗi khởi tạo Firebase:", e);
+  }
 
   window.onload = function() {
-    if (typeof syncAdminData === 'function') syncAdminData();
-    const savedUser = localStorage.getItem('session_user_permanent');
-    if (savedUser) currentUser = savedUser;
-    if (typeof selectGame === 'function') selectGame(null, 'Free Fire');
-    if (typeof updateUI === 'function') updateUI();
-    if (typeof checkAdminApproval === 'function') {
-      setInterval(checkAdminApproval, 2000);
-    }
+    try { if (typeof syncAdminData === 'function') syncAdminData(); } catch(e) {}
+    try {
+      const savedUser = localStorage.getItem('session_user_permanent');
+      if (savedUser && typeof currentUser !== 'undefined') currentUser = savedUser;
+    } catch(e) {}
+    try { if (typeof selectGame === 'function') selectGame(null, 'Free Fire'); } catch(e) {}
+    try { if (typeof updateUI === 'function') updateUI(); } catch(e) {}
+    try {
+      if (typeof checkAdminApproval === 'function') {
+        setInterval(checkAdminApproval, 2000);
+      }
+    } catch(e) {}
   };
 </script>
 </body>
