@@ -1031,16 +1031,16 @@
       }, 3000);
     }
 <script>
-window.onload = function() { 
-  syncAdminData(); 
+window.onload = function() {
+  syncAdminData();
 
-  const savedUser = localStorage.getItem('session_user_permanent'); 
-  if (savedUser) currentUser = savedUser; 
-  
-  selectGame(null, 'Free Fire'); 
-  updateUI(); 
+  const savedUser = localStorage.getItem('session_user_permanent');
+  if (savedUser) currentUser = savedUser;
 
-  setInterval(checkAdminApproval, 2000); 
+  selectGame(null, 'Free Fire');
+  updateUI();
+
+  setInterval(checkAdminApproval, 2000);
 };
 </script>
 
@@ -1049,12 +1049,23 @@ window.onload = function() {
 
 <script>
 const firebaseConfig = {
-  ...
+  apiKey: "AIzaSyAVxnbzaGLHgTv7mOv-wlGnSgbQU4qDK_c",
+  authDomain: "garena-store-db.firebaseapp.com",
+  projectId: "garena-store-db",
+  storageBucket: "garena-store-db.firebasestorage.app",
+  messagingSenderId: "1037363068665",
+  appId: "1:1037363068665:web:48c8f90cc0bbf375726c28",
+  measurementId: "G-7ECY0PYP74"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-...
+try {
+  firebase.initializeApp(firebaseConfig);
+  window.db = firebase.firestore();
+  console.log("Firebase đã kết nối!");
+} catch (error) {
+  console.error("Firebase lỗi:", error);
+}
 </script>
+
 </body>
 </html>
