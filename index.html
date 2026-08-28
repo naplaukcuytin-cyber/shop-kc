@@ -3,78 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giao Diện Tài Xỉu Mô Phỏng</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Mạng Xã Hội Mini - Đăng Nhập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            width: 300px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        h2 { text-align: center; color: #38bdf8; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #white;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background: #0ea5e9; }
+    </style>
 </head>
 <body>
 
-    <div class="game-wrapper">
-        <!-- Header thông tin người chơi -->
-        <div class="game-header">
-            <div class="user-info">
-                <span class="id">ID: 12720418</span>
-                <span class="balance">💰 30,560 Xu</span>
-            </div>
-            <div class="room-title">🎲 TÀI XỈU CÂN TẤT 🎲 (#919851)</div>
-        </div>
-
-        <!-- Khu vực bàn cược chính -->
-        <div class="main-table">
-            <!-- Cửa TÀI -->
-            <div class="bet-box tai-box">
-                <h2>TÀI</h2>
-                <div class="total-money">90,091,433</div>
-                <div class="user-bet">Đã cược: 0</div>
-            </div>
-
-            <!-- Hũ điểm chính giữa -->
-            <div class="center-result">
-                <div class="dice-sum">09</div>
-                <div class="timer">Thời gian: 15s</div>
-            </div>
-
-            <!-- Cửa XỈU -->
-            <div class="bet-box xiu-box">
-                <h2>XỈU</h2>
-                <div class="total-money">113,031,850</div>
-                <div class="user-bet">Đã cược: 0</div>
-            </div>
-        </div>
-
-        <!-- Thanh chọn chip tiền cược (Mô phỏng) -->
-        <div class="chip-container">
-            <button class="chip" onclick="selectChip(1000)">1K</button>
-            <button class="chip" onclick="selectChip(10000)">10K</button>
-            <button class="chip" onclick="selectChip(50000)">50K</button>
-            <button class="chip" onclick="selectChip(100000)">100K</button>
-            <button class="chip" onclick="selectChip(500000)">500K</button>
-            <button class="chip" onclick="selectChip(5000000)">5M</button>
-        </div>
-
-        <!-- Khung điều khiển và Chat -->
-        <div class="bottom-panel">
-            <div class="action-buttons">
-                <button class="btn-action allin">ALL-IN</button>
-                <button class="btn-action bet">ĐẶT CƯỢC</button>
-                <button class="btn-action cancel">HỦY</button>
-            </div>
-        </div>
+    <div class="login-card">
+        <h2>Đăng Nhập</h2>
+        <form>
+            <label>Tên tài khoản</label>
+            <input type="text" placeholder="Nhập username..." required>
+            
+            <label>Mật khẩu</label>
+            <input type="password" placeholder="Nhập mật khẩu..." required>
+            
+            <button type="submit">Vào Mạng Xã Hội</button>
+        </form>
     </div>
 
-    <!-- Khung chat bên cạnh -->
-    <div class="chat-container">
-        <div class="chat-header">CHAT TRỰC TUYẾN</div>
-        <div class="chat-messages">
-            <div class="chat-item"><b>trrunngg:</b> Xỉu bú</div>
-            <div class="chat-item"><b>nam1203:</b> tai 14</div>
-            <div class="chat-item"><b>phuhoangoke:</b> 33 ae ơi</div>
-            <div class="chat-item"><b>hung3001:</b> AE VÔ MANH TAI</div>
-        </div>
-        <div class="chat-input-box">
-            <input type="text" placeholder="Nhập nội dung chat...">
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
