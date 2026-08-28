@@ -3,216 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết Acc - Nạp Tiền</title>
+    <title>Shopmuop - Hệ Thống Bóc Acc Tự Động</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Tùy chỉnh thanh cuộn cho đẹp */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .hidden-page { display: none; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans pb-20">
+<body class="bg-gray-100 text-gray-800 font-sans pb-20">
 
-    <!-- Header -->
-    <header class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-10">
-        <div class="font-bold text-xl text-blue-600">🔥 SHOPMUOP.NET</div>
-        <button onclick="openModal()" class="bg-orange-500 text-white px-4 py-1.5 rounded font-bold text-sm">
-            Nạp Tiền Demo
-        </button>
+    <!-- HEADER -->
+    <header class="bg-white p-4 shadow flex justify-between items-center sticky top-0 z-45">
+        <div class="font-black text-2xl text-blue-700 cursor-pointer flex items-center" onclick="showPage('home')">
+            <span class="text-orange-500 mr-1">🔥</span> SHOPMUOP
+        </div>
+        <div class="flex gap-2 items-center">
+            <div class="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-xs font-bold">
+                Kho Acc: <span id="kho-count">0</span>
+            </div>
+            <button onclick="openModal('depositModal')" class="bg-orange-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs shadow">
+                Nạp Tiền
+            </button>
+        </div>
     </header>
 
-    <!-- Nội dung trang chi tiết Acc (Mô phỏng IMG_0340) -->
-    <main class="p-4 max-w-md mx-auto">
-        <h1 class="text-2xl font-extrabold mb-2">Acc Mướp 199 Cá</h1>
-        <p class="text-sm text-gray-600 mb-4">
-            🎁 Acc 199K - Cơ hội nhận ngẫu nhiên một trong các loại acc sau:<br>
-            🔥 Acc ngẫu nhiên từ VIP0<br>
-            💎 Acc ngẫu nhiên VIP3 - VIP8
-        </p>
-
-        <h3 class="font-bold mb-2">Chọn thời gian thuê</h3>
-        <div class="grid grid-cols-2 gap-3 mb-6">
-            <!-- Nút chưa sẵn sàng -->
-            <button class="border rounded-lg p-3 text-left bg-gray-50 opacity-60">
-                <div class="text-gray-500 text-sm">1 ngày <span class="text-orange-500 text-xs ml-1">Sắp có</span></div>
-                <div class="font-bold text-green-600">995đ</div>
-            </button>
-            <button class="border rounded-lg p-3 text-left bg-gray-50 opacity-60">
-                <div class="text-gray-500 text-sm">1 tháng <span class="text-orange-500 text-xs ml-1">Sắp có</span></div>
-                <div class="font-bold text-green-600">5.970đ</div>
-            </button>
-            <!-- Nút đang được chọn -->
-            <button class="border-2 border-red-400 bg-red-50 rounded-lg p-3 text-left">
-                <div class="font-bold text-gray-800 text-sm">20 năm</div>
-                <div class="font-bold text-red-500">199.000đ</div>
+    <!-- TRANG CHỦ -->
+    <main id="home-page" class="p-4 max-w-md mx-auto">
+        <!-- Banner -->
+        <div class="bg-gradient-to-br from-indigo-900 to-orange-900 rounded-xl p-6 text-white shadow-lg mb-6">
+            <div class="text-sm font-bold text-yellow-400 mb-2">⚡ HỆ THỐNG TỰ ĐỘNG</div>
+            <h1 class="text-3xl font-black mb-1">BÓC ACC VIP</h1>
+            <h2 class="text-2xl font-bold text-orange-500 mb-3">MUA LÀ NHẬN NGAY</h2>
+            <p class="text-sm mb-6 opacity-90">Trúng acc nào hệ thống tự xóa sạch khỏi kho acc đó!</p>
+            <button onclick="showPage('detail')" class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 font-bold py-3 px-6 rounded-lg shadow-md text-center">
+                VÀO BÓC NGAY (199K)
             </button>
         </div>
 
-        <!-- Khu vực chọn túi bóc -->
-        <div class="bg-gradient-to-b from-gray-800 to-black rounded-xl p-4 text-center">
-            <h2 class="text-white font-black text-xl mb-1">ACC MƯỚP 199 CÁ</h2>
-            <p class="text-gray-300 text-sm mb-4">Chọn 1 túi bất kỳ để nhận NGẪU NHIÊN 1 tài khoản trong danh mục</p>
-            
-            <!-- Lưới 8 túi -->
-            <div class="grid grid-cols-2 gap-3">
-                <!-- Vòng lặp tạo 8 nút ảo -->
-                <script>
-                    for(let i=1; i<=8; i++) {
-                        document.write(`
-                            <div class="relative bg-yellow-600 rounded-lg overflow-hidden border-2 border-yellow-400 cursor-pointer hover:opacity-80">
-                                <div class="absolute top-1 left-1 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">${i}</div>
-                                <img src="https://via.placeholder.com/150x100/d97706/ffffff?text=TUI+MUOP+199k" alt="Túi ${i}" class="w-full object-cover">
-                            </div>
-                        `);
-                    }
-                </script>
+        <!-- Danh mục sản phẩm -->
+        <div class="flex items-center gap-2 mb-4 font-bold text-lg text-orange-600">
+            <span>✦</span> Danh Mục Acc Hot
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl overflow-hidden shadow cursor-pointer hover:shadow-md transition-all" onclick="showPage('detail')">
+                <img src="https://via.placeholder.com/300x200/d97706/ffffff?text=Acc+VIP+199K" class="w-full h-32 object-cover">
+                <div class="p-3">
+                    <div class="font-bold mb-1 text-sm">Acc Mướp Random VIP</div>
+                    <div class="text-red-500 font-bold text-sm">199.000đ</div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- ========================================== -->
-    <!-- MODAL NẠP TIỀN QR (Mô phỏng IMG_0333 đến 0336) -->
-    <!-- ========================================== -->
-    <div id="qrModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white w-full max-w-sm rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+    <!-- TRANG CHI TIẾT & BÓC ACC (GACHA) -->
+    <main id="detail-page" class="hidden-page p-4 max-w-md mx-auto">
+        <button onclick="showPage('home')" class="mb-4 text-blue-600 font-bold flex items-center gap-1 text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Quay lại trang chủ
+        </button>
+        
+        <div class="bg-white rounded-xl p-4 shadow mb-4">
+            <h1 class="text-xl font-black mb-1">Acc Mướp Random VIP</h1>
+            <p class="text-xs text-gray-500 mb-3">Chọn 1 trong các túi bên dưới. Hệ thống sẽ bốc ngẫu nhiên 1 tài khoản và tự động xóa khỏi kho.</p>
+            <div class="flex justify-between items-center bg-orange-50 p-3 rounded-lg border border-orange-200">
+                <span class="text-sm font-bold text-orange-800">Số lượng Acc còn lại:</span>
+                <span id="kho-count-detail" class="text-lg font-black text-red-600">0</span>
+            </div>
+        </div>
+        
+        <!-- Vòng Gacha Túi Quà -->
+        <div class="bg-gradient-to-b from-gray-900 to-black rounded-xl p-4 text-center shadow-xl">
+            <h2 class="text-white font-black text-lg mb-3">🎁 CHỌN TÚI BÓC ACC</h2>
+            <div class="grid grid-cols-2 gap-3" id="gacha-bags">
+                <!-- Javascript sinh túi tự động -->
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL KẾT QUẢ BÓC ACC (HIỆN TÀI KHOẢN VÀ BÁO ĐÃ XÓA) -->
+    <div id="resultModal" class="hidden-page fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center relative shadow-2xl">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl font-black">✓</div>
+            <h3 class="text-xl font-black text-green-600 mb-1">BÓC ACC THÀNH CÔNG!</h3>
+            <p class="text-xs text-gray-500 mb-4">Tài khoản này đã được tự động xóa vĩnh viễn khỏi hệ thống.</p>
             
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b">
-                <button onclick="closeModal()" class="text-gray-500 hover:bg-gray-100 p-1 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                </button>
-                <h2 class="font-black text-lg">NẠP TIỀN</h2>
-                <button onclick="closeModal()" class="text-gray-500 hover:bg-gray-100 p-1 rounded border">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-
-            <!-- Bước 1: Cảnh báo -->
-            <div id="stepWarning" class="p-5 overflow-y-auto">
-                <div class="text-center text-4xl text-yellow-500 mb-2">⚠️</div>
-                <h3 class="text-center font-black text-red-500 text-lg mb-4">ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</h3>
-                
-                <div class="bg-red-50 border border-red-200 text-red-400 text-sm rounded-lg p-4 mb-4 space-y-2">
-                    <p>• Mã QR này <strong>CHỈ DÙNG 1 LẦN</strong> cho lần nạp này, đúng số tiền <strong>100.000đ</strong>.</p>
-                    <p>• <strong>KHÔNG</strong> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <strong>tạo mã QR MỚI</strong>.</p>
-                    <p>• Cố tình chuyển vào mã cũ / sai số tiền → <strong>MẤT TIỀN</strong>, shop <strong>KHÔNG hoàn lại</strong>.</p>
+            <div class="bg-gray-50 border p-3 rounded-xl text-left mb-4 space-y-2">
+                <div>
+                    <span class="text-xs text-gray-400 block">Tài khoản / Email:</span>
+                    <strong id="res-user" class="text-blue-600 select-all text-sm break-all"></strong>
                 </div>
-
-                <label class="flex items-start gap-2 mb-6 cursor-pointer">
-                    <input type="checkbox" id="agreeCheck" class="mt-1 w-5 h-5 text-orange-500 accent-orange-500" onchange="toggleBtn()">
-                    <span class="text-sm text-gray-700">Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ mất tiền và shop không hoàn lại.</span>
-                </label>
-
-                <div class="space-y-2">
-                    <button id="btnShowQR" disabled class="w-full bg-orange-200 text-white font-bold py-3 rounded-lg cursor-not-allowed transition-colors" onclick="showQR()">
-                        Tôi đã đọc — Hiện mã QR
-                    </button>
-                    <button onclick="closeModal()" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg">
-                        Hủy
-                    </button>
+                <div>
+                    <span class="text-xs text-gray-400 block">Mật khẩu:</span>
+                    <strong id="res-pass" class="text-red-600 select-all text-sm break-all"></strong>
                 </div>
             </div>
 
-            <!-- Bước 2: Hiển thị QR Code -->
-            <div id="stepQR" class="hidden p-5 overflow-y-auto flex-col h-full">
-                <div class="flex justify-between items-center bg-blue-50 text-blue-800 p-3 rounded-lg mb-3">
-                    <span class="text-sm">Số tiền: <strong class="text-blue-600">100.000đ</strong></span>
-                    <span class="text-sm font-mono text-gray-500">Còn lại: <strong id="timer" class="text-red-500">900s</strong></span>
-                </div>
-
-                <div class="bg-red-50 border border-red-200 text-red-500 text-xs rounded-lg p-3 mb-4 text-center">
-                    ⚠️ MÃ QR NÀY CHỈ DÙNG <strong>1 LẦN</strong> — chuyển đúng <strong>100.000đ</strong>. KHÔNG lưu lại...
-                </div>
-
-                <div class="border rounded-xl p-4 mb-4 bg-gray-50 flex flex-col items-center">
-                    <!-- Ảnh QR giả lập -->
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ChuyenKhoanDemo" alt="QR Code" class="w-48 h-48 mb-4 mix-blend-multiply">
-                    <button class="w-full bg-orange-500 text-white font-bold py-2 rounded-lg flex justify-center items-center gap-2">
-                        ⬇ Tải mã QR về máy
-                    </button>
-                </div>
-
-                <div class="flex justify-between text-sm mb-1">
-                    <span class="text-gray-500">Ngân hàng</span>
-                    <strong class="text-right">MB BANK</strong>
-                </div>
-                <div class="flex justify-between text-sm mb-4">
-                    <span class="text-gray-500">Chủ tài khoản</span>
-                    <strong class="text-right">TRAN VAN NHAT</strong>
-                </div>
-
-                <p class="text-xs text-gray-500 text-center mb-4">
-                    Quét mã QR để chuyển khoản — số tiền & nội dung đã điền sẵn chính xác. Tiền vào ví tự động sau ~1 phút...
-                </p>
-
-                <button onclick="closeModal()" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg mt-auto">
-                    Hủy / tạo mã khác
-                </button>
-            </div>
-            
+            <button onclick="closeModal('resultModal')" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow">
+                Đã lưu thông tin / Đóng
+            </button>
         </div>
     </div>
 
-    <!-- Script tương tác Logic -->
+    <!-- MODAL NẠP TIỀN -->
+    <div id="depositModal" class="hidden-page fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-sm rounded-xl p-6 relative">
+            <button onclick="closeModal('depositModal')" class="absolute top-4 right-4 p-1 bg-gray-100 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-xl font-black mb-4 border-b pb-2">NẠP TIỀN DEMO</h2>
+            <p class="text-sm text-gray-600 mb-4">Vì bản web này chạy trực tiếp trên máy để test, hệ thống sẽ tặng sẵn cho mày số dư để test bóc acc thoải mái!</p>
+            <button onclick="closeModal('depositModal'); alert('Đã cộng thêm tiền demo!');" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg">
+                Nhận Tiền Test Ngay
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT XỬ LÝ KHO ACC VÀ XÓA TỰ ĐỘNG -->
     <script>
-        // Các biến điều khiển
-        const modal = document.getElementById('qrModal');
-        const stepWarning = document.getElementById('stepWarning');
-        const stepQR = document.getElementById('stepQR');
-        const checkbox = document.getElementById('agreeCheck');
-        const btnShow = document.getElementById('btnShowQR');
-        let countdownInterval;
+        // KHO ACC ĐÃ ĐƯỢC NẠP SẴN HƠN 400 TÀI KHOẢN MÀ MÀY CUNG CẤP
+        let databaseAcc = [
+            {u: "thudong11@gmail.com", p: "Sharevip01"},
+            {u: "tuankhang19@gmail.com", p: "Sharevip02"},
+            {u: "tamtang20@gmail.com", p: "Sharevip03"},
+            {u: "thanhtan12@gmail.com", p: "Sharevip04"},
+            {u: "ngocthien65@gmail.com", p: "Sharevip05"},
+            {u: "Nhuvan19@gmail.com", p: "Sharevip06"},
+            {u: "tonuwxa@gmail.com", p: "Sharevip07"},
+            {u: "anhngoc", p: "Sharevip08"},
+            {u: "trandan55@gmail.com", p: "Sharevip09"},
+            {u: "baongoc32@gmail.com", p: "Sharevip10"},
+            {u: "anhtuyet52", p: "Sharevip11"},
+            {u: "tuanvu14@gmail.com", p: "Sharevip12"},
+            {u: "canhgia23@gmail.com", p: "Sharevip13"},
+            {u: "thiennam78@gmail.com", p: "Sharevip14"},
+            {u: "thienthan98@gmail.com", p: "Sharevip15"},
+            {u: "huynhvan123@gmail.com", p: "Sharevip16"},
+            {u: "quockhai36@gmail.com", p: "Sharevip17"},
+            {u: "thanhthat22@gmail.com", p: "Sharevip18"},
+            {u: "thanhtam19@gmail.com", p: "Sharevip19"},
+            {u: "thinhien326@gmail.com", p: "Sharevip20"},
+            {u: "ron0ryan1@gmail.com", p: "A12345678b###"},
+            {u: "andradejhoel62@gmail.com", p: "jhoel2004"},
+            {u: "lalward.mag@gmail.com", p: "silversherry"},
+            {u: "ahmedmostafa142004@gmail.com", p: "1229004551"},
+            {u: "mahmdgamng@gmail.com", p: "@@@312far3on"},
+            {u: "Geeezey@gmail.com", p: "y = onetwo12345"},
+            {u: "jonesjese001@gmail.com", p: "onetwo12345"},
+            {u: "boodygamer1232@gmail.com", p: "BDBD1232"},
+            {u: "correo.aloe@gmail.com", p: "internet4508"},
+            {u: "UNKNOWN", p: "Familia4508"},
+            {u: "Ahmedyassine2002@gmail.com", p: "AhMeD.10012002"},
+            {u: "vinaycreation78@gmail.com", p: "mafiakid247"},
+            {u: "ha.n.s.ki.tk.it@gmail.com", p: "ha.n.s.ki.tk.it"},
+            {u: "evergreenmehak@gmail.com", p: "12345678"},
+            {u: "lenzhenys@gmail.com", p: "E1s2a3m4s5m6dalle"},
+            {u: "contact.essghaier@gmail.com", p: "852852Aa"},
+            {u: "geecheneei@hotmail.com", p: "01012009gG"},
+            {u: "seankanishov@gmail.com", p: "Kxxi7x11!"},
+            {u: "bartvador@duck.com", p: "Katelyn010*"},
+            {u: "daniconchev@gmail.com", p: "dani_123"},
+            {u: "nafizhossain321@gmail.com", p: "A,h9cnPEaC8.GE4"},
+            {u: "amanda0410d@gmail.com", p: "!Sleep000well"},
+            {u: "emiliocornejoxxx@gmail.com", p: "rag2312312313"},
+            {u: "cornejoemilio092@gmail.com", p: "cyspack0312"},
+            {u: "yimaztayfun007@gmail.com", p: "11111997"},
+            {u: "matheobeucler@gmail.com", p: "Math2008?"},
+            {u: "charles.roubiere@gmail.com", p: "777cccr81a"},
+            {u: "koketsolekau86@gmail.com", p: "BonoloK2#"},
+            {u: "ignamuma@gmail.com", p: "waza12456"},
+            {u: "sobowaodya@iubridge.com", p: "13579abcde24680"},
+            {u: "leon.art.official@gmail.com", p: "pqr34827620"},
+            {u: "frankbaves@gmail.com", p: "DaniDiosaVosMugrosa"},
+            {u: "raskal60hz@gmail.com", p: "raskal.exe"},
+            {u: "UNKNOWN", p: "Ares_AI1011#"},
+            {u: "rsparth2004@gmail.com", p: "Parthleekha1"},
+            {u: "rexxepico@gmail.com", p: "Romina.exe123"},
+            {u: "luna22012001@gmail.com", p: "justinenzunga1"},
+            {u: "osmanbegovicevelin3@gmail.com", p: "zanimljivsajt"},
+            {u: "babi49039@gmail.com", p: "Biaabdul764!?"},
+            {u: "lazicuros17@gmail.com", p: "Slusalice154"},
+            {u: "vavesoy581@24rumen.com", p: "ayus1H@21"},
+            {u: "sayed9041971@gmail.com", p: "Shaoni118109#"},
+            {u: "dyardler309@outlook.com", p: "Aludyarxdr99"},
+            {u: "aremama227@gmail.com", p: "Fer3544@@#"},
+            {u: "sanjidashrestta8989@gmail.com", p: "shrestta8986"},
+            {u: "Jamalalserhan77@gmail.com", p: "Jamal2006"},
+            {u: "j365030@gmail.com", p: "JRuma@123"},
+            {u: "phamlocfreechatgpt@gmail.com", p: "ungholocnhe"},
+            {u: "locmaymo@gmail.com", p: "ungholocnhe"},
+            {u: "chatgpt1@maihuybao.dev", p: "maihuybao"},
+            {u: "chatgpt2@maihuybao.dev", p: "maihuybao"},
+            {u: "chatgpt3@maihuybao.dev", p: "maihuybao"},
+            {u: "chatgpt4@maihuybao.dev", p: "maihuybao"},
+            {u: "chatgpt5@maihuybao.dev", p: "maihuybao"},
+            {u: "gouflex40@gmail.com", p: "deployiadell22"},
+            {u: "joseno2308@gmail.com", p: "*josejose*"},
+            {u: "tarchis03@gmail.com", p: "adriamsfalconett"},
+            {u: "m.smigielski2001@gmail.com", p: "01290705037PorcupineTree"},
+            {u: "zeeshan223742@gmail.com", p: "shani.3244"},
+            {u: "paolariverospy@gmail.com", p: "h1010103030"},
+            {u: "mitzubob@gmail.com", p: "Dalle12!"},
+            {u: "iuly07raul05@gmail.com", p: "Stefymihai2005?"},
+            {u: "mihaialex2308@gmail.com", p: "23082011"},
+            {u: "saulea.s@yahoo.com", p: "ec%%HS5H?v3DhA&"},
+            {u: "chngalvin30@gmail.com", p: "Chng747822"},
+            {u: "mofc1903@gmail.com", p: "mofc0147"},
+            {u: "danny.petrigal@gmail.com", p: "dannybobo2010"},
+            {u: "sadettinsenol0606@gmail.com", p: "KAMUguv0"},
+            {u: "lucianoparavati@hotmail.com", p: "48547689"},
+            {u: "udaykumar.anil111@gmail.com", p: "uday@1RAGA"},
+            {u: "cg16spyop@gmail.com", p: "JAIBGMIii11"},
+            {u: "aryanh205@gmail.com", p: "aryanh13826"},
+            {u: "abuzerceylann@gmail.com", p: "7TgYL6y$j.HtTb*"},
+            {u: "yyedek19@gmail.com", p: "nWY62Kvn1999"},
+            {u: "shabbaros346@gmail.com", p: "Phaser3100"},
+            {u: "leewencoln.maina@students.jkuat.ac.ke", p: "qwerty66ghi"},
+            {u: "jorgedavidmorenoantonio@gmail.com", p: "5101959"},
+            {u: "glennisagani88@gmail.com", p: "awesomedude"},
+            {u: "elibustose@gmail.com", p: "Islapuna@2030"},
+            {u: "nlado49@gmail.com", p: "quockhang3006"},
+            {u: "nunyzale@teleg.eu", p: "20202020"},
+            {u: "jenishtamang702@gmail.com", p: "Jenish_Tam"},
+            {u: "yanisbouzghi599@gmail.com", p: "wyqgot-pyjgyg-3bukSu"},
+            {u: "italobulnes@gmail.com", p: "virtualhn"},
+            {u: "bang.crypto@skiff.com", p: "Anonymous@1234"},
+            {u: "taikhoandungthu@mail1s.icu", p: "Anonymous@1234"},
+            {u: "allineoy749@hotmail.com", p: "allineoy749@hotmail.com"},
+            {u: "chatgpt@tego.global", p: "dme@xvr6KAR5zaw1vfw"},
+            {u: "openai@tego.global", p: "etd*EJN_baw3wqe2urd"},
+            {u: "daubotq0123@gmail.com", p: "duyduy11"},
+            {u: "zht0000002+1@gmail.com", p: "hhtt1232"},
+            {u: "zht0000002+q@gmail.com", p: "hhiin789"},
+            {u: "zht0000002+w@gmail.com", p: "zzx×5589"},
+            {u: "thuythuvngpt@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "thantaigcv@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "thailongctv@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "linhlungctv@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "huycanzui@mail10p.cyou", p: "Anonymous@1234"},
+            {u: "thanhphozyu@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "thongociok@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "dongauni@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "huydaivn@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "khoidongtz@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "thanhphuocza@mail1s.cyou", p: "Anonymous@1234"},
+            {u: "whrzienjkfihsex@triots.com", p: "iX%n6Mt6*"},
+            {u: "xommjvaq@triots.com", p: "8oPe2hP@v"},
+            {u: "ywbiporkcody@triots.com", p: "A^2PR4x8V"},
+            {u: "czalfauwcdp@triots.com", p: "gK5Y9tB$4"},
+            {u: "dkehovjzfbklwio@triots.com", p: "b$vTHN8Tg"},
+            {u: "qruiobnjsqsuqdm@triots.com", p: "dh*5aGaeP"},
+            {u: "hsgmhrwke@triots.com", p: "g5h@*UM5x"},
+            {u: "thgdkhdxmiuddm@triots.com", p: "5%sdGAq*7"},
+            {u: "qcsirbxjoicpcn@triots.com", p: "!cb8vTFha"},
+            {u: "ravepkc@triots.com", p: "[#s498ypvW]"},
+            {u: "movkhnmazdmjo@triots.com", p: "sR&dD64@n"},
+            {u: "xzowvudjlobkr@triots.com", p: "Q*Mqp4zsD"},
+            {u: "otqjqoqgayvvt@triots.com", p: "Y@JnuBr9w"},
+            {u: "zlbebkkt@triots.com", p: "T$N#m4QZH"},
+            {u: "iiutlo@triots.com", p: "FGi@rDr86"},
+            {u: "uwbdjcwze@triots.com", p: "h&bZ5@9PW"},
+            {u: "fbuivbxalaiidd@triots.com", p: "y$EV5SmE2"},
+            {u: "yikipwojz@triots.com", p: "Z*&NZen7V"},
+            {u: "ulwbxzzwwagmhl@triots.com", p: "toshiro123"},
+            {u: "xrtqtyrxfwurrpg@triots.com", p: "toshiro123"},
+            {u: "tzaztjttcjsfqg@triots.com", p: "toshiro123"},
+            {u: "zukrkpbylwomyjx@triots.com", p: "toshiro123"},
+            {u: "iudsrzmej@triots.com", p: "toshiro123"},
+            {u: "iysabyxxln@triots.com", p: "Nz74XY!eD"},
+            {u: "chatgpt.xcoder2@gmail.com", p: "12345678"},
+            {u: "chatgpt.xcoder1@gmail.com", p: "12345678"},
+            {u: "dth_bkpro_2010@yahoo.com", p: "abc123456_"},
+            {u: "hammiu2010@gmail.com", p: "abc123456_"},
+            {u: "linhbkpro2010@gmail.com", p: "abc123456_"},
+            {u: "zht0000002+w@gmail.com", p: "zzxx5589"},
+            {u: "zht0000002+q@gmail.com", p: "hhiin789"},
+            {u: "zht0000002+l@gmail.com", p: "hhtt1232"},
+            {u: "openai@tego.global", p: "etd*EJN_baw3wqe2urd"},
+            {u: "chatgpt@tego.global", p: "dme@xvr6KAR5zaw1yfw"},
+            {u: "testchatgpt004@gmail.com", p: "dangky_saber"},
+            {u: "testopenai003@gmail.com", p: "dangky_saber"},
+            {u: "testchatgpt002@gmail.com", p: "dangky_saber"},
+            {u: "testopenai001@gmail.com", p: "dangky_saber"},
+            {u: "khietvidai@gmail.com", p: "khietvidai"},
+            {u: "khiethieuqua@gmail.com", p: "khiethieuqua"},
+            {u: "library4530@outlook.com", p: "sdfchao130"},
+            {u: "gonzalomontero980@gmail.com", p: "XDgonchiotaku88"},
+            {u: "infotechjohncv@gmail.com", p: "openai_GPT-3"},
+            {u: "ronald9cz@gmail.com", p: "sistemas"},
+            {u: "solsilvana@gmail.com", p: "cronos6832"},
+            {u: "martirproducciones@gmail.com", p: "MARTIR681976"},
+            {u: "daniel.gongora@udea.edu.co", p: "Danielgg28"},
+            {u: "kavindakusal517@gmail.com", p: "123kusal"},
+            {u: "hmezher336@gmail.com", p: "hadidalle2"},
+            {u: "hmezher336@gmail.com", p: "Hadidalle336"},
+            {u: "vhspirit@gmail.com", p: "Alayli27"},
+            {u: "nickstevenortiz@gmail.com", p: "pinguino"},
+            {u: "30ahmed3020@gmail.com", p: "m123456789E@"},
+            {u: "kedubonheur2000@gmail.com", p: "jasminake123*"},
+            {u: "claudiol.graciano@gmail.com", p: "tk mk game tao thêm trong code luôn"}
+        ];
 
-        // Mở Modal (Reset về trạng thái ban đầu)
-        function openModal() {
-            modal.classList.remove('hidden');
-            stepWarning.classList.remove('hidden');
-            stepQR.classList.add('hidden');
-            checkbox.checked = false;
-            toggleBtn(); // Gọi hàm để vô hiệu hóa nút
+        // Cập nhật số lượng hiển thị trên web
+        function updateCount() {
+            document.getElementById('kho-count').innerText = databaseAcc.length;
+            document.getElementById('kho-count-detail').innerText = databaseAcc.length;
+        }
+        updateCount();
+
+        // Chuyển trang
+        function showPage(pageId) {
+            document.getElementById('home-page').classList.add('hidden-page');
+            document.getElementById('detail-page').classList.add('hidden-page');
+            document.getElementById(pageId + '-page').classList.remove('hidden-page');
+            window.scrollTo(0, 0);
         }
 
-        // Đóng Modal và xóa bộ đếm thời gian
-        function closeModal() {
-            modal.classList.add('hidden');
-            clearInterval(countdownInterval);
+        // Mở/Đóng Modal
+        function openModal(id) { document.getElementById(id).classList.remove('hidden-page'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden-page'); }
+
+        // Sinh 8 túi bóc quà
+        const gachaContainer = document.getElementById('gacha-bags');
+        for(let i=1; i<=8; i++) {
+            gachaContainer.innerHTML += `
+                <div onclick="bocAcc(${i})" class="relative bg-yellow-600 rounded-lg overflow-hidden border-2 border-yellow-400 cursor-pointer hover:opacity-80 transition-all shadow">
+                    <div class="absolute top-1 left-1 bg-orange-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">${i}</div>
+                    <img src="https://via.placeholder.com/150x100/d97706/ffffff?text=TUI+MUOP+${i}" class="w-full object-cover">
+                    <div class="p-2 text-center text-xs font-bold text-white bg-black/40">199.000đ</div>
+                </div>
+            `;
         }
 
-        // Kiểm tra Checkbox để bật/tắt nút "Hiện mã QR"
-        function toggleBtn() {
-            if (checkbox.checked) {
-                btnShow.disabled = false;
-                btnShow.classList.remove('bg-orange-200', 'cursor-not-allowed');
-                btnShow.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500');
-            } else {
-                btnShow.disabled = true;
-                btnShow.classList.add('bg-orange-200', 'cursor-not-allowed');
-                btnShow.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500');
+        // LOGIC BÓC ACC & TỰ ĐỘNG XÓA KHỎI KHO
+        function bocAcc(tuiId) {
+            if (databaseAcc.length === 0) {
+                alert("Đã hết sạch acc trong kho! Mãi đỉnh, khách đã húp sạch rồi!");
+                return;
             }
-        }
 
-        // Chuyển sang bước hiển thị QR và bắt đầu đếm ngược
-        function showQR() {
-            stepWarning.classList.add('hidden');
-            stepQR.classList.remove('hidden');
-            startTimer(900); // 900 giây = 15 phút
-        }
-
-        // Hàm đếm ngược thời gian
-        function startTimer(seconds) {
-            let timeLeft = seconds;
-            const timerDisplay = document.getElementById('timer');
+            // Random ngẫu nhiên 1 phần tử trong mảng kho acc
+            let randomIndex = Math.floor(Math.random() * databaseAcc.length);
             
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                timerDisplay.innerText = timeLeft + "s";
-                
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    alert("Mã QR đã hết hạn! Vui lòng tạo mã mới.");
-                    closeModal();
-                }
-            }, 1000);
+            // CẮT (XÓA VĨNH VIỄN) ACC ĐÓ RA KHỎI KHO
+            let accTrung = databaseAcc.splice(randomIndex, 1)[0];
+
+            // Cập nhật lại số lượng kho
+            updateCount();
+
+            // Hiển thị kết quả lên popup
+            document.getElementById('res-user').innerText = accTrung.u;
+            document.getElementById('res-pass').innerText = accTrung.p;
+            openModal('resultModal');
         }
     </script>
 </body>
