@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Digital - Mua Hàng Tự Động</title>
+    <title>Shop Random Acc Game Uy Tín</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body {
-            background-color: #07090e;
+            background-color: #0b0f19;
             color: #f1f5f9;
-            padding: 16px;
+            padding: 12px;
             display: flex;
             justify-content: center;
         }
@@ -17,160 +17,204 @@
             width: 100%;
             max-width: 480px;
         }
-        .back-link {
-            color: #38bdf8;
-            text-decoration: none;
-            font-size: 13px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-        .product-card {
-            background: linear-gradient(145deg, #111827, #0f172a);
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            margin-bottom: 16px;
-        }
-        .badge {
-            background: rgba(56, 189, 248, 0.1);
-            color: #38bdf8;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 10px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-        }
-        h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; color: #fff; }
-        .price-box {
+        /* Header / Số dư */
+        .header {
             display: flex;
-            align-items: baseline;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 15px;
-        }
-        .price-big { color: #22c55e; font-size: 24px; font-weight: 800; }
-        .price-old { color: #64748b; font-size: 14px; text-decoration: line-through; }
-        
-        .section-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .packages {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .pkg-btn {
-            background: #1e293b;
-            border: 1.5px solid #334155;
-            color: #cbd5e1;
-            border-radius: 10px;
-            padding: 10px 6px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-        .pkg-btn .time { font-size: 12px; margin-bottom: 2px; }
-        .pkg-btn .cost { font-size: 13px; font-weight: 700; color: #38bdf8; }
-        .pkg-btn.selected {
-            border-color: #38bdf8;
-            background: rgba(56, 189, 248, 0.08);
-            color: #fff;
-        }
-        
-        .info-box {
-            background: #0f172a;
-            border: 1px solid #1e293b;
+            justify-content: space-between;
+            align-items: center;
+            background: #111827;
+            padding: 12px 16px;
             border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 20px;
+            border: 1px solid #1f2937;
+            margin-bottom: 16px;
+        }
+        .logo { font-weight: 800; color: #f59e0b; font-size: 16px; }
+        .balance-badge {
+            background: #1f2937;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 13px;
-            line-height: 1.6;
-            color: #94a3b8;
+            font-weight: bold;
+            color: #22c55e;
+            border: 1px solid #374151;
         }
-        .info-box ul { padding-left: 16px; }
-        .info-box li { margin-bottom: 4px; }
-        .info-box strong { color: #f1f5f9; }
 
-        .checkout-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
+        /* Banner banner game */
+        .banner {
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-type: shadow;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+        }
+        .banner h1 { font-size: 20px; font-weight: 900; margin-bottom: 6px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .banner p { font-size: 12px; color: #f3e8ff; }
+
+        /* Danh mục game */
+        .game-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .game-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: #9ca3af;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: #f59e0b;
+            color: #111827;
+            border-color: #f59e0b;
+        }
+
+        /* Lưới danh sách vòng quay / hộp quà random */
+        .grid-boxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .box-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: 0.2s;
         }
-        .checkout-btn:active { transform: scale(0.98); }
+        .box-card:hover { border-color: #f59e0b; }
+        .box-img {
+            background: #1f2937;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            position: relative;
+        }
+        .box-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #dc2626;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .box-content { padding: 10px; }
+        .box-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #fff; }
+        .box-desc { font-size: 11px; color: #9ca3af; margin-bottom: 8px; }
+        .box-price {
+            background: #1f2937;
+            color: #f59e0b;
+            font-weight: 800;
+            font-size: 14px;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid #374151;
+        }
+        .box-price:hover { background: #f59e0b; color: #111827; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <a href="#" class="back-link">‹ Quay lại danh sách sản phẩm</a>
+        <!-- Thanh trên cùng -->
+        <div class="header">
+            <div class="logo">🔥 SHOP ACC VIP</div>
+            <div class="balance-badge">Ví: 0 đ (+ Nạp)</div>
+        </div>
 
-        <div class="product-card">
-            <span class="badge">🔥 Bán Chạy Nhất</span>
-            <h2>Tài Khoản Netflix 4K Riêng Tư (Chính Hãng 1 Tháng)</h2>
+        <!-- Banner -->
+        <div class="banner">
+            <h1>THỬ VẬN MAY ACC GAME 10K</h1>
+            <p>100% Trúng acc có skin xịn - Không có acc rác!</p>
+        </div>
+
+        <!-- Tab chọn game -->
+        <div class="game-tabs">
+            <button class="tab-btn active">Tất cả</button>
+            <button class="tab-btn">Free Fire</button>
+            <button class="tab-btn">Liên Quân Mobile</button>
+            <button class="tab-btn">PUBG Mobile</button>
+        </div>
+
+        <!-- Danh sách hộp random -->
+        <div class="grid-boxes">
             
-            <div class="price-box">
-                <span class="price-big" id="priceDisplay">45.000 đ</span>
-                <span class="price-old">120.000 đ</span>
-            </div>
-            
-            <div class="section-title">Chọn gói thời gian:</div>
-            <div class="packages">
-                <div class="pkg-btn selected" onclick="chonGoi(this, 45000, '1 Tháng')">
-                    <div class="time">1 Tháng</div>
-                    <div class="cost">45k</div>
+            <div class="box-card">
+                <div class="box-img">
+                    <span class="box-tag">HOT 99%</span>
+                    🎁
                 </div>
-                <div class="pkg-btn" onclick="chonGoi(this, 120000, '3 Tháng')">
-                    <div class="time">3 Tháng</div>
-                    <div class="cost">120k</div>
-                </div>
-                <div class="pkg-btn" onclick="chonGoi(this, 220000, '6 Tháng')">
-                    <div class="time">6 Tháng</div>
-                    <div class="cost">220k</div>
+                <div class="box-content">
+                    <div class="box-title">Random Free Fire 9K</div>
+                    <div class="box-desc">Cơ hội trúng Acc M1014 Dạ Xoắn, Skin súng VIP.</div>
+                    <div class="box-price" onclick="thuVanMay('Free Fire 9K', 9000)">9.000 đ</div>
                 </div>
             </div>
 
-            <div class="info-box">
-                <div class="section-title" style="color: #38bdf8; margin-bottom: 6px;">Chính sách & Hướng dẫn:</div>
-                <ul>
-                    <li>Bảo hành <strong>1 đổi 1</strong> suốt thời gian sử dụng.</li>
-                    <li>Thanh toán xong <strong>nhận tài khoản ngay</strong> trên màn hình.</li>
-                    <li>Hỗ trợ xử lý lỗi tự động 24/7 qua hệ thống.</li>
-                </ul>
+            <div class="box-card">
+                <div class="box-img">
+                    <span class="box-tag">VIP</span>
+                    📦
+                </div>
+                <div class="box-content">
+                    <div class="box-title">Random Liên Quân 20K</div>
+                    <div class="box-desc">Trúng Acc từ 20 đến 80 tướng, full ngọc 3.</div>
+                    <div class="box-price" onclick="thuVanMay('Liên Quân 20K', 20000)">20.000 đ</div>
+                </div>
             </div>
 
-            <button class="checkout-btn" onclick="thanhToan()">THANH TOÁN NGAY (TỰ ĐỘNG)</button>
+            <div class="box-card">
+                <div class="box-img">
+                    <span class="box-tag">SIÊU VIP</span>
+                    💎
+                </div>
+                <div class="box-content">
+                    <div class="box-title">Random PUBG Mobile 50K</div>
+                    <div class="box-desc">Acc có đồ Bape, M416 Băng hoặc trang phục thần thoại.</div>
+                    <div class="box-price" onclick="thuVanMay('PUBG 50K', 50000)">50.000 đ</div>
+                </div>
+            </div>
+
+            <div class="box-card">
+                <div class="box-img">
+                    <span class="box-tag">XẢ KHO</span>
+                    🔥
+                </div>
+                <div class="box-content">
+                    <div class="box-title">Thử Vận May Free Fire 20K</div>
+                    <div class="box-desc">100% trúng acc trắng thông tin, rank Bạch Kim trở lên.</div>
+                    <div class="box-price" onclick="thuVanMay('Free Fire 20K', 20000)">20.000 đ</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        let giaHienTai = 45000;
-        let goiHienTai = '1 Tháng';
-
-        function chonGoi(el, gia, tenGoi) {
-            document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-            giaHienTai = gia;
-            goiHienTai = tenGoi;
-            document.getElementById('priceDisplay').innerText = gia.toLocaleString() + ' đ';
-        }
-
-        function thanhToan() {
-            alert("Đã chọn gói: Netflix " + goiHienTai + " (" + giaHienTai.toLocaleString() + "đ)\n-> Mở mã QR VietQR nhận hàng tự động!");
+        function thuVanMay(tenGoi, gia) {
+            let xacNhan = confirm("Bạn muốn mở gói [" + tenGoi + "] với giá " + gia.toLocaleString() + "đ?\n(Tài khoản của bạn chưa đủ tiền, hệ thống sẽ chuyển sang mục Nạp Tiền tự động!)");
+            if (xacNhan) {
+                alert("Mở cổng nạp QR VietQR để nạp tiền vào ví!");
+            }
         }
     </script>
 
