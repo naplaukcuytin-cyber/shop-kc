@@ -3,173 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siêu Thị Số Đa Năng 24/7</title>
+    <title>Chi Tiết Sản Phẩm - Siêu Thị Số</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: Arial, sans-serif;
             background-color: #0b0f19;
             color: #f1f5f9;
-            padding: 12px;
+            padding: 15px;
         }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        header h1 { color: #38bdf8; font-size: 20px; margin-bottom: 4px; }
-        header p { color: #94a3b8; font-size: 12px; }
-
-        /* Thanh danh mục trượt ngang */
-        .categories {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-        }
-        .categories::-webkit-scrollbar { display: none; }
-        .cat-btn {
-            background: #1e293b;
-            color: #cbd5e1;
-            border: 1px solid #334155;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .cat-btn.active { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; }
-
-        /* Lưới sản phẩm */
-        .grid-products {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 cột cho điện thoại */
-            gap: 10px;
-            max-width: 600px;
+        .container {
+            max-width: 500px;
             margin: 0 auto;
         }
-        .product-card {
-            background-color: #1e293b;
-            border-radius: 10px;
-            padding: 12px;
-            border: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .product-tag {
-            font-size: 10px;
-            background: #334155;
+        .back-link {
             color: #38bdf8;
-            padding: 2px 6px;
-            border-radius: 4px;
-            width: fit-content;
-            margin-bottom: 6px;
-        }
-        .product-title {
+            text-decoration: none;
             font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            line-height: 1.3;
+            display: inline-block;
+            margin-bottom: 15px;
         }
-        .product-price {
-            color: #4ade80;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 10px;
+        .product-header {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
         }
-        .buy-btn {
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 8px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 13px;
+        h2 { font-size: 18px; margin-bottom: 8px; color: #fff; }
+        .price-big { color: #4ade80; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+        
+        /* Chọn gói */
+        .section-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #94a3b8; }
+        .packages {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .pkg-btn {
+            flex: 1;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: #fff;
+            border-radius: 8px;
             cursor: pointer;
-            width: 100%;
+            text-align: center;
+            font-size: 13px;
         }
+        .pkg-btn.selected {
+            border-color: #38bdf8;
+            background: #1e3a8a;
+            font-weight: bold;
+        }
+
+        /* Hướng dẫn và lưu ý */
+        .info-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+        .info-box ul { padding-left: 18px; margin-top: 5px; }
+        .info-box li { margin-bottom: 4px; }
+
+        /* Nút thanh toán */
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        .checkout-btn:hover { background: #16a34a; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>⚡ SIÊU THỊ SỐ ĐA NĂNG</h1>
-        <p>Bán cả thế giới - Tự động 100%</p>
-    </header>
+    <div class="container">
+        <a href="#" class="back-link">← Quay lại danh mục</a>
 
-    <!-- Các danh mục -->
-    <div class="categories">
-        <button class="cat-btn active">Tất cả</button>
-        <button class="cat-btn">Netflix / Giải Trí</button>
-        <button class="cat-btn">Key Phần Mềm</button>
-        <button class="cat-btn">Buff Mạng Xã Hội</button>
-        <button class="cat-btn">Acc Game / Nick</button>
-        <button class="cat-btn">Tool Auto</button>
-    </div>
-
-    <!-- Danh sách sản phẩm chia 2 cột -->
-    <div class="grid-products">
-        
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Giải Trí</div>
-                <div class="product-title">Netflix 4K Riêng Tư (1 Tháng)</div>
-                <div class="product-price">45.000 đ</div>
+        <div class="product-header">
+            <h2>Tài Khoản Netflix 4K Riêng Tư (Chính Hãng)</h2>
+            <div class="price-big" id="priceDisplay">45.000 đ</div>
+            
+            <div class="section-title">CHỌN GÓI THỜI GIAN:</div>
+            <div class="packages">
+                <button class="pkg-btn selected" onclick="chonGoi(this, 45000, '1 Tháng')">1 Tháng<br><b>45k</b></button>
+                <button class="pkg-btn" onclick="chonGoi(this, 120000, '3 Tháng')">3 Tháng<br><b>120k</b></button>
+                <button class="pkg-btn" onclick="chonGoi(this, 220000, '6 Tháng')">6 Tháng<br><b>220k</b></button>
             </div>
-            <button class="buy-btn" onclick="muaHang('Netflix 4K', 45000)">Mua Ngay</button>
         </div>
 
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Mạng Xã Hội</div>
-                <div class="product-title">1000 Follow TikTok (Siêu rẻ)</div>
-                <div class="product-price">60.000 đ</div>
-            </div>
-            <button class="buy-btn" onclick="muaHang('1000 Follow TikTok', 60000)">Mua Ngay</button>
+        <div class="info-box">
+            <div class="section-title" style="color: #38bdf8; margin-bottom: 5px;">📜 HƯỚNG DẪN & CHÍNH SÁCH:</div>
+            <ul>
+                <li><b>Bảo hành:</b> 1 đổi 1 trong suốt thời gian sử dụng nếu lỗi tài khoản.</li>
+                <li><b>Cách nhận hàng:</b> Sau khi thanh toán quét mã QR thành công, hệ thống tự động hiện Tài khoản + Mật khẩu ngay trên màn hình.</li>
+                <li><b>Lưu ý:</b> Không được đổi mật khẩu hoặc thay đổi thông tin profile cá nhân chung.</li>
+            </ul>
         </div>
 
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Phần Mềm</div>
-                <div class="product-title">Key ChatGPT Plus (1 Tháng)</div>
-                <div class="product-price">90.000 đ</div>
-            </div>
-            <button class="buy-btn" onclick="muaHang('ChatGPT Plus', 90000)">Mua Ngay</button>
-        </div>
-
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Acc Game</div>
-                <div class="product-title">Acc Random 50k Tướng VIP</div>
-                <div class="product-price">50.000 đ</div>
-            </div>
-            <button class="buy-btn" onclick="muaHang('Acc Random Game', 50000)">Mua Ngay</button>
-        </div>
-
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Tool Auto</div>
-                <div class="product-title">Tool Auto Click Siêu Tốc</div>
-                <div class="product-price">150.000 đ</div>
-            </div>
-            <button class="buy-btn" onclick="muaHang('Tool Auto Click', 150000)">Mua Ngay</button>
-        </div>
-
-        <div class="product-card">
-            <div>
-                <div class="product-tag">Giải Trí</div>
-                <div class="product-title">Spotify Premium (1 Năm)</div>
-                <div class="product-price">180.000 đ</div>
-            </div>
-            <button class="buy-btn" onclick="muaHang('Spotify 1 Năm', 180000)">Mua Ngay</button>
-        </div>
-
+        <button class="checkout-btn" onclick="thanhToanNgay()">THANH TOÁN NGAY (TỰ ĐỘNG)</button>
     </div>
 
     <script>
-        function muaHang(tenSP, gia) {
-            alert("Đã chọn: " + tenSP + " - Giá: " + gia.toLocaleString() + "đ\nChuẩn bị chuyển sang cổng thanh toán QR!");
+        let giaHienTai = 45000;
+        let goiHienTai = '1 Tháng';
+
+        function chonGoi(btn, gia, tenGoi) {
+            // Bỏ chọn tất cả nút cũ
+            let buttons = document.querySelectorAll('.pkg-btn');
+            buttons.forEach(b => b.classList.remove('selected'));
+            
+            // Chọn nút mới
+            btn.classList.add('selected');
+            giaHienTai = gia;
+            goiHienTai = tenGoi;
+            
+            // Cập nhật giá hiển thị
+            document.getElementById('priceDisplay').innerText = gia.toLocaleString() + ' đ';
+        }
+
+        function thanhToanNgay() {
+            alert("Mày đã chọn gói: Netflix " + goiHienTai + " - Giá: " + giaHienTai.toLocaleString() + "đ\n-> Chuyển sang bước tạo mã QR VietQR để thanh toán tự động!");
         }
     </script>
 
