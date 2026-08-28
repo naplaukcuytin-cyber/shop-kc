@@ -3,135 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Mướp Net - Mô Phỏng</title>
-    <!-- Sử dụng Tailwind CSS để style nhanh giống hệt -->
+    <title>Chi tiết Acc - Nạp Tiền</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh thanh cuộn cho đẹp */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans pb-20">
 
-    <!-- PHẦN TRANG CHỦ MẪU -->
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-20">
-        <!-- Header -->
-        <div class="flex justify-between items-center p-4 border-b">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl font-black text-orange-600 italic">SHOPMUOP.NET</span>
-            </div>
-            <button onclick="openModal()" class="bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-bold">Nạp Tiền</button>
+    <!-- Header -->
+    <header class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-10">
+        <div class="font-bold text-xl text-blue-600">🔥 SHOPMUOP.NET</div>
+        <button onclick="openModal()" class="bg-orange-500 text-white px-4 py-1.5 rounded font-bold text-sm">
+            Nạp Tiền Demo
+        </button>
+    </header>
+
+    <!-- Nội dung trang chi tiết Acc (Mô phỏng IMG_0340) -->
+    <main class="p-4 max-w-md mx-auto">
+        <h1 class="text-2xl font-extrabold mb-2">Acc Mướp 199 Cá</h1>
+        <p class="text-sm text-gray-600 mb-4">
+            🎁 Acc 199K - Cơ hội nhận ngẫu nhiên một trong các loại acc sau:<br>
+            🔥 Acc ngẫu nhiên từ VIP0<br>
+            💎 Acc ngẫu nhiên VIP3 - VIP8
+        </p>
+
+        <h3 class="font-bold mb-2">Chọn thời gian thuê</h3>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <!-- Nút chưa sẵn sàng -->
+            <button class="border rounded-lg p-3 text-left bg-gray-50 opacity-60">
+                <div class="text-gray-500 text-sm">1 ngày <span class="text-orange-500 text-xs ml-1">Sắp có</span></div>
+                <div class="font-bold text-green-600">995đ</div>
+            </button>
+            <button class="border rounded-lg p-3 text-left bg-gray-50 opacity-60">
+                <div class="text-gray-500 text-sm">1 tháng <span class="text-orange-500 text-xs ml-1">Sắp có</span></div>
+                <div class="font-bold text-green-600">5.970đ</div>
+            </button>
+            <!-- Nút đang được chọn -->
+            <button class="border-2 border-red-400 bg-red-50 rounded-lg p-3 text-left">
+                <div class="font-bold text-gray-800 text-sm">20 năm</div>
+                <div class="font-bold text-red-500">199.000đ</div>
+            </button>
         </div>
 
-        <!-- Banner sản phẩm -->
-        <div class="p-4">
-            <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-6 text-white text-center shadow-xl">
-                <h1 class="text-2xl font-black uppercase tracking-wider text-yellow-400">ACC MƯỚP 199 CÁ</h1>
-                <p class="text-xs text-gray-300 mt-2">Chọn 1 túi bất kỳ để nhận NGẪU NHIÊN 1 tài khoản trong danh mục</p>
-                <button onclick="openModal()" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90">
-                    Chơi ngay · 199.000đ
+        <!-- Khu vực chọn túi bóc -->
+        <div class="bg-gradient-to-b from-gray-800 to-black rounded-xl p-4 text-center">
+            <h2 class="text-white font-black text-xl mb-1">ACC MƯỚP 199 CÁ</h2>
+            <p class="text-gray-300 text-sm mb-4">Chọn 1 túi bất kỳ để nhận NGẪU NHIÊN 1 tài khoản trong danh mục</p>
+            
+            <!-- Lưới 8 túi -->
+            <div class="grid grid-cols-2 gap-3">
+                <!-- Vòng lặp tạo 8 nút ảo -->
+                <script>
+                    for(let i=1; i<=8; i++) {
+                        document.write(`
+                            <div class="relative bg-yellow-600 rounded-lg overflow-hidden border-2 border-yellow-400 cursor-pointer hover:opacity-80">
+                                <div class="absolute top-1 left-1 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">${i}</div>
+                                <img src="https://via.placeholder.com/150x100/d97706/ffffff?text=TUI+MUOP+199k" alt="Túi ${i}" class="w-full object-cover">
+                            </div>
+                        `);
+                    }
+                </script>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL NẠP TIỀN QR (Mô phỏng IMG_0333 đến 0336) -->
+    <!-- ========================================== -->
+    <div id="qrModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white w-full max-w-sm rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+                <button onclick="closeModal()" class="text-gray-500 hover:bg-gray-100 p-1 rounded">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </button>
+                <h2 class="font-black text-lg">NẠP TIỀN</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:bg-gray-100 p-1 rounded border">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-        </div>
-    </div>
 
-    <!-- POPUP NẠP TIỀN (CHUẨN NHƯ ẢNH MẪU) -->
-    <div id="depositModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white w-full max-w-sm rounded-2xl p-6 relative shadow-2xl">
-            
-            <!-- Nút đóng -->
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-lg">&times;</button>
-            
-            <h2 class="text-xl font-black text-center mb-4 tracking-wide">NẠP TIỀN</h2>
-
-            <!-- BƯỚC 1: CẢNH BÁO TRƯỚC KHI HIỆN QR -->
-            <div id="step1" class="space-y-4">
-                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-xs space-y-2">
-                    <p class="font-bold text-center text-sm">⚠️ ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</p>
-                    <p>• Mã QR này <span class="font-bold underline">CHỈ DÙNG 1 LẦN</span> cho lần nạp này, đúng số tiền <span class="font-bold">100.000đ</span>.</p>
-                    <p>• <span class="font-bold">KHÔNG</span> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <span class="font-bold">tạo mã QR mới</span>.</p>
-                    <p>• Cố tình chuyển vào mã cũ / sai số tiền $\rightarrow$ <span class="font-bold">MẤT TIỀN</span>, shop <span class="font-bold">KHÔNG</span> hoàn lại.</p>
+            <!-- Bước 1: Cảnh báo -->
+            <div id="stepWarning" class="p-5 overflow-y-auto">
+                <div class="text-center text-4xl text-yellow-500 mb-2">⚠️</div>
+                <h3 class="text-center font-black text-red-500 text-lg mb-4">ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</h3>
+                
+                <div class="bg-red-50 border border-red-200 text-red-400 text-sm rounded-lg p-4 mb-4 space-y-2">
+                    <p>• Mã QR này <strong>CHỈ DÙNG 1 LẦN</strong> cho lần nạp này, đúng số tiền <strong>100.000đ</strong>.</p>
+                    <p>• <strong>KHÔNG</strong> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <strong>tạo mã QR MỚI</strong>.</p>
+                    <p>• Cố tình chuyển vào mã cũ / sai số tiền → <strong>MẤT TIỀN</strong>, shop <strong>KHÔNG hoàn lại</strong>.</p>
                 </div>
 
-                <label class="flex items-start space-x-3 cursor-pointer">
-                    <input type="checkbox" id="agreeCheck" onchange="toggleButton()" class="mt-1 w-4 h-4 text-orange-600 rounded">
-                    <span class="text-xs text-gray-700">Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ mất tiền và shop không hoàn lại.</span>
+                <label class="flex items-start gap-2 mb-6 cursor-pointer">
+                    <input type="checkbox" id="agreeCheck" class="mt-1 w-5 h-5 text-orange-500 accent-orange-500" onchange="toggleBtn()">
+                    <span class="text-sm text-gray-700">Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ mất tiền và shop không hoàn lại.</span>
                 </label>
 
-                <button id="showQrBtn" onclick="showQrCode()" disabled class="w-full py-3 rounded-xl font-bold text-white bg-gray-300 cursor-not-allowed transition-all">
-                    Tôi đã đọc – Hiện mã QR
-                </button>
-                <button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">
-                    Hủy
-                </button>
+                <div class="space-y-2">
+                    <button id="btnShowQR" disabled class="w-full bg-orange-200 text-white font-bold py-3 rounded-lg cursor-not-allowed transition-colors" onclick="showQR()">
+                        Tôi đã đọc — Hiện mã QR
+                    </button>
+                    <button onclick="closeModal()" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg">
+                        Hủy
+                    </button>
+                </div>
             </div>
 
-            <!-- BƯỚC 2: HIỆN MÃ QR & ĐẾM NGƯỢC THỜI GIAN -->
-            <div id="step2" class="space-y-4 hidden">
-                <div class="flex justify-between items-center bg-blue-50 px-3 py-2 rounded-lg text-xs font-bold text-blue-800">
-                    <span>Số tiền: 100.000đ</span>
-                    <span id="countdown" class="bg-white px-2 py-1 rounded text-red-600">Còn lại: 887s</span>
+            <!-- Bước 2: Hiển thị QR Code -->
+            <div id="stepQR" class="hidden p-5 overflow-y-auto flex-col h-full">
+                <div class="flex justify-between items-center bg-blue-50 text-blue-800 p-3 rounded-lg mb-3">
+                    <span class="text-sm">Số tiền: <strong class="text-blue-600">100.000đ</strong></span>
+                    <span class="text-sm font-mono text-gray-500">Còn lại: <strong id="timer" class="text-red-500">900s</strong></span>
                 </div>
 
-                <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-red-700 text-[11px] text-center font-medium">
-                    ⚠️ MÃ QR NÀY CHỈ DÙNG 1 LẦN – chuyển đúng <span class="font-bold">100.000đ</span>. KHÔNG lưu lại chuyển nhiều lần!
+                <div class="bg-red-50 border border-red-200 text-red-500 text-xs rounded-lg p-3 mb-4 text-center">
+                    ⚠️ MÃ QR NÀY CHỈ DÙNG <strong>1 LẦN</strong> — chuyển đúng <strong>100.000đ</strong>. KHÔNG lưu lại...
                 </div>
 
-                <!-- Khung chứa QR code mẫu -->
-                <div class="border rounded-xl p-3 text-center bg-gray-50 flex flex-col items-center">
-                    <div class="w-48 h-48 bg-white p-2 border shadow-sm flex items-center justify-center">
-                        <!-- Thay link ảnh QR thật của mày vào src bên dưới -->
-                        <img src="https://api.vietqr.io/image/970422-0000000000-nE7GkZz.jpg?amount=100000&addInfo=NAP100K" alt="QR Code" class="w-full h-full object-contain">
-                    </div>
-                    <button class="mt-3 w-full bg-orange-500 text-white text-xs font-bold py-2 rounded-lg shadow">
+                <div class="border rounded-xl p-4 mb-4 bg-gray-50 flex flex-col items-center">
+                    <!-- Ảnh QR giả lập -->
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ChuyenKhoanDemo" alt="QR Code" class="w-48 h-48 mb-4 mix-blend-multiply">
+                    <button class="w-full bg-orange-500 text-white font-bold py-2 rounded-lg flex justify-center items-center gap-2">
                         ⬇ Tải mã QR về máy
                     </button>
                 </div>
 
-                <div class="text-[11px] text-gray-500 text-center">
-                    Ngân hàng: <span class="font-bold text-black">MB BANK</span><br>
-                    Chủ tài khoản: <span class="font-bold text-black">TRAN VAN NHAT</span>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-500">Ngân hàng</span>
+                    <strong class="text-right">MB BANK</strong>
+                </div>
+                <div class="flex justify-between text-sm mb-4">
+                    <span class="text-gray-500">Chủ tài khoản</span>
+                    <strong class="text-right">TRAN VAN NHAT</strong>
                 </div>
 
-                <button onclick="resetModal()" class="w-full py-2.5 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 text-xs">
+                <p class="text-xs text-gray-500 text-center mb-4">
+                    Quét mã QR để chuyển khoản — số tiền & nội dung đã điền sẵn chính xác. Tiền vào ví tự động sau ~1 phút...
+                </p>
+
+                <button onclick="closeModal()" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg mt-auto">
                     Hủy / tạo mã khác
                 </button>
             </div>
-
+            
         </div>
     </div>
 
-    <!-- SCRIPT XỬ LÝ TƯƠNG TÁC -->
+    <!-- Script tương tác Logic -->
     <script>
+        // Các biến điều khiển
+        const modal = document.getElementById('qrModal');
+        const stepWarning = document.getElementById('stepWarning');
+        const stepQR = document.getElementById('stepQR');
+        const checkbox = document.getElementById('agreeCheck');
+        const btnShow = document.getElementById('btnShowQR');
+        let countdownInterval;
+
+        // Mở Modal (Reset về trạng thái ban đầu)
         function openModal() {
-            document.getElementById('depositModal').classList.remove('hidden');
+            modal.classList.remove('hidden');
+            stepWarning.classList.remove('hidden');
+            stepQR.classList.add('hidden');
+            checkbox.checked = false;
+            toggleBtn(); // Gọi hàm để vô hiệu hóa nút
         }
 
+        // Đóng Modal và xóa bộ đếm thời gian
         function closeModal() {
-            document.getElementById('depositModal').classList.add('hidden');
-            resetModal();
+            modal.classList.add('hidden');
+            clearInterval(countdownInterval);
         }
 
-        function toggleButton() {
-            const checkbox = document.getElementById('agreeCheck');
-            const btn = document.getElementById('showQrBtn');
+        // Kiểm tra Checkbox để bật/tắt nút "Hiện mã QR"
+        function toggleBtn() {
             if (checkbox.checked) {
-                btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                btn.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500', 'hover:opacity-90');
-                btn.disabled = false;
+                btnShow.disabled = false;
+                btnShow.classList.remove('bg-orange-200', 'cursor-not-allowed');
+                btnShow.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500');
             } else {
-                btn.classList.add('bg-gray-300', 'cursor-not-allowed');
-                btn.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500', 'hover:opacity-90');
-                btn.disabled = true;
+                btnShow.disabled = true;
+                btnShow.classList.add('bg-orange-200', 'cursor-not-allowed');
+                btnShow.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500');
             }
         }
 
-        function showQrCode() {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
+        // Chuyển sang bước hiển thị QR và bắt đầu đếm ngược
+        function showQR() {
+            stepWarning.classList.add('hidden');
+            stepQR.classList.remove('hidden');
+            startTimer(900); // 900 giây = 15 phút
         }
 
-        function resetModal() {
-            document.getElementById('step1').classList.remove('hidden');
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('agreeCheck').checked = false;
-            toggleButton();
+        // Hàm đếm ngược thời gian
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            const timerDisplay = document.getElementById('timer');
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft + "s";
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    alert("Mã QR đã hết hạn! Vui lòng tạo mã mới.");
+                    closeModal();
+                }
+            }, 1000);
         }
     </script>
 </body>
