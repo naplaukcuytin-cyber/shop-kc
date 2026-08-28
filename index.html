@@ -3,104 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Tự Động 24/7</title>
+    <title>Siêu Thị Số Đa Năng 24/7</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            padding: 15px;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+            padding: 12px;
         }
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-        header h1 { color: #38bdf8; font-size: 22px; margin-bottom: 5px; }
-        header p { color: #94a3b8; font-size: 13px; }
-        
+        header h1 { color: #38bdf8; font-size: 20px; margin-bottom: 4px; }
+        header p { color: #94a3b8; font-size: 12px; }
+
+        /* Thanh danh mục trượt ngang */
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .cat-btn.active { background: #38bdf8; color: #0f172a; font-weight: bold; border: none; }
+
+        /* Lưới sản phẩm */
         .grid-products {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            max-width: 500px;
+            grid-template-columns: repeat(2, 1fr); /* 2 cột cho điện thoại */
+            gap: 10px;
+            max-width: 600px;
             margin: 0 auto;
         }
         .product-card {
             background-color: #1e293b;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
             border: 1px solid #334155;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
+        .product-tag {
+            font-size: 10px;
+            background: #334155;
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            width: fit-content;
+            margin-bottom: 6px;
+        }
         .product-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            line-height: 1.3;
         }
         .product-price {
             color: #4ade80;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
         .buy-btn {
             background-color: #38bdf8;
             color: #0f172a;
             border: none;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             font-weight: bold;
+            font-size: 13px;
             cursor: pointer;
             width: 100%;
         }
-        .buy-btn:hover { background-color: #0ea5e9; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>⚡ SIÊU THỊ SỐ TỰ ĐỘNG</h1>
-        <p>Thanh toán tự động - Nhận hàng tức thì 24/7</p>
+        <h1>⚡ SIÊU THỊ SỐ ĐA NĂNG</h1>
+        <p>Bán cả thế giới - Tự động 100%</p>
     </header>
 
+    <!-- Các danh mục -->
+    <div class="categories">
+        <button class="cat-btn active">Tất cả</button>
+        <button class="cat-btn">Netflix / Giải Trí</button>
+        <button class="cat-btn">Key Phần Mềm</button>
+        <button class="cat-btn">Buff Mạng Xã Hội</button>
+        <button class="cat-btn">Acc Game / Nick</button>
+        <button class="cat-btn">Tool Auto</button>
+    </div>
+
+    <!-- Danh sách sản phẩm chia 2 cột -->
     <div class="grid-products">
-        <!-- Sản phẩm 1 -->
+        
         <div class="product-card">
             <div>
-                <div class="product-title">Tài khoản Netflix Premium (1 Tháng)</div>
+                <div class="product-tag">Giải Trí</div>
+                <div class="product-title">Netflix 4K Riêng Tư (1 Tháng)</div>
+                <div class="product-price">45.000 đ</div>
+            </div>
+            <button class="buy-btn" onclick="muaHang('Netflix 4K', 45000)">Mua Ngay</button>
+        </div>
+
+        <div class="product-card">
+            <div>
+                <div class="product-tag">Mạng Xã Hội</div>
+                <div class="product-title">1000 Follow TikTok (Siêu rẻ)</div>
+                <div class="product-price">60.000 đ</div>
+            </div>
+            <button class="buy-btn" onclick="muaHang('1000 Follow TikTok', 60000)">Mua Ngay</button>
+        </div>
+
+        <div class="product-card">
+            <div>
+                <div class="product-tag">Phần Mềm</div>
+                <div class="product-title">Key ChatGPT Plus (1 Tháng)</div>
+                <div class="product-price">90.000 đ</div>
+            </div>
+            <button class="buy-btn" onclick="muaHang('ChatGPT Plus', 90000)">Mua Ngay</button>
+        </div>
+
+        <div class="product-card">
+            <div>
+                <div class="product-tag">Acc Game</div>
+                <div class="product-title">Acc Random 50k Tướng VIP</div>
                 <div class="product-price">50.000 đ</div>
             </div>
-            <button class="buy-btn" onclick="muaHang('Netflix Premium', 50000)">Mua Ngay</button>
+            <button class="buy-btn" onclick="muaHang('Acc Random Game', 50000)">Mua Ngay</button>
         </div>
 
-        <!-- Sản phẩm 2 -->
         <div class="product-card">
             <div>
-                <div class="product-title">Key Bản Quyền Tool Auto (1 Năm)</div>
-                <div class="product-price">120.000 đ</div>
+                <div class="product-tag">Tool Auto</div>
+                <div class="product-title">Tool Auto Click Siêu Tốc</div>
+                <div class="product-price">150.000 đ</div>
             </div>
-            <button class="buy-btn" onclick="muaHang('Key Tool Auto', 120000)">Mua Ngay</button>
+            <button class="buy-btn" onclick="muaHang('Tool Auto Click', 150000)">Mua Ngay</button>
         </div>
 
-        <!-- Sản phẩm 3 -->
         <div class="product-card">
             <div>
-                <div class="product-title">Gói 1000 Follow TikTok Uy Tín</div>
-                <div class="product-price">80.000 đ</div>
+                <div class="product-tag">Giải Trí</div>
+                <div class="product-title">Spotify Premium (1 Năm)</div>
+                <div class="product-price">180.000 đ</div>
             </div>
-            <button class="buy-btn" onclick="muaHang('1000 Follow TikTok', 80000)">Mua Ngay</button>
+            <button class="buy-btn" onclick="muaHang('Spotify 1 Năm', 180000)">Mua Ngay</button>
         </div>
+
     </div>
 
     <script>
         function muaHang(tenSP, gia) {
-            let xacNhan = confirm("Bạn có muốn mua: " + tenSP + " với giá " + gia.toLocaleString() + "đ không?");
-            if (xacNhan) {
-                alert("Hệ thống đang tạo mã QR thanh toán VietQR cho sản phẩm: " + tenSP + ".\n(Sau khi chuyển khoản, web sẽ tự động nhả tài khoản/key cho bạn!)");
-            }
+            alert("Đã chọn: " + tenSP + " - Giá: " + gia.toLocaleString() + "đ\nChuẩn bị chuyển sang cổng thanh toán QR!");
         }
     </script>
 
