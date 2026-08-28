@@ -3,220 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Random Acc Game Uy Tín</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body {
-            background-color: #0b0f19;
-            color: #f1f5f9;
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 480px;
-        }
-        /* Header / Số dư */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111827;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #1f2937;
-            margin-bottom: 16px;
-        }
-        .logo { font-weight: 800; color: #f59e0b; font-size: 16px; }
-        .balance-badge {
-            background: #1f2937;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #22c55e;
-            border: 1px solid #374151;
-        }
-
-        /* Banner banner game */
-        .banner {
-            background: linear-gradient(135deg, #7c3aed, #db2777);
-            padding: 20px;
-            border-radius: 14px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-type: shadow;
-            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
-        }
-        .banner h1 { font-size: 20px; font-weight: 900; margin-bottom: 6px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .banner p { font-size: 12px; color: #f3e8ff; }
-
-        /* Danh mục game */
-        .game-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-        .game-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            background: #1f2937;
-            border: 1px solid #374151;
-            color: #9ca3af;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .tab-btn.active {
-            background: #f59e0b;
-            color: #111827;
-            border-color: #f59e0b;
-        }
-
-        /* Lưới danh sách vòng quay / hộp quà random */
-        .grid-boxes {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        .box-card {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: 0.2s;
-        }
-        .box-card:hover { border-color: #f59e0b; }
-        .box-img {
-            background: #1f2937;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            position: relative;
-        }
-        .box-tag {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #dc2626;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        .box-content { padding: 10px; }
-        .box-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #fff; }
-        .box-desc { font-size: 11px; color: #9ca3af; margin-bottom: 8px; }
-        .box-price {
-            background: #1f2937;
-            color: #f59e0b;
-            font-weight: 800;
-            font-size: 14px;
-            text-align: center;
-            padding: 6px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 1px solid #374151;
-        }
-        .box-price:hover { background: #f59e0b; color: #111827; }
-    </style>
+    <title>Shop Mướp Net - Mô Phỏng</title>
+    <!-- Sử dụng Tailwind CSS để style nhanh giống hệt -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
-    <div class="container">
-        <!-- Thanh trên cùng -->
-        <div class="header">
-            <div class="logo">🔥 SHOP ACC VIP</div>
-            <div class="balance-badge">Ví: 0 đ (+ Nạp)</div>
+    <!-- PHẦN TRANG CHỦ MẪU -->
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-20">
+        <!-- Header -->
+        <div class="flex justify-between items-center p-4 border-b">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-black text-orange-600 italic">SHOPMUOP.NET</span>
+            </div>
+            <button onclick="openModal()" class="bg-orange-500 text-white px-3 py-1.5 rounded-lg text-sm font-bold">Nạp Tiền</button>
         </div>
 
-        <!-- Banner -->
-        <div class="banner">
-            <h1>THỬ VẬN MAY ACC GAME 10K</h1>
-            <p>100% Trúng acc có skin xịn - Không có acc rác!</p>
+        <!-- Banner sản phẩm -->
+        <div class="p-4">
+            <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-6 text-white text-center shadow-xl">
+                <h1 class="text-2xl font-black uppercase tracking-wider text-yellow-400">ACC MƯỚP 199 CÁ</h1>
+                <p class="text-xs text-gray-300 mt-2">Chọn 1 túi bất kỳ để nhận NGẪU NHIÊN 1 tài khoản trong danh mục</p>
+                <button onclick="openModal()" class="mt-4 w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90">
+                    Chơi ngay · 199.000đ
+                </button>
+            </div>
         </div>
+    </div>
 
-        <!-- Tab chọn game -->
-        <div class="game-tabs">
-            <button class="tab-btn active">Tất cả</button>
-            <button class="tab-btn">Free Fire</button>
-            <button class="tab-btn">Liên Quân Mobile</button>
-            <button class="tab-btn">PUBG Mobile</button>
-        </div>
-
-        <!-- Danh sách hộp random -->
-        <div class="grid-boxes">
+    <!-- POPUP NẠP TIỀN (CHUẨN NHƯ ẢNH MẪU) -->
+    <div id="depositModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-6 relative shadow-2xl">
             
-            <div class="box-card">
-                <div class="box-img">
-                    <span class="box-tag">HOT 99%</span>
-                    🎁
+            <!-- Nút đóng -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold text-lg">&times;</button>
+            
+            <h2 class="text-xl font-black text-center mb-4 tracking-wide">NẠP TIỀN</h2>
+
+            <!-- BƯỚC 1: CẢNH BÁO TRƯỚC KHI HIỆN QR -->
+            <div id="step1" class="space-y-4">
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-xs space-y-2">
+                    <p class="font-bold text-center text-sm">⚠️ ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</p>
+                    <p>• Mã QR này <span class="font-bold underline">CHỈ DÙNG 1 LẦN</span> cho lần nạp này, đúng số tiền <span class="font-bold">100.000đ</span>.</p>
+                    <p>• <span class="font-bold">KHÔNG</span> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <span class="font-bold">tạo mã QR mới</span>.</p>
+                    <p>• Cố tình chuyển vào mã cũ / sai số tiền $\rightarrow$ <span class="font-bold">MẤT TIỀN</span>, shop <span class="font-bold">KHÔNG</span> hoàn lại.</p>
                 </div>
-                <div class="box-content">
-                    <div class="box-title">Random Free Fire 9K</div>
-                    <div class="box-desc">Cơ hội trúng Acc M1014 Dạ Xoắn, Skin súng VIP.</div>
-                    <div class="box-price" onclick="thuVanMay('Free Fire 9K', 9000)">9.000 đ</div>
-                </div>
+
+                <label class="flex items-start space-x-3 cursor-pointer">
+                    <input type="checkbox" id="agreeCheck" onchange="toggleButton()" class="mt-1 w-4 h-4 text-orange-600 rounded">
+                    <span class="text-xs text-gray-700">Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ mất tiền và shop không hoàn lại.</span>
+                </label>
+
+                <button id="showQrBtn" onclick="showQrCode()" disabled class="w-full py-3 rounded-xl font-bold text-white bg-gray-300 cursor-not-allowed transition-all">
+                    Tôi đã đọc – Hiện mã QR
+                </button>
+                <button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">
+                    Hủy
+                </button>
             </div>
 
-            <div class="box-card">
-                <div class="box-img">
-                    <span class="box-tag">VIP</span>
-                    📦
+            <!-- BƯỚC 2: HIỆN MÃ QR & ĐẾM NGƯỢC THỜI GIAN -->
+            <div id="step2" class="space-y-4 hidden">
+                <div class="flex justify-between items-center bg-blue-50 px-3 py-2 rounded-lg text-xs font-bold text-blue-800">
+                    <span>Số tiền: 100.000đ</span>
+                    <span id="countdown" class="bg-white px-2 py-1 rounded text-red-600">Còn lại: 887s</span>
                 </div>
-                <div class="box-content">
-                    <div class="box-title">Random Liên Quân 20K</div>
-                    <div class="box-desc">Trúng Acc từ 20 đến 80 tướng, full ngọc 3.</div>
-                    <div class="box-price" onclick="thuVanMay('Liên Quân 20K', 20000)">20.000 đ</div>
-                </div>
-            </div>
 
-            <div class="box-card">
-                <div class="box-img">
-                    <span class="box-tag">SIÊU VIP</span>
-                    💎
+                <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-red-700 text-[11px] text-center font-medium">
+                    ⚠️ MÃ QR NÀY CHỈ DÙNG 1 LẦN – chuyển đúng <span class="font-bold">100.000đ</span>. KHÔNG lưu lại chuyển nhiều lần!
                 </div>
-                <div class="box-content">
-                    <div class="box-title">Random PUBG Mobile 50K</div>
-                    <div class="box-desc">Acc có đồ Bape, M416 Băng hoặc trang phục thần thoại.</div>
-                    <div class="box-price" onclick="thuVanMay('PUBG 50K', 50000)">50.000 đ</div>
-                </div>
-            </div>
 
-            <div class="box-card">
-                <div class="box-img">
-                    <span class="box-tag">XẢ KHO</span>
-                    🔥
+                <!-- Khung chứa QR code mẫu -->
+                <div class="border rounded-xl p-3 text-center bg-gray-50 flex flex-col items-center">
+                    <div class="w-48 h-48 bg-white p-2 border shadow-sm flex items-center justify-center">
+                        <!-- Thay link ảnh QR thật của mày vào src bên dưới -->
+                        <img src="https://api.vietqr.io/image/970422-0000000000-nE7GkZz.jpg?amount=100000&addInfo=NAP100K" alt="QR Code" class="w-full h-full object-contain">
+                    </div>
+                    <button class="mt-3 w-full bg-orange-500 text-white text-xs font-bold py-2 rounded-lg shadow">
+                        ⬇ Tải mã QR về máy
+                    </button>
                 </div>
-                <div class="box-content">
-                    <div class="box-title">Thử Vận May Free Fire 20K</div>
-                    <div class="box-desc">100% trúng acc trắng thông tin, rank Bạch Kim trở lên.</div>
-                    <div class="box-price" onclick="thuVanMay('Free Fire 20K', 20000)">20.000 đ</div>
+
+                <div class="text-[11px] text-gray-500 text-center">
+                    Ngân hàng: <span class="font-bold text-black">MB BANK</span><br>
+                    Chủ tài khoản: <span class="font-bold text-black">TRAN VAN NHAT</span>
                 </div>
+
+                <button onclick="resetModal()" class="w-full py-2.5 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 text-xs">
+                    Hủy / tạo mã khác
+                </button>
             </div>
 
         </div>
     </div>
 
+    <!-- SCRIPT XỬ LÝ TƯƠNG TÁC -->
     <script>
-        function thuVanMay(tenGoi, gia) {
-            let xacNhan = confirm("Bạn muốn mở gói [" + tenGoi + "] với giá " + gia.toLocaleString() + "đ?\n(Tài khoản của bạn chưa đủ tiền, hệ thống sẽ chuyển sang mục Nạp Tiền tự động!)");
-            if (xacNhan) {
-                alert("Mở cổng nạp QR VietQR để nạp tiền vào ví!");
+        function openModal() {
+            document.getElementById('depositModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('depositModal').classList.add('hidden');
+            resetModal();
+        }
+
+        function toggleButton() {
+            const checkbox = document.getElementById('agreeCheck');
+            const btn = document.getElementById('showQrBtn');
+            if (checkbox.checked) {
+                btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                btn.classList.add('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500', 'hover:opacity-90');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+                btn.classList.remove('bg-gradient-to-r', 'from-orange-500', 'to-yellow-500', 'hover:opacity-90');
+                btn.disabled = true;
             }
         }
-    </script>
 
+        function showQrCode() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+
+        function resetModal() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('agreeCheck').checked = false;
+            toggleButton();
+        }
+    </script>
 </body>
 </html>
