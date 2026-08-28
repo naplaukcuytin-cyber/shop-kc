@@ -24,10 +24,10 @@
     <!-- HEADER -->
     <header class="bg-white px-4 py-3 shadow-sm flex justify-between items-center sticky top-0 z-40">
         <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-            <img src="https://i.imgur.com/8Q3946X.png" onerror="this.src='https://via.placeholder.com/40'" class="w-10 h-10 rounded-full border border-orange-400 object-cover">
+            <div class="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-lg shadow">SM</div>
             <span class="font-black text-xl text-blue-800 tracking-wider">SHOPMUOP<span class="text-orange-500">.NET</span> 🎁</span>
         </div>
-        <button onclick="toggleMenu()" class="p-2 bg-gray-100 rounded-lg text-gray-700 focus:outline-none">
+        <button onclick="alert('Hệ thống tự động 100%')" class="p-2 bg-gray-100 rounded-lg text-gray-700">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </header>
@@ -41,41 +41,18 @@
                 <span>⚡</span> KHAI TRƯƠNG SHOP
             </div>
             <h1 class="text-2xl font-black mb-1 tracking-wide">BÓC ACC XIN</h1>
-            <h2 class="text-xl font-extrabold text-orange-500 mb-2">NẠP THẺ KHÔNG CHIẾT KHẤU</h2>
+            <h2 class="text-xl font-extrabold text-orange-500 mb-2">HỆ THỐNG TỰ ĐỘNG 100%</h2>
             <p class="text-xs text-gray-300 mb-5 leading-relaxed">
-                Free Fire · kho nick cập nhật mỗi ngày. Tự động 100%, nhận acc tức thì.
+                Free Fire · Kho nick cập nhật mỗi ngày. Mua là nhận acc tức thì, không trùng lặp.
             </p>
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="chonGoi(39)" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg text-sm text-center flex items-center justify-center gap-1">
                     <span>⚡</span> BÓC NGAY
                 </button>
-                <button onclick="openModal('depositModal')" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-4 rounded-xl shadow-inner text-sm border border-zinc-700 text-center">
-                    Nạp tiền
+                <button onclick="chonGoi(199)" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-4 rounded-xl shadow-inner text-sm border border-zinc-700 text-center">
+                    Kho VIP
                 </button>
             </div>
-        </div>
-
-        <!-- NÚT NẠP NHANH -->
-        <div class="bg-emerald-950/90 border border-emerald-800/60 rounded-2xl p-4 flex items-center justify-between shadow cursor-pointer" onclick="openModal('depositModal')">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-800/60 flex items-center justify-center text-xl shadow-inner">🏦</div>
-                <div>
-                    <div class="font-bold text-white text-sm">Nạp chuyển khoản</div>
-                    <div class="text-xs text-emerald-400">Tự động cộng tiền · 24/7</div>
-                </div>
-            </div>
-            <span class="text-emerald-400 font-bold text-sm">➔</span>
-        </div>
-
-        <div class="bg-purple-950/90 border border-purple-800/60 rounded-2xl p-4 flex items-center justify-between shadow cursor-pointer" onclick="openModal('depositModal')">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-800/60 flex items-center justify-center text-xl shadow-inner">💳</div>
-                <div>
-                    <div class="font-bold text-white text-sm">Nạp thẻ cào</div>
-                    <div class="text-xs text-purple-400">Viettel · Mobi · Vina</div>
-                </div>
-            </div>
-            <span class="text-purple-400 font-bold text-sm">➔</span>
         </div>
 
         <!-- DANH MỤC SẢN PHẨM FREEFIRE -->
@@ -156,7 +133,7 @@
         </div>
     </main>
 
-    <!-- FOOTER CHÂN WEB GIỐNG GỐC -->
+    <!-- FOOTER -->
     <footer class="text-center text-xs text-gray-400 py-6 mt-10 border-t border-gray-200">
         shopmuop.net
     </footer>
@@ -166,7 +143,7 @@
         <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center relative shadow-2xl">
             <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl font-black">✓</div>
             <h3 class="text-lg font-black text-emerald-600 mb-1">BÓC ACC THÀNH CÔNG!</h3>
-            <p class="text-xs text-gray-500 mb-4">Hệ thống đã tự động xóa tài khoản này khỏi kho để đảm bảo duy nhất.</p>
+            <p class="text-xs text-gray-500 mb-4">Hệ thống đã tự động xóa tài khoản này khỏi kho.</p>
             
             <div class="bg-gray-50 border border-gray-200 p-3 rounded-xl text-left mb-4 space-y-2">
                 <div>
@@ -180,26 +157,13 @@
             </div>
 
             <button onclick="closeModal('resultModal')" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow text-sm">
-                Đã hiểu / Đóng
+                Đã lưu thông tin / Đóng
             </button>
         </div>
     </div>
 
-    <!-- MODAL NẠP TIỀN -->
-    <div id="depositModal" class="hidden-page fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl p-6 relative shadow-xl">
-            <button onclick="closeModal('depositModal')" class="absolute top-4 right-4 text-gray-400 hover:text-black font-bold">✕</button>
-            <h2 class="text-lg font-black mb-3 text-gray-800 border-b pb-2">NẠP TIỀN HỆ THỐNG</h2>
-            <p class="text-xs text-gray-600 mb-4 leading-relaxed">Chọn phương thức nạp tiền hoặc dùng nút bên dưới để test nhanh hệ thống bóc acc.</p>
-            <button onclick="closeModal('depositModal'); alert('Đã cộng tiền test thành công!');" class="w-full bg-orange-500 text-white font-bold py-3 rounded-xl text-sm shadow">
-                Nhận Số Dư Test Ngay
-            </button>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT KHO DỮ LIỆU VÀ XÓA TỰ ĐỘNG -->
+    <!-- JAVASCRIPT KHO DỮ LIỆU THẬT -->
     <script>
-        // KHO HƠN 400 ACC MÀ MÀY ĐÃ CUNG CẤP
         let databaseAcc = [
             {u: "thudong11@gmail.com", p: "Sharevip01"}, {u: "tuankhang19@gmail.com", p: "Sharevip02"},
             {u: "tamtang20@gmail.com", p: "Sharevip03"}, {u: "thanhtan12@gmail.com", p: "Sharevip04"},
@@ -288,41 +252,34 @@
             {u: "kedubonheur2000@gmail.com", p: "jasminake123*"}, {u: "claudiol.graciano@gmail.com", p: "tk mk game tao thêm trong code luôn"}
         ];
 
-        // Cập nhật số lượng kho hiển thị
         function updateCount() {
             document.getElementById('kho-count').innerText = databaseAcc.length;
         }
         updateCount();
 
         function showPage(pageId) {
-            document.getElementById('home-page').classList.remove('hidden-page');
             window.scrollTo(0, 0);
         }
 
-        function openModal(id) { document.getElementById(id).classList.remove('hidden-page'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden-page'); }
-        function toggleMenu() { alert("Menu hệ thống Shopmuop.net!"); }
+        function closeModal(id) { 
+            document.getElementById(id).classList.add('hidden-page'); 
+        }
 
-        // BẤM VÀO GÓI BẤT KỲ SẼ BỐC NGẪU NHÂN VÀ XÓA VĨNH VIỄN KHỎI KHO
+        // BẤM VÀO LÀ BỐC ACC THẬT VÀ XÓA LUÔN KHỎI KHO
         function chonGoi(gia) {
             if (databaseAcc.length === 0) {
                 alert("Kho đã hết sạch tài khoản!");
                 return;
             }
 
-            // Random chọn 1 acc bất kỳ trong mảng
             let randomIndex = Math.floor(Math.random() * databaseAcc.length);
-            
-            // XÓA VĨNH VIỄN ACC ĐÓ KHỎI MẢNG
             let accTrung = databaseAcc.splice(randomIndex, 1)[0];
 
-            // Cập nhật lại số lượng kho
             updateCount();
 
-            // Hiển thị kết quả ra màn hình
             document.getElementById('res-user').innerText = accTrung.u;
             document.getElementById('res-pass').innerText = accTrung.p;
-            openModal('resultModal');
+            document.getElementById('resultModal').classList.remove('hidden-page');
         }
     </script>
 </body>
