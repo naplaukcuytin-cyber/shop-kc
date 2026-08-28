@@ -1,286 +1,1218 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOPMUOP.NET - Hệ Thống Bóc Acc Free Fire Tự Động</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .hidden-page { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUOP FF STORE - Acc Free Fire</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f6f8;
+    color:#20242c;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.topbar{
+    background:linear-gradient(135deg,#ff4b16,#ff8a00);
+    color:#fff;
+    text-align:center;
+    padding:10px;
+    font-size:14px;
+    font-weight:700;
+}
+
+header{
+    background:#fff;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 2px 15px rgba(0,0,0,.08);
+}
+
+.nav{
+    max-width:1200px;
+    margin:auto;
+    min-height:70px;
+    padding:0 16px;
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:900;
+    color:#ff5818;
+    white-space:nowrap;
+}
+
+.logo span{
+    color:#222;
+}
+
+.menu{
+    display:flex;
+    gap:22px;
+    flex:1;
+}
+
+.menu a{
+    text-decoration:none;
+    color:#555;
+    font-weight:700;
+}
+
+.nav-btn{
+    border:0;
+    background:#fff;
+    font-weight:700;
+}
+
+.hero{
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 16px;
+}
+
+.hero-box{
+    min-height:260px;
+    border-radius:25px;
+    padding:40px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 80% 30%,rgba(255,105,40,.35),transparent 35%),
+        linear-gradient(120deg,#15171c,#383d48);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    overflow:hidden;
+}
+
+.hero-small{
+    color:#ff8b4c;
+    font-weight:900;
+}
+
+.hero h1{
+    font-size:44px;
+    margin:10px 0;
+}
+
+.hero p{
+    color:#d1d5dc;
+    margin-bottom:20px;
+    max-width:600px;
+    line-height:1.6;
+}
+
+.hero-icon{
+    font-size:100px;
+}
+
+.main{
+    max-width:1200px;
+    margin:auto;
+    padding:0 16px;
+}
+
+.section-title{
+    margin:30px 0 18px;
+    font-size:28px;
+}
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-bottom:20px;
+}
+
+.filter{
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:30px;
+    padding:10px 17px;
+    font-weight:800;
+}
+
+.filter.active{
+    background:#ff5b1a;
+    color:#fff;
+    border-color:#ff5b1a;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:17px;
+}
+
+.card{
+    background:#fff;
+    border-radius:17px;
+    overflow:hidden;
+    border:1px solid #eee;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.card-img{
+    height:155px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:25px;
+    font-weight:900;
+    background:
+        linear-gradient(135deg,#242832,#ff6422);
+}
+
+.card-body{
+    padding:15px;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:7px;
+    background:#eaf8ef;
+    color:#159447;
+    font-size:12px;
+    font-weight:800;
+}
+
+.account-id{
+    margin-top:9px;
+    color:#777;
+    font-size:13px;
+}
+
+.account-name{
+    font-weight:900;
+    margin:6px 0;
+}
+
+.price{
+    color:#ed4e19;
+    font-size:21px;
+    font-weight:900;
+}
+
+.buy{
+    width:100%;
+    margin-top:11px;
+    padding:12px;
+    border:0;
+    border-radius:10px;
+    color:#fff;
+    background:#ff5b1a;
+    font-weight:900;
+}
+
+.buy:hover{
+    background:#e9480d;
+}
+
+.history-box{
+    margin-bottom:40px;
+}
+
+.history-card{
+    background:#fff;
+    border-radius:15px;
+    padding:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.history-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.success{
+    color:#159447;
+}
+
+.empty{
+    background:#fff;
+    border-radius:15px;
+    padding:30px;
+    text-align:center;
+    color:#777;
+}
+
+footer{
+    background:#17191f;
+    color:#bbb;
+    text-align:center;
+    padding:35px 16px;
+    margin-top:50px;
+}
+
+/* MODAL */
+
+.modal-bg{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+
+.modal{
+    background:#fff;
+    width:min(520px,100%);
+    max-height:90vh;
+    overflow:auto;
+    border-radius:20px;
+    padding:25px;
+}
+
+.close{
+    float:right;
+    border:0;
+    width:37px;
+    height:37px;
+    border-radius:9px;
+    background:#eee;
+    font-size:20px;
+}
+
+.modal h2{
+    margin-bottom:18px;
+}
+
+.modal-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.warning{
+    margin-top:15px;
+    padding:14px;
+    border-radius:12px;
+    background:#fff1e8;
+    border:1px solid #ffc6a6;
+    line-height:1.5;
+}
+
+.primary{
+    width:100%;
+    border:0;
+    background:#ff5b1a;
+    color:#fff;
+    padding:14px;
+    border-radius:11px;
+    font-weight:900;
+    margin-top:15px;
+}
+
+.login-input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin:7px 0 12px;
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .menu{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+}
+
+@media(max-width:520px){
+
+    .nav{
+        gap:12px;
+    }
+
+    .logo{
+        font-size:21px;
+    }
+
+    .nav-btn{
+        font-size:13px;
+    }
+
+    .hero-box{
+        padding:25px;
+        min-height:220px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .hero-icon{
+        font-size:55px;
+    }
+
+    .grid{
+        gap:9px;
+    }
+
+    .card-img{
+        height:115px;
+        font-size:18px;
+    }
+
+    .card-body{
+        padding:11px;
+    }
+
+    .price{
+        font-size:18px;
+    }
+
+    .section-title{
+        font-size:23px;
+    }
+}
+</style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans pb-24">
 
-    <!-- THANH THÔNG BÁO CHẠY -->
-    <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs py-2 px-3 font-bold flex items-center shadow-inner overflow-hidden">
-        <span class="mr-2 text-base">🔥</span>
-        <div class="whitespace-nowrap animate-pulse">
-            Từng bừng khai trường shop mới - Kho tài khoản game đa dạng, cập nhật mỗi ngày!
-        </div>
+<body>
+
+<div class="topbar">
+🔥 KHO ACC FREE FIRE RANDOM — MUA NHANH — NHẬN ACC SAU KHI THANH TOÁN
+</div>
+
+<header>
+<div class="nav">
+
+    <div class="logo">
+        MUOP<span>FF</span>
     </div>
 
-    <!-- HEADER -->
-    <header class="bg-white px-4 py-3 shadow-sm flex justify-between items-center sticky top-0 z-40">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-            <div class="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-lg shadow">SM</div>
-            <span class="font-black text-xl text-blue-800 tracking-wider">SHOPMUOP<span class="text-orange-500">.NET</span> 🎁</span>
+    <nav class="menu">
+        <a href="#home">Trang chủ</a>
+        <a href="#shop">Kho acc</a>
+        <a href="#history">Lịch sử mua</a>
+    </nav>
+
+    <button class="nav-btn" onclick="openLogin()">
+        Đăng nhập
+    </button>
+
+    <button class="nav-btn" onclick="openHistory()">
+        🧾 Đơn hàng
+    </button>
+
+</div>
+</header>
+
+
+<section class="hero" id="home">
+
+<div class="hero-box">
+
+    <div>
+
+        <div class="hero-small">
+            MUOP FF STORE
         </div>
-        <button onclick="alert('Hệ thống tự động 100%')" class="p-2 bg-gray-100 rounded-lg text-gray-700">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+
+        <h1>
+            Kho Acc Free Fire
+        </h1>
+
+        <p>
+            Acc Free Fire Random theo từng mức giá.
+            Chọn giá phù hợp, mua nhanh và quản lý đơn hàng ngay trên website.
+        </p>
+
+        <button class="buy"
+                style="width:auto;padding:14px 22px"
+                onclick="document.getElementById('shop').scrollIntoView()">
+
+            XEM KHO ACC
+
         </button>
-    </header>
 
-    <!-- TRANG CHỦ -->
-    <main id="home-page" class="p-4 max-w-md mx-auto space-y-4">
-        
-        <!-- BANNER CHÍNH -->
-        <div class="bg-gradient-to-br from-zinc-900 via-neutral-900 to-amber-950 rounded-2xl p-5 text-white shadow-xl border border-amber-900/50">
-            <div class="inline-flex items-center gap-1 bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold mb-3 border border-amber-500/30">
-                <span>⚡</span> KHAI TRƯƠNG SHOP
-            </div>
-            <h1 class="text-2xl font-black mb-1 tracking-wide">BÓC ACC XIN</h1>
-            <h2 class="text-xl font-extrabold text-orange-500 mb-2">HỆ THỐNG TỰ ĐỘNG 100%</h2>
-            <p class="text-xs text-gray-300 mb-5 leading-relaxed">
-                Free Fire · Kho nick cập nhật mỗi ngày. Mua là nhận acc tức thì, không trùng lặp.
-            </p>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="chonGoi(39)" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg text-sm text-center flex items-center justify-center gap-1">
-                    <span>⚡</span> BÓC NGAY
-                </button>
-                <button onclick="chonGoi(199)" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-4 rounded-xl shadow-inner text-sm border border-zinc-700 text-center">
-                    Kho VIP
-                </button>
-            </div>
-        </div>
-
-        <!-- DANH MỤC SẢN PHẨM FREEFIRE -->
-        <div class="pt-2">
-            <div class="flex items-center gap-2 mb-3 font-black text-base text-orange-600">
-                <span>✦</span> FreeFire <span class="text-xs text-gray-500 font-normal">(Kho còn: <span id="kho-count" class="font-bold text-red-500">0</span> acc)</span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <!-- Gói 39K -->
-                <div onclick="chonGoi(39)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-blue-900 to-cyan-900 h-28 flex items-center justify-center p-2 text-center">
-                        <div class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">HOT</div>
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 39 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 39 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 39.000đ</div>
-                    </div>
-                </div>
-
-                <!-- Gói 49K -->
-                <div onclick="chonGoi(49)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-emerald-900 to-teal-900 h-28 flex items-center justify-center p-2 text-center">
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 49 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 49 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 49.000đ</div>
-                    </div>
-                </div>
-
-                <!-- Gói 79K -->
-                <div onclick="chonGoi(79)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-purple-900 to-indigo-900 h-28 flex items-center justify-center p-2 text-center">
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 79 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 79 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 79.000đ</div>
-                    </div>
-                </div>
-
-                <!-- Gói 99K -->
-                <div onclick="chonGoi(99)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-pink-900 to-rose-900 h-28 flex items-center justify-center p-2 text-center">
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 99 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 99 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 99.000đ</div>
-                    </div>
-                </div>
-
-                <!-- Gói 149K -->
-                <div onclick="chonGoi(149)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-slate-800 to-blue-950 h-28 flex items-center justify-center p-2 text-center">
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 149 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 149 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 149.000đ</div>
-                    </div>
-                </div>
-
-                <!-- Gói 199K -->
-                <div onclick="chonGoi(199)" class="bg-white rounded-2xl overflow-hidden shadow border border-gray-100 cursor-pointer hover:shadow-md transition">
-                    <div class="relative bg-gradient-to-br from-amber-700 to-yellow-900 h-28 flex items-center justify-center p-2 text-center">
-                        <div class="absolute top-2 left-2 bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded shadow">VIP</div>
-                        <span class="text-white font-black text-sm drop-shadow">TÚI MƯỚP 199 CÁ</span>
-                    </div>
-                    <div class="p-3">
-                        <div class="font-bold text-xs text-gray-800 mb-1 truncate">Acc Mướp 199 Cá</div>
-                        <div class="text-emerald-600 font-black text-sm">từ 199.000đ</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="text-center text-xs text-gray-400 py-6 mt-10 border-t border-gray-200">
-        shopmuop.net
-    </footer>
-
-    <!-- MODAL KẾT QUẢ BÓC ACC VÀ XÓA TỰ ĐỘNG -->
-    <div id="resultModal" class="hidden-page fixed inset-0 bg-black/75 flex items-center justify-center z-50 p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center relative shadow-2xl">
-            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl font-black">✓</div>
-            <h3 class="text-lg font-black text-emerald-600 mb-1">BÓC ACC THÀNH CÔNG!</h3>
-            <p class="text-xs text-gray-500 mb-4">Hệ thống đã tự động xóa tài khoản này khỏi kho.</p>
-            
-            <div class="bg-gray-50 border border-gray-200 p-3 rounded-xl text-left mb-4 space-y-2">
-                <div>
-                    <span class="text-[11px] text-gray-400 block font-semibold">Tài khoản / Email:</span>
-                    <strong id="res-user" class="text-blue-600 select-all text-sm break-all font-mono"></strong>
-                </div>
-                <div>
-                    <span class="text-[11px] text-gray-400 block font-semibold">Mật khẩu:</span>
-                    <strong id="res-pass" class="text-red-600 select-all text-sm break-all font-mono"></strong>
-                </div>
-            </div>
-
-            <button onclick="closeModal('resultModal')" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow text-sm">
-                Đã lưu thông tin / Đóng
-            </button>
-        </div>
     </div>
 
-    <!-- JAVASCRIPT KHO DỮ LIỆU THẬT -->
-    <script>
-        let databaseAcc = [
-            {u: "thudong11@gmail.com", p: "Sharevip01"}, {u: "tuankhang19@gmail.com", p: "Sharevip02"},
-            {u: "tamtang20@gmail.com", p: "Sharevip03"}, {u: "thanhtan12@gmail.com", p: "Sharevip04"},
-            {u: "ngocthien65@gmail.com", p: "Sharevip05"}, {u: "Nhuvan19@gmail.com", p: "Sharevip06"},
-            {u: "tonuwxa@gmail.com", p: "Sharevip07"}, {u: "anhngoc", p: "Sharevip08"},
-            {u: "trandan55@gmail.com", p: "Sharevip09"}, {u: "baongoc32@gmail.com", p: "Sharevip10"},
-            {u: "anhtuyet52", p: "Sharevip11"}, {u: "tuanvu14@gmail.com", p: "Sharevip12"},
-            {u: "canhgia23@gmail.com", p: "Sharevip13"}, {u: "thiennam78@gmail.com", p: "Sharevip14"},
-            {u: "thienthan98@gmail.com", p: "Sharevip15"}, {u: "huynhvan123@gmail.com", p: "Sharevip16"},
-            {u: "quockhai36@gmail.com", p: "Sharevip17"}, {u: "thanhthat22@gmail.com", p: "Sharevip18"},
-            {u: "thanhtam19@gmail.com", p: "Sharevip19"}, {u: "thinhien326@gmail.com", p: "Sharevip20"},
-            {u: "ron0ryan1@gmail.com", p: "A12345678b###"}, {u: "andradejhoel62@gmail.com", p: "jhoel2004"},
-            {u: "lalward.mag@gmail.com", p: "silversherry"}, {u: "ahmedmostafa142004@gmail.com", p: "1229004551"},
-            {u: "mahmdgamng@gmail.com", p: "@@@312far3on"}, {u: "Geeezey@gmail.com", p: "y = onetwo12345"},
-            {u: "jonesjese001@gmail.com", p: "onetwo12345"}, {u: "boodygamer1232@gmail.com", p: "BDBD1232"},
-            {u: "correo.aloe@gmail.com", p: "internet4508"}, {u: "UNKNOWN", p: "Familia4508"},
-            {u: "Ahmedyassine2002@gmail.com", p: "AhMeD.10012002"}, {u: "vinaycreation78@gmail.com", p: "mafiakid247"},
-            {u: "ha.n.s.ki.tk.it@gmail.com", p: "ha.n.s.ki.tk.it"}, {u: "evergreenmehak@gmail.com", p: "12345678"},
-            {u: "lenzhenys@gmail.com", p: "E1s2a3m4s5m6dalle"}, {u: "contact.essghaier@gmail.com", p: "852852Aa"},
-            {u: "geecheneei@hotmail.com", p: "01012009gG"}, {u: "seankanishov@gmail.com", p: "Kxxi7x11!"},
-            {u: "bartvador@duck.com", p: "Katelyn010*"}, {u: "daniconchev@gmail.com", p: "dani_123"},
-            {u: "nafizhossain321@gmail.com", p: "A,h9cnPEaC8.GE4"}, {u: "amanda0410d@gmail.com", p: "!Sleep000well"},
-            {u: "emiliocornejoxxx@gmail.com", p: "rag2312312313"}, {u: "cornejoemilio092@gmail.com", p: "cyspack0312"},
-            {u: "yimaztayfun007@gmail.com", p: "11111997"}, {u: "matheobeucler@gmail.com", p: "Math2008?"},
-            {u: "charles.roubiere@gmail.com", p: "777cccr81a"}, {u: "koketsolekau86@gmail.com", p: "BonoloK2#"},
-            {u: "ignamuma@gmail.com", p: "waza12456"}, {u: "sobowaodya@iubridge.com", p: "13579abcde24680"},
-            {u: "leon.art.official@gmail.com", p: "pqr34827620"}, {u: "frankbaves@gmail.com", p: "DaniDiosaVosMugrosa"},
-            {u: "raskal60hz@gmail.com", p: "raskal.exe"}, {u: "UNKNOWN", p: "Ares_AI1011#"},
-            {u: "rsparth2004@gmail.com", p: "Parthleekha1"}, {u: "rexxepico@gmail.com", p: "Romina.exe123"},
-            {u: "luna22012001@gmail.com", p: "justinenzunga1"}, {u: "osmanbegovicevelin3@gmail.com", p: "zanimljivsajt"},
-            {u: "babi49039@gmail.com", p: "Biaabdul764!?"}, {u: "lazicuros17@gmail.com", p: "Slusalice154"},
-            {u: "vavesoy581@24rumen.com", p: "ayus1H@21"}, {u: "sayed9041971@gmail.com", p: "Shaoni118109#"},
-            {u: "dyardler309@outlook.com", p: "Aludyarxdr99"}, {u: "aremama227@gmail.com", p: "Fer3544@@#"},
-            {u: "sanjidashrestta8989@gmail.com", p: "shrestta8986"}, {u: "Jamalalserhan77@gmail.com", p: "Jamal2006"},
-            {u: "j365030@gmail.com", p: "JRuma@123"}, {u: "phamlocfreechatgpt@gmail.com", p: "ungholocnhe"},
-            {u: "locmaymo@gmail.com", p: "ungholocnhe"}, {u: "chatgpt1@maihuybao.dev", p: "maihuybao"},
-            {u: "chatgpt2@maihuybao.dev", p: "maihuybao"}, {u: "chatgpt3@maihuybao.dev", p: "maihuybao"},
-            {u: "chatgpt4@maihuybao.dev", p: "maihuybao"}, {u: "chatgpt5@maihuybao.dev", p: "maihuybao"},
-            {u: "gouflex40@gmail.com", p: "deployiadell22"}, {u: "joseno2308@gmail.com", p: "*josejose*"},
-            {u: "tarchis03@gmail.com", p: "adriamsfalconett"}, {u: "m.smigielski2001@gmail.com", p: "01290705037PorcupineTree"},
-            {u: "zeeshan223742@gmail.com", p: "shani.3244"}, {u: "paolariverospy@gmail.com", p: "h1010103030"},
-            {u: "mitzubob@gmail.com", p: "Dalle12!"}, {u: "iuly07raul05@gmail.com", p: "Stefymihai2005?"},
-            {u: "mihaialex2308@gmail.com", p: "23082011"}, {u: "saulea.s@yahoo.com", p: "ec%%HS5H?v3DhA&"},
-            {u: "chngalvin30@gmail.com", p: "Chng747822"}, {u: "mofc1903@gmail.com", p: "mofc0147"},
-            {u: "danny.petrigal@gmail.com", p: "dannybobo2010"}, {u: "sadettinsenol0606@gmail.com", p: "KAMUguv0"},
-            {u: "lucianoparavati@hotmail.com", p: "48547689"}, {u: "udaykumar.anil111@gmail.com", p: "uday@1RAGA"},
-            {u: "cg16spyop@gmail.com", p: "JAIBGMIii11"}, {u: "aryanh205@gmail.com", p: "aryanh13826"},
-            {u: "abuzerceylann@gmail.com", p: "7TgYL6y$j.HtTb*"}, {u: "yyedek19@gmail.com", p: "nWY62Kvn1999"},
-            {u: "shabbaros346@gmail.com", p: "Phaser3100"}, {u: "leewencoln.maina@students.jkuat.ac.ke", p: "qwerty66ghi"},
-            {u: "jorgedavidmorenoantonio@gmail.com", p: "5101959"}, {u: "glennisagani88@gmail.com", p: "awesomedude"},
-            {u: "elibustose@gmail.com", p: "Islapuna@2030"}, {u: "nlado49@gmail.com", p: "quockhang3006"},
-            {u: "nunyzale@teleg.eu", p: "20202020"}, {u: "jenishtamang702@gmail.com", p: "Jenish_Tam"},
-            {u: "yanisbouzghi599@gmail.com", p: "wyqgot-pyjgyg-3bukSu"}, {u: "italobulnes@gmail.com", p: "virtualhn"},
-            {u: "bang.crypto@skiff.com", p: "Anonymous@1234"}, {u: "taikhoandungthu@mail1s.icu", p: "Anonymous@1234"},
-            {u: "allineoy749@hotmail.com", p: "allineoy749@hotmail.com"}, {u: "chatgpt@tego.global", p: "dme@xvr6KAR5zaw1vfw"},
-            {u: "openai@tego.global", p: "etd*EJN_baw3wqe2urd"}, {u: "daubotq0123@gmail.com", p: "duyduy11"},
-            {u: "zht0000002+1@gmail.com", p: "hhtt1232"}, {u: "zht0000002+q@gmail.com", p: "hhiin789"},
-            {u: "zht0000002+w@gmail.com", p: "zzx×5589"}, {u: "thuythuvngpt@mail1s.cyou", p: "Anonymous@1234"},
-            {u: "thantaigcv@mail1s.cyou", p: "Anonymous@1234"}, {u: "thailongctv@mail1s.cyou", p: "Anonymous@1234"},
-            {u: "linhlungctv@mail1s.cyou", p: "Anonymous@1234"}, {u: "huycanzui@mail10p.cyou", p: "Anonymous@1234"},
-            {u: "thanhphozyu@mail1s.cyou", p: "Anonymous@1234"}, {u: "thongociok@mail1s.cyou", p: "Anonymous@1234"},
-            {u: "dongauni@mail1s.cyou", p: "Anonymous@1234"}, {u: "huydaivn@mail1s.cyou", p: "Anonymous@1234"},
-            {u: "khoidongtz@mail1s.cyou", p: "Anonymous@1234"}, {u: "thanhphuocza@mail1s.cyou", p: "Anonymous@1234"},
-            {u: "whrzienjkfihsex@triots.com", p: "iX%n6Mt6*"}, {u: "xommjvaq@triots.com", p: "8oPe2hP@v"},
-            {u: "ywbiporkcody@triots.com", p: "A^2PR4x8V"}, {u: "czalfauwcdp@triots.com", p: "gK5Y9tB$4"},
-            {u: "dkehovjzfbklwio@triots.com", p: "b$vTHN8Tg"}, {u: "qruiobnjsqsuqdm@triots.com", p: "dh*5aGaeP"},
-            {u: "hsgmhrwke@triots.com", p: "g5h@*UM5x"}, {u: "thgdkhdxmiuddm@triots.com", p: "5%sdGAq*7"},
-            {u: "qcsirbxjoicpcn@triots.com", p: "!cb8vTFha"}, {u: "ravepkc@triots.com", p: "[#s498ypvW]"},
-            {u: "movkhnmazdmjo@triots.com", p: "sR&dD64@n"}, {u: "xzowvudjlobkr@triots.com", p: "Q*Mqp4zsD"},
-            {u: "otqjqoqgayvvt@triots.com", p: "Y@JnuBr9w"}, {u: "zlbebkkt@triots.com", p: "T$N#m4QZH"},
-            {u: "iiutlo@triots.com", p: "FGi@rDr86"}, {u: "uwbdjcwze@triots.com", p: "h&bZ5@9PW"},
-            {u: "fbuivbxalaiidd@triots.com", p: "y$EV5SmE2"}, {u: "yikipwojz@triots.com", p: "Z*&NZen7V"},
-            {u: "ulwbxzzwwagmhl@triots.com", p: "toshiro123"}, {u: "xrtqtyrxfwurrpg@triots.com", p: "toshiro123"},
-            {u: "tzaztjttcjsfqg@triots.com", p: "toshiro123"}, {u: "zukrkpbylwomyjx@triots.com", p: "toshiro123"},
-            {u: "iudsrzmej@triots.com", p: "toshiro123"}, {u: "iysabyxxln@triots.com", p: "Nz74XY!eD"},
-            {u: "chatgpt.xcoder2@gmail.com", p: "12345678"}, {u: "chatgpt.xcoder1@gmail.com", p: "12345678"},
-            {u: "dth_bkpro_2010@yahoo.com", p: "abc123456_"}, {u: "hammiu2010@gmail.com", p: "abc123456_"},
-            {u: "linhbkpro2010@gmail.com", p: "abc123456_"}, {u: "khietvidai@gmail.com", p: "khietvidai"},
-            {u: "khiethieuqua@gmail.com", p: "khiethieuqua"}, {u: "library4530@outlook.com", p: "sdfchao130"},
-            {u: "gonzalomontero980@gmail.com", p: "XDgonchiotaku88"}, {u: "infotechjohncv@gmail.com", p: "openai_GPT-3"},
-            {u: "ronald9cz@gmail.com", p: "sistemas"}, {u: "solsilvana@gmail.com", p: "cronos6832"},
-            {u: "martirproducciones@gmail.com", p: "MARTIR681976"}, {u: "daniel.gongora@udea.edu.co", p: "Danielgg28"},
-            {u: "kavindakusal517@gmail.com", p: "123kusal"}, {u: "hmezher336@gmail.com", p: "hadidalle2"},
-            {u: "hmezher336@gmail.com", p: "Hadidalle336"}, {u: "vhspirit@gmail.com", p: "Alayli27"},
-            {u: "nickstevenortiz@gmail.com", p: "pinguino"}, {u: "30ahmed3020@gmail.com", p: "m123456789E@"},
-            {u: "kedubonheur2000@gmail.com", p: "jasminake123*"}, {u: "claudiol.graciano@gmail.com", p: "tk mk game tao thêm trong code luôn"}
-        ];
+    <div class="hero-icon">
+        🎮
+    </div>
 
-        function updateCount() {
-            document.getElementById('kho-count').innerText = databaseAcc.length;
-        }
-        updateCount();
+</div>
 
-        function showPage(pageId) {
-            window.scrollTo(0, 0);
-        }
+</section>
 
-        function closeModal(id) { 
-            document.getElementById(id).classList.add('hidden-page'); 
-        }
 
-        // BẤM VÀO LÀ BỐC ACC THẬT VÀ XÓA LUÔN KHỎI KHO
-        function chonGoi(gia) {
-            if (databaseAcc.length === 0) {
-                alert("Kho đã hết sạch tài khoản!");
-                return;
+<main class="main" id="shop">
+
+<h2 class="section-title">
+    🎮 Acc Free Fire Random
+</h2>
+
+<div class="filters">
+
+    <button class="filter active"
+            onclick="setFilter('all',this)">
+        Tất cả
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(39000,this)">
+        39K
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(59000,this)">
+        59K
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(99000,this)">
+        99K
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(149000,this)">
+        149K
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(199000,this)">
+        199K
+    </button>
+
+    <button class="filter"
+            onclick="setFilter(299000,this)">
+        299K+
+    </button>
+
+</div>
+
+
+<div class="grid" id="products"></div>
+
+</main>
+
+
+<section class="main history-box" id="history">
+
+<h2 class="section-title">
+    🧾 Lịch sử mua hàng
+</h2>
+
+<div id="historyContent"></div>
+
+</section>
+
+
+<footer>
+
+    <strong>MUOP FF STORE</strong>
+    <br><br>
+    Kho acc Free Fire Random
+    <br>
+    © 2026 All Rights Reserved
+
+</footer>
+
+
+<!-- MODAL -->
+
+<div class="modal-bg" id="modalBg">
+
+<div class="modal" id="modal">
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   KHO ACC DEMO
+========================= */
+
+const defaultStock = [
+
+    {id:"FF-001",price:39000},
+    {id:"FF-002",price:39000},
+    {id:"FF-003",price:39000},
+
+    {id:"FF-004",price:59000},
+    {id:"FF-005",price:59000},
+    {id:"FF-006",price:59000},
+
+    {id:"FF-007",price:99000},
+    {id:"FF-008",price:99000},
+    {id:"FF-009",price:99000},
+
+    {id:"FF-010",price:149000},
+    {id:"FF-011",price:149000},
+
+    {id:"FF-012",price:199000},
+    {id:"FF-013",price:199000},
+
+    {id:"FF-014",price:299000},
+    {id:"FF-015",price:299000}
+
+];
+
+
+/*
+    Lưu kho vào trình duyệt.
+
+    Sau này nếu có Firebase/backend
+    thì thay phần này bằng database thật.
+*/
+
+let stock =
+    JSON.parse(localStorage.getItem("ff_stock"));
+
+if(!stock){
+
+    stock = defaultStock;
+
+    localStorage.setItem(
+        "ff_stock",
+        JSON.stringify(stock)
+    );
+
+}
+
+
+let orders =
+    JSON.parse(localStorage.getItem("ff_orders") || "[]");
+
+
+let currentFilter = "all";
+
+
+/* =========================
+   FORMAT TIỀN
+========================= */
+
+function money(number){
+
+    return number.toLocaleString("vi-VN") + "đ";
+
+}
+
+
+/* =========================
+   HIỂN THỊ KHO
+========================= */
+
+function renderProducts(){
+
+    let list;
+
+    if(currentFilter === "all"){
+
+        list = stock;
+
+    }else{
+
+        list = stock.filter(acc => {
+
+            if(currentFilter === 299000){
+
+                return acc.price >= 299000;
+
             }
 
-            let randomIndex = Math.floor(Math.random() * databaseAcc.length);
-            let accTrung = databaseAcc.splice(randomIndex, 1)[0];
+            return acc.price === currentFilter;
 
-            updateCount();
+        });
 
-            document.getElementById('res-user').innerText = accTrung.u;
-            document.getElementById('res-pass').innerText = accTrung.p;
-            document.getElementById('resultModal').classList.remove('hidden-page');
+    }
+
+
+    const box =
+        document.getElementById("products");
+
+
+    if(!list.length){
+
+        box.innerHTML = `
+            <div class="empty">
+                Mức giá này hiện đã hết acc.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML = list.map(acc => `
+
+        <article class="card">
+
+            <div class="card-img">
+                FREE FIRE
+            </div>
+
+            <div class="card-body">
+
+                <span class="status">
+                    CÒN HÀNG
+                </span>
+
+                <div class="account-id">
+                    ${acc.id}
+                </div>
+
+                <div class="account-name">
+                    Acc Free Fire Random
+                </div>
+
+                <div class="price">
+                    ${money(acc.price)}
+                </div>
+
+                <button
+                    class="buy"
+                    onclick="buyAccount('${acc.id}')">
+
+                    MUA NGAY
+
+                </button>
+
+            </div>
+
+        </article>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   LỌC GIÁ
+========================= */
+
+function setFilter(price,button){
+
+    currentFilter = price;
+
+
+    document
+        .querySelectorAll(".filter")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+
+    renderProducts();
+
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+function openModal(){
+
+    document
+        .getElementById("modalBg")
+        .style.display = "flex";
+
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("modalBg")
+        .style.display = "none";
+
+}
+
+
+/* =========================
+   MUA ACC
+========================= */
+
+function buyAccount(id){
+
+    const account =
+        stock.find(acc => acc.id === id);
+
+
+    if(!account){
+
+        alert("Acc này đã được bán!");
+
+        renderProducts();
+
+        return;
+
+    }
+
+
+    document.getElementById("modal").innerHTML = `
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+        <h2>
+            Xác nhận mua acc
+        </h2>
+
+        <div class="modal-row">
+
+            <span>Mã acc</span>
+
+            <strong>
+                ${account.id}
+            </strong>
+
+        </div>
+
+
+        <div class="modal-row">
+
+            <span>Loại</span>
+
+            <strong>
+                Free Fire Random
+            </strong>
+
+        </div>
+
+
+        <div class="modal-row">
+
+            <span>Giá</span>
+
+            <strong>
+                ${money(account.price)}
+            </strong>
+
+        </div>
+
+
+        <div class="warning">
+
+            ⚠️ Đây là bản HTML demo.
+            Khi làm website thật, bước này sẽ
+            kiểm tra thanh toán từ server trước
+            khi giao thông tin tài khoản.
+
+        </div>
+
+
+        <button
+            class="primary"
+            onclick="confirmPurchase('${account.id}')">
+
+            XÁC NHẬN MUA
+
+        </button>
+
+    `;
+
+
+    openModal();
+
+}
+
+
+/* =========================
+   XÁC NHẬN MUA
+========================= */
+
+function confirmPurchase(id){
+
+    const index =
+        stock.findIndex(acc => acc.id === id);
+
+
+    /*
+       Kiểm tra lần nữa để tránh
+       trường hợp acc đã bị bán.
+    */
+
+    if(index === -1){
+
+        alert(
+            "Acc này vừa được mua bởi người khác."
+        );
+
+        closeModal();
+
+        renderProducts();
+
+        return;
+
+    }
+
+
+    const account =
+        stock.splice(index,1)[0];
+
+
+    const order = {
+
+        code:
+            "DH" +
+            Date.now().toString().slice(-8),
+
+        account:
+            account.id,
+
+        price:
+            account.price,
+
+        time:
+            new Date().toLocaleString("vi-VN"),
+
+        status:
+            "Đã thanh toán"
+
+    };
+
+
+    orders.unshift(order);
+
+
+    /*
+       Lưu lại kho mới.
+
+       Acc vừa mua sẽ không còn
+       xuất hiện trong kho.
+    */
+
+    localStorage.setItem(
+        "ff_stock",
+        JSON.stringify(stock)
+    );
+
+
+    localStorage.setItem(
+        "ff_orders",
+        JSON.stringify(orders)
+    );
+
+
+    closeModal();
+
+    renderProducts();
+
+    renderHistory();
+
+
+    alert(
+        "Mua thành công! Acc đã được chuyển khỏi kho và lưu trong lịch sử đơn."
+    );
+
+
+    document
+        .getElementById("history")
+        .scrollIntoView();
+
+}
+
+
+/* =========================
+   LỊCH SỬ
+========================= */
+
+function renderHistory(){
+
+    const box =
+        document.getElementById("historyContent");
+
+
+    if(!orders.length){
+
+        box.innerHTML = `
+            <div class="empty">
+                Chưa có đơn hàng.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML = `
+
+        <div class="history-card">
+
+            ${orders.map(order => `
+
+                <div class="modal-row">
+
+                    <span>
+                        Mã đơn
+                    </span>
+
+                    <strong>
+                        ${order.code}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-row">
+
+                    <span>
+                        Acc
+                    </span>
+
+                    <strong>
+                        ${order.account}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-row">
+
+                    <span>
+                        Giá
+                    </span>
+
+                    <strong>
+                        ${money(order.price)}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-row">
+
+                    <span>
+                        Thời gian
+                    </span>
+
+                    <strong>
+                        ${order.time}
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-row">
+
+                    <span>
+                        Trạng thái
+                    </span>
+
+                    <strong class="success">
+                        ${order.status}
+                    </strong>
+
+                </div>
+
+                <br>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================
+   ĐĂNG NHẬP DEMO
+========================= */
+
+function openLogin(){
+
+    document.getElementById("modal").innerHTML = `
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+        <h2>
+            Đăng nhập
+        </h2>
+
+        <label>
+            Email
+        </label>
+
+        <input
+            class="login-input"
+            type="email"
+            placeholder="Nhập email">
+
+
+        <label>
+            Mật khẩu
+        </label>
+
+        <input
+            class="login-input"
+            type="password"
+            placeholder="Nhập mật khẩu">
+
+
+        <button
+            class="primary"
+            onclick="demoLogin()">
+
+            ĐĂNG NHẬP
+
+        </button>
+
+    `;
+
+
+    openModal();
+
+}
+
+
+function demoLogin(){
+
+    alert(
+        "Đây là giao diện demo. Khi triển khai thật sẽ kết nối Firebase Authentication."
+    );
+
+}
+
+
+/* =========================
+   MỞ LỊCH SỬ NHANH
+========================= */
+
+function openHistory(){
+
+    document.getElementById("modal").innerHTML = `
+
+        <button
+            class="close"
+            onclick="closeModal()">
+
+            ×
+
+        </button>
+
+        <h2>
+            🧾 Đơn hàng
+        </h2>
+
+        ${
+            orders.length
+
+            ?
+
+            orders.map(order => `
+
+                <div class="modal-row">
+
+                    <span>
+                        ${order.code}
+                    </span>
+
+                    <strong>
+                        ${order.account}
+                        -
+                        ${money(order.price)}
+                    </strong>
+
+                </div>
+
+            `).join("")
+
+            :
+
+            `
+            <div class="empty">
+                Chưa có đơn hàng.
+            </div>
+            `
         }
-    </script>
+
+    `;
+
+
+    openModal();
+
+}
+
+
+/* =========================
+   CLICK NGOÀI MODAL
+========================= */
+
+document
+    .getElementById("modalBg")
+    .addEventListener("click",function(e){
+
+        if(e.target === this){
+
+            closeModal();
+
+        }
+
+    });
+
+
+/* =========================
+   KHỞI CHẠY
+========================= */
+
+renderProducts();
+
+renderHistory();
+
+</script>
+
 </body>
 </html>
