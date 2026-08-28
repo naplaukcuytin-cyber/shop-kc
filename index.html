@@ -3,139 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Sản Phẩm - Siêu Thị Số</title>
+    <title>Shop Digital - Mua Hàng Tự Động</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #0b0f19;
+            background-color: #07090e;
             color: #f1f5f9;
-            padding: 15px;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
         }
         .container {
-            max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 480px;
         }
         .back-link {
             color: #38bdf8;
             text-decoration: none;
-            font-size: 14px;
-            display: inline-block;
-            margin-bottom: 15px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 16px;
+            font-weight: 500;
         }
-        .product-header {
-            background: #1e293b;
+        .product-card {
+            background: linear-gradient(145deg, #111827, #0f172a);
+            border: 1px solid #1e293b;
+            border-radius: 16px;
             padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            margin-bottom: 15px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 16px;
         }
-        h2 { font-size: 18px; margin-bottom: 8px; color: #fff; }
-        .price-big { color: #4ade80; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
-        
-        /* Chọn gói */
-        .section-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #94a3b8; }
-        .packages {
+        .badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; color: #fff; }
+        .price-box {
             display: flex;
-            gap: 10px;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 15px;
+        }
+        .price-big { color: #22c55e; font-size: 24px; font-weight: 800; }
+        .price-old { color: #64748b; font-size: 14px; text-decoration: line-through; }
+        
+        .section-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .packages {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
             margin-bottom: 20px;
         }
         .pkg-btn {
-            flex: 1;
-            padding: 10px;
-            background: #0f172a;
-            border: 1px solid #475569;
-            color: #fff;
-            border-radius: 8px;
+            background: #1e293b;
+            border: 1.5px solid #334155;
+            color: #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 6px;
             cursor: pointer;
             text-align: center;
-            font-size: 13px;
+            transition: all 0.2s ease;
         }
+        .pkg-btn .time { font-size: 12px; margin-bottom: 2px; }
+        .pkg-btn .cost { font-size: 13px; font-weight: 700; color: #38bdf8; }
         .pkg-btn.selected {
             border-color: #38bdf8;
-            background: #1e3a8a;
-            font-weight: bold;
+            background: rgba(56, 189, 248, 0.08);
+            color: #fff;
         }
-
-        /* Hướng dẫn và lưu ý */
+        
         .info-box {
-            background: #1e293b;
-            padding: 15px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
             border-radius: 12px;
-            border: 1px solid #334155;
+            padding: 14px;
             margin-bottom: 20px;
             font-size: 13px;
-            line-height: 1.5;
-            color: #cbd5e1;
+            line-height: 1.6;
+            color: #94a3b8;
         }
-        .info-box ul { padding-left: 18px; margin-top: 5px; }
+        .info-box ul { padding-left: 16px; }
         .info-box li { margin-bottom: 4px; }
+        .info-box strong { color: #f1f5f9; }
 
-        /* Nút thanh toán */
         .checkout-btn {
             width: 100%;
             padding: 14px;
-            background: #22c55e;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            text-align: center;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            transition: 0.2s;
         }
-        .checkout-btn:hover { background: #16a34a; }
+        .checkout-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <a href="#" class="back-link">← Quay lại danh mục</a>
+        <a href="#" class="back-link">‹ Quay lại danh sách sản phẩm</a>
 
-        <div class="product-header">
-            <h2>Tài Khoản Netflix 4K Riêng Tư (Chính Hãng)</h2>
-            <div class="price-big" id="priceDisplay">45.000 đ</div>
+        <div class="product-card">
+            <span class="badge">🔥 Bán Chạy Nhất</span>
+            <h2>Tài Khoản Netflix 4K Riêng Tư (Chính Hãng 1 Tháng)</h2>
             
-            <div class="section-title">CHỌN GÓI THỜI GIAN:</div>
-            <div class="packages">
-                <button class="pkg-btn selected" onclick="chonGoi(this, 45000, '1 Tháng')">1 Tháng<br><b>45k</b></button>
-                <button class="pkg-btn" onclick="chonGoi(this, 120000, '3 Tháng')">3 Tháng<br><b>120k</b></button>
-                <button class="pkg-btn" onclick="chonGoi(this, 220000, '6 Tháng')">6 Tháng<br><b>220k</b></button>
+            <div class="price-box">
+                <span class="price-big" id="priceDisplay">45.000 đ</span>
+                <span class="price-old">120.000 đ</span>
             </div>
-        </div>
+            
+            <div class="section-title">Chọn gói thời gian:</div>
+            <div class="packages">
+                <div class="pkg-btn selected" onclick="chonGoi(this, 45000, '1 Tháng')">
+                    <div class="time">1 Tháng</div>
+                    <div class="cost">45k</div>
+                </div>
+                <div class="pkg-btn" onclick="chonGoi(this, 120000, '3 Tháng')">
+                    <div class="time">3 Tháng</div>
+                    <div class="cost">120k</div>
+                </div>
+                <div class="pkg-btn" onclick="chonGoi(this, 220000, '6 Tháng')">
+                    <div class="time">6 Tháng</div>
+                    <div class="cost">220k</div>
+                </div>
+            </div>
 
-        <div class="info-box">
-            <div class="section-title" style="color: #38bdf8; margin-bottom: 5px;">📜 HƯỚNG DẪN & CHÍNH SÁCH:</div>
-            <ul>
-                <li><b>Bảo hành:</b> 1 đổi 1 trong suốt thời gian sử dụng nếu lỗi tài khoản.</li>
-                <li><b>Cách nhận hàng:</b> Sau khi thanh toán quét mã QR thành công, hệ thống tự động hiện Tài khoản + Mật khẩu ngay trên màn hình.</li>
-                <li><b>Lưu ý:</b> Không được đổi mật khẩu hoặc thay đổi thông tin profile cá nhân chung.</li>
-            </ul>
-        </div>
+            <div class="info-box">
+                <div class="section-title" style="color: #38bdf8; margin-bottom: 6px;">Chính sách & Hướng dẫn:</div>
+                <ul>
+                    <li>Bảo hành <strong>1 đổi 1</strong> suốt thời gian sử dụng.</li>
+                    <li>Thanh toán xong <strong>nhận tài khoản ngay</strong> trên màn hình.</li>
+                    <li>Hỗ trợ xử lý lỗi tự động 24/7 qua hệ thống.</li>
+                </ul>
+            </div>
 
-        <button class="checkout-btn" onclick="thanhToanNgay()">THANH TOÁN NGAY (TỰ ĐỘNG)</button>
+            <button class="checkout-btn" onclick="thanhToan()">THANH TOÁN NGAY (TỰ ĐỘNG)</button>
+        </div>
     </div>
 
     <script>
         let giaHienTai = 45000;
         let goiHienTai = '1 Tháng';
 
-        function chonGoi(btn, gia, tenGoi) {
-            // Bỏ chọn tất cả nút cũ
-            let buttons = document.querySelectorAll('.pkg-btn');
-            buttons.forEach(b => b.classList.remove('selected'));
-            
-            // Chọn nút mới
-            btn.classList.add('selected');
+        function chonGoi(el, gia, tenGoi) {
+            document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
             giaHienTai = gia;
             goiHienTai = tenGoi;
-            
-            // Cập nhật giá hiển thị
             document.getElementById('priceDisplay').innerText = gia.toLocaleString() + ' đ';
         }
 
-        function thanhToanNgay() {
-            alert("Mày đã chọn gói: Netflix " + goiHienTai + " - Giá: " + giaHienTai.toLocaleString() + "đ\n-> Chuyển sang bước tạo mã QR VietQR để thanh toán tự động!");
+        function thanhToan() {
+            alert("Đã chọn gói: Netflix " + goiHienTai + " (" + giaHienTai.toLocaleString() + "đ)\n-> Mở mã QR VietQR nhận hàng tự động!");
         }
     </script>
 
