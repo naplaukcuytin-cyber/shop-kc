@@ -1,402 +1,377 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <!-- Service Worker -->
-    <!-- <meta name="sw-valid" content="1" />
-        <script>
-            if ('serviceWorker' in navigator) {
-                const params = new URLSearchParams(window.location.search);
-                const serviceWorkerDebug = 'serviceWorkerDebug';
-                const isDebug = params.has(serviceWorkerDebug);
-                window.addEventListener('load', () =>
-                    navigator.serviceWorker
-                        .register(
-                            window.location.pathname +
-                                'sw.js' +
-                                (isDebug ? '?v=' + params.get(serviceWorkerDebug) : ''),
-                            { scope: window.location.pathname },
-                        )
-                        .then((registration) => console.log('Service Worker: success registered', registration.scope))
-                        .catch((error) => console.error('Service Worker: fail registered', error)),
-                );
-                navigator.serviceWorker.addEventListener('message', (event) => {
-                    if (event.data.type === 'REDIRECT_TO_BACKUP') {
-                        window.location.href = event.data.url; // redirect to new domain
-                    }
-                });
-            }
-        </script> -->
-    <title>
-      SUNWIN | Chơi Game Bài Đổi Thưởng Online Bản Web
-    </title>
-    <meta name="keywords" content="Sunwin, Web Sunwin, Game bài đổi thưởng" />
-    <meta name="description" content="Sunwin trang chơi game bài đổi thưởng Sunwin phiên bản web chơi game: Tài Xỉu, Xóc Đĩa, Săn Cá, Keno, Bầu Cua, Lô Đề, Thể Thao,… Đăng ký nhận quà khủng." />
-    <link rel="apple-touch-icon" sizes="180x180" href="fav_icons/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="fav_icons/icon-48x48.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="fav_icons/icon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="fav_icons/icon-16x16.png" />
-    <link rel="manifest" href="fav_icons/site.webmanifest" />
-    <!--http://www.html5rocks.com/en/mobile/mobifying/-->
-    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1, viewport-fit=cover" />
-    <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-    <meta name="theme-color" content="#270701" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="format-detection" content="telephone=no" />
-    <!-- force webkit on 360 -->
-    <meta name="renderer" content="webkit" />
-    <meta name="force-rendering" content="webkit" />
-    <!-- force edge on IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <!-- force full screen on some browser -->
-    <meta name="full-screen" content="yes" />
-    <meta name="x5-fullscreen" content="true" />
-    <meta name="360-fullscreen" content="true" />
-    <!-- force screen orientation on some browser -->
-    <meta name="screen-orientation" content="landscape" />
-    <meta name="x5-orientation" content="landscape" />
-    <!--fix fireball/issues/3568 -->
-    <!--<meta name="browsermode" content="application">-->
-    <meta name="x5-page-mode" content="app" />
-    <!--<link rel="apple-touch-icon" href=".png" />-->
-    <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
-    <link rel="stylesheet" type="text/css" href="style.e598y.css" />
-    <link rel="canonical" href="https://web-sunwin.hk/" />
-    <style type="text/css">
-      body {
-                color: #270701;
-                background-color: #270701;
-            }
+from PIL import Image
+import pyautogui as pg
+import pyautogui
+import time
+import os
 
-            #spinner {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                margin-top: -15px;
-                -webkit-transform: translateY(-50%) translateX(-50%);
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                background: linear-gradient(#fffcc7, #fffcc7, #fffcc7);
-            }
+TAI_X = 585
+TAI_Y = 679
+XIU_X = 1078
+XIU_Y = 686
+MOT_NGHIN_X = 477
+MOT_NGHIN_Y = 850
+SUBMIT_X = 802
+SUBMIT_Y = 931
+KQUA_X = 1063
+KQUA_Y = 770
 
-            @keyframes fade {
-                0%,
-                100% {
-                    opacity: 0.5;
-                }
+TIENCUOC_1 = 4
+TIENCUOC_1 = 6
+TIENCUOC_1 = 12
+TIENCUOC_1 = 24
 
-                70% {
-                    opacity: 1;
-                }
-            }
 
-            .bar {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                -webkit-transform: translateY(-50%) translateX(-50%);
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                background: linear-gradient(#fffcc7, #fffcc7, #fffcc7);
-            }
+def TAI(money):
+    pyautogui.click(TAI_X, TAI_Y)
+    for i in range(money):
+        pyautogui.click(MOT_NGHIN_X, MOT_NGHIN_Y)
+    pyautogui.click(SUBMIT_X, SUBMIT_Y)
+    pyautogui.click(SUBMIT_X, SUBMIT_Y)
 
-            .bar:nth-child(1) {
-                filter: blur(10px);
-                animation: fade 1.5s linear infinite;
-            }
 
-            .bar:nth-child(2) {
-                filter: blur(15px);
-                animation: fade 1.5s linear infinite;
-            }
+def XIU(money):
+    pyautogui.click(XIU_X, XIU_Y)
+    for i in range(money):
+        pyautogui.click(MOT_NGHIN_X, MOT_NGHIN_Y)
+    pyautogui.click(SUBMIT_X, SUBMIT_Y)
+    pyautogui.click(SUBMIT_X, SUBMIT_Y)
 
-            .bar:nth-child(3) {
-                filter: blur(25px);
-                animation: fade 1.5s linear infinite;
-            }
 
-            .bar:nth-child(4) {
-                filter: blur(45px);
-                animation: fade 1.5s linear infinite;
-            }
+def FIND_TAI_XIU_SUBMIT_POSITION():
+    while True:
+        time.sleep(5)
+        ps = pg.position()
+        print(ps)
 
-            .logo {
-                position: absolute;
-                width: 200px;
-                height: 200px;
-                margin-top: -11px;
-                margin-left: -49px;
-            }
 
-            .logo2 {
-                position: absolute;
-                width: 200px;
-                height: 200px;
-                margin-top: -11px;
-                margin-left: -49px;
-            }
+def FIND_RGB_COLOR():
+    while True:
+        myScreenshot = pyautogui.screenshot()
+        myScreenshot.save(r'E:\Tool\Tai-Xiu\Tai-Xiu.png')
 
-            .bgColor {
-                background-color: #270701;
-                width: 110vmax;
-                height: 110vmax;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                z-index: -100;
-                transform: translate(-50%, -50%);
-            }
+        def rgb_of_pixel(img_path, x, y):
+            im = Image.open(img_path).convert('RGB')
+            r, g, b = im.getpixel((x, y))
+            a = (r, g, b)
+            return a
 
-            #additionalContent {
-                color: #ffe49e;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                margin-top: 87px;
-                width: 1000px;
-            }
+        img = "Tai-Xiu.png"
 
-            #additionalContent2 {
-                color: #ffe49e;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                margin-top: 112px;
-                width: 1000px;
-            }
+        print(rgb_of_pixel(img, KQUA_X, KQUA_Y))
+        time.sleep(5)
+        file_path = './Tai-Xiu.png'
+        os.remove(file_path)
 
-            #sunwin-link {
-                color: inherit;
-            }
 
-            @media (min-width: 1200px) {
-                #additionalContent p {
-                    font-size: 15px;
-                }
+def START():
 
-                #additionalContent2 p {
-                    font-size: 15px;
-                }
-            }
+    Time = 0
+    Round = 0
+    dem = 0
+    dem_1_1 = 0
+    dem_1_2 = 0
+    dem_2_2 = 0
+    dem_3_3 = 0
+    dem_4_4 = 0
 
-            @media (max-width: 500px) {
-                #additionalContent p {
-                    font-size: 11px;
-                }
+    check = -1
+    check1 = -1
+    check2 = -1
+    check3 = -1
+    check4 = -1
 
-                #additionalContent2 p {
-                    font-size: 8px;
-                }
-            }
+    pick0_4 = -1
+    pick0_6 = -1
+    pick0_12 = -1
+    pick0_24 = -1
+    pick1_4 = -1
+    pick1_6 = -1
+    pick1_12 = -1
+    pick1_24 = -1
+    pick = 0
 
-            #GameDiv,
-            #Cocos3dGameContainer,
-            #GameCanvas {
-                width: 100.2%;
-                height: 100%;
-                margin-left: -0.1%;
-                color: #270701;
-                background-color: #270701;
-            }
-            
-            .grecaptcha-badge {
-                visibility: hidden !important;
-            }
-    </style>
-  </head>
-  <body scroll="no" style="overflow: hidden">
-    <div id="qrcode" style="width: 0px; height: 0px">
-    </div>
-    <div id="splash" style="display: none">
-    </div>
-    <div id="splashGamePortrait" style="display: none">
-    </div>
-    <div id="loadingIcon" class="rotating" style="display: none">
-    </div>
-    <div id="GameDiv">
-      <div id="Cocos3dGameContainer">
-        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0">
-        </canvas>
-      </div>
-    </div>
-    <div id="spinner">
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="logo">
-        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 200" style="enable-background: new 0 0 200 200" space="preserve" fill="#9a8253">
-          <g>
-            <path d="M97.5,13.5c-1,2.4,1.5,10.5,5.4,16.8c3.9,6.3,6.7,14.4,0.7,21.8c0.9-2.1,2.1-9.4-4.9-18C91,24.3,96.3,14.8,97.5,13.5z">
-            </path>
-            <path d="M81.4,17.4c-0.1,2.6,4.9,9.4,10.7,14s11.2,11.2,8,20.2c0.1-2.3-1.2-9.5-10.8-15.3C78.8,29.9,80.6,19.1,81.4,17.4z">
-            </path>
-            <path d="M67.1,26.9C68,29.3,74.9,34,82,36.3C89,38.7,96.3,43,96.4,52.5c-0.7-2.2-4.4-8.5-15.3-10.7C68.9,39.4,67,28.6,67.1,26.9z
-                    ">
-            </path>
-            <path d="M57.5,40.1c1.6,2.1,9.9,4,17.3,3.9c7.4-0.2,15.8,1.3,19.1,10.3c-1.3-1.8-7.1-6.4-18.1-4.7C63.5,51.3,58,41.8,57.5,40.1z">
-            </path>
-            <path d="M52.9,56c2.2,1.3,10.6,0.5,17.5-2.3c6.9-2.7,15.3-4.1,21.5,3.2c-1.9-1.2-8.8-3.6-18.6,1.7C62.4,64.4,54,57.4,52.9,56z">
-            </path>
-            <path d="M53.7,71.6c2.6,0.6,10.2-2.9,15.8-7.7c5.7-4.7,13.3-8.8,21.4-3.9c-2.2-0.6-9.5-0.7-17.1,7.5
-                    C65.4,76.6,55.2,72.6,53.7,71.6z">
-            </path>
-            <path d="M60.4,87.2c2.6-0.4,8.4-6.4,12-12.9c3.6-6.4,9.1-12.9,18.6-11.3c-2.3,0.2-9.1,2.8-13.3,13.1
-                    C73.1,87.7,62.1,87.5,60.4,87.2z">
-            </path>
-            <path d="M71.7,99c2.3-1.2,5.6-9,6.7-16.3c1.1-7.3,4-15.3,13.4-17.1c-2.1,1.1-7.5,5.8-7.8,17C83.8,95,73.6,98.7,71.7,99z">
-            </path>
-            <path d="M85.9,106.9c1.7-1.9,2.6-10.3,1.2-17.6C85.7,82,86,73.4,94.4,68.8c-1.6,1.6-5.4,7.9-1.9,18.6
-                    C95.9,99.2,87.4,106,85.9,106.9z">
-            </path>
-            <path d="M103.2,109.2c1-2.4-1.5-10.5-5.5-16.8c-4-6.3-6.8-14.2-0.9-21.8c-0.9,2.1-2.1,9.4,5.1,18
-                    C109.8,98.3,104.5,107.9,103.2,109.2z">
-            </path>
-            <path d="M119.3,105.4c0-2.6-5-9.4-10.8-13.9s-11.3-11.1-8.3-20.1c-0.1,2.3,1.3,9.5,10.9,15.2C121.7,92.9,120,103.7,119.3,105.4z">
-            </path>
-            <path d="M133.4,96.2c-0.9-2.4-7.9-7.1-15-9.4c-7.1-2.3-14.5-6.6-14.6-16.1c0.7,2.2,4.5,8.4,15.4,10.5
-                    C131.3,83.7,133.4,94.5,133.4,96.2z">
-            </path>
-            <path d="M143.7,82.2c-1.7-1.9-9.9-3.8-17.3-3.4c-7.4,0.4-15.8-1-19.3-9.9c1.5,1.8,7.2,6.3,18.2,4.4
-                    C137.4,71.2,143.1,80.6,143.7,82.2z">
-            </path>
-            <path d="M148.6,65.5c-2.2-1.3-10.6-0.1-17.4,2.7c-6.8,2.9-15.2,4.5-21.5-2.6c1.9,1.2,8.9,3.5,18.6-2.2
-                    C139,57.4,147.5,64.2,148.6,65.5z">
-            </path>
-            <path d="M147.8,50.3c-2.6-0.6-10.2,2.9-15.9,7.5c-5.7,4.7-13.3,8.6-21.4,3.6c2.2,0.6,9.5,0.7,17.1-7.4
-                    C136.2,45.2,146.3,49.2,147.8,50.3z">
-            </path>
-            <path d="M141.4,35.1c-2.6,0.2-8.6,6.2-12.4,12.5c-3.8,6.4-9.5,12.6-18.9,10.8c2.3-0.2,9.2-2.6,13.6-12.8
-                    C128.8,34.3,139.7,34.6,141.4,35.1z">
-            </path>
-            <path d="M128.5,22.5c-2.2,1.2-5.5,9-6.4,16.4s-3.8,15.3-13.1,17.3c2.1-1.1,7.5-6,7.5-17.1C116.5,26.6,126.7,22.7,128.5,22.5z">
-            </path>
-            <path d="M115.3,15.5c-1.8,1.8-2.6,10.3-1.3,17.6s1,15.8-7.4,20.4c1.6-1.6,5.4-7.9,2.1-18.6C105.1,23.1,113.7,16.3,115.3,15.5z">
-            </path>
-          </g>
-        </svg>
-      </div>
-      <div class="bgColor">
-      </div>
-      <div id="additionalContent">
-        <p>
-          <strong>          <a href="https://web-sunwin.hk/" id="sunwin-link" target="_blank">          SUN.WIN
-</a>
-</strong>
-          là thương hiệu nổi tiếng nhất nên thường xuyên bị giả mạo.
-        </p>
-      </div>
-      <div id="additionalContent2">
-        <p>
-          Quý khách lưu ý: chỉ tải và chơi game trực tiếp tại
-          <strong>          <a href="https://web-sunwin.hk/" id="sunwin-link" target="_blank">          SUNWIN.HK
-</a>
-</strong>
-          để trải nghiệm Game Bài chính hãng
-        </p>
-      </div>
-    </div>
-    <div id="mask">
-      <!-- <h1 id="tip">Vui lòng vuốt lên để thấy toàn màn hình</h1>-->
-      <div id="image">
-      </div>
-    </div>
-    <div id="handImage">
-    </div>
-    <div id="div_full_screen" style="width: 100%; height: 100%; visibility: hidden">
-      <div id="enterFullscreen" class="enterFullScreen_Portrait">
-      </div>
-      <div id="exitFullscreen" class="exitFullScreen_Portrait">
-      </div>
-    </div>
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAADYNpwCeJMqIN2Xw">
-    </div>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async="" defer="">
-    </script>
-    <script src="/umd.js?v=1786559740533">
-    </script>
-    <script>
-      // Vô hiệu hóa tất cả sự kiện touch trên body
-            document.getElementById(&#39;spinner&#39;).addEventListener(
-                &#39;touchstart&#39;,
-                function (event) {
-                    event.preventDefault();
-                },
-                { passive: false },
-            );
+    while True:
+        TIEN_CUOC = 0
+        myScreenshot = pyautogui.screenshot()
+        myScreenshot.save(r'E:\Tool\Tai-Xiu\Tai-Xiu.png')
 
-            // Vô hiệu hóa sự kiện chuột
-            document.getElementById(&#39;spinner&#39;).addEventListener(&#39;mousedown&#39;, function (event) {
-                event.preventDefault();
-            });
+        def rgb_of_pixel(img_path, x, y):
+            im = Image.open(img_path).convert('RGB')
+            r, g, b = im.getpixel((x, y))
+            a = (r, g, b)
+            return a
 
-            // Vô hiệu hóa sự kiện cuộn (scroll)
-            document.getElementById(&#39;spinner&#39;).addEventListener(&#39;wheel&#39;, function (event) {
-                event.preventDefault();
-            });
+        img = "Tai-Xiu.png"
+        # 4 cầu gần nhất
+        check3 = check2
+        check2 = check1
+        check1 = check
+        if rgb_of_pixel(img, KQUA_X, KQUA_Y)[0] == 206 and rgb_of_pixel(img, KQUA_X, KQUA_Y)[1] == 255 and rgb_of_pixel(img, KQUA_X, KQUA_Y)[2] == 255:
+            dem = dem+1
+            if check == 1:
+                dem = 1
+                dem_1_1 = dem_1_1+1
+            else:
+                dem_1_1 = 0
 
-            // Cũng có thể sử dụng một số event khác nếu cần
-            // document.body.addEventListener(&#39;touchmove&#39;, function(event) {
-            //   event.preventDefault();
-            // });
-    </script>
-    <!-- Polyfills bundle. -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-polyfills/0.1.42/polyfill.min.js" charset="utf-8">
-    </script>
-    <script src="./lib/common360-v1-251610-1334.js" charset="utf-8">
-    </script>
-    <script src="./lib/howler.min.js" charset="utf-8">
-    </script>
-    <!-- Polyfills bundle. -->
-    <script src="src/polyfills.bundle.5adbf.js" charset="utf-8">
-    </script>
-    <!-- SystemJS support. -->
-    <script src="src/system.bundle.692e9.js" charset="utf-8">
-    </script>
-    <!-- Import map -->
-    <script src="src/import-map.e34b5.json" type="systemjs-importmap" charset="utf-8">
-    </script>
-    <script>
-      var minWithdraw = 0x30d40;
-            var sportPlaceBet = null;
-            var maints = null;
-            var browerToken = null;
-            var gameId = null;
-            const loadMaint = () =&gt; {
-                const jsonFilePath = &#39;./config/maint.json?v=&#39; + Date.now();
-                fetch(jsonFilePath)
-                    .then((response) =&gt; response.json())
-                    .then((data) =&gt; {
-                        maints = data;
-                    })
-                    .catch((error) =&gt; {
-                        console.error(&#39;Error fetching the JSON file:&#39;, error);
-                    });
-            };
-            setInterval(loadMaint, 60000);
-            loadMaint();
-            const fpPromise = new Promise((resolve, reject) =&gt; {
-                window.resolveFpPromise = resolve;
-                window.rejectFpPromise = reject;
-                setTimeout(() =&gt; {
-                    reject(new Error(&#39;Không thể tải dữ liệu&#39;));
-                }, 40000);
-            }).catch((error) =&gt; {
-                window.location.reload();
-            });
-            System.import(&#39;./index.a1740.js&#39;).catch(function (err) {
-                console.error(err);
-            });
-    </script>
-  </body>
-</html>
+            if dem == 1 and dem_1_1 == 1:
+                dem_2_2 = dem_2_2
+            elif dem == 2 and check == 0:
+                dem_2_2 = dem_2_2 + 1
+            else:
+                dem_2_2 = 0
+
+            check = 0
+        else:
+            dem = dem+1
+            if check == 0:
+                dem = 1
+                dem_1_1 = dem_1_1+1
+            else:
+                dem_1_1 = 0
+
+            if dem == 1 and dem_1_1 == 1:
+                dem_2_2 = dem_2_2
+            elif dem == 2 and check == 1:
+                dem_2_2 = dem_2_2 + 1
+            else:
+                dem_2_2 = 0
+            check = 1
+
+        # Đếm cầu 1-2
+        if dem_1_1 == 1 and dem_2_2 == 1:
+            dem_1_2 = dem_1_2+1
+        if dem_1_1 >= 3 or dem_2_2 >= 2 or dem >= 3:
+            dem_1_2 = 0
+
+        # Đếm cầu 3-3
+        if dem == 3:
+            dem_3_3 = dem_3_3+1
+        if dem_2_2 >= 2 or dem_1_1 >= 2 or dem >= 4:
+            dem_3_3 = 0
+        if dem_2_2 == 1 and dem_1_1 == 1:
+            dem_3_3 = 0
+
+        if check == 0:
+            if pick0_4 == 0 or pick0_6 == 0 or pick0_12 == 0 or pick0_24 == 0:
+                pick0_4 = -1
+                pick0_6 = -1
+                pick0_12 = -1
+                pick0_24 = -1
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~ HÚP TRỌN ~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        else:
+            if pick1_6 == 0 or pick1_6 == 0 or pick1_12 == 0 or pick1_24 == 0:
+                pick1_4 = -1
+                pick1_6 = -1
+                pick1_12 = -1
+                pick1_24 = -1
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~ HÚP TRỌN ~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+        Round = Round + 1
+        print(Round)
+        file = open("./Data.txt", "w", encoding="utf-8")
+        file.write("--------------Round")
+        file.write("\n")
+        # file.write("Đếm 1-1:", dem_1_1)
+        # file.write("\n")
+        # file.write("Đếm 2-2:", dem_2_2)
+        # file.write("\n")
+        file.write("Đếm Bệt:")
+        # file.write(dem)
+        file.write("\n")
+
+        print('Đếm 1-1:', dem_1_1)
+        print('Đếm 1-2:', dem_1_2)
+        print('Đếm 2-2:', dem_2_2)
+        print('Đếm 3-3:', dem_3_3)
+        # print('Đếm 4-4:', dem_4_4)
+        print('Đếm Bệt:', dem)
+        if check == 0:
+            print('Kết quả:', 'Tài')
+            file.write("Kết quả:")
+            file.write("TÀI")
+        else:
+            print('Kết quả:', 'Xỉu')
+            file.write("Kết quả:")
+            file.write("XỈU")
+        print("-------------------------------------------------------------------------------")
+        if dem_1_1 == 10:
+            dem = 6
+        if dem_1_2 == 5:
+            dem_1_2 = 4
+        if(dem == 11):
+            dem = 7
+        if dem_2_2 == 7:
+            dem_2_2 = 5
+        if dem_3_3 == 4:
+            dem_3_3 = 3
+        if(dem >= 7):
+            if dem == 7:
+                TIEN_CUOC = 4
+            elif dem == 8:
+                TIEN_CUOC = 6
+            elif dem == 9:
+                TIEN_CUOC = 12
+            elif dem == 10:
+                TIEN_CUOC = 24
+            if check == 1:
+                TAI(TIEN_CUOC)
+                print('Đã chọn TÀI', TIEN_CUOC, 'k')
+                if dem == 7:
+                    pick0_4 = pick0_4+1
+                if dem == 8:
+                    pick0_6 = pick0_6+1
+                if dem == 9:
+                    pick0_12 = pick0_12+1
+                if dem == 10:
+                    pick0_24 = pick0_24+1
+            else:
+                XIU(TIEN_CUOC)
+                print('Đã chọn XỈU', TIEN_CUOC, 'k')
+                if dem == 7:
+                    pick1_4 = pick1_4+1
+                if dem == 8:
+                    pick1_6 = pick1_6+1
+                if dem == 9:
+                    pick1_12 = pick1_12+1
+                if dem == 10:
+                    pick1_24 = pick1_24+1
+        else:
+            if dem_1_1 == 6:
+                if check == 0:
+                    pick0_4 = pick0_4+1
+                    TAI(4)
+                    print('Đã chọn TÀI', 4, 'k')
+                else:
+                    pick1_4 = pick1_4+1
+                    XIU(4)
+                    print('Đã chọn XỈU', 4, 'k')
+            elif dem_1_1 == 7:
+                if check == 0:
+                    pick0_6 = pick0_6+1
+                    TAI(6)
+                    print('Đã chọn TÀI', 6, 'k')
+                else:
+                    pick1_6 = pick1_6+1
+                    XIU(6)
+                    print('Đã chọn XỈU', 6, 'k')
+            elif dem_1_1 == 8:
+                if check == 0:
+                    pick0_12 = pick0_12+1
+                    TAI(12)
+                    print('Đã chọn TÀI', 12, 'k')
+                else:
+                    pick1_12 = pick1_12+1
+                    XIU(12)
+                    print('Đã chọn XỈU', 12, 'k')
+            elif dem_1_1 == 9:
+                if check == 0:
+                    pick0_24 = pick0_24+1
+                    TAI(24)
+                    print('Đã chọn TÀI', 24, 'k')
+                else:
+                    pick1_24 = pick1_24+1
+                    XIU(24)
+                    print('Đã chọn XỈU', 24, 'k')
+            else:
+                if dem_2_2 == 5:
+                    if check == 0 and dem_1_1 == 0:
+                        pick0_4 = pick0_4+1
+                        TAI(4)
+                        print('Đã chọn TÀI', 4, 'k')
+                    elif check == 1 and dem_1_1 == 0:
+                        pick1_4 = pick1_4+1
+                        XIU(4)
+                        print('Đã chọn XỈU', 4, 'k')
+                    elif check == 0 and dem_1_1 == 1:
+                        pick1_6 = pick1_6+1
+                        XIU(6)
+                        print('Đã chọn XỈU', 6, 'k')
+                    elif check == 1 and dem_1_1 == 1:
+                        pick0_6 = pick0_6+1
+                        TAI(6)
+                        print('Đã chọn TÀI', 6, 'k')
+                elif dem_2_2 == 6:
+                    if check == 0 and dem_1_1 == 0:
+                        pick0_12 = pick0_12+1
+                        TAI(12)
+                        print('Đã chọn TÀI', 12, 'k')
+                    elif check == 1 and dem_1_1 == 0:
+                        pick0_12 = pick0_12+1
+                        XIU(12)
+                        print('Đã chọn XỈU', 12, 'k')
+                    elif check == 0 and dem_1_1 == 1:
+                        pick1_24 = pick1_24+1
+                        XIU(24)
+                        print('Đã chọn XỈU', 24, 'k')
+                    elif check == 1 and dem_1_1 == 1:
+                        pick0_24 = pick0_24+1
+                        TAI(24)
+                        print('Đã chọn TÀI', 24, 'k')
+                else:
+                    if dem_1_2 == 4:
+                        if dem_2_2 == 1 and dem == 2:
+                            if check == 0:
+                                pick1_4 = pick1_4+1
+                                XIU(4)
+                                print('Đã chọn XỈU', 4, 'k')
+                            else:
+                                pick0_4 = pick0_4+1
+                                TAI(4)
+                                print('Đã chọn TÀI', 4, 'k')
+                        elif dem_1_1 == 1 and dem_2_2 == 1:
+                            if check == 0:
+                                pick0_6 = pick0_6+1
+                                TAI(6)
+                                print('Đã chọn TÀI', 6, 'k')
+                            else:
+                                pick1_6 = pick1_6+1
+                                XIU(6)
+                                print('Đã chọn XỈU', 6, 'k')
+                        elif dem_1_1 == 2:
+                            if check == 0:
+                                pick1_12 = pick1_12+1
+                                XIU(12)
+                                print('Đã chọn XỈU', 12, 'k')
+                            else:
+                                pick0_12 = pick0_12+1
+                                TAI(12)
+                                print('Đã chọn TÀI', 12, 'k')
+                    else:
+                        if dem_3_3 == 3:
+                            if dem_1_1 == 0:
+                                if check == 0:
+                                    pick0_4 = pick0_4+1
+                                    TAI(4)
+                                    print('Đã chọn TÀI', 4, 'k')
+                                else:
+                                    pick1_4 = pick1_4+1
+                                    XIU(4)
+                                    print('Đã chọn XỈU', 4, 'k')
+                            elif dem_1_1 == 1:
+                                if check == 0:
+                                    pick1_6 = pick1_6+1
+                                    XIU(6)
+                                    print('Đã chọn XỈU', 6, 'k')
+                                else:
+                                    pick0_6 = pick0_6+1
+                                    TAI(6)
+                                    print('Đã chọn TÀI', 6, 'k')
+                            elif dem == 2:
+                                if check == 0:
+                                    pick1_12 = pick1_12+1
+                                    XIU(12)
+                                    print('Đã chọn XỈU', 12, 'k')
+                                else:
+                                    pick0_12 = pick0_12+1
+                                    TAI(12)
+                                    print('Đã chọn TÀI', 12, 'k')
+
+        time.sleep(68.6)
+        file_path = './Tai-Xiu.png'
+        os.remove(file_path)
+
+
+# FIND_RGB_COLOR()
+# FIND_TAI_XIU_SUBMIT_POSITION()
+START()
