@@ -1,1 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Quản Lý Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
+        h2 { color: #333; }
+        button { padding: 10px 15px; background: #0084ff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #0084ff; color: white; }
+        .btn-duyet { background: #2e7d32; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
 
+    <h2>🔥 TRANG DUYỆT ĐƠN NẠP CỦA ADMIN</h2>
+    <button onclick="taiDanhSach()">🔄 Tải Lại Danh Sách Đơn</button>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Khách Hàng</th>
+                <th>Gói Nạp</th>
+                <th>ID Game</th>
+                <th>Số Tiền</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody id="bangChuaDuyet">
+            <tr><td colspan="5" style="text-align: center;">Bấm nút "Tải Lại Danh Sách Đơn" để xem đơn mới!</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        const SHEETDB_URL = "https://sheetdb.io/api/v1/ukuqfpsb9yvzi";
+
+        function taiDanhSach() {
+            fetch(SHEETDB_URL)
+                .then(res => res.json())
+                .then(orders => {
+                    const tbody = document.getElementById('bangChuaDuyet');
+                    tbody.innerHTML = '';
+
+                    const dsChuaDuyet = orders.filter(o => o.status === "pending");
+
+                    if(dsChuaDuyet.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666;">Không có đơn nào đang chờ!</td></tr>`;
+                        return;
+                    }
+
+                    dsChuaDuyet.forEach(o => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><b>${o.user}</b></td>
+                                <td>${o.package}</td>
+                                <td style="color: red; font-weight: bold;">${o.uid}</td>
+                                <td style="color: green; font-weight: bold;">${Number(o.price).toLocaleString()}đ</td>
+                                <td>
+                                    <button class="btn-duyet" onclick="duyetDon('${o.id}')">Duyệt Xong</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => alert("Lỗi tải dữ liệu: " + err));
+        }
+
+        function duyetDon(idDon) {
+            if(!confirm("Xác nhận đã nạp tiền cho khách này?")) return;
+
+            fetch(`${SHEETDB_URL}/id/${idDon}`, {
+                method: 'PATCH',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: { status: "approved" } })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Đã duyệt thành công!");
+                taiDanhSach();
+            })
+            .catch(err => alert("Lỗi duyệt đơn: " + err));
+        }
+    </script>
+</body>
+</html>
