@@ -860,22 +860,26 @@
       showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ  kiểm tra.');
       closeModal('depositModal');
     }
-// Đoạn code tự động đẩy đơn sang Google Sheets để Admin thấy
+const orderData = {
+        id: Date.now(),
+        user: currentUser || "Khách",
+        package: "Nạp Chuyển Khoản", 
+        price: val,
+        uid: currentGeneratedMemo || "Không có",
+        time: new Date().toLocaleString(),
+        status: "pending"
+    };
+
     fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            data: {
-                id: Date.now(),
-                user: currentUser || "Khách",
-                package: "Nạp Chuyển Khoản", 
-                price: val, // Nó sẽ tự lấy đúng số tiền val mà khách vừa nhập
-                uid: currentGeneratedMemo || "Không có",
-                time: new Date().toLocaleString(),
-                status: "pending"
-            }
-        })
-    });
+        body: JSON.stringify(orderData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Đã đẩy đơn thành công:", data);
+    })
+    .catch(err => console.log("Lỗi:", err));
     function submitCard(typeStr) {
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
       const seri = document.getElementById('cardSeri').value.trim();
