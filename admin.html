@@ -2,36 +2,48 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Trang Quản Lý Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đơn Nạp - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
-        h2 { color: #333; }
-        button { padding: 10px 15px; background: #0084ff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background: #0084ff; color: white; }
-        .btn-duyet { background: #2e7d32; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: #0f172a; color: #f8fafc; padding: 30px; }
+        .container { max-width: 900px; margin: 0 auto; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h2 { margin-bottom: 20px; font-size: 22px; color: #38bdf8; display: flex; align-items: center; gap: 10px; }
+        .btn-reload { background: #3b82f6; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; margin-bottom: 20px; }
+        .btn-reload:hover { background: #2563eb; }
+        table { width: 100%; border-collapse: collapse; background: #0f172a; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #1e293b; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { font-size: 14px; }
+        .badge-uid { color: #f43f5e; font-weight: 700; }
+        .badge-price { color: #10b981; font-weight: 700; }
+        .btn-duyet { background: #10b981; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-duyet:hover { background: #059669; }
+        .empty-row { text-align: center; color: #64748b; padding: 30px; }
     </style>
 </head>
 <body>
 
-    <h2>🔥 TRANG DUYỆT ĐƠN NẠP CỦA ADMIN</h2>
-    <button onclick="taiDanhSach()">🔄 Tải Lại Danh Sách Đơn</button>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Khách Hàng</th>
-                <th>Gói Nạp</th>
-                <th>ID Game</th>
-                <th>Số Tiền</th>
-                <th>Thao Tác</th>
-            </tr>
-        </thead>
-        <tbody id="bangChuaDuyet">
-            <tr><td colspan="5" style="text-align: center;">Bấm nút "Tải Lại Danh Sách Đơn" để xem đơn mới!</td></tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <h2>⚡ HỆ THỐNG QUẢN LÝ ĐƠN NẠP</h2>
+        <button class="btn-reload" onclick="taiDanhSach()">🔄 Tải Lại Danh Sách Đơn</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Khách Hàng</th>
+                    <th>Gói Nạp</th>
+                    <th>Nội dung/ID</th>
+                    <th>Số Tiền</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="bangChuaDuyet">
+                <tr><td colspan="5" class="empty-row">Bấm nút "Tải Lại Danh Sách Đơn" để kiểm tra đơn mới!</td></tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         const SHEETDB_URL = "https://sheetdb.io/api/v1/ukuqfpsb9yvzi";
@@ -46,7 +58,7 @@
                     const dsChuaDuyet = orders.filter(o => o.status === "pending");
 
                     if(dsChuaDuyet.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #666;">Không có đơn nào đang chờ!</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tuyệt vời! Không còn đơn nào đang chờ duyệt.</td></tr>`;
                         return;
                     }
 
@@ -55,8 +67,8 @@
                             <tr>
                                 <td><b>${o.user}</b></td>
                                 <td>${o.package}</td>
-                                <td style="color: red; font-weight: bold;">${o.uid}</td>
-                                <td style="color: green; font-weight: bold;">${Number(o.price).toLocaleString()}đ</td>
+                                <td class="badge-uid">${o.uid}</td>
+                                <td class="badge-price">${Number(o.price).toLocaleString()}đ</td>
                                 <td>
                                     <button class="btn-duyet" onclick="duyetDon('${o.id}')">Duyệt Xong</button>
                                 </td>
@@ -67,21 +79,8 @@
                 .catch(err => alert("Lỗi tải dữ liệu: " + err));
         }
 
-        function duyetDon(idDon) {
-            if(!confirm("Xác nhận đã nạp tiền cho khách này?")) return;
-
-            fetch(`${SHEETDB_URL}/id/${idDon}`, {
-                method: 'PATCH',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: { status: "approved" } })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert("Đã duyệt thành công!");
-                taiDanhSach();
-            })
-            .catch(err => alert("Lỗi duyệt đơn: " + err));
-        }
+        // Tự động tải luôn khi vừa mở trang admin
+        taiDanhSach();
     </script>
 </body>
 </html>
