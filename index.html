@@ -1031,43 +1031,6 @@
       }, 3000);
     }
 <script>
-window.onload = function() {
-  try {
-    syncAdminData();
-  } catch (e) {
-    console.error("syncAdminData:", e);
-  }
-
-  try {
-    const savedUser = localStorage.getItem('session_user_permanent');
-    if (savedUser) currentUser = savedUser;
-  } catch (e) {
-    console.error("session:", e);
-  }
-
-  try {
-    selectGame(null, 'Free Fire');
-  } catch (e) {
-    console.error("selectGame:", e);
-  }
-
-  try {
-    updateUI();
-  } catch (e) {
-    console.error("updateUI:", e);
-  }
-
-  try {
-    setInterval(function() {
-      if (typeof checkAdminApproval === 'function') {
-        checkAdminApproval();
-      }
-    }, 2000);
-  } catch (e) {
-    console.error("approval:", e);
-  }
-};
-</script>
 </body>
 </html>
 
