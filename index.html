@@ -1030,7 +1030,14 @@
         showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
       }, 3000);
     }
-<script>
+window.onload = function() {
+      syncAdminData();
+      const savedUser = localStorage.getItem('session_user_permanent');
+      if(savedUser) currentUser = savedUser;
+      renderPriceGrid();
+      updateUI();
+    };
+  </script>
 </body>
 </html>
 
