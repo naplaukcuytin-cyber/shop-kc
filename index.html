@@ -563,7 +563,7 @@
       </div>
 
       <div class="form-group">
-        <label>Tài khoản (4-20 ký tự)</label>
+        <label>Tài khoản (6-20 ký tự)</label>
         <input type="text" class="form-control" id="accInput" placeholder="Nhập tên tài khoản...">
       </div>
 
@@ -857,10 +857,25 @@
 
       notifyAdminViaEmail(`Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${val.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo}`);
 
-      showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ Admin kiểm tra.');
+      showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ  kiểm tra.');
       closeModal('depositModal');
     }
-
+// Đoạn code tự động đẩy đơn sang Google Sheets để Admin thấy
+    fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            data: {
+                id: Date.now(),
+                user: currentUser || "Khách",
+                package: "Nạp Chuyển Khoản", 
+                price: val, // Nó sẽ tự lấy đúng số tiền val mà khách vừa nhập
+                uid: currentGeneratedMemo || "Không có",
+                time: new Date().toLocaleString(),
+                status: "pending"
+            }
+        })
+    });
     function submitCard(typeStr) {
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
       const seri = document.getElementById('cardSeri').value.trim();
@@ -1004,7 +1019,7 @@
     }
 
     function confirmPurchase() {
-      const uid = document.getElementById('gameUID').value.trim();
+      const uid =  document.getElementById('gameUID').value.trim();
       if(!uid) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!'); return; }
       if(!selectedPriceObj) { showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!'); return; }
 
