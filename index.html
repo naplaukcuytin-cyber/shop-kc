@@ -862,10 +862,10 @@
     }
 const orderData = {
         id: Date.now(),
-        user: currentUser || "Khách",
+        user: typeof currentUser !== 'undefined' ? currentUser : "Khách",
         package: "Nạp Chuyển Khoản", 
         price: val,
-        uid: currentGeneratedMemo || "Không có",
+        uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
         time: new Date().toLocaleString(),
         status: "pending"
     };
@@ -873,7 +873,7 @@ const orderData = {
     fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify({ data: orderData }) // <--- DÒNG NÀY LÀ LINH HỒN ĐÂY NÀY
     })
     .then(res => res.json())
     .then(data => {
