@@ -1620,6 +1620,12 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
 
     }
 
+    function normalizeCustomerBalanceValue(raw) {
+      if(raw && typeof raw === 'object') raw = raw.balance ?? raw.amount ?? raw.money ?? raw.wallet ?? raw.value ?? 0;
+      const n = Number(raw);
+      return Number.isFinite(n) ? Math.max(0,n) : 0;
+    }
+
     function updateUI() {
 
       const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
@@ -1651,7 +1657,7 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
 
           balanceRef.on('value', snap => {
 
-            const balance = Number(snap.val()) || 0;
+            const balance = normalizeCustomerBalanceValue(snap.val());
 
             const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
 
@@ -2277,14 +2283,10 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
             err.currentBalance = initial;
             throw err;
           }
-
-          // Ghi trực tiếp số dư đã tính toán sau khi đọc lại Firebase. Bản cũ
-          // dùng transaction nhưng một số dữ liệu/node cũ khiến transaction
-          // nhận null/object và trả committed=false dù giao diện có số dư.
           const newBalance = initial - price;
           return balanceRef.set(newBalance).then(() =>
             balanceRef.once('value').then(snap => {
-              const verified = normalizeBalance(snap.val());
+              const verified = normalizeCustomerBalanceValue(snap.val());
               if(verified !== newBalance) {
                 const err = new Error('BALANCE_VERIFY_FAILED');
                 err.currentBalance = verified;
