@@ -5,19 +5,80 @@
 
 .verified-ok{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#1683ff;color:#fff;font-size:13px;box-shadow:0 0 0 0 rgba(22,131,255,.45);animation:verifiedPulse 1.7s ease-out infinite}
 @keyframes verifiedPulse{0%{box-shadow:0 0 0 0 rgba(22,131,255,.45);transform:scale(.95)}70%{box-shadow:0 0 0 9px rgba(22,131,255,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(22,131,255,0);transform:scale(.95)}}
-</style></head><body>
+@keyframes adminLedPreview{from{background-position:100% 0}to{background-position:-100% 0}} </style></head><body>
 <header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Thu hồi số dư • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button></div></div></header>
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
+<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('recover',this)">Thu hồi số dư</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và thu hồi/trừ lại số dư. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 
 <section id="users" style="display:none"><div class="card"><b>KHÁCH HÀNG / KIỂM TRA GIAN LẬN</b><p class="muted">Chỉ hiển thị tên tài khoản, tên đăng ký và thời gian đăng ký. Không lấy mật khẩu.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+/-)</label><input id="admAmount" type="number" placeholder="Ví dụ 100000 hoặc -100000"></div></div><div class="actions"><button class="btn btn-primary" onclick="adminAdjustMoney()">Cập nhật số dư</button></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Tài khoản</th><th>Tên đăng ký</th><th>Đăng ký lúc</th><th>Số dư</th><th>Đánh dấu</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
-<section id="site" style="display:none"><div class="card"><b>CHỈNH TRANG CHỦ</b><p class="muted">Các nội dung này lưu Firebase để trang khách đọc lại.</p><label>Tiêu đề trang</label><input id="siteTitle"><label>Tiêu đề sự kiện</label><input id="eventTitle"><label>Thông báo hệ thống</label><textarea id="announcement"></textarea><label>Banner 1</label><input id="banner1"><label>Banner 2</label><input id="banner2"><label>Chân trang</label><textarea id="footerText"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div></section>
+<section id="recover" style="display:none">
+  <div class="card">
+    <b>THU HỒI SỐ DƯ — CHỈ ADMIN</b>
+    <p class="muted">Khách hàng không thể tự rút tiền. Admin dùng mục này để thu hồi/trừ lại số dư và ghi rõ lý do.</p>
+    <div class="mini-grid">
+      <div>
+        <label>Tài khoản khách</label>
+        <input id="recoverUser" placeholder="Ví dụ: minh" oninput="previewRecoveryBalance()">
+        <div id="recoverBalancePreview" class="muted" style="margin-top:6px"></div>
+      </div>
+      <div>
+        <label>Số tiền thu hồi</label>
+        <input id="recoverAmount" type="number" min="1" placeholder="Ví dụ: 450000">
+      </div>
+    </div>
+    <label>Lý do / ghi chú cho khách</label>
+    <textarea id="recoverReason" rows="3" placeholder="Ví dụ: Bạn gian lận nạp tiền — số dư đã thu hồi."></textarea>
+    <div class="actions">
+      <button class="btn btn-red" onclick="recoverFromAdmin()">↩ Thu hồi tiền</button>
+      <button class="btn btn-gray" onclick="previewRecoveryBalance()">Kiểm tra số dư</button>
+    </div>
+  </div>
+  <div class="card">
+    <b>LỊCH SỬ THU HỒI</b>
+    <div class="table" style="margin-top:10px">
+      <table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Lý do / ghi chú</th><th>Thời gian</th></tr></thead>
+      <tbody id="recoveriesBody"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section id="site" style="display:none"><div class="card"><b>CHỈNH TRANG CHỦ</b><p class="muted">Các nội dung này lưu Firebase để trang khách đọc lại.</p><label>Tiêu đề trang</label><input id="siteTitle"><label>Tiêu đề sự kiện</label><input id="eventTitle"><label>Thông báo hệ thống</label><textarea id="announcement"></textarea><label>Banner 1</label><input id="banner1"><label>Banner 2</label><input id="banner2"><label>Chân trang</label><textarea id="footerText"></textarea>
+<label>LED sự kiện</label>
+<div class="mini-grid">
+  <div>
+    <label style="font-weight:600">Trạng thái</label>
+    <select id="ledEnabled">
+      <option value="on">Bật</option>
+      <option value="off">Tắt</option>
+    </select>
+  </div>
+  <div>
+    <label style="font-weight:600">Hiệu ứng</label>
+    <select id="ledEffect">
+      <option value="chase7">7 màu nối đuôi</option>
+      <option value="soft">7 màu mềm</option>
+      <option value="fast">7 màu nhanh</option>
+      <option value="slow">7 màu chậm</option>
+    </select>
+  </div>
+</div>
+<label>Tốc độ LED</label>
+<select id="ledSpeed">
+  <option value="1200">Rất nhanh</option>
+  <option value="1800">Nhanh</option>
+  <option value="2400" selected>Bình thường</option>
+  <option value="3200">Chậm</option>
+  <option value="4200">Rất chậm</option>
+</select>
+<div id="ledPreview" style="height:14px;border-radius:99px;margin-top:10px;background:linear-gradient(90deg,#ff1744,#ff9100,#ffee00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744);background-size:250% 100%;animation:adminLedPreview 2s linear infinite"></div><div class="notice" style="margin-top:10px">LED luôn chạy quanh mép ảnh; thay đổi hiệu ứng tại đây sẽ được trang khách cập nhật realtime.</div>
+<div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div></section>
 <section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
+const ADMIN_ACC='phong 23112007';
 const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
 const defaultGames={'Free Fire':{unit:'Kim Cương',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]}};
@@ -27,8 +88,8 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function fmt(n){return (Number(n)||0).toLocaleString('vi-VN')+' đ'}
 function when(ts){if(!ts)return '-';try{return new Date(ts).toLocaleString('vi-VN')}catch(e){return '-'}}
 function badge(st){let t=st==='pending'?'Chờ duyệt':st==='processing'?'Đang xử lý':st==='approved'?'Đã duyệt':st==='completed'?'Hoàn tất':st==='rejected'?'Đã hủy':st;return `<span class="badge ${esc(st)}">${esc(t)}</span>`}
-function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2)}).catch(e=>alert(e.message))}
-function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim()}).then(()=>alert('Đã lưu trang chủ.')).catch(e=>alert('Lỗi: '+e.message))}
+function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';if(document.getElementById('ledEnabled')) ledEnabled.value=c.ledEnabled===false?'off':'on';if(document.getElementById('ledEffect')) ledEffect.value=c.ledEffect||'chase7';if(document.getElementById('ledSpeed')) ledSpeed.value=String(c.ledSpeed||2400);gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2)}).catch(e=>alert(e.message))}
+function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim(),ledEnabled:ledEnabled.value==='on',ledEffect:ledEffect.value,ledSpeed:Number(ledSpeed.value)||2400}).then(()=>alert('Đã lưu trang chủ.')).catch(e=>alert('Lỗi: '+e.message))}
 function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
 function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
 function approve(id){let r=db.ref('orders/'+id);r.once('value').then(s=>{let o=s.val();if(!o||o.status!=='pending')throw Error('Đơn không còn chờ duyệt.');let u=String(o.user||'').trim(),amt=Number(o.price||0);if(!u||amt<=0)throw Error('Đơn không hợp lệ.');return db.ref('balances/'+encodeURIComponent(u)).transaction(v=>(Number(v)||0)+amt).then(x=>{if(!x.committed)throw Error('Không cập nhật được số dư.');return r.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt})})}).then(()=>alert('Đã duyệt và cộng tiền.')).catch(e=>alert('Lỗi: '+e.message))}
@@ -51,7 +112,7 @@ function previewRecoveryBalance(){
     el.textContent='Số dư hiện tại: '+fmt(s.val());
   }).catch(()=>{el.textContent='Không đọc được số dư.'});
 }
-function recoverFromAdmin(){const u=document.getElementById('recoverUser').value.trim(),amt=Number(document.getElementById('recoverAmount').value),reason=document.getElementById('recoverReason').value.trim();if(!u||!Number.isFinite(amt)||amt<=0){alert('Nhập đúng tài khoản và số tiền thu hồi.');return}adminRecoverBalance(u,amt,reason).then(()=>{alert('Đã thu hồi '+fmt(amt)+' khỏi tài khoản '+u+'.');document.getElementById('recoverAmount').value='';document.getElementById('recoverReason').value=''}).catch(e=>alert('Lỗi: '+e.message))}
+function recoverFromAdmin(){const u=document.getElementById('recoverUser').value.trim(),amt=Number(document.getElementById('recoverAmount').value),reason=document.getElementById('recoverReason').value.trim();if(!u||!Number.isFinite(amt)||amt<=0){alert('Nhập đúng tài khoản và số tiền thu hồi.');return}if(!reason){alert('Hãy nhập lý do/ghi chú để khách biết vì sao số dư bị thu hồi.');return}if(!confirm('Xác nhận thu hồi '+fmt(amt)+' khỏi tài khoản '+u+'?'))return;adminRecoverBalance(u,amt,reason).then(()=>{alert('Đã thu hồi '+fmt(amt)+' khỏi tài khoản '+u+'.');document.getElementById('recoverAmount').value='';document.getElementById('recoverReason').value='';previewRecoveryBalance()}).catch(e=>alert('Lỗi: '+e.message))}
 function adminRecoverBalance(user, amount, reason){
   if(typeof ADMIN_ACC==='undefined' || !ADMIN_ACC) throw new Error('Không xác định được quyền Admin.');
   amount=Number(amount);
