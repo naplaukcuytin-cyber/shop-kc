@@ -64,9 +64,11 @@ function adminAdjustMoney(){
   const u=admUser.value.trim(), amt=Number(admAmount.value), note=(admNote.value||'').trim(), type=admNoteType.value;
   if(!u||!Number.isFinite(amt)||amt===0){alert('Nhập tài khoản và số tiền khác 0.');return;}
   const finalType=amt>0?'success':'warning';
-  const finalNote=note || (amt>0
-    ? `🎉 Chúc mừng! Admin vừa tặng/tri ân ${fmt(Math.abs(amt))} vào ví của bạn. Cảm ơn bạn đã tin tưởng và ủng hộ Shop KC!`
-    : `⚠️ Cảnh báo: Admin vừa trừ ${fmt(Math.abs(amt))} khỏi số dư tài khoản của bạn. Vui lòng kiểm tra giao dịch và liên hệ hỗ trợ nếu cần.`);
+  const finalNote=note
+    ? `${note} — Số tiền: ${amt>0?'+':'-'}${fmt(Math.abs(amt))}`
+    : (amt>0
+      ? `🎉 Chúc mừng! Admin vừa tặng/tri ân ${fmt(Math.abs(amt))} vào ví của bạn. Số tiền cộng: +${fmt(Math.abs(amt))}. Cảm ơn bạn đã tin tưởng và ủng hộ Shop KC!`
+      : `⚠️ Cảnh báo: Admin vừa trừ ${fmt(Math.abs(amt))} khỏi số dư tài khoản của bạn. Số tiền trừ: -${fmt(Math.abs(amt))}. Vui lòng kiểm tra giao dịch và liên hệ hỗ trợ nếu cần.`);
   const ref=db.ref('balances/'+encodeURIComponent(u));
   ref.transaction(v=>(Number(v)||0)+amt).then(x=>{
     if(!x.committed) throw Error('Không cập nhật được số dư.');
