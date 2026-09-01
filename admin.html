@@ -9,7 +9,7 @@
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 <section id="withdrawals" style="display:none"><div class="card"><b>YÊU CẦU RÚT TIỀN</b><p class="muted">Khi khách gửi yêu cầu, số dư đã được tạm trừ. Hủy yêu cầu sẽ hoàn lại số dư.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Thông tin nhận</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="withdrawalsBody"></tbody></table></div></div></section>
-<section id="users" style="display:none"><div class="card"><b>👥 KHÁCH HÀNG • SỐ DƯ REALTIME</b><p class="muted">Danh sách lấy từ Firebase và được giữ trong <b>customerRegistry</b>. Khi khách đăng ký, nạp tiền hoặc phát sinh đơn, hồ sơ sẽ được ghi nhận để Admin tiếp tục kiểm tra về sau. Số dư cập nhật theo thời gian thực.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+ để cộng / - để trừ)</label><input id="admAmount" type="number" placeholder="Ví dụ 500000 hoặc -500000"></div></div><label>Ghi chú gửi cho khách</label><textarea id="admNote" placeholder="Ví dụ: Chúc mừng! Tài khoản đã được cộng 500.000đ. / Cảnh báo: Vui lòng kiểm tra lại thông tin giao dịch..."></textarea><div class="mini-grid"><div><label>Loại ghi chú</label><select id="admNoteType"><option value="success">🎉 Chúc mừng / Thông báo</option><option value="warning">⚠️ Cảnh báo / Lưu ý</option></select></div><div><label>&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="adminAdjustMoney()">💰 Cộng / Trừ tiền + Gửi ghi chú</button></div></div><div class="actions"><button class="btn btn-gray" onclick="clearMoneyForm()">Xóa form</button></div><div id="fraudPanel" class="fraud-panel" style="display:none"></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Khách hàng</th><th>Tài khoản</th><th>Thời gian ghi nhận</th><th>Số dư realtime + thao tác</th><th>Kiểm tra</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
+<section id="users" style="display:none"><div class="card"><b>👥 KHÁCH HÀNG • SỐ DƯ REALTIME</b><p class="muted">Danh sách lấy từ Firebase và được giữ trong <b>customerRegistry</b>. Khi khách đăng ký, nạp tiền hoặc phát sinh đơn, hồ sơ sẽ được ghi nhận để Admin tiếp tục kiểm tra về sau. Số dư cập nhật theo thời gian thực.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+ để cộng / - để trừ)</label><input id="admAmount" type="number" placeholder="Ví dụ 500000 hoặc -500000"></div></div><label>Ghi chú gửi cho khách</label><textarea id="admNote" placeholder="Ví dụ: Tài khoản đã được cộng 500.000đ. / Cảnh báo: Vui lòng kiểm tra lại thông tin giao dịch..."></textarea><div class="mini-grid"><div><label>Loại ghi chú</label><select id="admNoteType"><option value="success">🔔 Thông báo</option><option value="warning">⚠️ Cảnh báo / Lưu ý</option></select></div><div><label>&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="adminAdjustMoney()">💰 Cộng / Trừ tiền + Gửi ghi chú</button></div></div><div class="actions"><button class="btn btn-gray" onclick="clearMoneyForm()">Xóa form</button></div><div id="fraudPanel" class="fraud-panel" style="display:none"></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Khách hàng</th><th>Tài khoản</th><th>Thời gian ghi nhận</th><th>Số dư realtime + thao tác</th><th>Kiểm tra</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
 <section id="site" style="display:none"><div class="card"><b>CHỈNH TRANG CHỦ</b><p class="muted">Các nội dung này lưu Firebase để trang khách đọc lại.</p><label>Tiêu đề trang</label><input id="siteTitle"><label>Tiêu đề sự kiện</label><input id="eventTitle"><label>Thông báo hệ thống</label><textarea id="announcement"></textarea><label>Banner 1</label><input id="banner1"><label>Banner 2</label><input id="banner2"><label>Chân trang</label><textarea id="footerText"></textarea>
 <label>LED sự kiện</label>
 <div class="mini-grid">
@@ -46,39 +46,69 @@ function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JS
 function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
 function normalizeBalanceValue(raw){
   if(raw && typeof raw==='object'){ raw=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0; }
-  const n=Number(raw); return Number.isFinite(n)?Math.max(0,n):0;
+  const n=Number(raw); return Number.isFinite(n)?n:0;
 }
-function balanceRefFor(user){ return db.ref('balances/'+encodeURIComponent(String(user||'').trim())); }
 function adjustBalanceVerified(user,delta){
   user=String(user||'').trim(); delta=Number(delta);
   if(!user) return Promise.reject(new Error('Thiếu tài khoản khách hàng.'));
   if(!Number.isFinite(delta)||delta===0) return Promise.reject(new Error('Số tiền phải khác 0.'));
-  const ref=balanceRefFor(user);
-  return ref.transaction(function(current){
-    const before=normalizeBalanceValue(current);
-    const after=before+delta;
-    if(after<0) return;
-    return after;
+  const ref=db.ref('balances/'+encodeURIComponent(user));
+  return ref.transaction(function(raw){
+    const current=normalizeBalanceValue(raw);
+    const next=current+delta;
+    if(next<0) return;
+    return next;
   }).then(function(result){
-    if(!result.committed) throw new Error('Số dư không đủ để trừ khoản này.');
-    return normalizeBalanceValue(result.snapshot.val());
+    const after=normalizeBalanceValue(result&&result.snapshot?result.snapshot.val():null);
+    if(!result||!result.committed){
+      const err=new Error('INSUFFICIENT_BALANCE');
+      err.currentBalance=after;
+      throw err;
+    }
+    return ref.once('value').then(function(s){
+      const verified=normalizeBalanceValue(s.val());
+      if(verified!==after) throw new Error('Không xác minh được số dư sau khi cập nhật.');
+      return verified;
+    });
   });
 }
-
 function approve(id){
-  db.ref('orders/'+id).once('value').then(function(s){
-    var o=s.val();
-    if(!o||o.status!=='pending') throw Error('Đơn không còn chờ duyệt.');
-    var u=String(o.user||'').trim(), amt=Number(o.price||0);
-    if(!u||amt<=0) throw Error('Đơn không hợp lệ.');
+  const orderRef=db.ref('orders/'+id);
+  orderRef.transaction(function(o){
+    if(!o||o.status!=='pending') return;
+    return Object.assign({},o,{status:'approving',approvingBy:'ADMIN',approvingAt:Date.now()});
+  }).then(function(lock){
+    if(!lock||!lock.committed) throw new Error('Đơn không còn chờ duyệt hoặc đang được Admin khác xử lý.');
+    const o=lock.snapshot.val()||{},u=String(o.user||'').trim(),amt=Number(o.price||0);
+    if(!u||amt<=0) throw new Error('Đơn không hợp lệ.');
     return adjustBalanceVerified(u,amt).then(function(newBal){
-      return db.ref('orders/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt,balanceAfter:newBal}).then(function(){
-        return notifyCustomer(u,'success','🎉 Nạp tiền thành công! Đơn '+fmt(amt)+' đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+fmt(newBal)+'. Xin cảm ơn bạn đã tin tưởng Shop KC!',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
+      return orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt,balanceAfter:newBal}).then(function(){
+        return notifyCustomer(u,'success','Nạp tiền thành công! Đơn '+fmt(amt)+' đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+fmt(newBal)+'. Xin cảm ơn bạn đã tin tưởng Shop KC!',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
       });
+    }).catch(function(err){
+      // Chỉ trả đơn về pending nếu bước cộng tiền thất bại. Sau khi đã cộng tiền
+      // tuyệt đối không rollback trạng thái vì có thể gây cộng tiền lần hai.
+      if(err&&err.message==='INSUFFICIENT_BALANCE'){
+        return orderRef.transaction(function(cur){
+          if(cur&&cur.status==='approving') return Object.assign({},cur,{status:'pending',approvingBy:null,approvingAt:null});
+          return;
+        }).then(function(){throw err;});
+      }
+      throw err;
     });
   }).then(function(){alert('Đã duyệt đơn và cộng tiền thành công.');}).catch(function(e){alert('Lỗi: '+e.message);});
 }
-function reject(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val()||{};let u=String(o.user||'').trim();return db.ref('orders/'+id).update({status:'rejected',updatedAt:firebase.database.ServerValue.TIMESTAMP,updatedBy:'ADMIN'}).then(()=>u?notifyCustomer(u,'warning',`⚠️ Cảnh báo: Đơn nạp ${fmt(o.price)} của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.`,Number(o.price)||0):null)}).then(()=>alert('Đã hủy đơn và gửi cảnh báo cho khách.')).catch(e=>alert('Lỗi: '+e.message))}
+function reject(id){
+  const ref=db.ref('orders/'+id);
+  ref.transaction(function(o){
+    if(!o||o.status!=='pending') return;
+    return Object.assign({},o,{status:'rejected',updatedAt:firebase.database.ServerValue.TIMESTAMP,updatedBy:'ADMIN'});
+  }).then(function(result){
+    if(!result||!result.committed) throw new Error('Đơn không còn chờ duyệt.');
+    const o=result.snapshot.val()||{},u=String(o.user||'').trim();
+    return u?notifyCustomer(u,'warning','Cảnh báo: Đơn nạp '+fmt(o.price)+' của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.',Number(o.price)||0):null;
+  }).then(function(){alert('Đã hủy đơn và gửi cảnh báo cho khách.');}).catch(function(e){alert('Lỗi: '+e.message);});
+}
 function completeGame(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val();if(!o||o.status!=='processing')throw Error('Đơn game không còn đang xử lý.');return db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'})}).then(()=>alert('Đã hoàn tất đơn game.')).catch(e=>alert('Lỗi: '+e.message))}
 function renderWithdrawals(data){lastWithdrawals=data||{};let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>o.status==='pending').sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));withdrawPendingCount.textContent=a.length;withdrawalsBody.innerHTML=a.map(o=>`<tr><td><b>${esc(o.user||'')}</b><br>${esc(o.displayName||'')}</td><td>${fmt(o.amount)}</td><td>${esc(o.receiveInfo||'')}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td><button class="btn btn-green" onclick="approveWithdraw('${o.id}')">Đã chuyển</button> <button class="btn btn-red" onclick="rejectWithdraw('${o.id}')">Từ chối + hoàn tiền</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Không có yêu cầu rút.</td></tr>'}
 function approveWithdraw(id){db.ref('withdrawals/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN'}).then(()=>alert('Đã đánh dấu đã chuyển tiền.')).catch(e=>alert('Lỗi: '+e.message))}
@@ -113,19 +143,22 @@ function adminAdjustMoney(){
   const finalNote=note
     ? `${note} — Số tiền: ${amt>0?'+':'-'}${fmt(Math.abs(amt))}`
     : (amt>0
-      ? `🎉 Chúc mừng! Admin vừa tặng/tri ân ${fmt(Math.abs(amt))} vào ví của bạn. Số tiền cộng: +${fmt(Math.abs(amt))}. Cảm ơn bạn đã tin tưởng và ủng hộ Shop KC!`
-      : `⚠️ Cảnh báo: Admin vừa trừ ${fmt(Math.abs(amt))} khỏi số dư tài khoản của bạn. Số tiền trừ: -${fmt(Math.abs(amt))}. Vui lòng kiểm tra giao dịch và liên hệ hỗ trợ nếu cần.`);
+      ? `Admin vừa cộng ${fmt(Math.abs(amt))} vào ví của bạn.`
+      : `Admin vừa trừ ${fmt(Math.abs(amt))} khỏi ví của bạn.`);
   const btn=document.querySelector('[onclick="adminAdjustMoney()"]'); if(btn)btn.disabled=true;
-  adjustBalanceVerified(u,amt).then(newBal=>{
+  adjustBalanceVerified(u,amt).then(function(newBal){
     const side=[];
-    side.push(ensureCustomerRegistry(u,(adminCustomers[u]&&adminCustomers[u].displayName)||u).catch(e=>console.warn('Registry:',e)));
-    side.push(db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,balanceAfter:newBal,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}).catch(e=>console.warn('Log:',e)));
-    side.push(notifyCustomer(u,finalType,`${finalNote} Số dư hiện tại: ${fmt(newBal)}.`,amt).catch(e=>console.warn('Notice:',e)));
-    return Promise.all(side).then(()=>newBal);
-  }).then(newBal=>{
-    alert(amt>0?`Đã cộng ${fmt(Math.abs(amt))} cho ${u}. Số dư mới: ${fmt(newBal)}. Đã tạo thông báo chúc mừng/tri ân.`:`Đã trừ ${fmt(Math.abs(amt))} của ${u}. Số dư mới: ${fmt(newBal)}. Đã tạo cảnh báo cho khách.`);
+    side.push(ensureCustomerRegistry(u,u).catch(function(e){console.warn('Registry:',e);}));
+    side.push(db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,balanceAfter:newBal,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}).catch(function(e){console.warn('Log:',e);}));
+    side.push(notifyCustomer(u,finalType,finalNote+' Số dư hiện tại: '+fmt(newBal)+'.',amt));
+    return Promise.all(side).then(function(){return newBal;});
+  }).then(function(newBal){
+    alert(`Đã ${amt>0?'cộng':'trừ'} ${fmt(Math.abs(amt))} cho ${u}. Số dư mới: ${fmt(newBal)}. Đã gửi thông báo 1 lần cho khách.`);
     admAmount.value='';admNote.value='';renderUsersFromState();
-  }).catch(e=>alert('Không thể thay đổi số dư: '+e.message)).finally(()=>{if(btn)btn.disabled=false;});
+  }).catch(function(e){
+    if(e&&e.message==='INSUFFICIENT_BALANCE') alert(`Số dư của ${u} không đủ để trừ ${fmt(Math.abs(amt))}.`);
+    else alert('Không thể thay đổi số dư: '+e.message);
+  }).finally(function(){if(btn)btn.disabled=false;});
 }
 let adminCustomers={},adminBalances={};
 function renderUsersFromState(){
