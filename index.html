@@ -338,7 +338,13 @@
     .qr-warning { margin-top:10px; padding:10px 12px; border-radius:10px; background:#fff3cd; color:#856404; border:1px solid #ffe08a; font-size:.82rem; line-height:1.5; }
     .qr-upload { margin-top:12px; padding:12px; border:1px dashed #0084ff; border-radius:10px; background:#f7fbff; }
     .qr-upload img { max-width:180px; max-height:180px; display:none; margin:10px auto 0; border-radius:10px; }
-  </style>
+  
+/* LED chạy quanh đúng mép khung ảnh sự kiện */
+.event-led-frame{position:relative;isolation:isolate;overflow:visible!important;border-radius:16px;}
+.event-led-frame::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:conic-gradient(from 0deg,transparent 0 300deg,#00e5ff 320deg,#fff 335deg,#00e5ff 350deg,transparent 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:eventLedRun 2.2s linear infinite;pointer-events:none;z-index:5;}
+.event-led-frame::after{content:"";position:absolute;inset:-3px;border-radius:inherit;box-shadow:0 0 8px rgba(0,229,255,.35),0 0 18px rgba(0,229,255,.16);pointer-events:none;z-index:4;}
+@keyframes eventLedRun{to{transform:rotate(360deg);}}
+</style>
 
 <!-- Firebase SDK v8 -->
 
@@ -546,7 +552,7 @@
 
     <!-- Banner Slide Carousel -->
 
-    <div class="banner-wrapper">
+    <div class="banner-wrapper event-led-frame">
 
       <div class="slider-track" id="sliderTrack">
 
@@ -964,7 +970,7 @@
   <div class="modal" id="withdrawModal">
     <div class="modal-content">
       <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('withdrawModal')"></i>
-      <h3 style="color:#7c3aed;text-align:center;margin-bottom:8px;">RÚT TIỀN</h3>
+      <h3 style="color:#7c3aed;text-align:center;margin-bottom:8px;">THU HỒI SỐ DƯ</h3>
       <div class="qr-warning"><b>Lưu ý:</b> Số tiền rút từ 20.000đ đến 10.000.000đ. Sau khi gửi, số dư sẽ được tạm trừ và hoàn lại nếu Admin từ chối.</div>
       <div class="form-group"><label>Số tiền muốn rút</label><input type="number" class="form-control" id="withdrawAmount" placeholder="Tối thiểu 20.000đ"></div>
       <div class="form-group"><label>Thông tin nhận tiền</label><textarea class="form-control" id="withdrawInfo" rows="4" placeholder="Ngân hàng - Số tài khoản - Tên chủ tài khoản"></textarea></div>
@@ -1727,7 +1733,7 @@
         if(!result.committed) throw Error('Số dư không đủ.');
         const r=db.ref('withdrawals').push();
         return r.set({id:r.key,user:currentUser,displayName:getRegisteredName(),amount,receiveInfo:info,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'});
-      }).then(()=>{showPopup('success','ĐÃ GỬI YÊU CẦU','Yêu cầu rút tiền đang chờ Admin xử lý.');closeModal('withdrawModal');})
+      }).then(()=>{showPopup('success','ĐÃ GỬI YÊU CẦU','Yêu cầu thu hồi số dư đang chờ Admin xử lý.');closeModal('withdrawModal');})
       .catch(e=>showPopup('error','RÚT TIỀN THẤT BẠI',e.message||'Không thể tạo yêu cầu.'));
     }
 
