@@ -54,19 +54,17 @@ function adjustBalanceVerified(user,delta){
   if(!user) return Promise.reject(new Error('Thiếu tài khoản khách hàng.'));
   if(!Number.isFinite(delta)||delta===0) return Promise.reject(new Error('Số tiền phải khác 0.'));
   const ref=balanceRefFor(user);
-  return ref.once('value').then(function(snap){
-    const before=normalizeBalanceValue(snap.val());
+  return ref.transaction(function(current){
+    const before=normalizeBalanceValue(current);
     const after=before+delta;
-    if(after<0) throw new Error('Số dư không đủ. Số dư hiện tại: '+fmt(before)+'. Số tiền muốn trừ: '+fmt(Math.abs(delta))+'.');
-    return ref.set(after).then(function(){
-      return ref.once('value').then(function(check){
-        const verified=normalizeBalanceValue(check.val());
-        if(verified!==after) throw new Error('Đã ghi nhưng không xác minh được số dư. Kiểm tra Firebase Rules tại /balances.');
-        return verified;
-      });
-    });
+    if(after<0) return;
+    return after;
+  }).then(function(result){
+    if(!result.committed) throw new Error('Số dư không đủ để trừ khoản này.');
+    return normalizeBalanceValue(result.snapshot.val());
   });
 }
+
 function approve(id){
   db.ref('orders/'+id).once('value').then(function(s){
     var o=s.val();
@@ -120,7 +118,7 @@ function adminAdjustMoney(){
   const btn=document.querySelector('[onclick="adminAdjustMoney()"]'); if(btn)btn.disabled=true;
   adjustBalanceVerified(u,amt).then(newBal=>{
     const side=[];
-    side.push(ensureCustomerRegistry(u,u).catch(e=>console.warn('Registry:',e)));
+    side.push(ensureCustomerRegistry(u,(adminCustomers[u]&&adminCustomers[u].displayName)||u).catch(e=>console.warn('Registry:',e)));
     side.push(db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,balanceAfter:newBal,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}).catch(e=>console.warn('Log:',e)));
     side.push(notifyCustomer(u,finalType,`${finalNote} Số dư hiện tại: ${fmt(newBal)}.`,amt).catch(e=>console.warn('Notice:',e)));
     return Promise.all(side).then(()=>newBal);
