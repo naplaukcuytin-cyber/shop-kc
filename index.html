@@ -1517,44 +1517,82 @@
     }
 
     function confirmBankTransferSent() {
-
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
 
-      const val = parseInt(document.getElementById('qrAmount').value);
+      const amountInput = document.getElementById('qrAmount');
+      const val = parseInt(amountInput && amountInput.value, 10);
 
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+      if(!Number.isFinite(val) || val <= 0) {
+        showPopup('error', 'THẤT BẠI', 'Vui lòng nhập số tiền nạp hợp lệ!');
+        return;
+      }
 
-      cards.push({ id: Date.now(), user: currentUser, type: 'Chuyển Khoản / QR', seri: 'BANK', pin: currentGeneratedMemo, val, status: 'pending' });
-
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${val.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo}`);
+      if(!currentGeneratedMemo) {
+        showPopup('error', 'THẤT BẠI', 'Vui lòng tạo mã QR trước!');
+        return;
+      }
 
       submitDeposit(val);
-
     }
 
     function submitDeposit(val) {
+      if(!currentUser) {
+        showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!');
+        return;
+      }
 
-      const orderId = Date.now().toString();
+      const amount = Number(val);
+      if(!Number.isFinite(amount) || amount <= 0) {
+        showPopup('error', 'THẤT BẠI', 'Số tiền nạp không hợp lệ!');
+        return;
+      }
 
+      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
+        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ. Vui lòng thử lại!');
+        return;
+      }
+
+      const orderRef = db.ref('orders').push();
       const orderData = {
-
-        id: orderId,
-
-        user: typeof currentUser !== 'undefined' && currentUser ? currentUser : "Khách",
-
+        id: orderRef.key,
+        user: currentUser,
         package: "Nạp Chuyển Khoản",
-
-        price: typeof val !== 'undefined' ? val : 0,
-
-        uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
-
+        price: amount,
+        uid: currentGeneratedMemo || "Không có",
+        memo: currentGeneratedMemo || "",
         time: new Date().toLocaleString('vi-VN'),
-
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
         status: "pending"
-
       };
+
+      orderRef.set(orderData)
+        .then(() => {
+          // Lưu cục bộ chỉ để lịch sử trên thiết bị khách; dữ liệu chính nằm trên Firebase.
+          const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+          cards.push({
+            id: Date.now(),
+            firebaseOrderId: orderRef.key,
+            user: currentUser,
+            type: 'Chuyển Khoản / QR',
+            seri: 'BANK',
+            pin: currentGeneratedMemo || '',
+            val: amount,
+            status: 'pending'
+          });
+          localStorage.setItem('sys_cards', JSON.stringify(cards));
+
+          notifyAdminViaEmail(
+            `Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${amount.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo || ''}`
+          );
+
+          showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ Admin kiểm tra.');
+          closeModal('depositModal');
+        })
+        .catch((err) => {
+          console.error('Lỗi gửi đơn Firebase:', err);
+          showPopup('error', 'LỖI GỬI ĐƠN', err.message || 'Không thể gửi đơn, vui lòng thử lại!');
+        });
+    };
 
       // Đẩy đơn trực tiếp lên Firebase Realtime Database
 
@@ -1695,70 +1733,127 @@
     }
 
     function renderAdminCards() {
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
       const tbody = document.getElementById('admCardTable');
+      if(!tbody) return;
 
-      tbody.innerHTML = '';
+      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không kết nối được Firebase.</td></tr>';
+        return;
+      }
 
-      cards.forEach(c => {
+      const ordersRef = db.ref('orders');
 
-        if(c.status === 'pending') {
+      ordersRef.off('value');
+      ordersRef.on('value', (snapshot) => {
+        tbody.innerHTML = '';
+        const orders = [];
+
+        snapshot.forEach(child => {
+          const c = child.val() || {};
+          if(c.status === 'pending') {
+            orders.push(c);
+          }
+        });
+
+        orders.sort((a, b) => {
+          const ta = Number(a.timestamp) || 0;
+          const tb = Number(b.timestamp) || 0;
+          return tb - ta;
+        });
+
+        if(orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không có đơn nạp đang chờ.</td></tr>';
+          return;
+        }
+
+        orders.forEach(c => {
+          const safeId = String(c.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
+          const user = String(c.user || 'Khách');
+          const type = String(c.package || 'Nạp tiền');
+          const memo = String(c.memo || c.uid || 'Không có');
+          const val = Number(c.price) || 0;
 
           tbody.innerHTML += `
-
             <tr>
-
-              <td>${c.user}</td>
-
-              <td>${c.type}<br><b>Pin:</b> ${c.pin}<br><b>Seri:</b> ${c.seri}</td>
-
-              <td>${c.val.toLocaleString()}đ</td>
-
+              <td>${user}</td>
+              <td>${type}<br><b>Nội dung:</b> ${memo}</td>
+              <td>${val.toLocaleString()}đ</td>
               <td>
-
-                <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="approveCard(${c.id})">Duyệt</button>
-
+                <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;"
+                  onclick="approveFirebaseOrder('${safeId}')">Duyệt</button>
               </td>
-
             </tr>
-
           `;
+        });
+      }, (err) => {
+        console.error('Firebase orders listener:', err);
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không đọc được đơn nạp từ Firebase.</td></tr>';
+      });
+    }
 
+    function approveFirebaseOrder(orderId) {
+      if(currentUser !== ADMIN_ACC) {
+        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
+        return;
+      }
+
+      if(!orderId || typeof db === 'undefined' || !db) {
+        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
+        return;
+      }
+
+      const orderRef = db.ref('orders/' + orderId);
+
+      orderRef.once('value').then(snapshot => {
+        const c = snapshot.val();
+
+        if(!c) {
+          showPopup('error', 'KHÔNG TÌM THẤY', 'Đơn nạp không còn tồn tại!');
+          return;
         }
+
+        if(c.status !== 'pending') {
+          showPopup('error', 'ĐÃ XỬ LÝ', 'Đơn này đã được xử lý trước đó!');
+          return;
+        }
+
+        const amount = Number(c.price) || 0;
+        const user = c.user;
+
+        if(!user || amount <= 0) {
+          showPopup('error', 'DỮ LIỆU LỖI', 'Đơn nạp không có dữ liệu hợp lệ!');
+          return;
+        }
+
+        const balanceRef = db.ref('balances/' + encodeURIComponent(user));
+        return balanceRef.transaction(current => (Number(current) || 0) + amount)
+          .then(() => orderRef.update({
+            status: 'success',
+            approvedAt: firebase.database.ServerValue.TIMESTAMP,
+            approvedBy: ADMIN_ACC
+          }))
+          .then(() => {
+            // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
+            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+            balances[user] = (balances[user] || 0) + amount;
+            localStorage.setItem('sys_balances', JSON.stringify(balances));
+            localStorage.setItem('last_approved_user', user);
+
+            showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
+          });
+      }).catch(err => {
+        console.error('Approve order error:', err);
+        showPopup('error', 'LỖI DUYỆT ĐƠN', err.message || 'Không thể duyệt đơn!');
+      });
+    }
 
       });
 
     }
 
     function approveCard(id) {
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
-      const c = cards.find(item => item.id === id);
-
-      if(c) {
-
-        c.status = 'success';
-
-        localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-        balances[c.user] = (balances[c.user] || 0) + c.val;
-
-        localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-        showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
-
-        renderAdminCards();
-
-        updateUI();
-
-        localStorage.setItem('last_approved_user', c.user);
-
-      }
+      return approveFirebaseOrder(String(id));
+    }
 
     }
 
