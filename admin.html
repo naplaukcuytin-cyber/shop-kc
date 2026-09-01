@@ -1,166 +1,29 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Đơn Nạp - Shop KC</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
-        h2 { text-align: center; color: #00ff88; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
-        th, td { border: 1px solid #333; padding: 12px; text-align: center; }
-        th { background: #252525; color: #00ff88; }
-        .status-pending { color: #ffcc00; font-weight: bold; }
-        .status-approved { color: #00ff88; font-weight: bold; }
-        .status-rejected { color: #ff4444; font-weight: bold; }
-        button { padding: 6px 12px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; margin: 2px; }
-        .btn-approve { background: #00ff88; color: #000; }
-        .btn-reject { background: #ff4444; color: #fff; }
-    </style>
-</head>
-<body>
-    <h2>DANH SÁCH ĐƠN NẠP TIỀN (REALTIME)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Mã Đơn</th><th>Tài Khoản</th><th>Gói Nạp</th><th>Số Tiền</th>
-                <th>Nội Dung/Memo</th><th>Thời Gian</th><th>Trạng Thái</th><th>Thao Tác</th>
-            </tr>
-        </thead>
-        <tbody id="orderTableBody">
-            <tr><td colspan="8">Đang tải dữ liệu...</td></tr>
-        </tbody>
-    </table>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
-            authDomain: "shop-kc.firebaseapp.com",
-            projectId: "shop-kc",
-            storageBucket: "shop-kc.firebasestorage.app",
-            messagingSenderId: "1073242689799",
-            appId: "1:1073242689799:web:41d0dc7795eb74a93df5a2",
-            measurementId: "G-Q9VN7NZHR0",
-            databaseURL: "https://shop-kc-default-rtdb.firebaseio.com"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        db.ref('orders').on('value', (snapshot) => {
-            const tbody = document.getElementById('orderTableBody');
-            tbody.innerHTML = '';
-
-            const data = snapshot.val();
-            if (!data) {
-                tbody.innerHTML = '<tr><td colspan="8">Chưa có đơn nạp nào!</td></tr>';
-                return;
-            }
-
-            Object.keys(data).reverse().forEach(key => {
-                const order = data[key];
-                const tr = document.createElement('tr');
-
-                let statusText = 'Chờ duyệt';
-                let statusClass = 'status-pending';
-
-                if (order.status === 'approved') {
-                    statusText = 'Đã duyệt';
-                    statusClass = 'status-approved';
-                } else if (order.status === 'rejected') {
-                    statusText = 'Đã hủy';
-                    statusClass = 'status-rejected';
-                }
-
-                tr.innerHTML = `
-                    <td>${order.id || key}</td>
-                    <td>${order.user || 'Khách'}</td>
-                    <td>${order.package || 'N/A'}</td>
-                    <td>${Number(order.price || 0).toLocaleString('vi-VN')} đ</td>
-                    <td>${order.uid || 'Không có'}</td>
-                    <td>${order.time || ''}</td>
-                    <td class="${statusClass}">${statusText}</td>
-                    <td>
-                        ${order.status === 'pending' ? `
-                            <button class="btn-approve" onclick="updateStatus('${key}', 'approved')">Duyệt</button>
-                            <button class="btn-reject" onclick="updateStatus('${key}', 'rejected')">Hủy</button>
-                        ` : 'Đã xử lý'}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }, (error) => {
-            console.error(error);
-            document.getElementById('orderTableBody').innerHTML =
-                '<tr><td colspan="8">Không đọc được Firebase: ' +
-                String(error.message || error) + '</td></tr>';
-        });
-
-        function updateStatus(orderId, status) {
-            const orderRef = db.ref('orders/' + orderId);
-
-            orderRef.once('value').then(snapshot => {
-                const order = snapshot.val();
-
-                if (!order) {
-                    throw new Error('Không tìm thấy đơn nạp.');
-                }
-
-                // Hủy đơn: chỉ đổi trạng thái, không cộng tiền.
-                if (status === 'rejected') {
-                    return orderRef.update({
-                        status: 'rejected',
-                        updatedAt: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
-
-                // Đã duyệt rồi thì tuyệt đối không cộng lần 2.
-                if (order.status === 'approved') {
-                    throw new Error('Đơn này đã được duyệt trước đó.');
-                }
-
-                const user = String(order.user || '').trim();
-                const amount = Number(order.price || 0);
-
-                if (!user) throw new Error('Đơn không có tài khoản khách.');
-                if (!Number.isFinite(amount) || amount <= 0) {
-                    throw new Error('Số tiền trong đơn không hợp lệ.');
-                }
-
-                // QUAN TRỌNG:
-                // Phải dùng đúng key mà trang khách dùng để đọc số dư.
-                // Nếu trang khách của mày đang đọc balances/<username>,
-                // dòng này sẽ cộng tiền đúng vào tài khoản đó.
-                const balanceRef = db.ref('balances/' + encodeURIComponent(user));
-
-                return balanceRef.transaction(currentBalance => {
-                    return (Number(currentBalance) || 0) + amount;
-                }).then(result => {
-                    if (!result.committed) {
-                        throw new Error('Firebase không commit được số dư.');
-                    }
-
-                    return orderRef.update({
-                        status: 'approved',
-                        approvedAt: firebase.database.ServerValue.TIMESTAMP,
-                        approvedAmount: amount
-                    });
-                });
-            }).then(() => {
-                alert(
-                    status === 'approved'
-                        ? 'Đã duyệt đơn và cộng ' +
-                          Number(arguments[0] ? 0 : 0) +
-                          'đ vào tài khoản khách!'
-                        : 'Đã hủy đơn!'
-                );
-            }).catch(err => {
-                console.error('Lỗi updateStatus:', err);
-                alert('Lỗi: ' + (err.message || err));
-            });
-        }
-    </script>
-</body>
-</html>
+<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Admin • Shop KC</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e7eaf0;--green:#16a05d;--red:#e5484d}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{background:#fff;border-bottom:1px solid var(--line);padding:15px;position:sticky;top:0;z-index:5}.top{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1100px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}.stat{background:#f8fafc;border-radius:12px;padding:14px}.stat b{font-size:23px}.muted{color:var(--muted);font-size:12px}label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}input,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit}textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.table{overflow:auto}table{width:100%;min-width:800px;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{font-size:11px;color:var(--muted)}.badge{padding:5px 8px;border-radius:99px;font-size:11px;font-weight:800}.pending{background:#fff2cc;color:#946200}.processing{background:#e7f1ff;color:#075db5}.approved{background:#dcf8e8;color:#08733e}.rejected{background:#ffe4e5;color:#a91e24}.notice{padding:11px;border-radius:10px;background:#fff8df;color:#806300;font-size:12px}
+</style></head><body>
+<header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Quản lý đơn + chỉnh nội dung trang chủ</small></div><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button></div></header>
+<div class="wrap"><div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
+<section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt</span><br><b id="approvedCount">0</b></div><div class="card stat"><span class="muted">Đã hủy</span><br><b id="rejectedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div></section>
+<section id="orders" style="display:none"><div class="card"><b>Đơn nạp đang xử lý</b><p class="muted">Nạp ví: Duyệt/Hủy. Nạp game: Hoàn tất.</p><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Đơn</th><th>Số tiền</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
+<section id="site" style="display:none"><div class="card"><b>Chỉnh trang chủ</b><p class="muted">Sau khi lưu, trang khách đọc dữ liệu từ Firebase nên không cần sửa code cho các nội dung này.</p><label>Tiêu đề trang</label><input id="siteTitle"><label>Tiêu đề sự kiện</label><input id="eventTitle"><label>Thông báo hệ thống</label><textarea id="announcement"></textarea><label>Banner 1</label><input id="banner1"><label>Banner 2</label><input id="banner2"><label>Chân trang</label><textarea id="footerText"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div><div class="notice">Chỉ cần lưu ở đây; không phải sửa HTML cho tiêu đề, thông báo và banner.</div></section>
+<section id="games" style="display:none"><div class="card"><b>Game & giá</b><p class="muted">Tạm thời chỉnh bằng JSON để không phá giao diện. Có thể đổi thành form từng game ở bước tiếp theo.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
+</div>
+<script>
+const firebaseConfig={apiKey:"AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrSEs",authDomain:"shop-kc.firebaseapp.com",projectId:"shop-kc",storageBucket:"shop-kc.firebasestorage.app",messagingSenderId:"1073242689799",appId:"1:1073242689799:web:41d0dc7795eb74a93df5a2",measurementId:"G-Q9VN7NZHR0",databaseURL:"https://shop-kc-default-rtdb.firebaseio.com"};firebase.initializeApp(firebaseConfig);const db=firebase.database();
+const defaultGames={"Free Fire":{"unit":"Kim Cương","rates":[{"p":50000,"v":"4.250"},{"p":100000,"v":"8.500"},{"p":200000,"v":"17.250"},{"p":500000,"v":"45.000"}]},"Liên Quân Mobile":{"unit":"Quân Huy","rates":[{"p":50000,"v":"4.200"},{"p":100000,"v":"8.550"},{"p":200000,"v":"17.700"},{"p":500000,"v":"45.000"}]}};
+function showTab(id,b){document.querySelectorAll('section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(id==='site'||id==='games')loadSite()}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function fmt(n){return (Number(n)||0).toLocaleString('vi-VN')+' đ'}
+function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2)}).catch(e=>alert(e.message))}
+function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim()}).then(()=>alert('Đã lưu trang chủ.')).catch(e=>alert('Lỗi: '+e.message))}
+function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
+function renderOrders(data){let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;rejectedCount.textContent=a.filter(o=>o.status==='rejected').length;recent.innerHTML=a.slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||'Nạp ví')} • ${fmt(o.price)} <span class="muted">${esc(o.time||'')}</span></div>`).join('')||'<span class="muted">Chưa có đơn.</span>';ordersBody.innerHTML=a.filter(o=>['pending','processing'].includes(o.status)).map(o=>{let game=!!o.game;let st=game?['Đang xử lý','processing']:['Chờ duyệt','pending'];let act=game?`<button class="btn btn-green" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;return `<tr><td>${esc(o.user||'Khách')}</td><td><b>${esc(o.game||o.package||'Nạp ví')}</b><br><span class="muted">${esc(o.gameUID||o.uid||o.memo||'-')}</span></td><td>${fmt(o.price)}</td><td>${esc(o.time||'')}</td><td><span class="badge ${st[1]}">${st[0]}</span></td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="6">Không có đơn đang xử lý.</td></tr>'}
+db.ref('orders').on('value',s=>renderOrders(s.val()));
+function approve(id){let r=db.ref('orders/'+id);r.once('value').then(s=>{let o=s.val();if(!o||o.status!=='pending')throw Error('Đơn không còn chờ duyệt');let u=String(o.user||'').trim(),amt=Number(o.price||0);if(!u||amt<=0)throw Error('Đơn không hợp lệ');return db.ref('balances/'+encodeURIComponent(u)).transaction(v=>(Number(v)||0)+amt).then(x=>{if(!x.committed)throw Error('Không cập nhật được số dư');return r.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedAmount:amt})})}).then(()=>alert('Đã duyệt và cộng tiền.')).catch(e=>alert('Lỗi: '+e.message))}
+function reject(id){db.ref('orders/'+id).update({status:'rejected',updatedAt:firebase.database.ServerValue.TIMESTAMP}).then(()=>alert('Đã hủy đơn.')).catch(e=>alert('Lỗi: '+e.message))}
+function completeGame(id){db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP}).then(()=>alert('Đã hoàn tất đơn game.')).catch(e=>alert('Lỗi: '+e.message))}
+loadSite();
+</script></body></html>
