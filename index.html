@@ -2325,30 +2325,51 @@
 
         return balanceRef.transaction(current => (Number(current) || 0) + amount)
 
-          .then(() => orderRef.update({
+          .then(result => {
+            if(!result.committed) throw new Error('Không thể cộng tiền vào số dư khách.');
+            const newBalance = Number(result.snapshot.val()) || 0;
+            return orderRef.update({
+              status: 'approved',
+              approvedAt: firebase.database.ServerValue.TIMESTAMP,
+              approvedBy: ADMIN_ACC
+            }).then(() => newBalance);
+          })
 
-            status: 'approved',
-
-            approvedAt: firebase.database.ServerValue.TIMESTAMP,
-
-            approvedBy: ADMIN_ACC
-
-          }))
-
-          .then(() => {
-
+          .then(newBalance => {
             // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
-
             const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-            balances[user] = (balances[user] || 0) + amount;
-
+            balances[user] = newBalance;
             localStorage.setItem('sys_balances', JSON.stringify(balances));
-
             localStorage.setItem('last_approved_user', user);
 
+            // Mỗi lần duyệt nạp tạo MỘT thông báo mới cho khách.
+            // Vì vậy nạp lần 2 sẽ không còn đứng ở thông báo của lần 1.
+            const userOrdersRef = db.ref('orders').orderByChild('user').equalTo(user);
+            return userOrdersRef.once('value').then(allSnap => {
+              let approvedCount = 0;
+              allSnap.forEach(ch => {
+                const o = ch.val() || {};
+                if(o.status === 'approved' || o.status === 'success') approvedCount++;
+              });
+              const lanNap = Math.max(1, approvedCount);
+              const noteText = `Nạp tiền thành công lần ${lanNap}. Bạn được cộng ${amount.toLocaleString('vi-VN')}đ vào ví. Số dư hiện tại: ${newBalance.toLocaleString('vi-VN')}đ.`;
+              return db.ref('customerNotices/' + encodeURIComponent(user)).push({
+                type:'success',
+                text:noteText,
+                title:'🎉 CHÚC MỪNG NẠP TIỀN',
+                timestamp:firebase.database.ServerValue.TIMESTAMP,
+                time:new Date().toLocaleString('vi-VN'),
+                admin:ADMIN_ACC,
+                amount:amount,
+                newBalance:newBalance,
+                depositNumber:lanNap,
+                source:'deposit_approved',
+                orderId:String(orderId)
+              });
+            });
+          })
+          .then(() => {
             showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
-
           });
 
       }).catch(err => {
