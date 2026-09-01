@@ -1717,38 +1717,54 @@
 
           }, err => console.error('Lỗi đọc trạng thái đơn:', err));
 
-          // Thông báo Admin: dùng customerNotices làm kênh chính, đồng thời đọc customerNotes cũ để tương thích.
-          const noticeRefs = [
-            db.ref('customerNotices/' + encodeURIComponent(currentUser)),
-            db.ref('customerNotes/' + encodeURIComponent(currentUser))
-          ];
-          noticeRefs.forEach(r => r.off('value'));
-          const renderLatestCustomerNotice = () => {
-            Promise.all(noticeRefs.map(r => r.once('value'))).then(snaps => {
-              const notes=[];
-              snaps.forEach(snap => snap.forEach(child => notes.push({id:child.key,...(child.val()||{})})));
-              notes.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
-              const latest=notes[0];
-              const box=document.getElementById('customerNoteBox');
-              if(!box || !latest) { if(box) box.style.display='none'; return; }
-              const type=latest.type==='warning'?'warning':'success';
-              const amount=Number(latest.amount)||0;
-              const amountText=amount ? ` ${amount>0?'Cộng':'Trừ'} ${Math.abs(amount).toLocaleString('vi-VN')}đ.` : '';
-              const message=String(latest.text||'') + (amountText && !String(latest.text||'').includes(Math.abs(amount).toLocaleString('vi-VN')) ? amountText : '');
-              box.classList.remove('note-warning','note-success');
-              box.classList.add(type==='warning'?'note-warning':'note-success');
-              document.getElementById('customerNoteTitle').innerText=type==='warning'?'⚠️ CẢNH BÁO TỪ ADMIN':'🎉 CHÚC MỪNG';
-              document.getElementById('customerNoteText').innerText=message;
-              document.getElementById('customerNoteTime').innerText=latest.time || formatHistoryTime(latest.timestamp);
-              box.style.display='block';
-              const marker=String(latest.id||latest.timestamp);
-              if(localStorage.getItem('last_customer_notice_marker')!==marker){
-                localStorage.setItem('last_customer_notice_marker',marker);
-                showPopup(type==='warning'?'error':'success', type==='warning'?'CẢNH BÁO':'CHÚC MỪNG', message);
-              }
-            }).catch(err=>console.error('Lỗi đọc thông báo Admin:',err));
+          // THÔNG BÁO ADMIN: chỉ dùng một kênh customerNotices để tránh đọc trùng
+          // và tạo popup lặp lại. Mỗi tài khoản có marker riêng.
+          const customerNoticeRef = db.ref('customerNotices/' + encodeURIComponent(currentUser));
+          customerNoticeRef.off('value');
+          const renderLatestCustomerNotice = (snap) => {
+            const notes=[];
+            snap.forEach(child => notes.push({id:child.key,...(child.val()||{})}));
+            notes.sort((a,b)=>{
+              const ta=Number(a.timestamp)||0, tb=Number(b.timestamp)||0;
+              return tb-ta || String(b.id).localeCompare(String(a.id));
+            });
+            const latest=notes[0];
+            const box=document.getElementById('customerNoteBox');
+            if(!box || !latest) { if(box) box.style.display='none'; return; }
+
+            const type=latest.type==='warning'?'warning':'success';
+            const amount=Number(latest.amount)||0;
+            const amountText=amount
+              ? ` Số tiền ${amount>0?'cộng':'trừ'}: ${amount>0?'+':'-'}${Math.abs(amount).toLocaleString('vi-VN')}đ.`
+              : '';
+            let message=String(latest.text||'').trim();
+            if(amountText && !message.includes(Math.abs(amount).toLocaleString('vi-VN'))) message += amountText;
+            if(latest.newBalance!==undefined && !message.includes('Số dư hiện tại')) {
+              message += ` Số dư hiện tại: ${Number(latest.newBalance||0).toLocaleString('vi-VN')}đ.`;
+            }
+
+            box.classList.remove('note-warning','note-success');
+            box.classList.add(type==='warning'?'note-warning':'note-success');
+            document.getElementById('customerNoteTitle').innerText=
+              type==='warning' ? '⚠️ CẢNH BÁO TỪ ADMIN' : '🎉 CHÚC MỪNG / TRI ÂN';
+            document.getElementById('customerNoteText').innerText=message;
+            document.getElementById('customerNoteTime').innerText=latest.time || formatHistoryTime(latest.timestamp);
+            box.style.display='block';
+
+            // Popup chỉ hiện đúng 1 lần cho đúng thông báo của đúng tài khoản.
+            // Không dùng marker chung cho mọi tài khoản và không chạy lại popup khi Firebase phát value nhiều lần.
+            const marker=String(latest.id||latest.timestamp||'');
+            const markerKey='last_customer_notice_marker_'+encodeURIComponent(currentUser);
+            if(marker && localStorage.getItem(markerKey)!==marker){
+              localStorage.setItem(markerKey,marker);
+              showPopup(
+                type==='warning'?'error':'success',
+                type==='warning'?'CẢNH BÁO':'CHÚC MỪNG / TRI ÂN',
+                message
+              );
+            }
           };
-          noticeRefs.forEach(r => r.on('value', renderLatestCustomerNotice, err => console.error('Lỗi đọc thông báo Admin:',err)));
+          customerNoticeRef.on('value', renderLatestCustomerNotice, err => console.error('Lỗi đọc thông báo Admin:',err));
           refreshCustomerBalanceRealtime();
 
 
