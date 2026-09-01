@@ -331,19 +331,18 @@
     .strength-medium { color: #fb8c00; }
 
     .strength-strong { color: #2e7d32; }
-
   .slide-item { position:relative; overflow:hidden; border-radius:14px; }
-    .slide-item::before { content:""; position:absolute; inset:0; padding:3px; border-radius:14px; background:conic-gradient(from 0deg, #00c6ff, #7a2cff, #ff2d75, #00e5a0, #00c6ff); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:ledRun 2.2s linear infinite; z-index:3; pointer-events:none; }
-    @keyframes ledRun { to { transform:rotate(360deg); } }
-    .qr-warning { margin-top:10px; padding:10px 12px; border-radius:10px; background:#fff3cd; color:#856404; border:1px solid #ffe08a; font-size:.82rem; line-height:1.5; }
-    .qr-upload { margin-top:12px; padding:12px; border:1px dashed #0084ff; border-radius:10px; background:#f7fbff; }
-    .qr-upload img { max-width:180px; max-height:180px; display:none; margin:10px auto 0; border-radius:10px; }
-  
-/* LED chạy quanh đúng mép khung ảnh sự kiện */
-.event-led-frame{position:relative;isolation:isolate;overflow:visible!important;border-radius:16px;}
-.event-led-frame::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:conic-gradient(from 0deg,transparent 0 300deg,#00e5ff 320deg,#fff 335deg,#00e5ff 350deg,transparent 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:eventLedRun 2.2s linear infinite;pointer-events:none;z-index:5;}
-.event-led-frame::after{content:"";position:absolute;inset:-3px;border-radius:inherit;box-shadow:0 0 8px rgba(0,229,255,.35),0 0 18px rgba(0,229,255,.16);pointer-events:none;z-index:4;}
-@keyframes eventLedRun{to{transform:rotate(360deg);}}
+  .slide-item img { position:relative; z-index:1; }
+  .led-edge { position:absolute; z-index:4; pointer-events:none; border-radius:999px; opacity:.98; filter:drop-shadow(0 0 4px rgba(0,229,255,.9)); }
+  .led-edge.top,.led-edge.bottom { height:4px; left:6px; right:6px; background:linear-gradient(90deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:220% 100%; animation:ledH 1.8s linear infinite; }
+  .led-edge.top { top:0; animation-delay:0s; }
+  .led-edge.bottom { bottom:0; animation-delay:-.9s; }
+  .led-edge.left,.led-edge.right { width:4px; top:6px; bottom:6px; background:linear-gradient(180deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:100% 220%; animation:ledV 1.8s linear infinite; }
+  .led-edge.left { left:0; animation-delay:-1.35s; }
+  .led-edge.right { right:0; animation-delay:-.45s; }
+  @keyframes ledH { from { background-position:100% 0; } to { background-position:-120% 0; } }
+  @keyframes ledV { from { background-position:0 100%; } to { background-position:0 -120%; } }
+
 </style>
 
 <!-- Firebase SDK v8 -->
@@ -535,12 +534,7 @@
       <i class="fa-solid fa-credit-card" style="color:#ff9500;"></i> Nạp Ví Qua Thẻ Cào / Garena
 
     </div>
-
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openWithdrawModal()">
-      <i class="fa-solid fa-money-bill-transfer" style="color:#7c3aed;"></i> Rút Tiền
-    </div>
-
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
+<div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
 
       <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Giao Dịch
 
@@ -552,13 +546,13 @@
 
     <!-- Banner Slide Carousel -->
 
-    <div class="banner-wrapper event-led-frame">
+    <div class="banner-wrapper">
 
       <div class="slider-track" id="sliderTrack">
 
-        <div class="slide-item led-frame"><img src="sukien1.PNG" alt="Banner 1"></div>
+        <div class="slide-item"><img src="sukien1.PNG" alt="Banner 1"><span class="led-edge top"></span><span class="led-edge right"></span><span class="led-edge bottom"></span><span class="led-edge left"></span></div>
 
-        <div class="slide-item led-frame"><img src="sukien2.PNG" alt="Banner 2"></div>
+        <div class="slide-item"><img src="sukien2.PNG" alt="Banner 2"><span class="led-edge top"></span><span class="led-edge right"></span><span class="led-edge bottom"></span><span class="led-edge left"></span></div>
 
       </div>
 
@@ -965,19 +959,6 @@
     </div>
 
   </div>
-
-<!-- Modal Rút Tiền -->
-  <div class="modal" id="withdrawModal">
-    <div class="modal-content">
-      <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('withdrawModal')"></i>
-      <h3 style="color:#7c3aed;text-align:center;margin-bottom:8px;">THU HỒI SỐ DƯ</h3>
-      <div class="qr-warning"><b>Lưu ý:</b> Số tiền rút từ 20.000đ đến 10.000.000đ. Sau khi gửi, số dư sẽ được tạm trừ và hoàn lại nếu Admin từ chối.</div>
-      <div class="form-group"><label>Số tiền muốn rút</label><input type="number" class="form-control" id="withdrawAmount" placeholder="Tối thiểu 20.000đ"></div>
-      <div class="form-group"><label>Thông tin nhận tiền</label><textarea class="form-control" id="withdrawInfo" rows="4" placeholder="Ngân hàng - Số tài khoản - Tên chủ tài khoản"></textarea></div>
-      <button class="btn-login-main" style="width:100%;justify-content:center;background:#7c3aed;" onclick="submitWithdraw()">GỬI YÊU CẦU RÚT TIỀN</button>
-    </div>
-  </div>
-
 <!-- Modal Xem Lịch Sử Giao Dịch -->
   <div class="modal" id="historyModal">
     <div class="modal-content">
@@ -1712,29 +1693,6 @@
       ref.set({id:ref.key,user:currentUser,displayName:getRegisteredName(),type:'garena_card',package:'Thẻ Garena',price:val,seri,pin,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'})
         .then(()=>{showPopup('success','ĐÃ GỬI','Thẻ Garena đã được gửi lên hệ thống và đang chờ Admin kiểm tra.');closeModal('depositModal');})
         .catch(e=>showPopup('error','LỖI GỬI ĐƠN',e.message||'Không thể gửi đơn.'));
-    }
-
-    function openWithdrawModal() {
-      closeSidebar();
-      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!'); return; }
-      document.getElementById('withdrawModal').classList.add('active');
-      document.getElementById('withdrawAmount').value='';
-      document.getElementById('withdrawInfo').value='';
-    }
-
-    function submitWithdraw() {
-      if(!currentUser) return;
-      const amount=Number(document.getElementById('withdrawAmount').value);
-      const info=document.getElementById('withdrawInfo').value.trim();
-      if(!Number.isInteger(amount)||amount<20000||amount>10000000) { showPopup('error','SỐ TIỀN KHÔNG HỢP LỆ','Mức rút từ 20.000đ đến 10.000.000đ.'); return; }
-      if(!info) { showPopup('error','THIẾU THÔNG TIN','Nhập thông tin nhận tiền (ngân hàng/số tài khoản/tên).'); return; }
-      const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
-      balanceRef.transaction(v=>{const b=Number(v)||0; if(b<amount)return; return b-amount;}).then(result=>{
-        if(!result.committed) throw Error('Số dư không đủ.');
-        const r=db.ref('withdrawals').push();
-        return r.set({id:r.key,user:currentUser,displayName:getRegisteredName(),amount,receiveInfo:info,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'});
-      }).then(()=>{showPopup('success','ĐÃ GỬI YÊU CẦU','Yêu cầu thu hồi số dư đang chờ Admin xử lý.');closeModal('withdrawModal');})
-      .catch(e=>showPopup('error','RÚT TIỀN THẤT BẠI',e.message||'Không thể tạo yêu cầu.'));
     }
 
     function previewQrProof(input){const f=input.files&&input.files[0],img=document.getElementById('qrProofPreview');if(!f||!img)return;if(f.size>5*1024*1024){input.value='';showPopup('error','ẢNH QUÁ LỚN','Vui lòng chọn ảnh tối đa 5MB.');return;}const r=new FileReader();r.onload=e=>{img.src=e.target.result;img.style.display='block';};r.readAsDataURL(f);}
