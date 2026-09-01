@@ -333,15 +333,47 @@
     .strength-strong { color: #2e7d32; }
   .slide-item { position:relative; overflow:hidden; border-radius:14px; }
   .slide-item img { position:relative; z-index:1; }
-  .led-edge { position:absolute; z-index:4; pointer-events:none; border-radius:999px; opacity:.98; filter:drop-shadow(0 0 4px rgba(0,229,255,.9)); }
-  .led-edge.top,.led-edge.bottom { height:4px; left:6px; right:6px; background:linear-gradient(90deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:220% 100%; animation:ledH 1.8s linear infinite; }
-  .led-edge.top { top:0; animation-delay:0s; }
-  .led-edge.bottom { bottom:0; animation-delay:-.9s; }
-  .led-edge.left,.led-edge.right { width:4px; top:6px; bottom:6px; background:linear-gradient(180deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:100% 220%; animation:ledV 1.8s linear infinite; }
-  .led-edge.left { left:0; animation-delay:-1.35s; }
-  .led-edge.right { right:0; animation-delay:-.45s; }
-  @keyframes ledH { from { background-position:100% 0; } to { background-position:-120% 0; } }
-  @keyframes ledV { from { background-position:0 100%; } to { background-position:0 -120%; } }
+  /* LED 7 màu chạy nối đuôi quanh đúng 4 mép ảnh */
+  .slide-item { position:relative; overflow:hidden; border-radius:14px; }
+  .slide-item img { position:relative; z-index:1; display:block; }
+  .led-edge {
+    position:absolute; z-index:4; pointer-events:none; border-radius:999px;
+    opacity:.98; filter:drop-shadow(0 0 5px rgba(255,255,255,.75));
+    --led-speed: 2.4s;
+  }
+  .led-edge.top,.led-edge.bottom {
+    height:4px; left:5px; right:5px;
+    background:linear-gradient(90deg,
+      #ff1744 0%, #ff9100 14%, #ffee00 28%, #00e676 42%,
+      #00e5ff 56%, #2979ff 70%, #d500f9 84%, #ff1744 100%);
+    background-size:320% 100%;
+    animation:ledChaseH var(--led-speed) linear infinite;
+  }
+  .led-edge.top { top:0; }
+  .led-edge.bottom { bottom:0; animation-delay:calc(var(--led-speed) / -2); }
+  .led-edge.left,.led-edge.right {
+    width:4px; top:5px; bottom:5px;
+    background:linear-gradient(180deg,
+      #ff1744 0%, #ff9100 14%, #ffee00 28%, #00e676 42%,
+      #00e5ff 56%, #2979ff 70%, #d500f9 84%, #ff1744 100%);
+    background-size:100% 320%;
+    animation:ledChaseV var(--led-speed) linear infinite;
+  }
+  .led-edge.left { left:0; animation-delay:calc(var(--led-speed) / -4); }
+  .led-edge.right { right:0; animation-delay:calc(var(--led-speed) * -3 / 4); }
+  @keyframes ledChaseH {
+    from { background-position:320% 0; }
+    to { background-position:-120% 0; }
+  }
+  @keyframes ledChaseV {
+    from { background-position:0 320%; }
+    to { background-position:0 -120%; }
+  }
+  .slide-item.led-off .led-edge { display:none; }
+  .slide-item.led-soft .led-edge { opacity:.7; filter:drop-shadow(0 0 3px rgba(255,255,255,.45)); }
+  .slide-item.led-fast .led-edge { --led-speed:1.35s; }
+  .slide-item.led-slow .led-edge { --led-speed:3.8s; }
+ to { background-position:0 -120%; } }
 
 
     .qr-mini-btn {
@@ -368,12 +400,6 @@
   .popup-icon-box.success i{animation:checkPulse 1.2s ease-in-out infinite}
   @keyframes successPop{0%{transform:scale(.65);opacity:.2}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
   @keyframes checkPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-  .led-edge.top,.led-edge.bottom{
-    background:linear-gradient(90deg,transparent 0%,#00e5ff 15%,#fff 22%,#a855f7 30%,#ff3b81 36%,#00e5ff 44%,transparent 55%);
-  }
-  .led-edge.left,.led-edge.right{
-    background:linear-gradient(180deg,transparent 0%,#00e5ff 15%,#fff 22%,#a855f7 30%,#ff3b81 36%,#00e5ff 44%,transparent 55%);
-  }
 
   .history-success{display:inline-flex;align-items:center;gap:5px;color:#2e7d32;font-weight:700}
   .history-check{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2e7d32;color:#fff;font-size:12px;line-height:18px;animation:historyCheckPulse 1.5s ease-in-out infinite}
@@ -1012,7 +1038,7 @@
         <button class="history-filter" data-filter="game" onclick="setHistoryFilter('game',this)">Nạp KC / Game</button>
         <button class="history-filter" data-filter="web" onclick="setHistoryFilter('web',this)">Nạp web</button>
       </div>
-      <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div>
+      <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div><div id="recoveryNoticeBox" style="display:none;margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff1f2;color:#9f1239;font-size:.8rem;"></div>
       <div style="overflow-x:auto;">
         <table>
           <thead><tr><th>Thời gian</th><th>Loại</th><th>Game / UID</th><th>Số tiền</th><th>Trạng thái</th></tr></thead>
@@ -1480,6 +1506,7 @@
           closeModal('authModal');
 
           updateUI();
+          if(typeof watchAdminRecoveries === 'function') watchAdminRecoveries();
 
           showPopup('success', 'THÀNH CÔNG', `Chào mừng ${profiles[u] || u}!`);
 
@@ -1794,6 +1821,18 @@
         renderUserHistory(localCards);
         return;
       }
+
+      db.ref('balance_recoveries').orderByChild('user').equalTo(currentUser).once('value').then(rs => {
+        const recs=[];
+        rs.forEach(child=>recs.push({id:child.key,...(child.val()||{})}));
+        recs.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+        const box=document.getElementById('recoveryNoticeBox');
+        if(box && recs.length){
+          const r=recs[0];
+          box.style.display='block';
+          box.innerHTML='⚠️ <b>Số dư đã được Admin thu hồi:</b> '+Number(r.amount||0).toLocaleString('vi-VN')+'đ — '+escapeHistoryHtml(r.reason||'Không có ghi chú')+'<br><span style="color:#6b7280">'+escapeHistoryHtml(r.time||formatHistoryTime(r.timestamp))+'</span>';
+        } else if(box){ box.style.display='none'; box.innerHTML=''; }
+      }).catch(()=>{});
 
       db.ref('orders').orderByChild('user').equalTo(currentUser).once('value')
         .then(snapshot => {
@@ -2267,7 +2306,53 @@
 
     };
 
-  </script>
+  
+    function applyLedConfig(cfg) {
+      const c = cfg || {};
+      const enabled = c.ledEnabled !== false;
+      const effect = String(c.ledEffect || 'chase7');
+      const speed = Number(c.ledSpeed || 2400);
+      document.querySelectorAll('.slide-item').forEach(el => {
+        el.classList.toggle('led-off', !enabled);
+        el.classList.remove('led-soft','led-fast','led-slow');
+        if(effect === 'soft') el.classList.add('led-soft');
+        if(effect === 'fast') el.classList.add('led-fast');
+        if(effect === 'slow') el.classList.add('led-slow');
+        el.style.setProperty('--led-speed', Math.max(700, Math.min(8000, speed)) + 'ms');
+      });
+    }
+
+
+    db.ref('siteConfig').on('value', function(snap) {
+      const cfg = snap.val() || {};
+      const annEl = document.getElementById('adminAnnouncement');
+      if(annEl && cfg.announcement) annEl.innerText = cfg.announcement;
+      applyLedConfig(cfg);
+    });
+
+
+    function watchAdminRecoveries() {
+      if(!currentUser || typeof db === 'undefined') return;
+      db.ref('balance_recoveries').orderByChild('user').equalTo(currentUser).on('value', function(snap) {
+        const rows = [];
+        snap.forEach(function(child){ rows.push({id:child.key, ...(child.val()||{})}); });
+        rows.sort(function(a,b){return (Number(b.timestamp)||0)-(Number(a.timestamp)||0);});
+        const latest = rows[0];
+        if(!latest) return;
+        const marker = String(latest.id || latest.timestamp);
+        if(localStorage.getItem('last_recovery_notice') !== marker) {
+          localStorage.setItem('last_recovery_notice', marker);
+          showPopup('error', 'SỐ DƯ ĐÃ THU HỒI',
+            'Admin đã thu hồi ' + Number(latest.amount||0).toLocaleString('vi-VN') +
+            'đ. Lý do: ' + String(latest.reason || 'Không có ghi chú') +
+            '. Số dư đã được cập nhật.');
+        }
+      });
+    }
+
+
+    if(currentUser) watchAdminRecoveries();
+</script>
 
 </body>
 
