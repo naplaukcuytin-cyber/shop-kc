@@ -2312,37 +2312,55 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
       btn.style.opacity = '0.6';
       if(processing) processing.style.display = 'block';
 
-      // Đọc số dư hiện tại trước khi giao dịch để tránh trường hợp Firebase
-      // transaction dùng giá trị cache cũ (khi Admin vừa cộng tiền realtime).
-      // Sau đó transaction lại một lần nếu lần đầu bị hủy do cache chưa đồng bộ.
-      const spendBalance = () => balanceRef.once('value').then(snap => {
-        const currentBalance = Number(snap.val()) || 0;
-        if(currentBalance < price) {
+      // Firebase là nguồn số dư chính. Nếu node của khách chưa tồn tại,
+      // khôi phục số dư cache cũ một lần để tránh bản cũ của shop hiển thị
+      // tiền nhưng node Firebase lại trống.
+      const readBalance = () => balanceRef.once('value').then(snap => {
+        let raw = snap.val();
+        if(raw && typeof raw === 'object' && Object.prototype.hasOwnProperty.call(raw, 'balance')) raw = raw.balance;
+        const serverBalance = Number(raw);
+        if(raw !== null && raw !== undefined && Number.isFinite(serverBalance)) {
+          return Math.max(0, serverBalance);
+        }
+
+        const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+        const localBalance = Number(localBalances[currentUser]);
+        if(Number.isFinite(localBalance) && localBalance > 0) {
+          return balanceRef.set(localBalance).then(() => localBalance);
+        }
+        return 0;
+      });
+
+      // Đọc lại server rồi mới transaction. Transaction chỉ được trừ khi
+      // số dư trên Firebase thực sự đủ, tránh báo thiếu tiền do cache cũ.
+      const spendBalance = () => readBalance().then(serverBalance => {
+        if(serverBalance < price) {
           const err = new Error('INSUFFICIENT_BALANCE');
-          err.currentBalance = currentBalance;
+          err.currentBalance = serverBalance;
           throw err;
         }
         return balanceRef.transaction(current => {
-          const balance = Number(current) || 0;
+          let value = current;
+          if(value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'balance')) value = value.balance;
+          const balance = Number(value) || 0;
           if(balance < price) return;
           return balance - price;
+        }).then(result => {
+          if(!result.committed) {
+            const err = new Error('INSUFFICIENT_BALANCE');
+            err.currentBalance = Number(result.snapshot && result.snapshot.val()) || serverBalance;
+            throw err;
+          }
+          return result;
         });
       });
 
-      spendBalance().then(result => {
-        if(result.committed) return result;
-        // Firebase có thể trả về committed=false khi client vừa nhận dữ liệu
-        // mới từ server. Đọc lại số dư rồi thử transaction thêm đúng 1 lần.
-        return spendBalance().then(retry => {
-          if(!retry.committed) throw new Error('INSUFFICIENT_BALANCE');
-          return retry;
-        });
-      }).then(result => {
-
+      spendBalance().then(() => {
         const orderRef = db.ref('orders').push();
         return orderRef.set({
           id: orderRef.key,
           user: currentUser,
+          displayName: getRegisteredName(),
           package: 'Nạp Game',
           game: selectedGame,
           gameUID: uid,
@@ -2353,11 +2371,17 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
           status: 'processing'
         });
       }).then(() => {
-        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-        balances[currentUser] = Math.max(0, (Number(balances[currentUser]) || 0) - price);
-        localStorage.setItem('sys_balances', JSON.stringify(balances));
-        updateUI();
-
+        // Không tự trừ localStorage lần nữa theo số dư cũ. Firebase listener
+        // sẽ cập nhật số dư mới; localStorage chỉ giữ bản cache hiển thị.
+        return balanceRef.once('value').then(snap => {
+          let value = snap.val();
+          if(value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'balance')) value = value.balance;
+          const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+          balances[currentUser] = Number(value) || 0;
+          localStorage.setItem('sys_balances', JSON.stringify(balances));
+          updateUI();
+        });
+      }).then(() => {
         showPopup('success', 'ĐÃ TIẾP NHẬN ĐƠN',
           `Đã trừ ${price.toLocaleString('vi-VN')}đ khỏi số dư. Đơn ${selectedGame} cho UID ${uid} đang được xử lý.`);
         loadPublicRecentHistory();
@@ -2367,7 +2391,7 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
           const actual = Number(err.currentBalance);
           const detail = Number.isFinite(actual)
             ? `Số dư thực tế hiện tại: ${actual.toLocaleString('vi-VN')}đ. Số tiền cần thanh toán: ${price.toLocaleString('vi-VN')}đ.`
-            : 'Vui lòng tải lại trang để đồng bộ số dư rồi thử lại.';
+            : 'Không đọc được số dư từ máy chủ. Vui lòng thử lại.';
           showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', detail);
         } else {
           showPopup('error', 'THANH TOÁN THẤT BẠI',
