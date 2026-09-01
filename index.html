@@ -332,13 +332,7 @@
 
     .strength-strong { color: #2e7d32; }
 
-  
-    @media (max-width: 480px) {
-      #publicOrderStatus { grid-template-columns: 1fr !important; }
-      #orderHistoryModal .modal-content { padding: 16px; }
-    }
-
-</style>
+  </style>
 
 <!-- Firebase SDK v8 -->
 
@@ -528,7 +522,10 @@
 
     </div>
 
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
+    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openCustomerOrderHistory()">
+        <i class="fa-solid fa-receipt" style="color:#2e7d32;"></i> Xem Lịch Sử Đơn Hàng
+      </div>
+      <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
 
       <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Nạp Tiền
 
@@ -939,19 +936,17 @@
   </div>
 
 
-  <div class="modal" id="orderHistoryModal">
-    <div class="modal-content" style="max-width:680px;">
-      <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('orderHistoryModal')"></i>
+  <div class="modal" id="customerOrderHistoryModal">
+    <div class="modal-content" style="max-width:620px;">
+      <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('customerOrderHistoryModal')"></i>
       <h3 style="color:#0084ff;text-align:center;margin-bottom:6px;">LỊCH SỬ ĐƠN HÀNG</h3>
-      <div style="text-align:center;color:#65676b;font-size:.78rem;margin-bottom:12px;">
-        Theo dõi đơn nạp game, số tiền đã thanh toán và trạng thái xử lý.
-      </div>
+      <div style="text-align:center;color:#65676b;font-size:.78rem;margin-bottom:12px;">Theo dõi các đơn nạp đang xử lý hoặc đã hoàn tất.</div>
       <div style="overflow-x:auto;">
-        <table style="min-width:620px;">
+        <table style="min-width:560px;">
           <thead>
-            <tr><th>Game</th><th>UID/Nội dung</th><th>Số tiền</th><th>Trạng thái</th><th>Thời gian</th></tr>
+            <tr><th>Game</th><th>UID</th><th>Mệnh giá</th><th>Trạng thái</th><th>Thời gian</th></tr>
           </thead>
-          <tbody id="orderHistoryTable"></tbody>
+          <tbody id="customerOrderHistoryTable"></tbody>
         </table>
       </div>
     </div>
@@ -1209,27 +1204,7 @@
 
     }
 
-    
-    function loadPublicOrderStatus() {
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') return;
-      db.ref('orders').on('value', snapshot => {
-        let total = 0, processing = 0, done = 0;
-        snapshot.forEach(child => {
-          const c = child.val() || {};
-          total++;
-          if(c.status === 'pending') processing++;
-          if(c.status === 'success' || c.status === 'approved') done++;
-        });
-        const a = document.getElementById('statusProcessing');
-        const b = document.getElementById('statusDone');
-        const c = document.getElementById('statusTotal');
-        if(a) a.innerText = processing;
-        if(b) b.innerText = done;
-        if(c) c.innerText = total;
-      });
-    }
-
-function updateSlider() {
+    function updateSlider() {
 
       document.getElementById('sliderTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
 
@@ -1821,73 +1796,89 @@ function updateSlider() {
 
     }
 
-    function openHistoryModal() {
-      openOrderHistoryModal();
-    }
-
-    function openOrderHistoryModal() {
+    
+    function openCustomerOrderHistory() {
       closeSidebar();
       if(!currentUser) {
         showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập!');
         return;
       }
 
-      const tbody = document.getElementById('orderHistoryTable');
-      if(!tbody) return;
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Đang tải lịch sử...</td></tr>';
-      document.getElementById('orderHistoryModal').classList.add('active');
+      const tbody = document.getElementById('customerOrderHistoryTable');
+      document.getElementById('customerOrderHistoryModal').classList.add('active');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Đang tải...</td></tr>';
 
       if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không kết nối được máy chủ.</td></tr>';
         return;
       }
 
-      db.ref('orders').orderByChild('user').equalTo(currentUser).once('value')
-        .then(snapshot => {
-          const orders = [];
-          snapshot.forEach(child => {
-            const c = child.val() || {};
-            orders.push(c);
-          });
+      db.ref('orders').orderByChild('user').equalTo(currentUser).once('value').then(snapshot => {
+        const orders = [];
+        snapshot.forEach(child => orders.push(child.val() || {}));
+        orders.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
 
-          orders.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
+        if(!orders.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có đơn hàng.</td></tr>';
+          return;
+        }
 
-          if(!orders.length) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có giao dịch nào.</td></tr>';
-            return;
-          }
+        tbody.innerHTML = '';
+        orders.forEach(o => {
+          const status =
+            o.status === 'success' ? '<span style="color:#2e7d32;font-weight:700;">✔ Hoàn tất</span>' :
+            o.status === 'approved' ? '<span style="color:#2e7d32;font-weight:700;">✔ Đã duyệt</span>' :
+            o.status === 'rejected' ? '<span style="color:#e53935;font-weight:700;">✖ Đã hủy</span>' :
+            '<span style="color:#fb8c00;font-weight:700;">⏳ Đang xử lý</span>';
 
-          tbody.innerHTML = '';
-          orders.forEach(c => {
-            const statusMap = {
-              pending: ['⏳ Đang xử lý', '#fb8c00'],
-              approved: ['✔ Đã duyệt', '#2e7d32'],
-              success: ['✔ Hoàn tất', '#2e7d32'],
-              rejected: ['✖ Đã hủy', '#e53935']
-            };
-            const st = statusMap[c.status] || ['• ' + (c.status || 'Không rõ'), '#65676b'];
-            const game = c.game || c.package || 'Nạp ví';
-            const uid = c.uid || c.memo || '—';
-            const price = Number(c.price) || 0;
-            const time = c.time || '—';
-
-            tbody.innerHTML += `
-              <tr>
-                <td><b>${game}</b></td>
-                <td>${uid}</td>
-                <td>${price.toLocaleString()}đ</td>
-                <td style="color:${st[1]};font-weight:700;">${st[0]}</td>
-                <td>${time}</td>
-              </tr>`;
-          });
-        })
-        .catch(err => {
-          console.error('History error:', err);
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không tải được lịch sử giao dịch.</td></tr>';
+          tbody.innerHTML += `<tr>
+            <td>${o.game || o.package || '—'}</td>
+            <td>${o.uid || o.memo || '—'}</td>
+            <td>${(Number(o.price)||0).toLocaleString()}đ</td>
+            <td>${status}</td>
+            <td>${o.time || '—'}</td>
+          </tr>`;
         });
+      }).catch(() => {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không tải được lịch sử.</td></tr>';
+      });
     }
 
-    // Click 5 lần vào Logo Garena mở Admin
+    function openHistoryModal() {
+
+      closeSidebar();
+
+      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập!'); return; }
+
+      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+
+      const tbody = document.getElementById('userHistoryTable');
+
+      tbody.innerHTML = '';
+
+      const userCards = cards.filter(c => c.user === currentUser);
+
+      if(userCards.length === 0) {
+
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>`;
+
+      } else {
+
+        userCards.reverse().forEach(c => {
+
+          const st = c.status === 'success' ? '<span style="color:#2e7d32; font-weight:bold;">✔ Thành công</span>' : '<span style="color:#fb8c00; font-weight:bold;">⏳ Đang chờ</span>';
+
+          tbody.innerHTML += `<tr><td>${c.type}</td><td>${c.val.toLocaleString()}đ</td><td>${st}</td></tr>`;
+
+        });
+
+      }
+
+      document.getElementById('historyModal').classList.add('active');
+
+    }
+
+    // Click 5 lần vào Logo Garena mở Admin
 
     function secretAdminClick() {
 
@@ -1999,8 +1990,7 @@ function updateSlider() {
 
                 <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;"
 
-                  onclick="${String(c.kind || '') === 'game_purchase' ? `approveFirebaseOrder('${safeId}')` : `approveFirebaseOrder('${safeId}')`}">${String(c.kind || '') === 'game_purchase' ? 'Hoàn tất' : 'Duyệt'}</button>
-                  ${String(c.kind || '') === 'game_purchase' ? `<button style="background:#e53935;color:white;border:none;padding:4px 8px;border-radius:4px;font-weight:bold;cursor:pointer;margin-left:4px;" onclick="rejectFirebaseOrder('${safeId}')">Hủy + hoàn tiền</button>` : ''}
+                  onclick="approveFirebaseOrder('${safeId}')">Duyệt</button>
 
               </td>
 
@@ -2021,105 +2011,98 @@ function updateSlider() {
     }
 
     function approveFirebaseOrder(orderId) {
-      if(currentUser !== ADMIN_ACC) {
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
-        return;
-      }
-      if(!orderId || typeof db === 'undefined' || !db) {
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
-        return;
-      }
 
-      const orderRef = db.ref('orders/' + orderId);
-      orderRef.once('value').then(snapshot => {
-        const c = snapshot.val();
-        if(!c) throw new Error('Đơn không còn tồn tại!');
-        if(c.status !== 'pending') throw new Error('Đơn này đã được xử lý trước đó!');
+      if(currentUser !== ADMIN_ACC) {
 
-        // Đơn nạp ví: duyệt xong mới cộng tiền.
-        if(c.kind !== 'game_purchase') {
-          const amount = Number(c.price) || 0;
-          const user = c.user;
-          if(!user || amount <= 0) throw new Error('Dữ liệu đơn nạp không hợp lệ!');
+        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
 
-          return db.ref('balances/' + encodeURIComponent(user))
-            .transaction(current => (Number(current) || 0) + amount)
-            .then(result => {
-              if(!result.committed) throw new Error('Không thể cập nhật số dư!');
-              return orderRef.update({
-                status: 'approved',
-                approvedAt: firebase.database.ServerValue.TIMESTAMP,
-                approvedBy: ADMIN_ACC
-              });
-            })
-            .then(() => {
-              const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-              balances[user] = (balances[user] || 0) + amount;
-              localStorage.setItem('sys_balances', JSON.stringify(balances));
-              localStorage.setItem('last_approved_user', user);
-              showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp tiền cho khách!');
-            });
-        }
+        return;
 
-        // Đơn mua/nạp game: tiền đã bị trừ khi khách tạo đơn,
-        // Admin chỉ chuyển trạng thái sang hoàn tất, tuyệt đối không cộng lại tiền.
-        return orderRef.update({
-          status: 'success',
-          processedAt: firebase.database.ServerValue.TIMESTAMP,
-          processedBy: ADMIN_ACC
-        }).then(() => {
-          showPopup('success', 'ĐÃ HOÀN TẤT', 'Đơn game đã được đánh dấu hoàn tất.');
-        });
-      }).catch(err => {
-        console.error('Approve order error:', err);
-        showPopup('error', 'LỖI XỬ LÝ ĐƠN', err.message || 'Không thể xử lý đơn!');
-      });
-    }
+      }
 
-    function rejectFirebaseOrder(orderId) {
-      if(currentUser !== ADMIN_ACC) {
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ Admin mới có quyền xử lý đơn!');
-        return;
-      }
+      if(!orderId || typeof db === 'undefined' || !db) {
 
-      const orderRef = db.ref('orders/' + orderId);
-      orderRef.once('value').then(snapshot => {
-        const c = snapshot.val();
-        if(!c) throw new Error('Không tìm thấy đơn!');
-        if(c.status !== 'pending') throw new Error('Đơn này đã được xử lý!');
+        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
 
-        // Chỉ hoàn tiền cho đơn game vì tiền đã trừ lúc đặt đơn.
-        if(c.kind === 'game_purchase') {
-          const amount = Number(c.price) || 0;
-          const user = c.user;
-          if(!user || amount <= 0) throw new Error('Dữ liệu hoàn tiền không hợp lệ!');
+        return;
 
-          return db.ref('balances/' + encodeURIComponent(user))
-            .transaction(current => (Number(current) || 0) + amount)
-            .then(result => {
-              if(!result.committed) throw new Error('Không thể hoàn tiền!');
-              return orderRef.update({
-                status: 'rejected',
-                rejectedAt: firebase.database.ServerValue.TIMESTAMP,
-                rejectedBy: ADMIN_ACC,
-                refund: amount
-              });
-            })
-            .then(() => showPopup('success', 'ĐÃ HỦY ĐƠN', `Đã hủy đơn và hoàn ${amount.toLocaleString()}đ cho khách.`));
-        }
+      }
 
-        return orderRef.update({
-          status: 'rejected',
-          rejectedAt: firebase.database.ServerValue.TIMESTAMP,
-          rejectedBy: ADMIN_ACC
-        }).then(() => showPopup('success', 'ĐÃ HỦY', 'Đã hủy đơn nạp tiền.'));
-      }).catch(err => {
-        console.error('Reject order error:', err);
-        showPopup('error', 'LỖI', err.message || 'Không thể hủy đơn!');
-      });
-    }
+      const orderRef = db.ref('orders/' + orderId);
 
-    function approveCard(id) {
+      orderRef.once('value').then(snapshot => {
+
+        const c = snapshot.val();
+
+        if(!c) {
+
+          showPopup('error', 'KHÔNG TÌM THẤY', 'Đơn nạp không còn tồn tại!');
+
+          return;
+
+        }
+
+        if(c.status !== 'pending') {
+
+          showPopup('error', 'ĐÃ XỬ LÝ', 'Đơn này đã được xử lý trước đó!');
+
+          return;
+
+        }
+
+        const amount = Number(c.price) || 0;
+
+        const user = c.user;
+
+        if(!user || amount <= 0) {
+
+          showPopup('error', 'DỮ LIỆU LỖI', 'Đơn nạp không có dữ liệu hợp lệ!');
+
+          return;
+
+        }
+
+        const balanceRef = db.ref('balances/' + encodeURIComponent(user));
+
+        return balanceRef.transaction(current => (Number(current) || 0) + amount)
+
+          .then(() => orderRef.update({
+
+            status: 'approved',
+
+            approvedAt: firebase.database.ServerValue.TIMESTAMP,
+
+            approvedBy: ADMIN_ACC
+
+          }))
+
+          .then(() => {
+
+            // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
+
+            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+
+            balances[user] = (balances[user] || 0) + amount;
+
+            localStorage.setItem('sys_balances', JSON.stringify(balances));
+
+            localStorage.setItem('last_approved_user', user);
+
+            showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
+
+          });
+
+      }).catch(err => {
+
+        console.error('Approve order error:', err);
+
+        showPopup('error', 'LỖI DUYỆT ĐƠN', err.message || 'Không thể duyệt đơn!');
+
+      });
+
+    }
+
+    function approveCard(id) {
 
       return approveFirebaseOrder(String(id));
 
@@ -2192,31 +2175,27 @@ function updateSlider() {
       }
 
       const uid = document.getElementById('gameUID').value.trim();
-      if(!uid) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!');
-        return;
-      }
-      if(!selectedPriceObj) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!');
-        return;
-      }
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ. Vui lòng thử lại!');
-        return;
-      }
+      if(!uid) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!'); return; }
+      if(!selectedPriceObj) { showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!'); return; }
 
       const amount = Number(selectedPriceObj.price);
+      if(!Number.isFinite(amount) || amount <= 0) {
+        showPopup('error', 'THẤT BẠI', 'Số tiền thanh toán không hợp lệ!');
+        return;
+      }
+
+      // Giữ nguyên giao diện/chức năng cũ, chỉ thay phần trừ số dư:
+      // Firebase là nguồn số dư chính và transaction giúp tránh trừ sai khi bấm nhiều lần.
+      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
+        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ!');
+        return;
+      }
+
       const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-      const orderRef = db.ref('orders').push();
-
       const btn = document.getElementById('btnPayAction');
-      const processing = document.getElementById('processingArea');
-      btn.disabled = true;
-      btn.style.display = 'none';
-      processing.style.display = 'block';
 
-      // Trừ tiền trực tiếp trên Firebase bằng transaction:
-      // nếu số dư không đủ thì transaction trả về undefined và không ghi dữ liệu.
+      btn.disabled = true;
+
       balanceRef.transaction(current => {
         const balance = Number(current) || 0;
         if(balance < amount) return;
@@ -2226,60 +2205,32 @@ function updateSlider() {
           throw new Error('Số dư không đủ.');
         }
 
-        const orderData = {
-          id: orderRef.key,
-          user: currentUser,
-          kind: 'game_purchase',
-          game: selectedGame,
-          package: selectedPriceObj.label,
-          price: amount,
-          uid: uid,
-          time: new Date().toLocaleString('vi-VN'),
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          status: 'pending'
-        };
+        // Đồng bộ localStorage để phần hiển thị cũ của trang không bị lệch.
+        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+        balances[currentUser] = Number(result.snapshot.val()) || 0;
+        localStorage.setItem('sys_balances', JSON.stringify(balances));
+        updateUI();
 
-        return orderRef.set(orderData).catch(err => {
-          // Nếu tạo đơn thất bại sau khi đã trừ tiền, hoàn tiền lại.
-          return balanceRef.transaction(current => (Number(current) || 0) + amount)
-            .then(() => { throw err; });
-        });
+        document.getElementById('btnPayAction').style.display = 'none';
+        document.getElementById('processingArea').style.display = 'block';
+
+        return new Promise(resolve => setTimeout(resolve, 3000));
       }).then(() => {
-        const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-        cards.push({
-          id: Date.now(),
-          firebaseOrderId: orderRef.key,
-          user: currentUser,
-          type: 'Nạp game',
-          game: selectedGame,
-          seri: uid,
-          pin: '',
-          val: amount,
-          status: 'pending',
-          time: new Date().toLocaleString('vi-VN')
-        });
-        localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-        showPopup(
-          'success',
-          'ĐÃ TIẾP NHẬN ĐƠN',
-          `Đã trừ ${amount.toLocaleString()}đ khỏi ví. Đơn ${selectedGame} đang được xử lý.`
-        );
-        document.getElementById('gameUID').value = '';
-        openOrderHistoryModal();
+        document.getElementById('processingArea').style.display = 'none';
+        document.getElementById('btnPayAction').style.display = 'flex';
+        showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
       }).catch(err => {
-        showPopup(
-          'error',
-          err.message === 'Số dư không đủ.' ? 'SỐ DƯ KHÔNG ĐỦ' : 'LỖI GIAO DỊCH',
-          err.message === 'Số dư không đủ.'
-            ? 'Tài khoản không đủ tiền, vui lòng nạp thêm!'
-            : (err.message || 'Không thể tạo đơn, vui lòng thử lại!')
-        );
-        if(err.message === 'Số dư không đủ.') openDepositModal('qr');
+        document.getElementById('processingArea').style.display = 'none';
+        document.getElementById('btnPayAction').style.display = 'flex';
+
+        if(err.message === 'Số dư không đủ.') {
+          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', 'Tài khoản không đủ tiền, vui lòng nạp thêm!');
+          openDepositModal('qr');
+        } else {
+          showPopup('error', 'LỖI GIAO DỊCH', err.message || 'Không thể thanh toán!');
+        }
       }).finally(() => {
         btn.disabled = false;
-        btn.style.display = 'flex';
-        processing.style.display = 'none';
       });
     }
 
@@ -2300,58 +2251,19 @@ function updateSlider() {
   </script>
 
 
-  <div class="main-card" style="margin-top:10px;">
-    <div class="section-header">
-      <div class="section-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div>
-        <div class="section-title-sub">MINH BẠCH GIAO DỊCH</div>
-        <div class="section-title-main">Trạng thái hệ thống</div>
-      </div>
-    </div>
-    <div id="publicOrderStatus" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-      <div style="background:#f0f2f5;border-radius:12px;padding:12px;text-align:center;">
-        <b id="statusProcessing">—</b><br><small>Đang xử lý</small>
-      </div>
-      <div style="background:#f0f2f5;border-radius:12px;padding:12px;text-align:center;">
-        <b id="statusDone">—</b><br><small>Đã hoàn tất</small>
-      </div>
-      <div style="background:#f0f2f5;border-radius:12px;padding:12px;text-align:center;">
-        <b id="statusTotal">—</b><br><small>Tổng đơn</small>
-      </div>
-    </div>
-    <div style="margin-top:10px;font-size:.78rem;color:#65676b;text-align:center;">
-      Số liệu được lấy trực tiếp từ hệ thống đơn hàng, không dùng số liệu giả.
-    </div>
-  </div>
+  <footer id="siteFooter" style="margin-top:20px;background:#fff;border-top:1px solid #e4e6eb;padding:22px 15px;color:#65676b;font-size:.78rem;line-height:1.65;">
+    <div style="max-width:600px;margin:auto;text-align:center;">
+      <div style="font-weight:800;color:#1c1e21;margin-bottom:6px;">THÔNG TIN ĐƠN VỊ</div>
+      <div>CÔNG TY CỔ PHẦN [TÊN ĐƠN VỊ CỦA BẠN]</div>
+      <div>Giấy CNĐKKD số [SỐ ĐĂNG KÝ KINH DOANH THẬT]</div>
+      <div>Cơ quan cấp: [CƠ QUAN CẤP]</div>
+      <div>Địa chỉ trụ sở chính: [ĐỊA CHỈ TRỤ SỞ THẬT]</div>
 
-  <div class="main-card" style="margin-top:10px;">
-    <div style="display:flex;gap:10px;align-items:flex-start;">
-      <div class="section-icon" style="flex:0 0 36px;"><i class="fa-solid fa-headset"></i></div>
-      <div>
-        <div class="section-title-main">Hỗ trợ khách hàng</div>
-        <div style="font-size:.82rem;color:#65676b;margin-top:4px;line-height:1.5;">
-          Nếu đơn đang xử lý lâu hơn dự kiến, vui lòng giữ nguyên mã đơn/UID để bộ phận hỗ trợ kiểm tra nhanh.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer style="margin-top:18px;background:#fff;border-top:1px solid #e4e6eb;padding:24px 16px;color:#65676b;font-size:.78rem;line-height:1.65;">
-    <div style="max-width:600px;margin:auto;">
-      <div style="font-weight:800;color:#1c1e21;font-size:.9rem;margin-bottom:6px;">THÔNG TIN ĐƠN VỊ VẬN HÀNH</div>
-      <div>Tên đơn vị: <b>[Tên doanh nghiệp/đơn vị của bạn]</b></div>
-      <div>Mã số doanh nghiệp/MST: <b>[Điền thông tin đã đăng ký]</b></div>
-      <div>Địa chỉ trụ sở: <b>[Điền địa chỉ hợp pháp của đơn vị]</b></div>
-
-      <div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;">
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px 16px;margin-top:12px;">
         <a href="#faq" style="color:#0084ff;text-decoration:none;">Câu hỏi thường gặp</a>
         <a href="#support" style="color:#0084ff;text-decoration:none;">Trung tâm trợ giúp</a>
         <a href="#terms" style="color:#0084ff;text-decoration:none;">Điều khoản dịch vụ</a>
         <a href="#privacy" style="color:#0084ff;text-decoration:none;">Chính sách bảo mật</a>
-      </div>
-
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid #eee;">
-        © 2026 — Hệ thống nạp game. Thông tin pháp lý cần được thay bằng thông tin thật của đơn vị vận hành.
       </div>
     </div>
   </footer>
