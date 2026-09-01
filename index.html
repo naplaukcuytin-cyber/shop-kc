@@ -332,6 +332,12 @@
 
     .strength-strong { color: #2e7d32; }
 
+  .slide-item { position:relative; overflow:hidden; border-radius:14px; }
+    .slide-item::before { content:""; position:absolute; inset:0; padding:3px; border-radius:14px; background:conic-gradient(from 0deg, #00c6ff, #7a2cff, #ff2d75, #00e5a0, #00c6ff); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:ledRun 2.2s linear infinite; z-index:3; pointer-events:none; }
+    @keyframes ledRun { to { transform:rotate(360deg); } }
+    .qr-warning { margin-top:10px; padding:10px 12px; border-radius:10px; background:#fff3cd; color:#856404; border:1px solid #ffe08a; font-size:.82rem; line-height:1.5; }
+    .qr-upload { margin-top:12px; padding:12px; border:1px dashed #0084ff; border-radius:10px; background:#f7fbff; }
+    .qr-upload img { max-width:180px; max-height:180px; display:none; margin:10px auto 0; border-radius:10px; }
   </style>
 
 <!-- Firebase SDK v8 -->
@@ -339,6 +345,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <script>
 
@@ -365,25 +372,7 @@
   firebase.initializeApp(firebaseConfig);
 
   const db = firebase.database();
-  // CMS trang chủ: đọc nội dung do Admin lưu trong Firebase
-  function applySiteConfig(cfg) {
-    if (!cfg) return;
-    if (cfg.siteTitle) document.title = cfg.siteTitle;
-    const ann = document.getElementById('adminAnnouncement');
-    if (ann && cfg.announcement) ann.textContent = cfg.announcement;
-    const event = document.querySelector('.slider-controls > div:first-child');
-    if (event && cfg.eventTitle) event.innerHTML = '<span style="color:#2e7d32;">🟢</span> ' + cfg.eventTitle.replace(/[&<>"\']/g, '');
-    const slides = document.querySelectorAll('#sliderTrack .slide-item img');
-    if (slides[0] && cfg.banner1) slides[0].src = cfg.banner1;
-    if (slides[1] && cfg.banner2) slides[1].src = cfg.banner2;
-    if (cfg.gameConfig && typeof cfg.gameConfig === 'object') {
-      Object.keys(cfg.gameConfig).forEach(k => gameConfig[k] = cfg.gameConfig[k]);
-      if (typeof renderPriceGrid === 'function') renderPriceGrid();
-    }
-    localStorage.setItem('sys_announcement', cfg.announcement || '');
-  }
-  db.ref('siteConfig').on('value', snap => applySiteConfig(snap.val() || {}));
-
+  const storage = firebase.storage();
 
 </script>
 
@@ -541,6 +530,10 @@
 
     </div>
 
+    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openWithdrawModal()">
+      <i class="fa-solid fa-money-bill-transfer" style="color:#7c3aed;"></i> Rút Tiền
+    </div>
+
     <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
 
       <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Giao Dịch
@@ -557,9 +550,9 @@
 
       <div class="slider-track" id="sliderTrack">
 
-        <div class="slide-item"><img src="sukien1.PNG" alt="Banner 1"></div>
+        <div class="slide-item led-frame"><img src="sukien1.PNG" alt="Banner 1"></div>
 
-        <div class="slide-item"><img src="sukien2.PNG" alt="Banner 2"></div>
+        <div class="slide-item led-frame"><img src="sukien2.PNG" alt="Banner 2"></div>
 
       </div>
 
@@ -789,15 +782,7 @@
 
     <footer style="max-width:600px;margin:10px auto 30px;padding:22px 15px;text-align:center;color:#65676b;font-size:.78rem;line-height:1.7;">
     <div style="font-weight:800;color:#1c1e21;margin-bottom:6px;">THÔNG TIN ĐƠN VỊ VẬN HÀNH</div>
-    <div>CÔNG TY CỔ PHẦN SHOPEEPAY | Giấy CNĐKKD số 0103959912 | Cơ quan cấp: Phòng Đăng ký kinh doanh- Sở Kế hoạch và đầu tư TP Hà Nội | Địa chỉ trụ sở chính: Tầng 5, Tháp 2, Tòa nhà Capital Place, số 29 Liễu Giai, Phường Ngọc Hà, TP Hà Nội, Việt Nam
-Câu hỏi thường gặp
-
-Trung tâm trợ giúp
-
-Điều khoản dịch vụ
-
-Chính sách bảo mật
-</div>
+    <div>Vui lòng sử dụng đúng thông tin pháp nhân của đơn vị sở hữu và vận hành website.</div>
     <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:10px;">
       <a href="#" onclick="return false;" style="color:#0084ff;text-decoration:none;">Câu hỏi thường gặp</a>
       <a href="#" onclick="return false;" style="color:#0084ff;text-decoration:none;">Trung tâm trợ giúp</a>
@@ -834,11 +819,13 @@ Chính sách bảo mật
 
           <label>Nhập Số Tiền Cần Nạp (VNĐ)</label>
 
-          <input type="number" class="form-control" id="qrAmount" value="50000">
+          <input type="number" class="form-control" id="qrAmount" value="50000" min="20000" max="10000000">
+          <div class="qr-warning"><b>⚠️ Mức nạp:</b> tối thiểu <b>20.000đ</b> • tối đa <b>10.000.000đ</b>. <b>Chuyển đúng số tiền và đúng nội dung hiển thị.</b></div>
 
         </div>
 
-        <button class="btn-login-main" style="width:100%; justify-content:center;" onclick="createQR()">Tạo Thông Tin Chuyển Khoản</button>
+        <button class="btn-login-main" id="createQrBtn" style="width:100%; justify-content:center;" onclick="createQR()">Tạo Thông Tin Chuyển Khoản</button>
+        <div id="qrCreatedWarning" class="qr-warning" style="display:none;"><b>⚠️ Lưu ý:</b> Thông tin chuyển khoản đã được tạo. Không tạo lại mã mới; hãy chuyển đúng <b>số tiền</b> và <b>nội dung</b> hiển thị bên dưới.</div>
 
         <div id="qrImgBox" style="margin-top:15px; display:none; background:#f8f9fa; padding:15px; border-radius:12px; border:1px dashed #0084ff;">
 
@@ -860,10 +847,13 @@ Chính sách bảo mật
 
           </div>
 
+          <div class="qr-upload">
+            <b>📷 Tải ảnh xác nhận chuyển khoản (không bắt buộc)</b>
+            <input type="file" id="qrProofImage" accept="image/*" style="margin-top:8px; width:100%;">
+            <img id="qrProofPreview" alt="Ảnh xác nhận">
+          </div>
           <button class="btn-login-main" style="width:100%; justify-content:center; margin-top:12px; background:#2e7d32;" onclick="confirmBankTransferSent()">
-
             <i class="fa-solid fa-check-circle"></i> ĐÃ CHUYỂN KHOẢN
-
           </button>
 
         </div>
@@ -968,6 +958,18 @@ Chính sách bảo mật
 
     </div>
 
+  </div>
+
+<!-- Modal Rút Tiền -->
+  <div class="modal" id="withdrawModal">
+    <div class="modal-content">
+      <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('withdrawModal')"></i>
+      <h3 style="color:#7c3aed;text-align:center;margin-bottom:8px;">RÚT TIỀN</h3>
+      <div class="qr-warning"><b>Lưu ý:</b> Số tiền rút từ 20.000đ đến 10.000.000đ. Sau khi gửi, số dư sẽ được tạm trừ và hoàn lại nếu Admin từ chối.</div>
+      <div class="form-group"><label>Số tiền muốn rút</label><input type="number" class="form-control" id="withdrawAmount" placeholder="Tối thiểu 20.000đ"></div>
+      <div class="form-group"><label>Thông tin nhận tiền</label><textarea class="form-control" id="withdrawInfo" rows="4" placeholder="Ngân hàng - Số tài khoản - Tên chủ tài khoản"></textarea></div>
+      <button class="btn-login-main" style="width:100%;justify-content:center;background:#7c3aed;" onclick="submitWithdraw()">GỬI YÊU CẦU RÚT TIỀN</button>
+    </div>
   </div>
 
 <!-- Modal Xem Lịch Sử Giao Dịch -->
@@ -1120,21 +1122,21 @@ Chính sách bảo mật
 
     const gameConfig = {
 
-      'Free Fire': { unit: 'Kim Cương', rates: [{p:50000, v:'4.250'}, {p:100000, v:'8.500'}, {p:200000, v:'17.250'}, {p:500000, v:'45.000'}] },
+      'Free Fire': { unit: 'Kim Cương', rates: [{p:25000, v:'2.125'}, {p:50000, v:'4.250'}, {p:100000, v:'8.500'}, {p:200000, v:'17.250'}, {p:500000, v:'45.000'}] },
 
-      'Liên Quân Mobile': { unit: 'Quân Huy', rates: [{p:50000, v:'4.200'}, {p:100000, v:'8.550'}, {p:200000, v:'17.700'}, {p:500000, v:'45.000'}] },
+      'Liên Quân Mobile': { unit: 'Quân Huy', rates: [{p:25000, v:'2.100'}, {p:50000, v:'4.200'}, {p:100000, v:'8.550'}, {p:200000, v:'17.700'}, {p:500000, v:'45.000'}] },
 
-      'FC Mobile VN': { unit: 'FC Point', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'FC Mobile VN': { unit: 'FC Point', rates: [{p:25000, v:'1.875'}, {p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
 
-      'FC Online (VN)': { unit: 'FC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'FC Online (VN)': { unit: 'FC Coin', rates: [{p:25000, v:'1.875'}, {p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
 
-      'FC Online M (VN)': { unit: 'MC Coin', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
+      'FC Online M (VN)': { unit: 'MC Coin', rates: [{p:25000, v:'1.875'}, {p:50000, v:'3.750'}, {p:100000, v:'7.800'}, {p:200000, v:'16.500'}, {p:500000, v:'42.000'}] },
 
-      'Delta Force': { unit: 'KNB', rates: [{p:50000, v:'4.500'}, {p:100000, v:'9.000'}, {p:200000, v:'18.750'}, {p:500000, v:'48.000'}] },
+      'Delta Force': { unit: 'KNB', rates: [{p:25000, v:'2.250'}, {p:50000, v:'4.500'}, {p:100000, v:'9.000'}, {p:200000, v:'18.750'}, {p:500000, v:'48.000'}] },
 
       'Nạp Sò': { unit: 'Sò Garena', rates: [{p:50000, v:'1.500'}, {p:100000, v:'3.000'}, {p:200000, v:'6.000'}, {p:500000, v:'15.000'}] },
 
-      'Cái thế tranh hùng': { unit: 'Xu Vàng', rates: [{p:50000, v:'3.750'}, {p:100000, v:'7.500'}, {p:200000, v:'15.750'}, {p:500000, v:'40.000'}] }
+      'Cái thế tranh hùng': { unit: 'Xu Vàng', rates: [{p:25000, v:'1.875'}, {p:50000, v:'3.750'}, {p:100000, v:'7.500'}, {p:200000, v:'15.750'}, {p:500000, v:'40.000'}] }
 
     };
 
@@ -1423,6 +1425,9 @@ Chính sách bảo mật
         profiles[u] = dName;
 
         localStorage.setItem('sys_users', JSON.stringify(users));
+        if(typeof db !== 'undefined' && db) {
+          db.ref('userProfiles/' + encodeURIComponent(u)).set({user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,source:'website'}).catch(e=>console.warn('Không ghi được hồ sơ Firebase:',e));
+        }
 
         localStorage.setItem('sys_profiles', JSON.stringify(profiles));
 
@@ -1610,199 +1615,124 @@ Chính sách bảo mật
 
     }
 
+    function getRegisteredName() {
+      const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
+      return String(profiles[currentUser] || currentUser || '').trim();
+    }
+
     function createQR() {
-
-      currentGeneratedMemo = "NAP" + Math.floor(100000 + Math.random() * 900000);
-
+      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!'); return; }
+      const amount = Number(document.getElementById('qrAmount').value);
+      if(!Number.isInteger(amount) || amount < 20000 || amount > 10000000) {
+        showPopup('error','SỐ TIỀN KHÔNG HỢP LỆ','Mức nạp tối thiểu 20.000đ và tối đa 10.000.000đ.');
+        return;
+      }
+      if(currentGeneratedMemo) {
+        document.getElementById('qrCreatedWarning').style.display='block';
+        return;
+      }
+      currentGeneratedMemo = getRegisteredName().toUpperCase().replace(/\s+/g,' ').trim();
       document.getElementById('qrMemo').innerText = currentGeneratedMemo;
-
       document.getElementById('qrImgBox').style.display = 'block';
+      document.getElementById('createQrBtn').style.display = 'none';
+      document.getElementById('qrCreatedWarning').style.display = 'block';
+    }
 
+    function resetQrState() {
+      currentGeneratedMemo='';
+      const btn=document.getElementById('createQrBtn'); if(btn) btn.style.display='block';
+      const box=document.getElementById('qrImgBox'); if(box) box.style.display='none';
+      const warn=document.getElementById('qrCreatedWarning'); if(warn) warn.style.display='none';
+      const file=document.getElementById('qrProofImage'); if(file) file.value='';
+      const prev=document.getElementById('qrProofPreview'); if(prev){prev.src='';prev.style.display='none';}
+    }
+
+    function validateDepositAmount(amount) {
+      if(!Number.isInteger(amount) || amount < 20000 || amount > 10000000) {
+        showPopup('error','SỐ TIỀN KHÔNG HỢP LỆ','Mức nạp tối thiểu 20.000đ và tối đa 10.000.000đ.');
+        return false;
+      }
+      return true;
     }
 
     function confirmBankTransferSent() {
-
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-
-      const amountInput = document.getElementById('qrAmount');
-
-      const val = parseInt(amountInput && amountInput.value, 10);
-
-      if(!Number.isFinite(val) || val <= 0) {
-
-        showPopup('error', 'THẤT BẠI', 'Vui lòng nhập số tiền nạp hợp lệ!');
-
-        return;
-
-      }
-
-      if(!currentGeneratedMemo) {
-
-        showPopup('error', 'THẤT BẠI', 'Vui lòng tạo mã QR trước!');
-
-        return;
-
-      }
-
+      const val = parseInt(document.getElementById('qrAmount').value, 10);
+      if(!validateDepositAmount(val)) return;
+      if(!currentGeneratedMemo) { showPopup('error', 'THẤT BẠI', 'Vui lòng tạo thông tin chuyển khoản trước!'); return; }
       submitDeposit(val);
-
     }
 
     function submitDeposit(val) {
-
-      if(!currentUser) {
-
-        showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!');
-
-        return;
-
-      }
-
+      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
       const amount = Number(val);
+      if(!validateDepositAmount(amount)) return;
+      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') { showPopup('error','LỖI HỆ THỐNG','Không kết nối được máy chủ.'); return; }
 
-      if(!Number.isFinite(amount) || amount <= 0) {
-
-        showPopup('error', 'THẤT BẠI', 'Số tiền nạp không hợp lệ!');
-
-        return;
-
-      }
-
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ. Vui lòng thử lại!');
-
-        return;
-
-      }
-
+      const file = document.getElementById('qrProofImage')?.files?.[0] || null;
       const orderRef = db.ref('orders').push();
+      const baseOrder = { id:orderRef.key,user:currentUser,displayName:getRegisteredName(),package:'Nạp Chuyển Khoản',price:amount,uid:currentGeneratedMemo,memo:currentGeneratedMemo,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending',type:'bank' };
 
-      const orderData = {
+      const saveOrder = (proofUrl='') => orderRef.set({...baseOrder, proofImage:proofUrl}).then(()=>{
+        showPopup('success','ĐÃ GỬI YÊU CẦU','Đã ghi nhận đơn. Admin sẽ kiểm tra số tiền, nội dung và ảnh xác nhận.');
+        closeModal('depositModal'); resetQrState();
+      });
 
-        id: orderRef.key,
-
-        user: currentUser,
-
-        package: "Nạp Chuyển Khoản",
-
-        price: amount,
-
-        uid: currentGeneratedMemo || "Không có",
-
-        memo: currentGeneratedMemo || "",
-
-        time: new Date().toLocaleString('vi-VN'),
-
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-
-        status: "pending"
-
-      };
-
-      orderRef.set(orderData)
-
-        .then(() => {
-
-          // Lưu cục bộ chỉ để lịch sử trên thiết bị khách; dữ liệu chính nằm trên Firebase.
-
-          const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
-          cards.push({
-
-            id: Date.now(),
-
-            firebaseOrderId: orderRef.key,
-
-            user: currentUser,
-
-            type: 'Chuyển Khoản / QR',
-
-            seri: 'BANK',
-
-            pin: currentGeneratedMemo || '',
-
-            val: amount,
-
-            status: 'pending'
-
-          });
-
-          localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-          notifyAdminViaEmail(
-
-            `Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${amount.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo || ''}`
-
-          );
-
-          showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ Admin kiểm tra.');
-
-          closeModal('depositModal');
-
-        })
-
-        .catch((err) => {
-
-          console.error('Lỗi gửi đơn Firebase:', err);
-
-          showPopup('error', 'LỖI GỬI ĐƠN', err.message || 'Không thể gửi đơn, vui lòng thử lại!');
-
-        });
-
+      if(file && typeof storage !== 'undefined') {
+        if(file.size > 5*1024*1024) { showPopup('error','ẢNH QUÁ LỚN','Vui lòng chọn ảnh tối đa 5MB.'); return; }
+        const path='payment_proofs/'+currentUser+'/'+orderRef.key+'_'+Date.now();
+        storage.ref(path).put(file).then(snap=>snap.ref.getDownloadURL()).then(saveOrder)
+          .catch(err=>showPopup('error','LỖI TẢI ẢNH',err.message||'Không thể tải ảnh xác nhận.'));
+      } else saveOrder();
     }
 
     function submitCard(typeStr) {
-
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-
-      const seri = document.getElementById('cardSeri').value.trim();
-
-      const pin = document.getElementById('cardPin').value.trim();
-
-      const val = parseInt(document.getElementById('cardVal').value);
-
-      if(!seri || !pin) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đủ Seri và Mã Thẻ!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
-      cards.push({ id: Date.now(), user: currentUser, type: typeStr, seri, pin, val, status: 'pending' });
-
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} gửi ${typeStr} | Mệnh giá: ${val.toLocaleString()}đ | Mã Pin: ${pin} | Seri: ${seri}`);
-
-      showPopup('success', 'XÁC NHẬN THÀNH CÔNG', 'Đã gửi mã thẻ lên hệ thống!');
-
-      closeModal('depositModal');
-
+      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!'); return; }
+      const seri=document.getElementById('cardSeri').value.trim(), pin=document.getElementById('cardPin').value.trim(), val=parseInt(document.getElementById('cardVal').value,10);
+      if(!seri || !pin) { showPopup('error','THẤT BẠI','Vui lòng nhập đủ Seri và Mã Thẻ!'); return; }
+      if(!Number.isFinite(val)||val<20000||val>10000000) { showPopup('error','MỆNH GIÁ KHÔNG HỢP LỆ','Mức nạp tối thiểu 20.000đ và tối đa 10.000.000đ.'); return; }
+      const ref=db.ref('orders').push();
+      ref.set({id:ref.key,user:currentUser,displayName:getRegisteredName(),type:'phone_card',package:typeStr,provider:document.getElementById('cardProvider').value,price:val,seri,pin,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'})
+        .then(()=>{showPopup('success','ĐÃ GỬI','Thẻ đã được gửi lên hệ thống và đang chờ Admin kiểm tra.');closeModal('depositModal');})
+        .catch(e=>showPopup('error','LỖI GỬI ĐƠN',e.message||'Không thể gửi đơn.'));
     }
 
     function submitGarenaCard() {
-
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
-
-      const seri = document.getElementById('garSeri').value.trim() || 'GARENA';
-
-      const pin = document.getElementById('garPin').value.trim();
-
-      const val = parseInt(document.getElementById('garVal').value);
-
-      if(!pin) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập Mã Thẻ Garena!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
-      cards.push({ id: Date.now(), user: currentUser, type: 'Thẻ Garena', seri, pin, val, status: 'pending' });
-
-      localStorage.setItem('sys_cards', JSON.stringify(cards));
-
-      notifyAdminViaEmail(`Khách: ${currentUser} gửi THẺ GARENA | Mệnh giá: ${val.toLocaleString()}đ | Mã Pin: ${pin}`);
-
-      showPopup('success', 'XÁC NHẬN THÀNH CÔNG', 'Đã gửi Thẻ Garena lên hệ thống!');
-
-      closeModal('depositModal');
-
+      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!'); return; }
+      const seri=document.getElementById('garSeri').value.trim()||'GARENA', pin=document.getElementById('garPin').value.trim(), val=parseInt(document.getElementById('garVal').value,10);
+      if(!pin) { showPopup('error','THẤT BẠI','Vui lòng nhập Mã Thẻ Garena!'); return; }
+      if(!Number.isFinite(val)||val<20000||val>10000000) { showPopup('error','MỆNH GIÁ KHÔNG HỢP LỆ','Mức nạp tối thiểu 20.000đ và tối đa 10.000.000đ.'); return; }
+      const ref=db.ref('orders').push();
+      ref.set({id:ref.key,user:currentUser,displayName:getRegisteredName(),type:'garena_card',package:'Thẻ Garena',price:val,seri,pin,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'})
+        .then(()=>{showPopup('success','ĐÃ GỬI','Thẻ Garena đã được gửi lên hệ thống và đang chờ Admin kiểm tra.');closeModal('depositModal');})
+        .catch(e=>showPopup('error','LỖI GỬI ĐƠN',e.message||'Không thể gửi đơn.'));
     }
+
+    function openWithdrawModal() {
+      closeSidebar();
+      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!'); return; }
+      document.getElementById('withdrawModal').classList.add('active');
+      document.getElementById('withdrawAmount').value='';
+      document.getElementById('withdrawInfo').value='';
+    }
+
+    function submitWithdraw() {
+      if(!currentUser) return;
+      const amount=Number(document.getElementById('withdrawAmount').value);
+      const info=document.getElementById('withdrawInfo').value.trim();
+      if(!Number.isInteger(amount)||amount<20000||amount>10000000) { showPopup('error','SỐ TIỀN KHÔNG HỢP LỆ','Mức rút từ 20.000đ đến 10.000.000đ.'); return; }
+      if(!info) { showPopup('error','THIẾU THÔNG TIN','Nhập thông tin nhận tiền (ngân hàng/số tài khoản/tên).'); return; }
+      const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
+      balanceRef.transaction(v=>{const b=Number(v)||0; if(b<amount)return; return b-amount;}).then(result=>{
+        if(!result.committed) throw Error('Số dư không đủ.');
+        const r=db.ref('withdrawals').push();
+        return r.set({id:r.key,user:currentUser,displayName:getRegisteredName(),amount,receiveInfo:info,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'pending'});
+      }).then(()=>{showPopup('success','ĐÃ GỬI YÊU CẦU','Yêu cầu rút tiền đang chờ Admin xử lý.');closeModal('withdrawModal');})
+      .catch(e=>showPopup('error','RÚT TIỀN THẤT BẠI',e.message||'Không thể tạo yêu cầu.'));
+    }
+
+    function previewQrProof(input){const f=input.files&&input.files[0],img=document.getElementById('qrProofPreview');if(!f||!img)return;if(f.size>5*1024*1024){input.value='';showPopup('error','ẢNH QUÁ LỚN','Vui lòng chọn ảnh tối đa 5MB.');return;}const r=new FileReader();r.onload=e=>{img.src=e.target.result;img.style.display='block';};r.readAsDataURL(f);}
+    document.addEventListener('change',e=>{if(e.target&&e.target.id==='qrProofImage')previewQrProof(e.target);});
 
     function openHistoryModal() {
       closeSidebar();
