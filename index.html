@@ -423,7 +423,7 @@
   @keyframes historyCheckPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(46,125,50,.25)}50%{transform:scale(1.12);box-shadow:0 0 0 6px rgba(46,125,50,0)}}
 
   .game-commitments{margin-top:18px}
-  .game-commitments .commit-card{min-height:150px}
+  .game-commitments .commit-card{min-height:185px}
   .public-history-card{margin-top:18px;background:#fff;border:1px solid #e4e6eb;border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(20,30,50,.06)}
   .public-history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
   .public-history-head h3{margin:0;font-size:1.05rem;color:#1c1e21}
@@ -847,19 +847,21 @@
         <label style="font-size:.85rem;font-weight:600;">Chọn gói nạp</label>
         <div class="price-grid" id="gamePagePriceGrid"></div>
         <button class="btn-login-main" id="gamePagePayBtn" style="width:100%;justify-content:center;margin-top:15px;padding:12px;" onclick="confirmGamePagePurchase()">NẠP NGAY</button>
-        <div class="commit-grid game-commitments">
-          <div class="commit-card"><h4>✓ Cam kết xử lý đúng thông tin</h4><p>Khách vui lòng kiểm tra chính xác ID/UID, tên game, gói tài nguyên và số tiền trước khi xác nhận. Hệ thống ghi nhận đúng dữ liệu mà khách đã gửi để hạn chế nhầm lẫn trong quá trình xử lý đơn.</p></div>
-          <div class="commit-card"><h4>✓ Cam kết minh bạch giao dịch</h4><p>Mỗi đơn nạp được tạo mã riêng, lưu thời gian, tài khoản, game, UID, gói nạp, số tiền và trạng thái. Khách có thể kiểm tra lại lịch sử giao dịch của mình bất cứ lúc nào.</p></div>
-          <div class="commit-card"><h4>✓ Cam kết bảo vệ số dư</h4><p>Trước khi trừ tiền, hệ thống kiểm tra số dư và chỉ tiếp tục khi tài khoản đủ tiền. Nếu giao dịch không tạo được, số dư sẽ không bị trừ. Các thay đổi số dư được đồng bộ theo dữ liệu hệ thống.</p></div>
-          <div class="commit-card"><h4>✓ Cam kết hỗ trợ khi phát sinh lỗi</h4><p>Nếu đơn bị treo, sai trạng thái hoặc phát sinh sự cố, khách nên giữ lại mã đơn, thời gian giao dịch và thông tin liên quan để bộ phận hỗ trợ kiểm tra nhanh nhất.</p></div>
-          <div class="commit-card"><h4>✓ Quy định khi nạp game</h4><p>Không nhập UID của người khác nếu chưa được cho phép. Không gửi thông tin sai, cố tình tạo giao dịch gian lận hoặc lợi dụng lỗi hệ thống. Các trường hợp vi phạm có thể bị tạm khóa xử lý và được Admin kiểm tra.</p></div>
-          <div class="commit-card"><h4>✓ Lưu ý về thời gian xử lý</h4><p>Thời gian hoàn tất phụ thuộc vào trạng thái hệ thống và từng trò chơi. Khi đơn đang xử lý, khách không nên tạo lại nhiều đơn giống nhau vì có thể phát sinh giao dịch trùng.</p></div>
-        </div>
-
         <section class="public-history-card">
-          <div class="public-history-head"><div><h3>⚡ LỊCH SỬ NẠP GẦN ĐÂY</h3><p>Giao dịch thực tế được cập nhật tự động. Các mục “mẫu” chỉ dùng để minh họa giao diện.</p></div><span class="live-dot">● LIVE</span></div>
+          <div class="public-history-head"><div><h3>⚡ LỊCH SỬ NẠP GẦN ĐÂY</h3><p>Các giao dịch thành công sẽ được cập nhật tự động. Khi chưa có giao dịch thực tế, hệ thống hiển thị dữ liệu mẫu có ghi rõ để minh họa giao diện.</p></div><span class="live-dot">● LIVE</span></div>
           <div id="publicRecentHistory" class="public-history-list"></div>
         </section>
+
+        <div class="commit-grid game-commitments">
+          <div class="commit-card"><h4>✓ Cam kết xử lý đúng thông tin</h4><p>Quý khách vui lòng kiểm tra cẩn thận ID/UID, tên trò chơi, máy chủ nếu có, gói tài nguyên, mệnh giá và số tiền trước khi nhấn nút NẠP NGAY. Hệ thống sẽ tiếp nhận và xử lý theo đúng thông tin khách hàng đã xác nhận. Trong trường hợp khách nhập sai UID hoặc thông tin nhận tài nguyên, vui lòng liên hệ hỗ trợ sớm để được kiểm tra tình trạng đơn.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết minh bạch giao dịch</h4><p>Mỗi đơn nạp được ghi nhận với thông tin giao dịch cần thiết như tài khoản, trò chơi, UID, gói nạp, số tiền, thời gian và trạng thái xử lý. Khách hàng có thể theo dõi lịch sử giao dịch để đối chiếu khi cần thiết. Website không tự ý thay đổi thông tin đơn sau khi khách đã xác nhận, trừ các cập nhật trạng thái xử lý của hệ thống.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết bảo vệ số dư khách hàng</h4><p>Trước khi thực hiện đơn, hệ thống kiểm tra số dư tài khoản và chỉ cho phép giao dịch khi số dư đáp ứng giá trị gói nạp. Khoản tiền được trừ theo đúng giá niêm yết của gói đã chọn. Nếu giao dịch không được tạo thành công, hệ thống không chủ động trừ thêm tiền của khách và số dư được đồng bộ lại theo dữ liệu hệ thống.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết hỗ trợ khi phát sinh sự cố</h4><p>Nếu đơn hàng có dấu hiệu chậm xử lý, sai trạng thái, chưa nhận được tài nguyên hoặc phát sinh lỗi trong quá trình giao dịch, quý khách vui lòng cung cấp tài khoản, UID, tên game, thời gian nạp và thông tin đơn hàng để bộ phận hỗ trợ kiểm tra. Chúng tôi ưu tiên đối soát theo dữ liệu hệ thống nhằm hạn chế ảnh hưởng đến quyền lợi của khách hàng.</p></div>
+          <div class="commit-card"><h4>✓ Quy định khi nạp game</h4><p>Khách hàng có trách nhiệm sử dụng đúng UID/tài khoản của mình hoặc tài khoản được chủ sở hữu cho phép. Không cố tình nhập thông tin sai, tạo nhiều giao dịch trùng, lợi dụng lỗi hệ thống, can thiệp dữ liệu hoặc thực hiện hành vi gian lận. Các giao dịch có dấu hiệu bất thường có thể được tạm giữ để kiểm tra trước khi tiếp tục xử lý.</p></div>
+          <div class="commit-card"><h4>✓ Lưu ý về thời gian xử lý</h4><p>Thời gian hoàn tất đơn có thể phụ thuộc vào trạng thái máy chủ, hệ thống trò chơi và tình trạng xử lý tại từng thời điểm. Trong lúc đơn đang được xử lý, quý khách không nên liên tục tạo lại cùng một giao dịch vì có thể gây trùng yêu cầu. Hãy chờ trạng thái đơn được cập nhật hoặc liên hệ hỗ trợ nếu thời gian xử lý kéo dài bất thường.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết tiếp nhận và đối soát</h4><p>Mọi yêu cầu nạp tiền và nạp game được tiếp nhận theo thông tin mà khách hàng gửi trên hệ thống. Khi cần đối soát, bộ phận hỗ trợ sẽ căn cứ vào dữ liệu giao dịch, thời gian, mã đơn, tài khoản và trạng thái lưu trên hệ thống để kiểm tra. Khách hàng nên lưu lại thông tin giao dịch cho đến khi đơn hoàn tất.</p></div>
+          <div class="commit-card"><h4>✓ Trách nhiệm của khách hàng</h4><p>Quý khách vui lòng bảo mật tài khoản đăng nhập, không chia sẻ mật khẩu hoặc thông tin truy cập cho người khác, đồng thời kiểm tra kỹ nội dung giao dịch trước khi xác nhận. Việc bảo mật thông tin tài khoản giúp hạn chế các rủi ro ngoài ý muốn và giúp quá trình hỗ trợ, xác minh giao dịch được thực hiện nhanh chóng và chính xác hơn.</p></div>
+        </div>
       </div>
     </section>
 
@@ -1407,7 +1409,7 @@
       const title=document.getElementById('gamePageTitle'); if(title) title.innerText='NẠP '+String(gameName).toUpperCase();
       const sub=document.getElementById('gamePageSub'); if(sub) sub.innerText='Chọn gói '+gameUnit(gameName)+' bên dưới';
       const note=document.getElementById('gameUnitNote'); if(note) note.innerText='Đơn vị nhận: '+gameUnit(gameName);
-      const uid=document.getElementById('gamePageUID'); if(uid){uid.value=document.getElementById('gameUID')?.value||'';}
+      const uid=document.getElementById('gamePageUID'); if(uid && !uid.value) uid.value='';
       renderGamePagePrices();
       window.scrollTo({top:0,behavior:'smooth'});
     }
@@ -1441,7 +1443,6 @@
       const uid=(document.getElementById('gamePageUID')?.value||'').trim();
       if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
       if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn một gói nạp.');return;}
-      const legacyUid=document.getElementById('gameUID'); if(legacyUid) legacyUid.value=uid;
       confirmPurchase();
     }
 
@@ -1592,32 +1593,32 @@
 
         document.getElementById('balanceText').innerText = (balances[currentUser] || 0).toLocaleString();
 
-        document.getElementById('requireLoginNotice').style.display = 'none';
-
-        document.getElementById('payForm').style.display = 'block';
-
         // Số dư thật nằm trên Firebase, không dùng localStorage làm nguồn chính.
 
         if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
 
           const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
 
+          // Firebase là nguồn số dư chính. Nếu tài khoản cũ chỉ còn số dư trong
+          // cache local và Firebase chưa có node, đồng bộ một lần sang Firebase
+          // để số tiền đang hiển thị có thể sử dụng được khi thanh toán.
+          balanceRef.once('value').then(snap => {
+            if(snap.val() === null || typeof snap.val() === 'undefined') {
+              const cached = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+              const cachedBalance = Number(cached[currentUser]) || 0;
+              if(cachedBalance > 0) return balanceRef.set(cachedBalance);
+            }
+          }).catch(err => console.error('Lỗi đồng bộ số dư ban đầu:', err));
+
           balanceRef.off('value');
 
           balanceRef.on('value', snap => {
-
             const balance = Number(snap.val()) || 0;
-
             const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
             localBalances[currentUser] = balance;
-
             localStorage.setItem('sys_balances', JSON.stringify(localBalances));
-
             const el = document.getElementById('balanceText');
-
             if(el) el.innerText = balance.toLocaleString();
-
           }, err => console.error('Lỗi đọc số dư Firebase:', err));
 
           // Realtime trạng thái đơn: khách sẽ biết ngay khi Admin duyệt/hủy.
@@ -1677,10 +1678,6 @@
         document.getElementById('btnLogin').style.display = 'flex';
 
         document.getElementById('userProfile').style.display = 'none';
-
-        document.getElementById('requireLoginNotice').style.display = 'block';
-
-        document.getElementById('payForm').style.display = 'none';
 
       }
 
@@ -2208,26 +2205,22 @@
 
       if(!u || isNaN(amt)) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tên và số tiền!'); return; }
 
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-      balances[u] = (balances[u] || 0) + amt;
-
-      localStorage.setItem('sys_balances', JSON.stringify(balances));
-
       if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
-
         db.ref('balances/' + encodeURIComponent(u)).transaction(current => (Number(current) || 0) + amt)
-
-          .then(() => showPopup('success', 'THÀNH CÔNG', 'Đã cộng tiền vào số dư Firebase của khách!'))
-
+          .then(() => {
+            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+            balances[u] = (Number(balances[u]) || 0) + amt;
+            localStorage.setItem('sys_balances', JSON.stringify(balances));
+            showPopup('success', 'THÀNH CÔNG', 'Đã cộng tiền vào số dư Firebase của khách!');
+          })
           .catch(err => showPopup('error', 'LỖI FIREBASE', err.message || 'Không thể cập nhật số dư!'));
-
         return;
-
       }
 
+      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+      balances[u] = (Number(balances[u]) || 0) + amt;
+      localStorage.setItem('sys_balances', JSON.stringify(balances));
       showPopup('success', 'THÀNH CÔNG', `Đã cập nhật số dư cho ${u}!`);
-
       updateUI();
 
     }
@@ -2278,7 +2271,17 @@
       const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
       const btn=document.getElementById('gamePagePayBtn');
       if(btn){btn.disabled=true;btn.style.opacity='.6';}
-      balanceRef.transaction(current=>{const balance=Number(current)||0;if(balance<price)return;return balance-price;}).then(result=>{
+      balanceRef.transaction(current=>{
+        let balance;
+        if(current === null || typeof current === 'undefined') {
+          const cached=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+          balance=Number(cached[currentUser])||0;
+        } else {
+          balance=Number(current)||0;
+        }
+        if(balance<price) return;
+        return balance-price;
+      }).then(result=>{
         if(!result.committed) throw new Error('INSUFFICIENT_BALANCE');
         const orderRef=db.ref('orders').push();
         return orderRef.set({id:orderRef.key,user:currentUser,displayName:getRegisteredName(),package:'Nạp Game',game:selectedGame,gameUID:uid,price:price,label:selectedPriceObj.label,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'processing'});
