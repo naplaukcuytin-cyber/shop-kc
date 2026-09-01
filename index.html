@@ -111,6 +111,15 @@
     }
 
     .balance-text { color: var(--success-green); font-weight: bold; font-size: 0.85rem; }
+    .admin-customer-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:12px;margin:10px 0;}
+    .admin-customer-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+    .admin-customer-table th,.admin-customer-table td{padding:9px 7px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:middle;}
+    .admin-customer-table th{background:#f1f5f9;font-weight:800;color:#334155;position:sticky;top:0;z-index:1;}
+    .admin-balance-live{font-weight:900;color:#15803d;white-space:nowrap;}
+    .fraud-btn{background:#7c3aed;color:#fff;border:none;padding:7px 9px;border-radius:8px;font-weight:800;cursor:pointer;white-space:nowrap;}
+    .note-warning{border-color:#fed7aa!important;background:#fff7ed!important;color:#9a3412!important;}
+    .note-success{border-color:#bbf7d0!important;background:#f0fdf4!important;color:#166534!important;}
+    .admin-scroll{max-height:330px;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;background:#fff;}
 
     .container { max-width: 600px; margin: 15px auto; padding: 0 15px; }
 
@@ -693,6 +702,12 @@
 
     </div>
 
+    <div id="customerNoteBox" style="display:none;margin-bottom:15px;padding:14px 16px;border-radius:16px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;box-shadow:0 4px 14px rgba(37,99,235,.06);">
+      <div id="customerNoteTitle" style="font-weight:800;margin-bottom:5px;"></div>
+      <div id="customerNoteText" style="line-height:1.55;"></div>
+      <div id="customerNoteTime" style="margin-top:7px;font-size:.75rem;color:#64748b;"></div>
+    </div>
+
     <!-- Khung Danh Mục Trò Chơi Nạp Thẻ -->
 
     <div class="main-card">
@@ -1064,7 +1079,7 @@
         <button class="history-filter" data-filter="game" onclick="setHistoryFilter('game',this)">Nạp KC / Game</button>
         <button class="history-filter" data-filter="web" onclick="setHistoryFilter('web',this)">Nạp web</button>
       </div>
-      <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div><div id="recoveryNoticeBox" style="display:none;margin-bottom:12px;padding:10px 12px;border-radius:10px;background:#fff1f2;color:#9f1239;font-size:.8rem;"></div>
+      <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div>
       <div style="overflow-x:auto;">
         <table>
           <thead><tr><th>Thời gian</th><th>Loại</th><th>Game / UID</th><th>Số tiền</th><th>Trạng thái</th></tr></thead>
@@ -1084,45 +1099,55 @@
 
       <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">BẢNG ĐIỀU KHIỂN ADMIN</h3>
 
-      <a href="admin.html" target="_blank" style="display: block; padding: 10px 15px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin-top: 10px; text-align: center; font-weight: bold;">📥 Quản Lý Đơn Nạp (SheetDB)</a>
+      <a href="admin.html" target="_blank" style="display:block;padding:10px 15px;background:#3b82f6;color:white;text-decoration:none;border-radius:8px;margin-top:10px;text-align:center;font-weight:bold;">📥 Quản Lý Đơn Nạp (SheetDB)</a>
 
-      <div style="background:#fff3cd; padding:12px; border-radius:10px; margin-bottom:15px; margin-top:15px;">
-
+      <div style="background:#fff3cd;padding:12px;border-radius:10px;margin:15px 0;">
         <label><b>Thông Báo Mức Nạp Khách Hàng:</b></label>
-
         <textarea class="form-control" id="admNoticeInput" style="margin-top:5px;" rows="2"></textarea>
-
-        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:8px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
-
+        <button style="margin-top:8px;background:#d39e00;color:white;border:none;padding:8px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
       </div>
 
-      <div style="background:#f0f2f5; padding:12px; border-radius:10px; margin-bottom:15px;">
+      <div class="admin-customer-card">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+          <div>
+            <div style="font-weight:900;color:#111827;">👥 DANH SÁCH KHÁCH HÀNG</div>
+            <div style="font-size:.75rem;color:#64748b;margin-top:3px;">Tên khách và số dư được lưu cố định trên hệ thống; số dư cập nhật theo thời gian thực.</div>
+          </div>
+          <span id="adminCustomerCount" style="font-weight:900;color:#0084ff;">0 khách</span>
+        </div>
+        <div class="admin-scroll" style="margin-top:10px;">
+          <table class="admin-customer-table">
+            <thead><tr><th>Tên khách</th><th>Tài khoản</th><th>Số dư</th><th>Kiểm tra</th></tr></thead>
+            <tbody id="adminCustomerTable"><tr><td colspan="4" style="text-align:center;padding:18px;">Đang tải danh sách...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
 
-        <label><b>Cộng / Trừ Tiền Khách Hàng:</b></label>
-
+      <div id="adminMoneyPanel" style="background:#f0f2f5;padding:12px;border-radius:10px;margin-bottom:15px;">
+        <label><b>💰 CỘNG / TRỪ TIỀN KHÁCH HÀNG</b></label>
+        <div style="font-size:.74rem;color:#64748b;margin:4px 0 7px;">Nhập số dương để cộng tiền, số âm để trừ/thu hồi tiền. Thao tác sẽ cập nhật Firebase ngay lập tức.</div>
         <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:5px;">
-
         <input type="number" class="form-control" id="admAmount" placeholder="Số tiền (+/- VNĐ)" style="margin-top:5px;">
+        <input type="text" class="form-control" id="admMoneyNote" placeholder="Ghi chú cho khách (cảnh báo / chúc mừng / lý do điều chỉnh)" style="margin-top:5px;">
+        <button style="margin-top:8px;background:#2e7d32;color:white;border:none;padding:10px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
+      </div>
 
-        <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
-
+      <div style="background:#eef2ff;padding:12px;border-radius:10px;margin-bottom:15px;">
+        <label><b>📝 GỬI GHI CHÚ RIÊNG CHO KHÁCH</b></label>
+        <select id="admNoteType" class="form-control" style="margin-top:5px;">
+          <option value="success">🎉 Chúc mừng / Thông báo tốt</option>
+          <option value="warning">⚠️ Cảnh báo / Lưu ý</option>
+        </select>
+        <input type="text" class="form-control" id="admNoteUser" placeholder="Tài khoản khách" style="margin-top:5px;">
+        <textarea class="form-control" id="admNoteText" rows="3" placeholder="Nội dung ghi chú khách sẽ nhìn thấy" style="margin-top:5px;"></textarea>
+        <button style="margin-top:8px;background:#4f46e5;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:800;width:100%;cursor:pointer;" onclick="adminSendCustomerNote()">Gửi Ghi Chú</button>
       </div>
 
       <h4>Đơn Nạp Đang Xử Lý:</h4>
-
       <table>
-
-        <thead>
-
-          <tr><th>Khách</th><th>Đơn / UID</th><th>Số tiền</th><th>Thao tác</th></tr>
-
-        </thead>
-
+        <thead><tr><th>Khách</th><th>Đơn / UID</th><th>Số tiền</th><th>Thao tác</th></tr></thead>
         <tbody id="admCardTable"></tbody>
-
-      </table>
-
-    </div>
+      </table>    </div>
 
   </div>
 
@@ -1533,7 +1558,9 @@
 
         localStorage.setItem('sys_users', JSON.stringify(users));
         if(typeof db !== 'undefined' && db) {
-          db.ref('userProfiles/' + encodeURIComponent(u)).set({user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,source:'website'}).catch(e=>console.warn('Không ghi được hồ sơ Firebase:',e));
+          const profileData={user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,source:'website',active:true};
+          db.ref('userProfiles/' + encodeURIComponent(u)).set(profileData).catch(e=>console.warn('Không ghi được hồ sơ Firebase:',e));
+          db.ref('customerRegistry/' + encodeURIComponent(u)).update({user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,active:true}).catch(e=>console.warn('Không ghi được danh sách khách Firebase:',e));
         }
 
         localStorage.setItem('sys_profiles', JSON.stringify(profiles));
@@ -1553,7 +1580,9 @@
           closeModal('authModal');
 
           updateUI();
-          if(typeof watchAdminRecoveries === 'function') watchAdminRecoveries();
+          if(typeof db !== 'undefined' && db && u !== ADMIN_ACC) {
+            db.ref('customerRegistry/' + encodeURIComponent(u)).update({user:u,displayName:profiles[u] || u,active:true,lastSeenAt:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});
+          }
 
           showPopup('success', 'THÀNH CÔNG', `Chào mừng ${profiles[u] || u}!`);
 
@@ -1592,6 +1621,10 @@
         document.getElementById('displayNameText').innerText = profiles[currentUser] || currentUser;
 
         document.getElementById('balanceText').innerText = (balances[currentUser] || 0).toLocaleString();
+
+        if(typeof db !== 'undefined' && db && currentUser !== ADMIN_ACC) {
+          ensureCustomerRegistry(currentUser, profiles[currentUser] || currentUser);
+        }
 
         // Số dư thật nằm trên Firebase, không dùng localStorage làm nguồn chính.
 
@@ -1670,6 +1703,30 @@
             }
 
           }, err => console.error('Lỗi đọc trạng thái đơn:', err));
+
+          // Ghi chú riêng từ Admin: cảnh báo hoặc chúc mừng, cập nhật realtime cho khách.
+          const noteRef = db.ref('customerNotes/' + encodeURIComponent(currentUser));
+          noteRef.off('value');
+          noteRef.on('value', snap => {
+            const notes=[];
+            snap.forEach(child => notes.push({id:child.key,...(child.val()||{})}));
+            notes.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+            const latest=notes[0];
+            const box=document.getElementById('customerNoteBox');
+            if(!box || !latest) { if(box) box.style.display='none'; return; }
+            const type=latest.type==='warning'?'warning':'success';
+            box.classList.remove('note-warning','note-success');
+            box.classList.add(type==='warning'?'note-warning':'note-success');
+            document.getElementById('customerNoteTitle').innerText=type==='warning'?'⚠️ GHI CHÚ TỪ ADMIN':'🎉 THÔNG BÁO TỪ ADMIN';
+            document.getElementById('customerNoteText').innerText=String(latest.text||'');
+            document.getElementById('customerNoteTime').innerText=latest.time || formatHistoryTime(latest.timestamp);
+            box.style.display='block';
+            const marker=String(latest.id||latest.timestamp);
+            if(localStorage.getItem('last_customer_note_notice')!==marker){
+              localStorage.setItem('last_customer_note_notice',marker);
+              showPopup(type==='warning'?'error':'success', type==='warning'?'CẢNH BÁO TỪ ADMIN':'CHÚC MỪNG', String(latest.text||''));
+            }
+          }, err => console.error('Lỗi đọc ghi chú Admin:', err));
 
         }
 
@@ -1865,18 +1922,6 @@
         return;
       }
 
-      db.ref('balance_recoveries').orderByChild('user').equalTo(currentUser).once('value').then(rs => {
-        const recs=[];
-        rs.forEach(child=>recs.push({id:child.key,...(child.val()||{})}));
-        recs.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
-        const box=document.getElementById('recoveryNoticeBox');
-        if(box && recs.length){
-          const r=recs[0];
-          box.style.display='block';
-          box.innerHTML='⚠️ <b>Số dư đã được Admin thu hồi:</b> '+Number(r.amount||0).toLocaleString('vi-VN')+'đ — '+escapeHistoryHtml(r.reason||'Không có ghi chú')+'<br><span style="color:#6b7280">'+escapeHistoryHtml(r.time||formatHistoryTime(r.timestamp))+'</span>';
-        } else if(box){ box.style.display='none'; box.innerHTML=''; }
-      }).catch(()=>{});
-
       db.ref('orders').orderByChild('user').equalTo(currentUser).once('value')
         .then(snapshot => {
           const firebaseOrders = [];
@@ -2012,56 +2057,141 @@
 
     }
 
+    let adminCustomerProfiles = {};
+    let adminCustomerBalances = {};
+    let adminCustomerRegistry = {};
+    let adminCustomerListenersStarted = false;
+
+    function ensureCustomerRegistry(u, displayName) {
+      if(!u || u === ADMIN_ACC || typeof db === 'undefined' || !db || typeof db.ref !== 'function') return;
+      db.ref('customerRegistry/' + encodeURIComponent(u)).update({
+        user:u,
+        displayName:displayName || u,
+        active:true,
+        updatedAt:firebase.database.ServerValue.TIMESTAMP
+      }).catch(()=>{});
+    }
+
+    function focusMoneyForCustomer(user) {
+      const input=document.getElementById('admUser');
+      const panel=document.getElementById('adminMoneyPanel');
+      if(input) { input.value=user; input.focus(); }
+      if(panel) { panel.scrollIntoView({behavior:'smooth',block:'center'}); panel.style.boxShadow='0 0 0 3px rgba(79,70,229,.25)'; setTimeout(()=>panel.style.boxShadow='',1200); }
+      showAdminFraudSummary(user);
+    }
+
+    function showAdminFraudSummary(user) {
+      if(!user || typeof db==='undefined' || !db) return;
+      db.ref('orders').orderByChild('user').equalTo(user).once('value').then(snap=>{
+        let total=0, pending=0, approved=0, game=0, count=0;
+        snap.forEach(child=>{
+          const o=child.val()||{}; count++;
+          const amount=Number(o.price)||0;
+          total+=amount;
+          if(o.status==='pending'||o.status==='processing') pending++;
+          if(o.status==='approved'||o.status==='success'||o.status==='completed') approved++;
+          if(o.game) game++;
+        });
+        const bal=Number(adminCustomerBalances[user])||0;
+        showPopup('success','KIỂM TRA GIAO DỊCH',
+          'Khách: '+user+' | Số dư hiện tại: '+bal.toLocaleString('vi-VN')+'đ | Tổng đơn: '+count+' | Đơn đã duyệt/hoàn tất: '+approved+' | Đơn đang chờ: '+pending+' | Đơn game: '+game+'.');
+      }).catch(()=>{});
+    }
+
+    function renderAdminCustomers() {
+      const tbody=document.getElementById('adminCustomerTable');
+      const countEl=document.getElementById('adminCustomerCount');
+      if(!tbody) return;
+      const merged={};
+      [adminCustomerRegistry,adminCustomerProfiles].forEach(src=>Object.keys(src||{}).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]={...(merged[u]||{}),...(src[u]||{})};
+      }));
+      Object.keys(adminCustomerBalances||{}).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]=merged[u]||{user:u,displayName:u};
+      });
+      const localProfiles=JSON.parse(localStorage.getItem('sys_profiles')||'{}');
+      Object.keys(localProfiles).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]=merged[u]||{};
+        merged[u].user=u;
+        merged[u].displayName=merged[u].displayName||localProfiles[u]||u;
+      });
+      const users=Object.keys(merged).sort((a,b)=>String(merged[a].displayName||a).localeCompare(String(merged[b].displayName||b),'vi'));
+      if(countEl) countEl.innerText=users.length+' khách';
+      if(!users.length){ tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:18px;">Chưa có khách hàng.</td></tr>'; return; }
+      tbody.innerHTML=users.map(u=>{
+        const c=merged[u]||{};
+        const name=escapeHistoryHtml(c.displayName||u);
+        const user=escapeHistoryHtml(u);
+        const bal=(Number(adminCustomerBalances[u])||0).toLocaleString('vi-VN');
+        return `<tr><td><b>${name}</b></td><td>${user}</td><td class="admin-balance-live">${bal}đ</td><td><button class="fraud-btn" onclick="focusMoneyForCustomer(${JSON.stringify(u).replace(/</g,'\\u003c')})">🔎 Kiểm tra gian lận</button></td></tr>`;
+      }).join('');
+    }
+
+    function startAdminCustomerRealtime() {
+      if(adminCustomerListenersStarted || typeof db==='undefined' || !db || typeof db.ref!=='function') return;
+      adminCustomerListenersStarted=true;
+      db.ref('customerRegistry').on('value',snap=>{
+        adminCustomerRegistry={};
+        snap.forEach(child=>{ const c=child.val()||{}; const u=c.user||decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerRegistry[u]=c; });
+        renderAdminCustomers();
+      });
+      db.ref('userProfiles').on('value',snap=>{
+        adminCustomerProfiles={};
+        snap.forEach(child=>{ const c=child.val()||{}; const u=c.user||decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerProfiles[u]=c; });
+        renderAdminCustomers();
+      });
+      db.ref('balances').on('value',snap=>{
+        adminCustomerBalances={};
+        snap.forEach(child=>{ const u=decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerBalances[u]=Number(child.val())||0; });
+        renderAdminCustomers();
+      });
+      // Đồng bộ các hồ sơ local cũ sang registry để không bị mất tên khách khỏi danh sách.
+      const localProfiles=JSON.parse(localStorage.getItem('sys_profiles')||'{}');
+      Object.keys(localProfiles).forEach(u=>{ if(u!==ADMIN_ACC) ensureCustomerRegistry(u,localProfiles[u]); });
+      renderAdminCustomers();
+    }
+
     function renderAdminCards() {
       const tbody = document.getElementById('admCardTable');
       if(!tbody) return;
-
+      startAdminCustomerRealtime();
       if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không kết nối được Firebase.</td></tr>';
         return;
       }
-
       const ordersRef = db.ref('orders');
       ordersRef.off('value');
-
       ordersRef.on('value', (snapshot) => {
         tbody.innerHTML = '';
         const orders = [];
-
         snapshot.forEach(child => {
           const c = child.val() || {};
-          if(c.status === 'pending' || c.status === 'processing') {
-            orders.push({ id: child.key, ...c });
-          }
+          if(c.status === 'pending' || c.status === 'processing') orders.push({ id: child.key, ...c });
         });
-
         orders.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
-
         if(!orders.length) {
           tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không có đơn đang xử lý.</td></tr>';
           return;
         }
-
         orders.forEach(c => {
           const safeId = String(c.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
           const isGame = !!c.game;
-          const user = escapeHistoryHtml(c.user || 'Khách');
+          const rawUser = c.user || 'Khách';
+          const user = escapeHistoryHtml(rawUser);
+          const customerName = escapeHistoryHtml((adminCustomerProfiles[rawUser]||adminCustomerRegistry[rawUser]||{}).displayName || rawUser);
+          const liveBalance = (Number(adminCustomerBalances[rawUser]) || 0).toLocaleString('vi-VN');
           const amount = (Number(c.price) || 0).toLocaleString('vi-VN');
-
+          ensureCustomerRegistry(rawUser, (adminCustomerProfiles[rawUser]||adminCustomerRegistry[rawUser]||{}).displayName || rawUser);
           const detail = isGame
             ? `<b>${escapeHistoryHtml(c.game)}</b><br><span style="font-size:.72rem;">UID: ${escapeHistoryHtml(c.gameUID || '-')}</span>`
             : `${escapeHistoryHtml(c.package || 'Nạp ví')}<br><span style="font-size:.72rem;">${escapeHistoryHtml(c.memo || c.uid || 'Không có')}</span>`;
-
           const action = isGame
             ? `<button style="background:#0084ff;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="completeGameOrder('${safeId}')">Hoàn tất</button>`
             : `<button style="background:#2e7d32;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="approveFirebaseOrder('${safeId}')">Duyệt</button>`;
-
-          tbody.innerHTML += `<tr>
-            <td>${user}</td>
-            <td>${detail}<br><span style="font-size:.7rem;color:#fb8c00;">${isGame ? 'Đang xử lý' : 'Chờ duyệt'}</span></td>
-            <td>${amount}đ</td>
-            <td>${action}</td>
-          </tr>`;
+          tbody.innerHTML += `<tr><td><b>${customerName}</b><br><span style="font-size:.72rem;color:#64748b;">${user}</span><br><span class="admin-balance-live" style="font-size:.75rem;">Số dư: ${liveBalance}đ</span></td><td>${detail}<br><span style="font-size:.7rem;color:#fb8c00;">${isGame ? 'Đang xử lý' : 'Chờ duyệt'}</span></td><td>${amount}đ</td><td>${action}</td></tr>`;
         });
       }, err => {
         console.error('Firebase orders listener:', err);
@@ -2198,31 +2328,48 @@
     }
 
     function adminAddMoney() {
-
+      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ Admin mới được điều chỉnh số dư.'); return; }
       const u = document.getElementById('admUser').value.trim();
+      const amt = Number(document.getElementById('admAmount').value);
+      const note = document.getElementById('admMoneyNote')?.value.trim() || '';
+      if(!u || !Number.isFinite(amt) || amt===0) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tài khoản và số tiền khác 0!'); return; }
+      if(u === ADMIN_ACC) { showPopup('error','TỪ CHỐI','Không được tự điều chỉnh số dư Admin.'); return; }
+      const ref = db.ref('balances/' + encodeURIComponent(u));
+      ref.transaction(current => {
+        const next=(Number(current)||0)+amt;
+        if(next<0) return;
+        return next;
+      }).then(result=>{
+        if(!result.committed) throw new Error('Số dư không đủ để trừ khoản này.');
+        const newBalance=Number(result.snapshot.val())||0;
+        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+        balances[u]=newBalance; localStorage.setItem('sys_balances',JSON.stringify(balances));
+        ensureCustomerRegistry(u,(adminCustomerProfiles[u]||{}).displayName||u);
+        const title=amt>0?'🎉 Admin cộng tiền':'⚠️ Admin điều chỉnh số dư';
+        const defaultText=amt>0?'Tài khoản của bạn vừa được cộng '+Math.abs(amt).toLocaleString('vi-VN')+'đ. Số dư hiện tại: '+newBalance.toLocaleString('vi-VN')+'đ.':'Tài khoản của bạn vừa được trừ '+Math.abs(amt).toLocaleString('vi-VN')+'đ. Số dư hiện tại: '+newBalance.toLocaleString('vi-VN')+'đ.';
+        const finalNote=note || defaultText;
+        const noteRef=db.ref('customerNotes/'+encodeURIComponent(u)).push();
+        return noteRef.set({type:amt>0?'success':'warning',text:finalNote,timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString('vi-VN'),admin:ADMIN_ACC,amount:amt,newBalance:newBalance,source:'balance_adjustment'}).then(()=>{
+          showPopup('success','CẬP NHẬT THÀNH CÔNG','Đã cập nhật số dư cho '+u+'. Số dư mới: '+newBalance.toLocaleString('vi-VN')+'đ.');
+          document.getElementById('admAmount').value='';
+          if(document.getElementById('admMoneyNote')) document.getElementById('admMoneyNote').value='';
+          renderAdminCustomers();
+        });
+      }).catch(err=>showPopup('error','LỖI CẬP NHẬT SỐ DƯ',err.message||'Không thể cập nhật số dư!'));
+    }
 
-      const amt = parseInt(document.getElementById('admAmount').value);
-
-      if(!u || isNaN(amt)) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tên và số tiền!'); return; }
-
-      if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
-        db.ref('balances/' + encodeURIComponent(u)).transaction(current => (Number(current) || 0) + amt)
-          .then(() => {
-            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-            balances[u] = (Number(balances[u]) || 0) + amt;
-            localStorage.setItem('sys_balances', JSON.stringify(balances));
-            showPopup('success', 'THÀNH CÔNG', 'Đã cộng tiền vào số dư Firebase của khách!');
-          })
-          .catch(err => showPopup('error', 'LỖI FIREBASE', err.message || 'Không thể cập nhật số dư!'));
-        return;
-      }
-
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-      balances[u] = (Number(balances[u]) || 0) + amt;
-      localStorage.setItem('sys_balances', JSON.stringify(balances));
-      showPopup('success', 'THÀNH CÔNG', `Đã cập nhật số dư cho ${u}!`);
-      updateUI();
-
+    function adminSendCustomerNote() {
+      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ Admin mới được gửi ghi chú.'); return; }
+      const u=document.getElementById('admNoteUser').value.trim();
+      const text=document.getElementById('admNoteText').value.trim();
+      const type=document.getElementById('admNoteType').value;
+      if(!u || !text) { showPopup('error','THIẾU THÔNG TIN','Vui lòng nhập tài khoản khách và nội dung ghi chú.'); return; }
+      ensureCustomerRegistry(u,(adminCustomerProfiles[u]||{}).displayName||u);
+      db.ref('customerNotes/'+encodeURIComponent(u)).push({type:type==='warning'?'warning':'success',text:text,timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString('vi-VN'),admin:ADMIN_ACC,source:'admin_note'}).then(()=>{
+        showPopup('success','ĐÃ GỬI','Ghi chú đã được gửi và khách sẽ thấy ngay.');
+        document.getElementById('admNoteText').value='';
+        document.getElementById('admNoteUser').value='';
+      }).catch(err=>showPopup('error','LỖI GỬI GHI CHÚ',err.message||'Không thể gửi ghi chú!'));
     }
 
     function adminSaveAnnouncement() {
@@ -2391,27 +2538,7 @@
     });
 
 
-    function watchAdminRecoveries() {
-      if(!currentUser || typeof db === 'undefined') return;
-      db.ref('balance_recoveries').orderByChild('user').equalTo(currentUser).on('value', function(snap) {
-        const rows = [];
-        snap.forEach(function(child){ rows.push({id:child.key, ...(child.val()||{})}); });
-        rows.sort(function(a,b){return (Number(b.timestamp)||0)-(Number(a.timestamp)||0);});
-        const latest = rows[0];
-        if(!latest) return;
-        const marker = String(latest.id || latest.timestamp);
-        if(localStorage.getItem('last_recovery_notice') !== marker) {
-          localStorage.setItem('last_recovery_notice', marker);
-          showPopup('error', 'SỐ DƯ ĐÃ THU HỒI',
-            'Admin đã thu hồi ' + Number(latest.amount||0).toLocaleString('vi-VN') +
-            'đ. Lý do: ' + String(latest.reason || 'Không có ghi chú') +
-            '. Số dư đã được cập nhật.');
-        }
-      });
-    }
 
-
-    if(currentUser) watchAdminRecoveries();
 </script>
 
 </body>
