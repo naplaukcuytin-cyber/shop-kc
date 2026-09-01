@@ -188,6 +188,25 @@
     .strength-medium { color: #fb8c00; }
     .strength-strong { color: #2e7d32; }
   </style>
+<!-- Firebase SDK v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs",
+    authDomain: "shop-kc.firebaseapp.com",
+    projectId: "shop-kc",
+    storageBucket: "shop-kc.firebasestorage.app",
+    messagingSenderId: "1073242689799",
+    appId: "1:1073242689799:web:41d0dc7795eb74a93df5a2",
+    measurementId: "G-Q9VN7NZHR0",
+    databaseURL: "https://shop-kc-default-rtdb.firebaseio.com"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
 </head>
 <body>
 
@@ -857,29 +876,28 @@
 
       notifyAdminViaEmail(`Khách: ${currentUser} vừa CHUYỂN KHOẢN | Số tiền: ${val.toLocaleString()}đ | Nội dung: ${currentGeneratedMemo}`);
 
-      showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ  kiểm tra.');
-      closeModal('depositModal');
-    }
-const orderData = {
-    id: Date.now(),
-    user: typeof currentUser !== 'undefined' ? currentUser : "Khách",
-    package: "Nạp Chuyển Khoản",
-    price: val,
-    uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
-    time: new Date().toLocaleString(),
-    status: "pending"
-};
+      function submitDeposit() {
+    const orderId = Date.now().toString();
+    const orderData = {
+        id: orderId,
+        user: typeof currentUser !== 'undefined' ? currentUser : "Khách",
+        package: "Nạp Chuyển Khoản",
+        price: typeof val !== 'undefined' ? val : 0,
+        uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
+        time: new Date().toLocaleString('vi-VN'),
+        status: "pending"
+    };
 
-fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
-    method: 'POST',
-    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-    body: JSON.stringify({ data: orderData }) // <--- DÒNG NÀY LÀ LINH HỒN ĐÂY NÀY
-})
-.then(res => res.json())
-.then(data => {
-    console.log("Đã đẩy đơn thành công:", data);
-})
-.catch(err => console.log("Lỗi:", err));
+    // Đẩy đơn trực tiếp lên Firebase Realtime Database
+    db.ref('orders/' + orderId).set(orderData)
+    .then(() => {
+        showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ kiểm tra.');
+        closeModal('depositModal');
+    })
+    .catch((err) => {
+        alert("Lỗi gửi đơn: " + err.message);
+    });
+}
     function submitCard(typeStr) {
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
       const seri = document.getElementById('cardSeri').value.trim();
