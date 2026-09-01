@@ -3,181 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Trị – Admin Local</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Quản Lý Đơn Nạp</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root {
-            --primary: #0ea5e9;
-            --success: #10b981;
-            --danger: #ef4444;
-            --bg: #0f172a;
-            --panel: rgba(30, 41, 59, 0.7);
-            --text: #f8fafc;
-            --border: #334155;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; }
-        .container { max-width: 1000px; margin: 0 auto; }
-
-        .header-card {
-            background: var(--panel);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header-title { font-size: 20px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
-
-        .btn-group-head { display: flex; gap: 10px; }
-        
-        .btn {
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 13px;
-        }
-        .btn-refresh { background: #0284c7; color: white; }
-        .btn-clear { background: #ef4444; color: white; }
-        .btn:hover { opacity: 0.9; }
-
-        .table-card {
-            background: var(--panel);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            overflow-x: auto;
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { color: #94a3b8; font-size: 12px; text-transform: uppercase; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        td { padding: 16px; border-bottom: 1px solid #1e293b; font-size: 14px; }
-
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .status-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-        .status-approved { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        .status-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-
-        .btn-act { border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; color: white; margin-right: 4px; }
-        .btn-approve { background: var(--success); }
-        .btn-reject { background: #f59e0b; }
-        .btn-delete { background: #475569; }
-
-        .empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
-        .empty-icon { font-size: 48px; margin-bottom: 12px; }
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
+        h2 { text-align: center; color: #00ff88; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: center; }
+        th { background: #252525; color: #00ff88; }
+        .status-pending { color: #ffcc00; font-weight: bold; }
+        .status-approved { color: #00ff88; font-weight: bold; }
+        .status-rejected { color: #ff4444; font-weight: bold; }
+        button { padding: 6px 12px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; margin: 2px; }
+        .btn-approve { background: #00ff88; color: #000; }
+        .btn-reject { background: #ff4444; color: #fff; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-card">
-        <div class="header-title">⚡ QUẢN LÝ NẠP TIỀN (LOCAL)</div>
-        <div class="btn-group-head">
-            <button class="btn btn-refresh" onclick="loadOrders()">🔄 Tải Lại Dữ Liệu</button>
-            <button class="btn btn-clear" onclick="clearAllOrders()">🗑️ Xóa Tất Cả</button>
-        </div>
-    </div>
+    <h2>DANH SÁCH ĐƠN NẠP TIỀN (REALTIME)</h2>
 
-    <div class="table-card">
-        <table>
-            <thead>
-                <tr>
-                    <th>Khách Hàng</th>
-                    <th>Gói Nạp</th>
-                    <th>Số Tiền</th>
-                    <th>Mã / Nội Dung</th>
-                    <th>Thời Gian</th>
-                    <th>Trạng Thái</th>
-                    <th>Thao Tác</th>
-                </tr>
-            </thead>
-            <tbody id="order-list"></tbody>
-        </table>
-        <div id="empty-box" class="empty-state" style="display: none;">
-            <div class="empty-icon">☕</div>
-            <h3>Tuyệt vời! Không có đơn nào.</h3>
-            <p style="margin-top: 6px; font-size: 13px;">Hệ thống chưa ghi nhận đơn nạp mới.</p>
-        </div>
-    </div>
-</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Đơn</th>
+                <th>Tài Khoản</th>
+                <th>Gói Nạp</th>
+                <th>Số Tiền</th>
+                <th>Nội Dung/Memo</th>
+                <th>Thời Gian</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody id="orderTableBody">
+            <tr><td colspan="8">Đang tải dữ liệu...</td></tr>
+        </tbody>
+    </table>
 
-<script>
-    function loadOrders() {
-        const tbody = document.getElementById('order-list');
-        const emptyBox = document.getElementById('empty-box');
-        
-        // Lấy dữ liệu từ LocalStorage
-        const orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
-        
-        tbody.innerHTML = '';
+    <script>
+        // Cấu hình Firebase Realtime Database
+        const firebaseConfig = {
+            databaseURL: "https://shopacc-df4fa-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        if (orders.length === 0) {
-            emptyBox.style.display = 'block';
-            return;
-        }
+        // Lắng nghe dữ liệu realtime từ Firebase
+        db.ref('orders').on('value', (snapshot) => {
+            const tbody = document.getElementById('orderTableBody');
+            tbody.innerHTML = '';
 
-        emptyBox.style.display = 'none';
+            const data = snapshot.val();
+            if (!data) {
+                tbody.innerHTML = '<tr><td colspan="8">Chưa có đơn nạp nào!</td></tr>';
+                return;
+            }
 
-        orders.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            
-            let statusClass = 'status-pending';
-            let statusText = 'Chờ duyệt';
-            if (item.status === 'approved') { statusClass = 'status-approved'; statusText = 'Đã duyệt'; }
-            if (item.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Đã hủy'; }
+            // Duyệt từng đơn và hiển thị
+            Object.keys(data).reverse().forEach(key => {
+                const order = data[key];
+                const tr = document.createElement('tr');
+                
+                let statusText = 'Chờ duyệt';
+                let statusClass = 'status-pending';
+                if (order.status === 'approved') {
+                    statusText = 'Đã duyệt';
+                    statusClass = 'status-approved';
+                } else if (order.status === 'rejected') {
+                    statusText = 'Đã hủy';
+                    statusClass = 'status-rejected';
+                }
 
-            tr.innerHTML = `
-                <td><b>${item.user || 'Khách'}</b></td>
-                <td>${item.package || 'N/A'}</td>
-                <td style="color: #38bdf8; font-weight: 600;">${Number(item.price || 0).toLocaleString()}đ</td>
-                <td><code>${item.uid || 'Không có'}</code></td>
-                <td style="font-size: 12px; color: #94a3b8;">${item.time || ''}</td>
-                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                <td>
-                    <button class="btn-act btn-approve" onclick="updateStatus(${index}, 'approved')">Duyệt</button>
-                    <button class="btn-act btn-reject" onclick="updateStatus(${index}, 'rejected')">Hủy</button>
-                    <button class="btn-act btn-delete" onclick="deleteOrder(${index})">Xóa</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
+                tr.innerHTML = `
+                    <td>${order.id || key}</td>
+                    <td>${order.user || 'Khách'}</td>
+                    <td>${order.package || 'N/A'}</td>
+                    <td>${Number(order.price || 0).toLocaleString('vi-VN')} đ</td>
+                    <td>${order.uid || 'Không có'}</td>
+                    <td>${order.time || ''}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>
+                        ${order.status === 'pending' ? `
+                            <button class="btn-approve" onclick="updateStatus('${key}', 'approved')">Duyệt</button>
+                            <button class="btn-reject" onclick="updateStatus('${key}', 'rejected')">Hủy</button>
+                        ` : 'Đã xử lý'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         });
-    }
 
-    function updateStatus(index, status) {
-        let orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
-        if(orders[index]) {
-            orders[index].status = status;
-            localStorage.setItem('shop_orders', JSON.stringify(orders));
-            loadOrders();
+        // Cập nhật trạng thái đơn
+        function updateStatus(orderId, status) {
+            db.ref('orders/' + orderId).update({ status: status })
+            .then(() => alert('Cập nhật thành công!'))
+            .catch(err => alert('Lỗi: ' + err.message));
         }
-    }
-
-    function deleteOrder(index) {
-        if (!confirm('Xóa đơn này?')) return;
-        let orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
-        orders.splice(index, 1);
-        localStorage.setItem('shop_orders', JSON.stringify(orders));
-        loadOrders();
-    }
-
-    function clearAllOrders() {
-        if (!confirm('Xóa sạch toàn bộ đơn hàng?')) return;
-        localStorage.removeItem('shop_orders');
-        loadOrders();
-    }
-
-    // Tự động tải dữ liệu khi mở
-    loadOrders();
-</script>
-
+    </script>
 </body>
 </html>
