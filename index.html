@@ -1715,25 +1715,47 @@
 
         if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
 
-          const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-
-          balanceRef.off('value');
-
-          balanceRef.on('value', snap => {
-
-            const balance = normalizeCustomerBalanceValue(snap.val());
-
-            const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-            localBalances[currentUser] = balance;
-
-            localStorage.setItem('sys_balances', JSON.stringify(localBalances));
-
+          // Firebase /balances là nguồn số dư duy nhất. Đồng bộ trực tiếp
+          // từ cả key đã encode và key cũ chưa encode để tương thích dữ liệu cũ.
+          const encodedBalanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
+          const rawBalanceRef = db.ref('balances/' + currentUser);
+          const updateCustomerBalanceUI = balance => {
+            const safeBalance = normalizeCustomerBalanceValue(balance);
+            try {
+              const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+              localBalances[currentUser] = safeBalance;
+              localStorage.setItem('sys_balances', JSON.stringify(localBalances));
+            } catch(e) {}
             const el = document.getElementById('balanceText');
+            if(el) el.innerText = safeBalance.toLocaleString('vi-VN');
+          };
 
-            if(el) el.innerText = balance.toLocaleString();
-
+          // Key chuẩn mà Admin hiện tại sử dụng.
+          encodedBalanceRef.off('value');
+          encodedBalanceRef.on('value', snap => {
+            const raw = snap.val();
+            // Nếu key chuẩn có dữ liệu thì luôn ưu tiên nó.
+            if(raw !== null && raw !== undefined) updateCustomerBalanceUI(raw);
           }, err => console.error('Lỗi đọc số dư Firebase:', err));
+
+          // Tương thích tài khoản được tạo bởi bản cũ.
+          if(currentUser !== encodeURIComponent(currentUser)) {
+            rawBalanceRef.off('value');
+            rawBalanceRef.on('value', snap => {
+              // Chỉ dùng key cũ khi key chuẩn chưa tồn tại.
+              encodedBalanceRef.once('value').then(es => {
+                if(es.val() === null || es.val() === undefined) updateCustomerBalanceUI(snap.val());
+              }).catch(()=>{});
+            }, err => console.warn('Lỗi đọc số dư key cũ:', err));
+          }
+
+          // Đọc một lần ngay khi mở/đăng nhập để không phải chờ event listener.
+          encodedBalanceRef.once('value').then(snap => {
+            if(snap.val() !== null && snap.val() !== undefined) updateCustomerBalanceUI(snap.val());
+            else if(currentUser !== encodeURIComponent(currentUser)) {
+              return rawBalanceRef.once('value').then(rs => updateCustomerBalanceUI(rs.val()));
+            }
+          }).catch(err => console.error('Lỗi lấy số dư ban đầu:', err));
 
           // Realtime trạng thái đơn: khách sẽ biết ngay khi Admin duyệt/hủy.
 
@@ -1769,29 +1791,11 @@
 
             const latest = Object.values(orders).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0))[0];
 
-            // Khi Admin duyệt nạp ví, lấy balanceAfter của chính đơn đã duyệt để
-            // cập nhật giao diện ngay lập tức. Không chờ khách mua KC mới refresh.
-            const approvedDeposits = Object.values(orders).filter(o =>
-              o && !o.game && (o.status === 'approved' || o.status === 'success') &&
-              Number.isFinite(Number(o.balanceAfter))
-            ).sort((a,b)=>(Number(b.approvedAt||b.timestamp)||0)-(Number(a.approvedAt||a.timestamp)||0));
-            if(approvedDeposits.length) {
-              const approved = approvedDeposits[0];
-              const freshBalance = normalizeCustomerBalanceValue(approved.balanceAfter);
-              const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-              localBalances[currentUser] = freshBalance;
-              localStorage.setItem('sys_balances', JSON.stringify(localBalances));
-              const el = document.getElementById('balanceText');
-              if(el) el.innerText = freshBalance.toLocaleString('vi-VN');
-            } else if(latest && (latest.status === 'approved' || latest.status === 'success') && !latest.game) {
-              // Tương thích với đơn cũ chưa có balanceAfter: đọc lại số dư thật.
-              balanceRef.once('value').then(bs => {
-                const freshBalance = normalizeCustomerBalanceValue(bs.val());
-                const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-                localBalances[currentUser] = freshBalance;
-                localStorage.setItem('sys_balances', JSON.stringify(localBalances));
-                const el = document.getElementById('balanceText');
-                if(el) el.innerText = freshBalance.toLocaleString('vi-VN');
+            // Không lấy balanceAfter trong order để ghi đè giao diện.
+            // balanceAfter chỉ là log; số dư hiển thị luôn lấy trực tiếp từ /balances.
+            if(latest && (latest.status === 'approved' || latest.status === 'success') && !latest.game) {
+              encodedBalanceRef.once('value').then(bs => {
+                if(bs.val() !== null && bs.val() !== undefined) updateCustomerBalanceUI(bs.val());
               }).catch(e => console.warn('Không refresh được số dư sau duyệt:', e));
             }
 
