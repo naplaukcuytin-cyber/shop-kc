@@ -545,7 +545,21 @@
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+function openOrderStatusModal() {
+  const modal = document.getElementById("orderStatusModal");
 
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function closeOrderStatusModal() {
+  const modal = document.getElementById("orderStatusModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 <script>
 
   const firebaseConfig = {
@@ -949,6 +963,23 @@
         <label style="font-size:.85rem;font-weight:600;">Chọn gói nạp</label>
         <div class="price-grid" id="gamePagePriceGrid"></div>
         <button class="btn-login-main" id="gamePagePayBtn" style="width:100%;justify-content:center;margin-top:15px;padding:12px;" onclick="confirmGamePagePurchase()">NẠP NGAY</button>
+<button
+  type="button"
+  onclick="openOrderStatusModal()"
+  style="
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border:1px solid #0084ff;
+    border-radius:12px;
+    background:#ffffff;
+    color:#0084ff;
+    font-weight:800;
+    cursor:pointer;
+  "
+>
+  ⟳ XEM TRẠNG THÁI ĐƠN HÀNG
+</button>
 <button
   type="button"
   onclick="openOrderStatusModal()"
@@ -2891,6 +2922,166 @@ function closeOrderStatusModal() {
       "
     >
       ĐÃ HIỂU
+    </button>
+  </div>
+</div>
+
+<style>
+  @keyframes orderStatusSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+<div
+  id="orderStatusModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(15,23,42,.62);
+  "
+>
+  <div
+    style="
+      position:relative;
+      width:100%;
+      max-width:420px;
+      border-radius:22px;
+      padding:24px;
+      background:#ffffff;
+      box-shadow:0 22px 60px rgba(15,23,42,.30);
+    "
+  >
+    <button
+      type="button"
+      onclick="closeOrderStatusModal()"
+      aria-label="Đóng trạng thái đơn hàng"
+      style="
+        position:absolute;
+        top:12px;
+        right:14px;
+        width:34px;
+        height:34px;
+        border:0;
+        border-radius:50%;
+        background:#eef2f7;
+        color:#475569;
+        font-size:21px;
+        line-height:1;
+        cursor:pointer;
+      "
+    >×</button>
+
+    <span
+      style="
+        display:inline-block;
+        color:#0084ff;
+        font-size:11px;
+        font-weight:900;
+        letter-spacing:.09em;
+      "
+    >
+      THEO DÕI ĐƠN HÀNG
+    </span>
+
+    <h2 style="margin:6px 0 4px;font-size:22px;">
+      Trạng thái thanh toán
+    </h2>
+
+    <p style="margin:0 0 20px;color:#687386;font-size:13px;line-height:1.5;">
+      Thông tin trạng thái đơn hàng hiện tại.
+    </p>
+
+    <div style="display:flex;gap:12px;padding-bottom:18px;">
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          width:32px;
+          height:32px;
+          min-width:32px;
+          border-radius:50%;
+          background:#dcfce7;
+          color:#15803d;
+          font-weight:900;
+        "
+      >✓</div>
+
+      <div>
+        <b style="display:block;font-size:14px;">Yêu cầu đã tạo</b>
+        <small style="display:block;margin-top:4px;color:#687386;line-height:1.45;">
+          Thông tin đơn đang chờ được kiểm tra.
+        </small>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;padding-bottom:18px;">
+      <div
+        style="
+          width:32px;
+          height:32px;
+          min-width:32px;
+          border:3px solid #bfdbfe;
+          border-top-color:#0084ff;
+          border-radius:50%;
+          animation:orderStatusSpin .8s linear infinite;
+        "
+      ></div>
+
+      <div>
+        <b style="display:block;font-size:14px;">Đang chờ xử lý</b>
+        <small style="display:block;margin-top:4px;color:#687386;line-height:1.45;">
+          Hệ thống đang chờ xác nhận chính thức.
+        </small>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;">
+      <div
+        style="
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          width:32px;
+          height:32px;
+          min-width:32px;
+          border-radius:50%;
+          background:#eef2f7;
+          color:#718096;
+          font-weight:900;
+        "
+      >3</div>
+
+      <div>
+        <b style="display:block;font-size:14px;">Thanh toán hoàn tất</b>
+        <small style="display:block;margin-top:4px;color:#687386;line-height:1.45;">
+          Chỉ hiển thị sau khi có xác nhận chính thức.
+        </small>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      onclick="closeOrderStatusModal()"
+      style="
+        width:100%;
+        margin-top:22px;
+        padding:13px;
+        border:0;
+        border-radius:12px;
+        background:linear-gradient(135deg,#0084ff,#7000ff);
+        color:#ffffff;
+        font-weight:800;
+        cursor:pointer;
+      "
+    >
+      ĐÓNG
     </button>
   </div>
 </div>
