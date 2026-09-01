@@ -2286,8 +2286,9 @@
       if(!uid){ showPopup('error','THẤT BẠI','Vui lòng nhập ID Game!'); return; }
       if(!selectedPriceObj){ showPopup('error','THẤT BẠI','Vui lòng chọn gói quy đổi!'); return; }
       if(typeof db==='undefined'||!db||typeof db.ref!=='function'){ showPopup('error','LỖI HỆ THỐNG','Không kết nối được máy chủ. Vui lòng thử lại!'); return; }
+
       const price=Number(selectedPriceObj.price)||0;
-      if(price<=0){ showPopup('error','DỮ LIỆU LỖI','Gói nạp không hợp lệ!'); return; }
+      if(!Number.isFinite(price)||price<=0){ showPopup('error','DỮ LIỆU LỖI','Gói nạp không hợp lệ!'); return; }
 
       const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
       const btn=document.getElementById('gamePagePayBtn');
@@ -2295,42 +2296,59 @@
       if(btn){btn.disabled=true;btn.style.opacity='0.6';}
       if(processing)processing.style.display='block';
 
-      // CHỈ dùng cho luồng NẠP KC. Các phần khác của website không thay đổi.
-      // Đọc số dư máy chủ trước, sau đó transaction trừ tiền một lần duy nhất.
+      // LUỒNG NẠP KC: dùng chính số dư đang lưu tại balances/<username>.
+      // Không lấy localStorage làm nguồn tiền và không phụ thuộc vào việc mua lần sau.
       balanceRef.once('value').then(function(snap){
-        const serverBalance=normalizeCustomerBalanceValue(snap.val());
-        if(serverBalance<price){
+        const raw=snap.val();
+        const current=normalizeCustomerBalanceValue(raw);
+        if(current < price){
           const err=new Error('INSUFFICIENT_BALANCE');
-          err.currentBalance=serverBalance;
+          err.currentBalance=current;
           throw err;
         }
-        return balanceRef.transaction(function(raw){
-          const current=normalizeCustomerBalanceValue(raw);
-          if(current<price) return;
-          return current-price;
+
+        const newBalance=current-price;
+        // Ghi trực tiếp số dư mới rồi đọc lại xác nhận.
+        return balanceRef.set(newBalance).then(function(){
+          return balanceRef.once('value').then(function(check){
+            const verified=normalizeCustomerBalanceValue(check.val());
+            if(verified !== newBalance){
+              throw new Error('Không xác minh được số dư sau khi thanh toán. Vui lòng thử lại.');
+            }
+            return verified;
+          });
         });
-      }).then(function(result){
-        if(!result||!result.committed){
-          const actual=normalizeCustomerBalanceValue(result&&result.snapshot?result.snapshot.val():null);
-          const err=new Error('INSUFFICIENT_BALANCE'); err.currentBalance=actual; throw err;
-        }
-        const spentBalance=normalizeCustomerBalanceValue(result.snapshot.val());
+      }).then(function(spentBalance){
         const orderRef=db.ref('orders').push();
         return orderRef.set({
-          id:orderRef.key,user:currentUser,displayName:getRegisteredName(),
-          package:'Nạp Game',game:selectedGame,gameUID:uid,price:price,
-          label:selectedPriceObj.label,time:new Date().toLocaleString('vi-VN'),
-          timestamp:firebase.database.ServerValue.TIMESTAMP,status:'processing'
+          id:orderRef.key,
+          user:currentUser,
+          displayName:getRegisteredName(),
+          package:'Nạp Game',
+          game:selectedGame,
+          gameUID:uid,
+          price:price,
+          label:selectedPriceObj.label,
+          time:new Date().toLocaleString('vi-VN'),
+          timestamp:firebase.database.ServerValue.TIMESTAMP,
+          status:'processing'
         }).then(function(){
-          try{const b=JSON.parse(localStorage.getItem('sys_balances')||'{}');b[currentUser]=spentBalance;localStorage.setItem('sys_balances',JSON.stringify(b));}catch(e){}
-          const el=document.getElementById('balanceText'); if(el)el.innerText=spentBalance.toLocaleString('vi-VN');
-          showPopup('success','ĐÃ TIẾP NHẬN ĐƠN',`Đã trừ ${price.toLocaleString('vi-VN')}đ khỏi số dư. Số dư còn lại: ${spentBalance.toLocaleString('vi-VN')}đ. Đơn ${selectedGame} đang được xử lý.`);
+          try{
+            const b=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+            b[currentUser]=spentBalance;
+            localStorage.setItem('sys_balances',JSON.stringify(b));
+          }catch(e){}
+          const el=document.getElementById('balanceText');
+          if(el)el.innerText=spentBalance.toLocaleString('vi-VN');
+          showPopup('success','ĐÃ TIẾP NHẬN ĐƠN',
+            `Đã trừ ${price.toLocaleString('vi-VN')}đ khỏi số dư. Số dư còn lại: ${spentBalance.toLocaleString('vi-VN')}đ. Đơn ${selectedGame} đang được xử lý.`);
           loadPublicRecentHistory();
         });
       }).catch(function(err){
         console.error('Lỗi Nạp KC:',err);
         if(err&&err.message==='INSUFFICIENT_BALANCE'){
-          showPopup('error','SỐ DƯ KHÔNG ĐỦ',`Số dư thực tế: ${Number(err.currentBalance||0).toLocaleString('vi-VN')}đ. Số tiền cần thanh toán: ${price.toLocaleString('vi-VN')}đ.`);
+          showPopup('error','SỐ DƯ KHÔNG ĐỦ',
+            `Số dư thực tế: ${Number(err.currentBalance||0).toLocaleString('vi-VN')}đ. Số tiền cần thanh toán: ${price.toLocaleString('vi-VN')}đ.`);
         }else{
           showPopup('error','THANH TOÁN THẤT BẠI',err&&err.message?err.message:'Không thể tạo đơn. Vui lòng thử lại.');
         }
