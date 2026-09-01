@@ -421,6 +421,27 @@
   .history-success{display:inline-flex;align-items:center;gap:5px;color:#2e7d32;font-weight:700}
   .history-check{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2e7d32;color:#fff;font-size:12px;line-height:18px;animation:historyCheckPulse 1.5s ease-in-out infinite}
   @keyframes historyCheckPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(46,125,50,.25)}50%{transform:scale(1.12);box-shadow:0 0 0 6px rgba(46,125,50,0)}}
+
+  .game-commitments{margin-top:18px}
+  .game-commitments .commit-card{min-height:150px}
+  .public-history-card{margin-top:18px;background:#fff;border:1px solid #e4e6eb;border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(20,30,50,.06)}
+  .public-history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+  .public-history-head h3{margin:0;font-size:1.05rem;color:#1c1e21}
+  .public-history-head p{margin:5px 0 0;color:#6b7280;font-size:.76rem;line-height:1.45}
+  .live-dot{font-size:.68rem;font-weight:800;color:#2e7d32;background:#e8f5e9;padding:5px 8px;border-radius:999px;white-space:nowrap}
+  .public-history-list{overflow:hidden}
+  .public-history-row{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid #edf0f3;animation:historySlideIn .35s ease both}
+  .public-history-row:last-child{border-bottom:0}
+  .public-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef5ff;color:#1683ff;font-weight:800;flex:0 0 auto}
+  .public-history-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+  .public-history-info b{font-size:.84rem;color:#1f2937}
+  .public-history-info span{font-size:.72rem;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .public-history-money{text-align:right;display:flex;flex-direction:column;gap:3px}
+  .public-history-money b{font-size:.82rem;color:#1683ff}
+  .public-history-money span{font-size:.62rem;color:#9ca3af}
+  .demo-row{opacity:.78}
+  .demo-row .public-history-money span{color:#b7791f}
+  @keyframes historySlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 
 <!-- Firebase SDK v8 -->
@@ -710,7 +731,7 @@
 
       <div class="game-grid" id="gameGrid">
 
-        <div class="game-card-item selected" data-category="garena" onclick="selectGame(this, 'Free Fire')">
+        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Free Fire')">
 
           <span class="badge-auto">AUTO</span>
 
@@ -718,7 +739,7 @@
 
           <div class="game-name">Free Fire</div>
 
-          <div class="game-status-btn">✔ ĐANG CHỌN</div>
+          <div class="game-status-btn">Bấm nạp</div>
 
         </div>
 
@@ -826,60 +847,21 @@
         <label style="font-size:.85rem;font-weight:600;">Chọn gói nạp</label>
         <div class="price-grid" id="gamePagePriceGrid"></div>
         <button class="btn-login-main" id="gamePagePayBtn" style="width:100%;justify-content:center;margin-top:15px;padding:12px;" onclick="confirmGamePagePurchase()">NẠP NGAY</button>
-        <div class="commit-grid">
-          <div class="commit-card"><h4>✓ Xử lý đúng thông tin</h4><p>Kiểm tra ID/UID và gói nạp trước khi xác nhận đơn.</p></div>
-          <div class="commit-card"><h4>✓ Theo dõi giao dịch</h4><p>Đơn nạp được lưu vào lịch sử để khách và Admin cùng kiểm tra.</p></div>
-          <div class="commit-card"><h4>✓ Minh bạch trạng thái</h4><p>Trạng thái đơn được cập nhật theo dữ liệu hệ thống realtime.</p></div>
-          <div class="commit-card"><h4>✓ Hỗ trợ khi có lỗi</h4><p>Nếu giao dịch gặp sự cố, hãy giữ lại mã đơn và liên hệ hỗ trợ.</p></div>
+        <div class="commit-grid game-commitments">
+          <div class="commit-card"><h4>✓ Cam kết xử lý đúng thông tin</h4><p>Khách vui lòng kiểm tra chính xác ID/UID, tên game, gói tài nguyên và số tiền trước khi xác nhận. Hệ thống ghi nhận đúng dữ liệu mà khách đã gửi để hạn chế nhầm lẫn trong quá trình xử lý đơn.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết minh bạch giao dịch</h4><p>Mỗi đơn nạp được tạo mã riêng, lưu thời gian, tài khoản, game, UID, gói nạp, số tiền và trạng thái. Khách có thể kiểm tra lại lịch sử giao dịch của mình bất cứ lúc nào.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết bảo vệ số dư</h4><p>Trước khi trừ tiền, hệ thống kiểm tra số dư và chỉ tiếp tục khi tài khoản đủ tiền. Nếu giao dịch không tạo được, số dư sẽ không bị trừ. Các thay đổi số dư được đồng bộ theo dữ liệu hệ thống.</p></div>
+          <div class="commit-card"><h4>✓ Cam kết hỗ trợ khi phát sinh lỗi</h4><p>Nếu đơn bị treo, sai trạng thái hoặc phát sinh sự cố, khách nên giữ lại mã đơn, thời gian giao dịch và thông tin liên quan để bộ phận hỗ trợ kiểm tra nhanh nhất.</p></div>
+          <div class="commit-card"><h4>✓ Quy định khi nạp game</h4><p>Không nhập UID của người khác nếu chưa được cho phép. Không gửi thông tin sai, cố tình tạo giao dịch gian lận hoặc lợi dụng lỗi hệ thống. Các trường hợp vi phạm có thể bị tạm khóa xử lý và được Admin kiểm tra.</p></div>
+          <div class="commit-card"><h4>✓ Lưu ý về thời gian xử lý</h4><p>Thời gian hoàn tất phụ thuộc vào trạng thái hệ thống và từng trò chơi. Khi đơn đang xử lý, khách không nên tạo lại nhiều đơn giống nhau vì có thể phát sinh giao dịch trùng.</p></div>
         </div>
+
+        <section class="public-history-card">
+          <div class="public-history-head"><div><h3>⚡ LỊCH SỬ NẠP GẦN ĐÂY</h3><p>Giao dịch thực tế được cập nhật tự động. Các mục “mẫu” chỉ dùng để minh họa giao diện.</p></div><span class="live-dot">● LIVE</span></div>
+          <div id="publicRecentHistory" class="public-history-list"></div>
+        </section>
       </div>
     </section>
-
-    <!-- Khung Nhập ID & Chọn Gói Nạp -->
-
-    <div class="main-card" id="legacyPayCard">
-
-      <h3 style="margin-bottom:15px; font-size:1rem; color:#0084ff;" id="gameSelectTitle">THANH TOÁN ĐƠN HÀNG: FREE FIRE</h3>
-
-      <div id="requireLoginNotice" style="text-align:center; padding:20px; background:#fff3cd; border-radius:12px;">
-
-        <i class="fa-solid fa-lock" style="font-size:1.5rem; color:#856404;"></i>
-
-        <p style="margin-top:8px; font-weight:bold;">Vui lòng Đăng Nhập tài khoản để thực hiện nạp!</p>
-
-      </div>
-
-      <div id="payForm" style="display:none;">
-
-        <div class="form-group">
-
-          <label>Nhập ID Game / UID Khách Hàng</label>
-
-          <input type="text" class="form-control" id="gameUID" placeholder="Ví dụ: [16791135458977](tel:[16791135458977](tel:16791135458977))">
-
-        </div>
-
-        <label style="font-size:0.85rem; font-weight:600;">Chọn Gói Quy Đổi (Áp dụng x15 tài nguyên)</label>
-
-        <div class="price-grid" id="priceGridArea"></div>
-
-        <div id="processingArea" style="display:none; text-align:center; padding:20px; background:#e7f3ff; border-radius:14px; margin-top:15px;">
-
-          <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:#0084ff;"></i>
-
-          <p style="margin-top:10px; font-weight:bold; color:#0084ff;">Đang xử lý giao dịch... Vui lòng chờ chút!</p>
-
-        </div>
-
-        <button class="btn-login-main" id="btnPayAction" style="width:100%; justify-content:center; margin-top:15px; padding:12px;" onclick="confirmPurchase()">
-
-          Thanh Toán
-
-        </button>
-
-      </div>
-
-    </div>
 
   </div>
 
@@ -1210,7 +1192,7 @@
 
     let currentSlide = 0;
 
-    let selectedGame = 'Free Fire';
+    let selectedGame = null;
 
     let selectedPriceObj = null;
 
@@ -1464,11 +1446,10 @@
     }
 
     function renderPriceGrid() {
-      const conf=getGameConfig(selectedGame);
+      // Khối thanh toán cũ đã được bỏ khỏi trang chủ. Giá chỉ render khi mở trang game riêng.
       const grid=document.getElementById('priceGridArea');
-      if(!grid)return;
-      grid.innerHTML=''; selectedPriceObj=null;
-      (conf.rates||[]).forEach(r=>{grid.innerHTML += `<div class="price-box" onclick="selectPrice(this, ${Number(r.p)||0}, '${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}')"><b>💎 ${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}</b><div style="color:#0084ff;font-weight:bold;margin-top:4px;">${(Number(r.p)||0).toLocaleString('vi-VN')}đ</div></div>`;});
+      if(!grid || !selectedGame) return;
+      renderGamePagePrices();
     }
 
     function selectPrice(el, price, label) {
@@ -2284,77 +2265,35 @@
         showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!');
         return;
       }
-
-      const uid = document.getElementById('gameUID').value.trim();
-      if(!uid) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!');
-        return;
-      }
-      if(!selectedPriceObj) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!');
-        return;
-      }
+      const uid=(document.getElementById('gamePageUID')?.value||'').trim();
+      if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
+      if(!selectedGame){showPopup('error','CHƯA CHỌN GAME','Vui lòng chọn game trước.');return;}
+      if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn gói nạp.');return;}
       if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ. Vui lòng thử lại!');
+        showPopup('error','LỖI HỆ THỐNG','Không kết nối được máy chủ. Vui lòng thử lại!');
         return;
       }
-
-      const price = Number(selectedPriceObj.price) || 0;
-      if(price <= 0) {
-        showPopup('error', 'DỮ LIỆU LỖI', 'Gói nạp không hợp lệ!');
-        return;
-      }
-
-      const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-      const btn = document.getElementById('btnPayAction');
-      const processing = document.getElementById('processingArea');
-
-      btn.disabled = true;
-      btn.style.opacity = '0.6';
-      processing.style.display = 'block';
-
-      balanceRef.transaction(current => {
-        const balance = Number(current) || 0;
-        if(balance < price) return;
-        return balance - price;
-      }).then(result => {
+      const price=Number(selectedPriceObj.price)||0;
+      if(price<=0){showPopup('error','DỮ LIỆU LỖI','Gói nạp không hợp lệ!');return;}
+      const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
+      const btn=document.getElementById('gamePagePayBtn');
+      if(btn){btn.disabled=true;btn.style.opacity='.6';}
+      balanceRef.transaction(current=>{const balance=Number(current)||0;if(balance<price)return;return balance-price;}).then(result=>{
         if(!result.committed) throw new Error('INSUFFICIENT_BALANCE');
-
-        const orderRef = db.ref('orders').push();
-        return orderRef.set({
-          id: orderRef.key,
-          user: currentUser,
-          package: 'Nạp Game',
-          game: selectedGame,
-          gameUID: uid,
-          price: price,
-          label: selectedPriceObj.label,
-          time: new Date().toLocaleString('vi-VN'),
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          status: 'processing'
-        });
-      }).then(() => {
-        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-        balances[currentUser] = Math.max(0, (Number(balances[currentUser]) || 0) - price);
-        localStorage.setItem('sys_balances', JSON.stringify(balances));
+        const orderRef=db.ref('orders').push();
+        return orderRef.set({id:orderRef.key,user:currentUser,displayName:getRegisteredName(),package:'Nạp Game',game:selectedGame,gameUID:uid,price:price,label:selectedPriceObj.label,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'processing'});
+      }).then(()=>{
+        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+        balances[currentUser]=Math.max(0,(Number(balances[currentUser])||0)-price);
+        localStorage.setItem('sys_balances',JSON.stringify(balances));
         updateUI();
-
-        showPopup('success', 'ĐÃ TIẾP NHẬN ĐƠN',
-          `Đã trừ ${price.toLocaleString('vi-VN')}đ khỏi số dư. Đơn ${selectedGame} cho UID ${uid} đang được xử lý.`);
-      }).catch(err => {
-        console.error('Lỗi thanh toán game:', err);
-        if(err && err.message === 'INSUFFICIENT_BALANCE') {
-          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', 'Tài khoản không đủ tiền, vui lòng nạp thêm!');
-          openDepositModal('qr');
-        } else {
-          showPopup('error', 'THANH TOÁN THẤT BẠI',
-            err.message || 'Không thể tạo đơn. Số dư chưa được trừ.');
-        }
-      }).finally(() => {
-        processing.style.display = 'none';
-        btn.disabled = false;
-        btn.style.opacity = '1';
-      });
+        showPopup('success','ĐÃ TIẾP NHẬN ĐƠN','Đã trừ '+price.toLocaleString('vi-VN')+'đ khỏi số dư. Đơn '+selectedGame+' cho UID '+uid+' đang được xử lý.');
+        loadPublicRecentHistory();
+      }).catch(err=>{
+        console.error('Lỗi thanh toán game:',err);
+        if(err&&err.message==='INSUFFICIENT_BALANCE'){showPopup('error','SỐ DƯ KHÔNG ĐỦ','Tài khoản không đủ tiền, vui lòng nạp thêm!');openDepositModal('qr');}
+        else showPopup('error','THANH TOÁN THẤT BẠI',err.message||'Không thể tạo đơn. Số dư chưa được trừ.');
+      }).finally(()=>{if(btn){btn.disabled=false;btn.style.opacity='1';}});
     }
 
     window.onload = function() {
@@ -2365,13 +2304,58 @@
 
       if(savedUser) currentUser = savedUser;
 
-      renderPriceGrid();
-
       updateUI();
+      loadPublicRecentHistory();
 
     };
 
   
+    const demoRecentTopups = [
+      {name:'Minh Anh',game:'Free Fire',amount:100000,unit:'Kim Cương',demo:true},
+      {name:'Huy Hoàng',game:'Liên Quân Mobile',amount:200000,unit:'Quân Huy',demo:true},
+      {name:'Gia Bảo',game:'FC Mobile VN',amount:50000,unit:'FC Point',demo:true},
+      {name:'Quốc Việt',game:'Free Fire',amount:500000,unit:'Kim Cương',demo:true}
+    ];
+
+    function maskPublicName(name){
+      const n=String(name||'Khách');
+      if(n.length<=2)return n[0]+'***';
+      return n.slice(0,Math.min(3,n.length))+'***';
+    }
+
+    function publicHistoryItem(o){
+      const amount=(Number(o.amount||o.price)||0).toLocaleString('vi-VN')+'đ';
+      const label=o.demo?'Giao dịch mẫu':'Giao dịch thực';
+      return `<div class="public-history-row ${o.demo?'demo-row':''}">
+        <div class="public-avatar">${String(o.name||'K').charAt(0).toUpperCase()}</div>
+        <div class="public-history-info"><b>${escapeHistoryHtml(maskPublicName(o.name))}</b><span>${escapeHistoryHtml(o.game||'Nạp game')} · ${escapeHistoryHtml(o.unit||'Tài nguyên')}</span></div>
+        <div class="public-history-money"><b>${amount}</b><span>${label}</span></div>
+      </div>`;
+    }
+
+    function renderPublicRecentHistory(realItems){
+      const box=document.getElementById('publicRecentHistory'); if(!box)return;
+      const real=(realItems||[]).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0)).slice(0,10);
+      // Không giả mạo giao dịch thật: dữ liệu mẫu luôn được gắn nhãn “Giao dịch mẫu”.
+      const items=real.length ? real.concat(demoRecentTopups.slice(0,Math.max(0,3-real.length))) : demoRecentTopups;
+      box.innerHTML=items.map(publicHistoryItem).join('');
+    }
+
+    function loadPublicRecentHistory(){
+      if(typeof db==='undefined'||!db||typeof db.ref!=='function'){renderPublicRecentHistory([]);return;}
+      db.ref('orders').limitToLast(30).once('value').then(snap=>{
+        const rows=[];
+        snap.forEach(ch=>{const o=ch.val()||{}; if(o.game && ['approved','success','completed'].includes(String(o.status||'').toLowerCase())) rows.push({name:o.displayName||o.user||'Khách',game:o.game,amount:o.price,unit:(getGameConfig(o.game)||{}).unit||gameUnit(o.game),timestamp:o.timestamp});});
+        renderPublicRecentHistory(rows);
+      }).catch(()=>renderPublicRecentHistory([]));
+      db.ref('orders').off('value', window.__publicHistoryListener);
+      window.__publicHistoryListener=function(snap){
+        const rows=[]; snap.forEach(ch=>{const o=ch.val()||{};if(o.game&&['approved','success','completed'].includes(String(o.status||'').toLowerCase()))rows.push({name:o.displayName||o.user||'Khách',game:o.game,amount:o.price,unit:(getGameConfig(o.game)||{}).unit||gameUnit(o.game),timestamp:o.timestamp});});
+        renderPublicRecentHistory(rows);
+      };
+      db.ref('orders').on('value',window.__publicHistoryListener);
+    }
+
     function applyLedConfig(cfg) {
       const c = cfg || {};
       const enabled = c.ledEnabled !== false;
