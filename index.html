@@ -333,16 +333,15 @@
     .strength-strong { color: #2e7d32; }
   .slide-item { position:relative; overflow:hidden; border-radius:14px; }
   .slide-item img { position:relative; z-index:1; }
-  .led-edge { position:absolute; z-index:4; pointer-events:none; border-radius:999px; opacity:.98; filter:drop-shadow(0 0 4px rgba(0,229,255,.9)); }
-  .led-edge.top,.led-edge.bottom { height:4px; left:6px; right:6px; background:linear-gradient(90deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:220% 100%; animation:ledH 1.8s linear infinite; }
+  .led-edge { position:absolute; z-index:4; pointer-events:none; border-radius:999px; opacity:.98; filter:drop-shadow(0 0 5px rgba(0,229,255,.7)); }
+  .led-edge.top,.led-edge.bottom { height:4px; left:6px; right:6px; background:linear-gradient(90deg,#ff1744,#ff9100,#ffea00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744); background-size:280% 100%; animation:ledH 2.4s linear infinite; }
   .led-edge.top { top:0; animation-delay:0s; }
-  .led-edge.bottom { bottom:0; animation-delay:-.9s; }
-  .led-edge.left,.led-edge.right { width:4px; top:6px; bottom:6px; background:linear-gradient(180deg,transparent 0%,#00e5ff 18%,#fff 26%,#00e5ff 34%,transparent 52%); background-size:100% 220%; animation:ledV 1.8s linear infinite; }
-  .led-edge.left { left:0; animation-delay:-1.35s; }
-  .led-edge.right { right:0; animation-delay:-.45s; }
-  @keyframes ledH { from { background-position:100% 0; } to { background-position:-120% 0; } }
-  @keyframes ledV { from { background-position:0 100%; } to { background-position:0 -120%; } }
-
+  .led-edge.bottom { bottom:0; animation-delay:-1.2s; }
+  .led-edge.left,.led-edge.right { width:4px; top:6px; bottom:6px; background:linear-gradient(180deg,#ff1744,#ff9100,#ffea00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744); background-size:100% 280%; animation:ledV 2.4s linear infinite; }
+  .led-edge.left { left:0; animation-delay:-1.8s; }
+  .led-edge.right { right:0; animation-delay:-.6s; }
+  @keyframes ledH { from { background-position:100% 0; } to { background-position:-180% 0; } }
+  @keyframes ledV { from { background-position:0 100%; } to { background-position:0 -180%; } }
 
     .qr-mini-btn {
       border: 1px solid #0084ff;
@@ -400,15 +399,16 @@
   function applyLedConfig(c) {
     const cfg = c || {};
     const enabled = cfg.ledEnabled !== false;
-    const speed = Number(cfg.ledSpeed) || 1800;
+    const speed = Math.max(700, Number(cfg.ledSpeed) || 2400);
     const effect = cfg.ledEffect || 'chase7';
     let st = document.getElementById('firebaseLedStyle');
     if (!st) { st = document.createElement('style'); st.id = 'firebaseLedStyle'; document.head.appendChild(st); }
-    let duration = speed, opacity = 0.98;
-    if (effect === 'fast') duration = Math.max(700, speed * 0.55);
-    if (effect === 'slow') duration = speed * 1.8;
-    if (effect === 'soft') opacity = 0.55;
-    st.textContent = `.led-edge{animation-duration:${duration}ms!important;opacity:${opacity}!important}${enabled?'':'.led-edge{display:none!important}'}`;
+    let duration = speed, opacity = 0.98, filter = 'drop-shadow(0 0 5px rgba(0,229,255,.7))';
+    if (effect === 'fast') duration = Math.max(650, speed * .55);
+    if (effect === 'slow') duration = speed * 1.7;
+    if (effect === 'soft') { opacity=.55; filter='drop-shadow(0 0 3px rgba(0,229,255,.35))'; }
+    if (effect === 'sparkle') filter='drop-shadow(0 0 8px rgba(255,255,255,.95))';
+    st.textContent = `.led-edge{animation-duration:${duration}ms!important;opacity:${opacity}!important;filter:${filter}!important}${enabled?'':'.led-edge{display:none!important}'}`;
   }
 
   function listenSiteConfig() {
@@ -425,18 +425,30 @@
     if (!user) return;
     const ref = db.ref('customerNotices/' + encodeURIComponent(user));
     ref.off();
-    const markerKey = 'last_customer_notice_key_' + user;
+    const markerKey = 'shown_customer_notice_keys_' + user;
+    let shown = [];
+    try { shown = JSON.parse(localStorage.getItem(markerKey) || '[]'); } catch(e) {}
+    const remember = key => {
+      if (!key) return;
+      shown = shown.filter(k => k !== key);
+      shown.push(key);
+      shown = shown.slice(-30);
+      localStorage.setItem(markerKey, JSON.stringify(shown));
+    };
     ref.once('value').then(snap => {
-      const entries = Object.entries(snap.val() || {}).sort((a,b)=>(Number(b[1]?.timestamp)||0)-(Number(a[1]?.timestamp)||0));
-      if (entries.length && !localStorage.getItem(markerKey)) localStorage.setItem(markerKey, entries[0][0]);
+      // Existing notices are history, not new popups.
+      Object.keys(snap.val() || {}).forEach(k => { if (!shown.includes(k)) remember(k); });
       ref.on('child_added', child => {
         const key = child.key, n = child.val() || {};
-        const last = localStorage.getItem(markerKey);
-        if (last === key) return;
-        localStorage.setItem(markerKey, key);
+        if (shown.includes(key)) return;
+        remember(key);
         const type = n.type === 'warning' ? 'error' : 'success';
         const title = n.type === 'warning' ? '⚠️ CẢNH BÁO' : '🎉 CHÚC MỪNG';
-        showPopup(type, title, n.text || 'Bạn có một thông báo mới từ Admin.');
+        const amount = Number(n.amount || 0);
+        const amountLine = amount ? `
+
+Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.abs(amount).toLocaleString('vi-VN')}đ` : '';
+        showPopup(type, title, (n.text || 'Bạn có một thông báo mới từ Admin.') + amountLine);
       });
     });
   }
@@ -797,6 +809,7 @@
     </div>
 
     <!-- Khung Nhập ID & Chọn Gói Nạp -->
+    <div id="gamePaymentSection" style="display:none;">
 
     <div class="main-card">
 
@@ -843,6 +856,8 @@
     </div>
 
   </div>
+
+    </div>
 
     <footer style="max-width:600px;margin:10px auto 30px;padding:22px 15px;text-align:center;color:#65676b;font-size:.78rem;line-height:1.7;">
     <div style="font-weight:800;color:#1c1e21;margin-bottom:6px;">THÔNG TIN ĐƠN VỊ VẬN HÀNH</div>
@@ -1357,6 +1372,11 @@
       }
 
       selectedGame = gameName;
+      const gameSection = document.getElementById('gamePaymentSection');
+      if (gameSection) {
+        gameSection.style.display = 'block';
+        setTimeout(() => gameSection.scrollIntoView({behavior:'smooth', block:'start'}), 30);
+      }
 
       document.getElementById('gameSelectTitle').innerText = `THANH TOÁN ĐƠN HÀNG: ${gameName.toUpperCase()}`;
 
