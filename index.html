@@ -1592,26 +1592,6 @@
           console.error('Lỗi gửi đơn Firebase:', err);
           showPopup('error', 'LỖI GỬI ĐƠN', err.message || 'Không thể gửi đơn, vui lòng thử lại!');
         });
-    };
-
-      // Đẩy đơn trực tiếp lên Firebase Realtime Database
-
-      db.ref('orders/' + orderId).set(orderData)
-
-      .then(() => {
-
-        showPopup('success', 'ĐÃ GỬI YÊU CẦU', 'Đã ghi nhận! Vui lòng chờ kiểm tra.');
-
-        closeModal('depositModal');
-
-      })
-
-      .catch((err) => {
-
-        alert("Lỗi gửi đơn: " + err.message);
-
-      });
-
     }
 
     function submitCard(typeStr) {
@@ -1847,14 +1827,8 @@
       });
     }
 
-      });
-
-    }
-
     function approveCard(id) {
       return approveFirebaseOrder(String(id));
-    }
-
     }
 
     function adminAddMoney() {
