@@ -3,220 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Trị - Admin Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Hệ Thống Quản Trị – Admin Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0ea5e9;
             --success: #10b981;
+            --danger: #ef4444;
             --bg: #0f172a;
-            --panel: rgba(30, 41, 59, 0.6);
+            --panel: rgba(30, 41, 59, 0.7);
             --text: #f8fafc;
+            --border: #334155;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { 
-            background: var(--bg); 
-            background-image: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.12), transparent 25%),
-                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
-            color: var(--text); 
-            min-height: 100vh; 
-            padding: 40px 20px; 
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
         }
-        .container { 
-            max-width: 1100px; 
-            margin: 0 auto; 
-            animation: fadeIn 0.6s ease-out;
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .header { 
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; 
-            background: var(--panel); padding: 20px 30px; border-radius: 16px;
-            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
         }
-        .header h1 { 
-            font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
-            background: linear-gradient(to right, #38bdf8, #818cf8); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; gap: 10px;
+
+        .header-card {
+            background: var(--panel);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
-        
-        .btn-reload { 
-            background: linear-gradient(135deg, var(--primary), #3b82f6); color: white; 
-            border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; 
-            font-weight: 600; display: flex; align-items: center; gap: 8px;
-            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #38bdf8;
         }
-        .btn-reload:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(14, 165, 233, 0.5); }
-        .btn-reload:active { transform: translateY(1px); }
-        .btn-reload i { transition: transform 0.3s; }
-        .btn-reload:hover i { transform: rotate(180deg); }
-        
-        .table-container {
-            background: var(--panel); border-radius: 16px; padding: 25px;
-            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow-x: auto;
+
+        .btn-refresh {
+            background: linear-gradient(135deg, #0284c7, #0284c7);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+            transition: all 0.2s;
         }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 16px; color: #94a3b8; font-size: 13px; text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.05); letter-spacing: 0.5px;}
-        td { padding: 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; vertical-align: middle;}
-        tr:hover td { background: rgba(255,255,255,0.03); }
-        
-        .user-info { display: flex; align-items: center; gap: 12px; font-weight: 600; color: #e2e8f0; }
-        .user-avatar { 
-            width: 38px; height: 38px; background: linear-gradient(135deg, #6366f1, #8b5cf6); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            color: white; font-size: 16px; font-weight: bold; box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+
+        .btn-refresh:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
-        
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block;}
-        .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-        
-        .price { color: var(--success); font-weight: 700; font-size: 16px; }
-        .uid-text { color: #cbd5e1; font-family: monospace; font-size: 13px; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);}
-        
+
+        .table-card {
+            background: var(--panel);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            color: #94a3b8;
+            font-size: 13px;
+            text-transform: uppercase;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #1e293b;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .status-approved { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        .btn-group {
+            display: flex;
+            gap: 6px;
+        }
+
         .btn-action {
-            background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success);
-            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
-            transition: all 0.3s; display: inline-flex; align-items: center; gap: 6px;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
         }
-        .btn-action:hover { background: var(--success); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transform: scale(1.05);}
-        .btn-action:active { transform: scale(0.95); }
-        
-        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
-        .empty-state i { font-size: 50px; margin-bottom: 20px; opacity: 0.5; color: var(--primary); }
-        .empty-state h3 { font-size: 18px; font-weight: 500; color: #94a3b8;}
-        
-        .loading-state { text-align: center; padding: 50px; color: var(--primary); display: none; }
-        .spinner { animation: spin 1s linear infinite; font-size: 35px; margin-bottom: 15px;}
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .btn-approve { background: var(--success); }
+        .btn-reject { background: var(--danger); }
+        .btn-delete { background: #475569; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1><i class="fa-solid fa-bolt"></i> Quản Lý Nạp Tiền</h1>
-            <button class="btn-reload" onclick="taiDanhSach()">
-                <i class="fa-solid fa-rotate-right"></i> Tải Lại Dữ Liệu
-            </button>
+<div class="container">
+    <div class="header-card">
+        <div class="header-title">
+            ⚡ QUẢN LÝ NẠP TIỀN
         </div>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Khách Hàng</th>
-                        <th>Gói Nạp</th>
-                        <th>Số Tiền</th>
-                        <th>Mã/Nội Dung</th>
-                        <th>Thời Gian</th>
-                        <th>Thao Tác</th>
-                    </tr>
-                </thead>
-                <tbody id="bangChuaDuyet">
-                    <!-- Dữ liệu sẽ đổ vào đây -->
-                </tbody>
-            </table>
-            
-            <!-- Icon Load khi đang tải -->
-            <div id="loading" class="loading-state">
-                <i class="fa-solid fa-circle-notch spinner"></i>
-                <p>Đang quét hệ thống...</p>
-            </div>
-        </div>
+        <button class="btn-refresh" onclick="loadData()">
+            🔄 Tải Lại Dữ Liệu
+        </button>
     </div>
 
-    <script>
-        const SHEETDB_URL = "https://sheetdb.io/api/v1/ukuqfpsb9yvzi";
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Khách Hàng</th>
+                    <th>Gói Nạp</th>
+                    <th>Số Tiền</th>
+                    <th>Mã / Nội Dung</th>
+                    <th>Thời Gian</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="order-list">
+                <!-- Dữ liệu sẽ đổ vào đây -->
+            </tbody>
+        </table>
+        <div id="empty-box" class="empty-state" style="display: none;">
+            <div class="empty-icon">☕</div>
+            <h3>Tuyệt vời! Không còn đơn nào chờ duyệt.</h3>
+            <p style="margin-top: 6px; font-size: 13px;">Thư giãn thôi, hệ thống đang sạch sẽ.</p>
+        </div>
+    </div>
+</div>
 
-        function taiDanhSach() {
-            const tbody = document.getElementById('bangChuaDuyet');
-            const loading = document.getElementById('loading');
+<script>
+    const API_URL = "https://sheetdb.io/api/v1/ukuqfpsb9yvzi";
+
+    async function loadData() {
+        const tbody = document.getElementById('order-list');
+        const emptyBox = document.getElementById('empty-box');
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Đang tải dữ liệu...</td></tr>';
+        
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
             
             tbody.innerHTML = '';
-            loading.style.display = 'block';
+            
+            if (!data || data.length === 0) {
+                emptyBox.style.display = 'block';
+                return;
+            }
 
-            fetch(SHEETDB_URL)
-                .then(res => res.json())
-                .then(orders => {
-                    loading.style.display = 'none';
-                    // Chỉ lấy những đơn có trạng thái là pending
-                    const dsChuaDuyet = orders.filter(o => o.status === "pending");
+            emptyBox.style.display = 'none';
 
-                    if(dsChuaDuyet.length === 0) {
-                        tbody.innerHTML = `
-                            <tr>
-                                <td colspan="6">
-                                    <div class="empty-state">
-                                        <i class="fa-solid fa-mug-hot"></i>
-                                        <h3>Tuyệt vời! Không còn đơn nào đang chờ duyệt.</h3>
-                                        <p style="font-size: 13px; margin-top: 10px;">Thư giãn thôi, hệ thống đang sạch sẽ!</p>
-                                    </div>
-                                </td>
-                            </tr>`;
-                        return;
-                    }
+            data.reverse().forEach(item => {
+                const tr = document.createElement('tr');
+                
+                let statusClass = 'status-pending';
+                let statusText = 'Chờ duyệt';
+                if (item.status === 'approved') { statusClass = 'status-approved'; statusText = 'Đã duyệt'; }
+                if (item.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Đã hủy'; }
 
-                    dsChuaDuyet.forEach(o => {
-                        // Lấy chữ cái đầu của tên làm Avatar
-                        const firstLetter = o.user.charAt(0).toUpperCase();
-                        
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar">${firstLetter}</div>
-                                        <span>${o.user}</span>
-                                    </div>
-                                </td>
-                                <td><span class="badge badge-pending"><i class="fa-solid fa-box"></i> ${o.package}</span></td>
-                                <td class="price">${Number(o.price).toLocaleString()}đ</td>
-                                <td><span class="uid-text">${o.uid}</span></td>
-                                <td style="color: #94a3b8; font-size: 13px;">${o.time}</td>
-                                <td>
-                                    <button class="btn-action" onclick="duyetDon('${o.id}', this)">
-                                        <i class="fa-solid fa-check"></i> Duyệt Xong
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                })
-                .catch(err => {
-                    loading.style.display = 'none';
-                    alert("Lỗi mạng, không tải được dữ liệu: " + err);
-                });
-        }
-
-        // Chức năng bấm duyệt đơn (Đổi trạng thái trên Google Sheets thành "approved")
-        function duyetDon(idDon, btnElement) {
-            // Đổi nút thành trạng thái đang xử lý
-            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang duyệt...';
-            btnElement.style.pointerEvents = "none";
-            btnElement.style.opacity = "0.7";
-
-            // Bắn API PATCH cập nhật trạng thái đơn đó thành approved
-            fetch(`${SHEETDB_URL}/id/${idDon}`, {
-                method: 'PATCH',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: { status: "approved" } })
-            })
-            .then(res => res.json())
-            .then(data => {
-                // Duyệt xong tải lại bảng
-                taiDanhSach();
-            })
-            .catch(err => {
-                alert("Lỗi khi duyệt: " + err);
-                taiDanhSach();
+                tr.innerHTML = `
+                    <td><b>${item.user || 'Khách'}</b></td>
+                    <td>${item.package || 'N/A'}</td>
+                    <td style="color: #38bdf8; font-weight: 600;">${Number(item.price || 0).toLocaleString()}đ</td>
+                    <td><code>${item.uid || 'Không có'}</code></td>
+                    <td style="font-size: 12px; color: #94a3b8;">${item.time || ''}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn-action btn-approve" onclick="updateStatus('${item.id}', 'approved')">Duyệt</button>
+                            <button class="btn-action btn-reject" onclick="updateStatus('${item.id}', 'rejected')">Hủy</button>
+                            <button class="btn-action btn-delete" onclick="deleteOrder('${item.id}')">Xóa</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
+        } catch (err) {
+            console.error("Lỗi tải dữ liệu:", err);
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444;">Lỗi tải dữ liệu từ SheetDB!</td></tr>';
         }
+    }
 
-        // Tự động tải dữ liệu khi vừa vào web
-        taiDanhSach();
-    </script>
+    async function updateStatus(id, status) {
+        try {
+            await fetch(`${API_URL}/id/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: { status: status } })
+            });
+            loadData();
+        } catch (err) {
+            alert('Không thể cập nhật trạng thái!');
+        }
+    }
+
+    async function deleteOrder(id) {
+        if (!confirm('Bạn có chắc muốn xóa đơn này?')) return;
+        try {
+            await fetch(`${API_URL}/id/${id}`, { method: 'DELETE' });
+            loadData();
+        } catch (err) {
+            alert('Không thể xóa đơn!');
+        }
+    }
+
+    // Tự động tải dữ liệu khi mở trang
+    loadData();
+</script>
+
 </body>
 </html>
