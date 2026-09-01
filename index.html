@@ -861,25 +861,25 @@
       closeModal('depositModal');
     }
 const orderData = {
-        id: Date.now(),
-        user: typeof currentUser !== 'undefined' ? currentUser : "Khách",
-        package: "Nạp Chuyển Khoản", 
-        price: val,
-        uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
-        time: new Date().toLocaleString(),
-        status: "pending"
-    };
+    id: Date.now(),
+    user: typeof currentUser !== 'undefined' ? currentUser : "Khách",
+    package: "Nạp Chuyển Khoản",
+    price: val,
+    uid: typeof currentGeneratedMemo !== 'undefined' ? currentGeneratedMemo : "Không có",
+    time: new Date().toLocaleString(),
+    status: "pending"
+};
 
-    fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: orderData }) // <--- DÒNG NÀY LÀ LINH HỒN ĐÂY NÀY
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("Đã đẩy đơn thành công:", data);
-    })
-    .catch(err => console.log("Lỗi:", err));
+fetch("https://sheetdb.io/api/v1/ukuqfpsb9yvzi", {
+    method: 'POST',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: orderData }) // <--- DÒNG NÀY LÀ LINH HỒN ĐÂY NÀY
+})
+.then(res => res.json())
+.then(data => {
+    console.log("Đã đẩy đơn thành công:", data);
+})
+.catch(err => console.log("Lỗi:", err));
     function submitCard(typeStr) {
       if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!'); return; }
       const seri = document.getElementById('cardSeri').value.trim();
