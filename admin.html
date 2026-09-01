@@ -44,12 +44,55 @@ function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{
 function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim(),ledEnabled:ledEnabled.value==='on',ledEffect:ledEffect.value,ledSpeed:Number(ledSpeed.value)||2400}).then(()=>alert('Đã lưu trang chủ và cấu hình LED.')).catch(e=>alert('Lỗi: '+e.message))}
 function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
 function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
-function approve(id){let r=db.ref('orders/'+id);r.once('value').then(s=>{let o=s.val();if(!o||o.status!=='pending')throw Error('Đơn không còn chờ duyệt.');let u=String(o.user||'').trim(),amt=Number(o.price||0);if(!u||amt<=0)throw Error('Đơn không hợp lệ.');return db.ref('balances/'+encodeURIComponent(u)).transaction(v=>(Number(v)||0)+amt).then(x=>{if(!x.committed)throw Error('Không cập nhật được số dư.');return Promise.all([r.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt}),notifyCustomer(u,'success',`🎉 Nạp tiền thành công! Đơn ${fmt(amt)} của bạn đã được Admin duyệt và cộng vào số dư. Xin cảm ơn bạn đã tin tưởng Shop KC!`,amt)])})}).then(()=>alert('Đã duyệt, cộng tiền và gửi thông báo cho khách.')).catch(e=>alert('Lỗi: '+e.message))}
+function normalizeBalanceValue(raw){
+  if(raw && typeof raw==='object'){ raw=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0; }
+  const n=Number(raw); return Number.isFinite(n)?n:0;
+}
+function adjustBalanceVerified(user,delta){
+  user=String(user||'').trim(); delta=Number(delta);
+  if(!user) return Promise.reject(new Error('Thiếu tài khoản khách hàng.'));
+  if(!Number.isFinite(delta)||delta===0) return Promise.reject(new Error('Số tiền phải khác 0.'));
+  const ref=db.ref('balances/'+encodeURIComponent(user));
+  return ref.transaction(raw=>normalizeBalanceValue(raw)+delta).then(result=>{
+    if(!result || !result.committed) throw new Error('Firebase không cho phép cập nhật số dư hoặc dữ liệu chưa được ghi.');
+    const after=normalizeBalanceValue(result.snapshot && result.snapshot.val());
+    return ref.once('value').then(s=>{
+      const verified=normalizeBalanceValue(s.val());
+      if(verified!==after) throw new Error('Không xác minh được số dư sau khi cập nhật.');
+      return verified;
+    });
+  });
+}
+function approve(id){
+  db.ref('orders/'+id).once('value').then(function(s){
+    var o=s.val();
+    if(!o||o.status!=='pending') throw Error('Đơn không còn chờ duyệt.');
+    var u=String(o.user||'').trim(), amt=Number(o.price||0);
+    if(!u||amt<=0) throw Error('Đơn không hợp lệ.');
+    return adjustBalanceVerified(u,amt).then(function(newBal){
+      return db.ref('orders/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt,balanceAfter:newBal}).then(function(){
+        return notifyCustomer(u,'success','🎉 Nạp tiền thành công! Đơn '+fmt(amt)+' đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+fmt(newBal)+'. Xin cảm ơn bạn đã tin tưởng Shop KC!',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
+      });
+    });
+  }).then(function(){alert('Đã duyệt đơn và cộng tiền thành công.');}).catch(function(e){alert('Lỗi: '+e.message);});
+}
 function reject(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val()||{};let u=String(o.user||'').trim();return db.ref('orders/'+id).update({status:'rejected',updatedAt:firebase.database.ServerValue.TIMESTAMP,updatedBy:'ADMIN'}).then(()=>u?notifyCustomer(u,'warning',`⚠️ Cảnh báo: Đơn nạp ${fmt(o.price)} của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.`,Number(o.price)||0):null)}).then(()=>alert('Đã hủy đơn và gửi cảnh báo cho khách.')).catch(e=>alert('Lỗi: '+e.message))}
 function completeGame(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val();if(!o||o.status!=='processing')throw Error('Đơn game không còn đang xử lý.');return db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'})}).then(()=>alert('Đã hoàn tất đơn game.')).catch(e=>alert('Lỗi: '+e.message))}
 function renderWithdrawals(data){lastWithdrawals=data||{};let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>o.status==='pending').sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));withdrawPendingCount.textContent=a.length;withdrawalsBody.innerHTML=a.map(o=>`<tr><td><b>${esc(o.user||'')}</b><br>${esc(o.displayName||'')}</td><td>${fmt(o.amount)}</td><td>${esc(o.receiveInfo||'')}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td><button class="btn btn-green" onclick="approveWithdraw('${o.id}')">Đã chuyển</button> <button class="btn btn-red" onclick="rejectWithdraw('${o.id}')">Từ chối + hoàn tiền</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Không có yêu cầu rút.</td></tr>'}
 function approveWithdraw(id){db.ref('withdrawals/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN'}).then(()=>alert('Đã đánh dấu đã chuyển tiền.')).catch(e=>alert('Lỗi: '+e.message))}
-function rejectWithdraw(id){let r=db.ref('withdrawals/'+id);r.once('value').then(s=>{let o=s.val();if(!o||o.status!=='pending')throw Error('Yêu cầu không còn chờ.');let amt=Number(o.amount)||0;return db.ref('balances/'+encodeURIComponent(o.user)).transaction(v=>(Number(v)||0)+amt).then(x=>{if(!x.committed)throw Error('Không hoàn lại số dư.');return Promise.all([r.update({status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN'}),notifyCustomer(o.user,'warning',`⚠️ Cảnh báo: Yêu cầu rút ${fmt(amt)} đã bị từ chối. Số tiền đã được hoàn lại vào ví của bạn. Vui lòng kiểm tra thông tin nhận tiền và thử lại.`,amt)])})}).then(()=>alert('Đã từ chối, hoàn tiền và gửi cảnh báo cho khách.')).catch(e=>alert('Lỗi: '+e.message))}
+function rejectWithdraw(id){
+  db.ref('withdrawals/'+id).once('value').then(function(s){
+    var o=s.val();
+    if(!o||o.status!=='pending') throw Error('Yêu cầu không còn chờ.');
+    var amt=Number(o.amount)||0, u=String(o.user||'').trim();
+    if(!u||amt<=0) throw Error('Dữ liệu hoàn tiền không hợp lệ.');
+    return adjustBalanceVerified(u,amt).then(function(newBal){
+      return db.ref('withdrawals/'+id).update({status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN',balanceAfter:newBal}).then(function(){
+        return notifyCustomer(u,'warning','⚠️ Cảnh báo: Yêu cầu rút '+fmt(amt)+' đã bị từ chối. Số tiền đã được hoàn lại vào ví. Số dư hiện tại: '+fmt(newBal)+'.',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
+      });
+    });
+  }).then(function(){alert('Đã từ chối yêu cầu và hoàn tiền thành công.');}).catch(function(e){alert('Lỗi: '+e.message);});
+}
 function ensureCustomerRegistry(u,name,createdAt){
   u=String(u||'').trim(); if(!u||u==='ADMIN') return;
   const ref=db.ref('customerRegistry/'+encodeURIComponent(u));
@@ -61,22 +104,26 @@ function notifyCustomer(u,type,text,amount){
   return db.ref('customerNotices/'+encodeURIComponent(u)).push({user:u,type:type,text:text,amount:Number(amount)||0,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'});
 }
 function adminAdjustMoney(){
-  const u=admUser.value.trim(), amt=Number(admAmount.value), note=(admNote.value||'').trim(), type=admNoteType.value;
+  const u=admUser.value.trim(), amt=Number(admAmount.value), note=(admNote.value||'').trim();
   if(!u||!Number.isFinite(amt)||amt===0){alert('Nhập tài khoản và số tiền khác 0.');return;}
+  if(u==='ADMIN'){alert('Không được cộng/trừ số dư tài khoản ADMIN.');return;}
   const finalType=amt>0?'success':'warning';
   const finalNote=note
     ? `${note} — Số tiền: ${amt>0?'+':'-'}${fmt(Math.abs(amt))}`
     : (amt>0
       ? `🎉 Chúc mừng! Admin vừa tặng/tri ân ${fmt(Math.abs(amt))} vào ví của bạn. Số tiền cộng: +${fmt(Math.abs(amt))}. Cảm ơn bạn đã tin tưởng và ủng hộ Shop KC!`
       : `⚠️ Cảnh báo: Admin vừa trừ ${fmt(Math.abs(amt))} khỏi số dư tài khoản của bạn. Số tiền trừ: -${fmt(Math.abs(amt))}. Vui lòng kiểm tra giao dịch và liên hệ hỗ trợ nếu cần.`);
-  const ref=db.ref('balances/'+encodeURIComponent(u));
-  ref.transaction(v=>(Number(v)||0)+amt).then(x=>{
-    if(!x.committed) throw Error('Không cập nhật được số dư.');
-    return ensureCustomerRegistry(u,u).then(()=>db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}));
-  }).then(()=>notifyCustomer(u,finalType,finalNote,amt)).then(()=>{
-    alert(amt>0?'Đã cộng tiền và gửi thông báo chúc mừng/tri ân cho khách.':'Đã trừ tiền và gửi cảnh báo cho khách.');
+  const btn=document.querySelector('[onclick="adminAdjustMoney()"]'); if(btn)btn.disabled=true;
+  adjustBalanceVerified(u,amt).then(newBal=>{
+    const side=[];
+    side.push(ensureCustomerRegistry(u,u).catch(e=>console.warn('Registry:',e)));
+    side.push(db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,balanceAfter:newBal,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}).catch(e=>console.warn('Log:',e)));
+    side.push(notifyCustomer(u,finalType,`${finalNote} Số dư hiện tại: ${fmt(newBal)}.`,amt).catch(e=>console.warn('Notice:',e)));
+    return Promise.all(side).then(()=>newBal);
+  }).then(newBal=>{
+    alert(amt>0?`Đã cộng ${fmt(Math.abs(amt))} cho ${u}. Số dư mới: ${fmt(newBal)}. Đã tạo thông báo chúc mừng/tri ân.`:`Đã trừ ${fmt(Math.abs(amt))} của ${u}. Số dư mới: ${fmt(newBal)}. Đã tạo cảnh báo cho khách.`);
     admAmount.value='';admNote.value='';renderUsersFromState();
-  }).catch(e=>alert('Lỗi: '+e.message));
+  }).catch(e=>alert('Không thể thay đổi số dư: '+e.message)).finally(()=>{if(btn)btn.disabled=false;});
 }
 let adminCustomers={},adminBalances={};
 function renderUsersFromState(){
@@ -94,7 +141,7 @@ function showFraud(u){
 function startCustomerRealtime(){
   db.ref('customerRegistry').on('value',s=>{adminCustomers={};s.forEach(ch=>{const c=ch.val()||{};const u=c.user||decodeURIComponent(ch.key);if(u&&u!=='ADMIN')adminCustomers[u]=c;});renderUsersFromState();});
   db.ref('userProfiles').on('value',s=>{s.forEach(ch=>{const c=ch.val()||{};const u=c.user||decodeURIComponent(ch.key);if(u&&u!=='ADMIN')adminCustomers[u]={...(adminCustomers[u]||{}),...c};});renderUsersFromState();});
-  db.ref('balances').on('value',s=>{adminBalances={};s.forEach(ch=>{const u=decodeURIComponent(ch.key);if(u&&u!=='ADMIN')adminBalances[u]=Number(ch.val())||0;});renderUsersFromState();});
+  db.ref('balances').on('value',s=>{adminBalances={};s.forEach(ch=>{const u=decodeURIComponent(ch.key);const raw=ch.val();let v=raw;if(raw&&typeof raw==='object'){v=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0;}if(u&&u!=='ADMIN')adminBalances[u]=Number(v)||0;});renderUsersFromState();});
   db.ref('orders').on('value',s=>{s.forEach(ch=>{const o=ch.val()||{};const u=String(o.user||'').trim();if(u&&u!=='ADMIN'){adminCustomers[u]={...(adminCustomers[u]||{}),user:u,displayName:o.displayName||adminCustomers[u]?.displayName||u,lastSeenAt:o.timestamp||Date.now()};ensureCustomerRegistry(u,adminCustomers[u].displayName);}});renderUsersFromState();});
 }
 function openProof(url){proofImage.src=url;proofModal.classList.add('active')}function closeProof(){proofModal.classList.remove('active');proofImage.src=''}
