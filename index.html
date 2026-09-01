@@ -2221,29 +2221,53 @@
     function approveFirebaseOrder(orderId) {
       if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!'); return; }
       const orderRef=db.ref('orders/'+orderId);
-      orderRef.transaction(raw=>{
-        if(!raw || raw.status!=='pending') return;
-        return Object.assign({},raw,{status:'approving',approvingBy:ADMIN_ACC,approvingAt:Date.now()});
-      }).then(lock=>{
-        if(!lock || !lock.committed) throw new Error('Đơn không còn chờ duyệt hoặc đang được xử lý.');
-        const c=lock.snapshot.val()||{};
+      orderRef.once('value').then(snap=>{
+        const c=snap.val()||{};
+        if(!c) throw new Error('Không tìm thấy đơn nạp.');
+        if(c.status==='approved' || c.status==='success') throw new Error('Đơn này đã được duyệt trước đó.');
+        if(c.status!=='pending') throw new Error('Đơn đang được xử lý hoặc đã thay đổi trạng thái.');
         const user=String(c.user||'').trim(), amount=Number(c.price)||0;
         if(!user||amount<=0) throw new Error('Đơn nạp không có dữ liệu hợp lệ!');
-        return adjustAdminBalanceVerified(user,amount).then(newBal=>{
-          return orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:ADMIN_ACC,approvedAmount:amount,balanceAfter:newBal}).then(()=>{
-            const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}'); balances[user]=newBal; localStorage.setItem('sys_balances',JSON.stringify(balances));
-            return db.ref('customerNotices/'+encodeURIComponent(user)).push({user:user,type:'success',text:'Nạp tiền thành công! Đơn '+amount.toLocaleString('vi-VN')+'đ đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+newBal.toLocaleString('vi-VN')+'đ.',amount:amount,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'}).catch(e=>console.warn('Không gửi được thông báo khách:',e));
+
+        // Chỉ cộng tiền vào đúng ví balances/<username>. KC và nạp tiền dùng chung một nguồn số dư.
+        const balanceRef=db.ref('balances/'+encodeURIComponent(user));
+        return balanceRef.transaction(raw=>{
+          const current=normalizeAdminBalanceValue(raw);
+          return current + amount;
+        }).then(result=>{
+          if(!result || !result.committed) throw new Error('Firebase không ghi được số dư khách.');
+          const newBal=normalizeAdminBalanceValue(result.snapshot.val());
+          return Promise.all([
+            orderRef.update({
+              status:'approved',
+              approvedAt:firebase.database.ServerValue.TIMESTAMP,
+              approvedBy:ADMIN_ACC,
+              approvedAmount:amount,
+              balanceAfter:newBal
+            }),
+            db.ref('customerNotices/'+encodeURIComponent(user)).push({
+              user:user,
+              type:'success',
+              title:'NẠP TIỀN THÀNH CÔNG',
+              text:'Admin đã duyệt đơn nạp '+amount.toLocaleString('vi-VN')+'đ. Số dư mới: '+newBal.toLocaleString('vi-VN')+'đ.',
+              amount:amount,
+              time:new Date().toLocaleString('vi-VN'),
+              timestamp:firebase.database.ServerValue.TIMESTAMP,
+              from:'ADMIN'
+            })
+          ]).then(()=>{
+            const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+            balances[user]=newBal;
+            localStorage.setItem('sys_balances',JSON.stringify(balances));
+            return newBal;
           });
-        }).catch(err=>{
-          if(err&&err.message==='INSUFFICIENT_BALANCE'){
-            return orderRef.transaction(cur=>{
-              if(cur&&cur.status==='approving') return Object.assign({},cur,{status:'pending',approvingBy:null,approvingAt:null});
-              return;
-            }).then(()=>{throw err;});
-          }
-          throw err;
         });
-      }).then(()=>showPopup('success','THÀNH CÔNG','Đã duyệt đơn nạp và cộng tiền vào số dư khách.')).catch(err=>showPopup('error','LỖI DUYỆT ĐƠN',err.message||'Không thể cập nhật số dư!'));
+      }).then(newBal=>{
+        showPopup('success','THÀNH CÔNG','Đã duyệt đơn nạp và cộng tiền ngay vào ví khách. Số dư mới: '+newBal.toLocaleString('vi-VN')+'đ.');
+      }).catch(err=>{
+        console.error('Approve deposit error:',err);
+        showPopup('error','LỖI DUYỆT ĐƠN',err.message||'Không thể cập nhật số dư!');
+      });
     }
     function approveCard(id) {
 
