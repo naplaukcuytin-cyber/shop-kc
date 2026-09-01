@@ -522,12 +522,9 @@
 
     </div>
 
-    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openCustomerOrderHistory()">
-        <i class="fa-solid fa-receipt" style="color:#2e7d32;"></i> Xem Lịch Sử Đơn Hàng
-      </div>
-      <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
+    <div style="padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="openHistoryModal()">
 
-      <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Nạp Tiền
+      <i class="fa-solid fa-clock-rotate-left" style="color:#0084ff;"></i> Lịch Sử Giao Dịch
 
     </div>
 
@@ -771,7 +768,18 @@
 
   </div>
 
-  <!-- Modal Nạp Tiền Vào Ví -->
+  \  <footer style="max-width:600px; margin:10px auto 30px; padding:22px 15px; text-align:center; color:#65676b; font-size:.78rem; line-height:1.7;">
+    <div style="font-weight:800; color:#1c1e21; margin-bottom:6px;">THÔNG TIN ĐƠN VỊ VẬN HÀNH</div>
+    <div>Vui lòng sử dụng chính xác thông tin pháp nhân của đơn vị sở hữu/vận hành website.</div>
+    <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:10px;">
+      <a href="#" onclick="return false;" style="color:#0084ff; text-decoration:none;">Câu hỏi thường gặp</a>
+      <a href="#" onclick="return false;" style="color:#0084ff; text-decoration:none;">Trung tâm trợ giúp</a>
+      <a href="#" onclick="return false;" style="color:#0084ff; text-decoration:none;">Điều khoản dịch vụ</a>
+      <a href="#" onclick="return false;" style="color:#0084ff; text-decoration:none;">Chính sách bảo mật</a>
+    </div>
+  </footer>
+
+<!-- Modal Nạp Tiền Vào Ví -->
 
   <div class="modal" id="depositModal">
 
@@ -935,102 +943,56 @@
 
   </div>
 
-
-  <div class="modal" id="customerOrderHistoryModal">
-    <div class="modal-content" style="max-width:620px;">
-      <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('customerOrderHistoryModal')"></i>
-      <h3 style="color:#0084ff;text-align:center;margin-bottom:6px;">LỊCH SỬ ĐƠN HÀNG</h3>
-      <div style="text-align:center;color:#65676b;font-size:.78rem;margin-bottom:12px;">Theo dõi các đơn nạp đang xử lý hoặc đã hoàn tất.</div>
+<!-- Modal Xem Lịch Sử Giao Dịch -->
+  <div class="modal" id="historyModal">
+    <div class="modal-content">
+      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('historyModal')"></i>
+      <h3 style="color:#0084ff; text-align:center; margin-bottom:6px;">LỊCH SỬ GIAO DỊCH</h3>
+      <p style="text-align:center; color:#65676b; font-size:.8rem; margin-bottom:15px;">Theo dõi đơn nạp ví và đơn nạp game của tài khoản</p>
+      <div id="historySummary" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;"></div>
       <div style="overflow-x:auto;">
-        <table style="min-width:560px;">
-          <thead>
-            <tr><th>Game</th><th>UID</th><th>Mệnh giá</th><th>Trạng thái</th><th>Thời gian</th></tr>
-          </thead>
-          <tbody id="customerOrderHistoryTable"></tbody>
+        <table>
+          <thead><tr><th>Thời gian</th><th>Loại</th><th>Game / UID</th><th>Số tiền</th><th>Trạng thái</th></tr></thead>
+          <tbody id="userHistoryTable"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- Modal Xem Lịch Sử Nạp -->
+  <!-- Modal Admin Quản Lý -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content" style="max-width:560px;">
+      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('adminModal')"></i>
+      <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">BẢNG ĐIỀU KHIỂN ADMIN</h3>
 
-  <div class="modal" id="historyModal">
+      <div style="background:#f0f2f5; padding:12px; border-radius:12px; margin-bottom:15px;">
+        <label><b>Cộng / Trừ Tiền Khách Hàng</b></label>
+        <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:7px;">
+        <input type="number" class="form-control" id="admAmount" placeholder="Số tiền (+/- VNĐ)" style="margin-top:7px;">
+        <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
+      </div>
 
-    <div class="modal-content">
+      <div style="background:#fff3cd; padding:12px; border-radius:12px; margin-bottom:15px;">
+        <label><b>Thông Báo Khách Hàng</b></label>
+        <textarea class="form-control" id="admNoticeInput" style="margin-top:7px;" rows="2"></textarea>
+        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:9px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
+      </div>
 
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('historyModal')"></i>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0;">
+        <h4 style="margin:0;">Đơn cần xử lý</h4>
+        <button onclick="renderAdminCards()" style="border:1px solid #ddd;background:#fff;border-radius:8px;padding:6px 9px;cursor:pointer;">↻ Làm mới</button>
+      </div>
+      <div style="font-size:.75rem;color:#65676b;margin-bottom:8px;">Nạp ví: Duyệt để cộng tiền. Nạp game: Hoàn tất sau khi đã nạp game cho UID.</div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>Khách</th><th>Đơn</th><th>Số tiền</th><th>Thao tác</th></tr></thead>
+          <tbody id="admCardTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-      <h3 style="color:#0084ff; text-align:center; margin-bottom:15px;">LỊCH SỬ NẠP TIỀN</h3>
-
-      <table>
-
-        <thead>
-
-          <tr><th>Loại Nạp</th><th>Mệnh Giá</th><th>Trạng Thái</th></tr>
-
-        </thead>
-
-        <tbody id="userHistoryTable"></tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
-  <!-- Modal Admin Quản Lý -->
-
-  <div class="modal" id="adminModal">
-
-    <div class="modal-content">
-
-      <i class="fa-solid fa-xmark" style="position:absolute; top:15px; right:15px; cursor:pointer;" onclick="closeModal('adminModal')"></i>
-
-      <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">BẢNG ĐIỀU KHIỂN ADMIN</h3>
-
-      <a href="admin.html" target="_blank" style="display: block; padding: 10px 15px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin-top: 10px; text-align: center; font-weight: bold;">📥 Quản Lý Đơn Nạp (SheetDB)</a>
-
-      <div style="background:#fff3cd; padding:12px; border-radius:10px; margin-bottom:15px; margin-top:15px;">
-
-        <label><b>Thông Báo Mức Nạp Khách Hàng:</b></label>
-
-        <textarea class="form-control" id="admNoticeInput" style="margin-top:5px;" rows="2"></textarea>
-
-        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:8px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
-
-      </div>
-
-      <div style="background:#f0f2f5; padding:12px; border-radius:10px; margin-bottom:15px;">
-
-        <label><b>Cộng / Trừ Tiền Khách Hàng:</b></label>
-
-        <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:5px;">
-
-        <input type="number" class="form-control" id="admAmount" placeholder="Số tiền (+/- VNĐ)" style="margin-top:5px;">
-
-        <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
-
-      </div>
-
-      <h4>Danh Sách Chờ Duyệt:</h4>
-
-      <table>
-
-        <thead>
-
-          <tr><th>Khách</th><th>Mã/Seri</th><th>M.Giá</th><th>Thao Tác</th></tr>
-
-        </thead>
-
-        <tbody id="admCardTable"></tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
-  <!-- Modal Đăng Nhập / Đăng Ký -->
+  <!-- Modal Đăng Nhập / Đăng Ký -->
 
   <div class="modal" id="authModal">
 
@@ -1796,319 +1758,102 @@
 
     }
 
-    
-    function openCustomerOrderHistory() {
+    function openHistoryModal() {
       closeSidebar();
-      if(!currentUser) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập!');
-        return;
-      }
+      if(!currentUser) { showPopup('error','THẤT BẠI','Vui lòng đăng nhập!'); return; }
+      const tbody=document.getElementById('userHistoryTable');
+      const summary=document.getElementById('historySummary');
+      tbody.innerHTML='<tr><td colspan="5" style="text-align:center;">Đang tải lịch sử...</td></tr>';
+      summary.innerHTML='';
+      document.getElementById('historyModal').classList.add('active');
 
-      const tbody = document.getElementById('customerOrderHistoryTable');
-      document.getElementById('customerOrderHistoryModal').classList.add('active');
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Đang tải...</td></tr>';
+      const localCards=JSON.parse(localStorage.getItem('sys_cards')||'[]').filter(c=>c.user===currentUser).map(c=>( {
+        timestamp:Number(c.timestamp)||Number(c.id)||0,time:c.time||'',type:c.type||'Nạp ví',game:c.game||'-',uid:c.gameUID||'',amount:Number(c.val)||0,status:c.status||'pending'
+      }));
 
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không kết nối được máy chủ.</td></tr>';
-        return;
-      }
-
-      db.ref('orders').orderByChild('user').equalTo(currentUser).once('value').then(snapshot => {
-        const orders = [];
-        snapshot.forEach(child => orders.push(child.val() || {}));
-        orders.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
-
-        if(!orders.length) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có đơn hàng.</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = '';
-        orders.forEach(o => {
-          const status =
-            o.status === 'success' ? '<span style="color:#2e7d32;font-weight:700;">✔ Hoàn tất</span>' :
-            o.status === 'approved' ? '<span style="color:#2e7d32;font-weight:700;">✔ Đã duyệt</span>' :
-            o.status === 'rejected' ? '<span style="color:#e53935;font-weight:700;">✖ Đã hủy</span>' :
-            '<span style="color:#fb8c00;font-weight:700;">⏳ Đang xử lý</span>';
-
-          tbody.innerHTML += `<tr>
-            <td>${o.game || o.package || '—'}</td>
-            <td>${o.uid || o.memo || '—'}</td>
-            <td>${(Number(o.price)||0).toLocaleString()}đ</td>
-            <td>${status}</td>
-            <td>${o.time || '—'}</td>
-          </tr>`;
-        });
-      }).catch(() => {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Không tải được lịch sử.</td></tr>';
-      });
+      if(typeof db==='undefined'||!db||typeof db.ref!=='function'){ renderUserHistory(localCards); return; }
+      db.ref('orders').orderByChild('user').equalTo(currentUser).once('value').then(snapshot=>{
+        const orders=[];
+        snapshot.forEach(child=>{const o=child.val()||{}; orders.push({timestamp:Number(o.timestamp)||0,time:o.time||'',type:o.game?'Nạp game':(o.package||'Nạp ví'),game:o.game||'-',uid:o.gameUID||o.uid||'',amount:Number(o.price)||0,status:o.status||'pending'});});
+        renderUserHistory(orders.length?orders:localCards);
+      }).catch(()=>renderUserHistory(localCards));
     }
 
-    function openHistoryModal() {
-
-      closeSidebar();
-
-      if(!currentUser) { showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập!'); return; }
-
-      const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
-
-      const tbody = document.getElementById('userHistoryTable');
-
-      tbody.innerHTML = '';
-
-      const userCards = cards.filter(c => c.user === currentUser);
-
-      if(userCards.length === 0) {
-
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>`;
-
-      } else {
-
-        userCards.reverse().forEach(c => {
-
-          const st = c.status === 'success' ? '<span style="color:#2e7d32; font-weight:bold;">✔ Thành công</span>' : '<span style="color:#fb8c00; font-weight:bold;">⏳ Đang chờ</span>';
-
-          tbody.innerHTML += `<tr><td>${c.type}</td><td>${c.val.toLocaleString()}đ</td><td>${st}</td></tr>`;
-
-        });
-
-      }
-
-      document.getElementById('historyModal').classList.add('active');
-
-    }
-
-    // Click 5 lần vào Logo Garena mở Admin
-
-    function secretAdminClick() {
-
-      adminClickCounter++;
-
-      if(adminClickCounter >= 5) {
-
-        adminClickCounter = 0;
-
-        openAdminModal();
-
-      }
-
-    }
-
-    function openAdminModal() {
-
-      if(currentUser !== ADMIN_ACC) { 
-
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!'); 
-
-        return; 
-
-      }
-
-      renderAdminCards();
-
-      document.getElementById('adminModal').classList.add('active');
-
-    }
-
-    function renderAdminCards() {
-
-      const tbody = document.getElementById('admCardTable');
-
-      if(!tbody) return;
-
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không kết nối được Firebase.</td></tr>';
-
-        return;
-
-      }
-
-      const ordersRef = db.ref('orders');
-
-      ordersRef.off('value');
-
-      ordersRef.on('value', (snapshot) => {
-
-        tbody.innerHTML = '';
-
-        const orders = [];
-
-        snapshot.forEach(child => {
-
-          const c = child.val() || {};
-
-          if(c.status === 'pending') {
-
-            orders.push(c);
-
-          }
-
-        });
-
-        orders.sort((a, b) => {
-
-          const ta = Number(a.timestamp) || 0;
-
-          const tb = Number(b.timestamp) || 0;
-
-          return tb - ta;
-
-        });
-
-        if(orders.length === 0) {
-
-          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không có đơn nạp đang chờ.</td></tr>';
-
-          return;
-
-        }
-
-        orders.forEach(c => {
-
-          const safeId = String(c.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
-
-          const user = String(c.user || 'Khách');
-
-          const type = String(c.package || 'Nạp tiền');
-
-          const memo = String(c.memo || c.uid || 'Không có');
-
-          const val = Number(c.price) || 0;
-
-          tbody.innerHTML += `
-
-            <tr>
-
-              <td>${user}</td>
-
-              <td>${type}<br><b>Nội dung:</b> ${memo}</td>
-
-              <td>${val.toLocaleString()}đ</td>
-
-              <td>
-
-                <button style="background:#2e7d32; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;"
-
-                  onclick="approveFirebaseOrder('${safeId}')">Duyệt</button>
-
-              </td>
-
-            </tr>
-
-          `;
-
-        });
-
-      }, (err) => {
-
-        console.error('Firebase orders listener:', err);
-
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không đọc được đơn nạp từ Firebase.</td></tr>';
-
-      });
-
-    }
-
-    function approveFirebaseOrder(orderId) {
-
-      if(currentUser !== ADMIN_ACC) {
-
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
-
-        return;
-
-      }
-
-      if(!orderId || typeof db === 'undefined' || !db) {
-
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
-
-        return;
-
-      }
-
-      const orderRef = db.ref('orders/' + orderId);
-
-      orderRef.once('value').then(snapshot => {
-
-        const c = snapshot.val();
-
-        if(!c) {
-
-          showPopup('error', 'KHÔNG TÌM THẤY', 'Đơn nạp không còn tồn tại!');
-
-          return;
-
-        }
-
-        if(c.status !== 'pending') {
-
-          showPopup('error', 'ĐÃ XỬ LÝ', 'Đơn này đã được xử lý trước đó!');
-
-          return;
-
-        }
-
-        const amount = Number(c.price) || 0;
-
-        const user = c.user;
-
-        if(!user || amount <= 0) {
-
-          showPopup('error', 'DỮ LIỆU LỖI', 'Đơn nạp không có dữ liệu hợp lệ!');
-
-          return;
-
-        }
-
-        const balanceRef = db.ref('balances/' + encodeURIComponent(user));
-
-        return balanceRef.transaction(current => (Number(current) || 0) + amount)
-
-          .then(() => orderRef.update({
-
-            status: 'approved',
-
-            approvedAt: firebase.database.ServerValue.TIMESTAMP,
-
-            approvedBy: ADMIN_ACC
-
-          }))
-
-          .then(() => {
-
-            // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
-
-            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-            balances[user] = (balances[user] || 0) + amount;
-
-            localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-            localStorage.setItem('last_approved_user', user);
-
-            showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
-
-          });
-
-      }).catch(err => {
-
-        console.error('Approve order error:', err);
-
-        showPopup('error', 'LỖI DUYỆT ĐƠN', err.message || 'Không thể duyệt đơn!');
-
-      });
-
-    }
-
-    function approveCard(id) {
-
-      return approveFirebaseOrder(String(id));
-
-    }
-
-    function adminAddMoney() {
+    function renderUserHistory(items){
+      const tbody=document.getElementById('userHistoryTable'), summary=document.getElementById('historySummary');
+      const list=(items||[]).slice().sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+      const processing=list.filter(x=>['pending','processing'].includes(x.status)).length;
+      const success=list.filter(x=>['approved','success','completed'].includes(x.status)).length;
+      const failed=list.filter(x=>['failed','cancelled','rejected'].includes(x.status)).length;
+      summary.innerHTML=`<div style="background:#fff3cd;padding:9px;border-radius:10px;text-align:center;"><b>${processing}</b><br><span style="font-size:.72rem;">Đang xử lý</span></div><div style="background:#e8f5e9;padding:9px;border-radius:10px;text-align:center;"><b>${success}</b><br><span style="font-size:.72rem;">Thành công</span></div><div style="background:#ffebee;padding:9px;border-radius:10px;text-align:center;"><b>${failed}</b><br><span style="font-size:.72rem;">Thất bại</span></div>`;
+      if(!list.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>';return;}
+      tbody.innerHTML=list.map(x=>{
+        const st=['approved','success','completed'].includes(x.status)?'<span style="color:#2e7d32;font-weight:700;">✔ Thành công</span>':['failed','cancelled','rejected'].includes(x.status)?'<span style="color:#c62828;font-weight:700;">✖ Thất bại</span>':'<span style="color:#fb8c00;font-weight:700;">⏳ Đang xử lý</span>';
+        const game=x.game&&x.game!=='-'?`${escapeHtml(x.game)}<br><span style="font-size:.72rem;color:#65676b;">UID: ${escapeHtml(x.uid||'-')}</span>`:'-';
+        return `<tr><td>${escapeHtml(x.time||formatHistoryTime(x.timestamp))}</td><td>${escapeHtml(x.type||'Giao dịch')}</td><td>${game}</td><td>${(Number(x.amount)||0).toLocaleString('vi-VN')}đ</td><td>${st}</td></tr>`;
+      }).join('');
+    }
+    function escapeHtml(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+    function formatHistoryTime(ts){if(!ts)return '-';try{return new Date(ts).toLocaleString('vi-VN')}catch(e){return '-'}}
+
+    // Click 5 lần vào Logo Garena mở Admin
+    function secretAdminClick() {
+      adminClickCounter++;
+      if(adminClickCounter>=5){adminClickCounter=0;openAdminModal();}
+    }
+
+    function openAdminModal(){
+      if(currentUser!==ADMIN_ACC){showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');return;}
+      renderAdminCards();
+      document.getElementById('adminModal').classList.add('active');
+    }
+
+    function renderAdminCards(){
+      const tbody=document.getElementById('admCardTable'); if(!tbody)return;
+      if(typeof db==='undefined'||!db||typeof db.ref!=='function'){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;">Không kết nối được Firebase.</td></tr>';return;}
+      const ordersRef=db.ref('orders');
+      ordersRef.off('value');
+      ordersRef.on('value',snapshot=>{
+        const orders=[];
+        snapshot.forEach(child=>{const c=child.val()||{}; if(['pending','processing'].includes(c.status)) orders.push({...c,_key:child.key});});
+        orders.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+        if(!orders.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;">Không có đơn cần xử lý.</td></tr>';return;}
+        tbody.innerHTML=orders.map(c=>{
+          const id=String(c._key||c.id||'').replace(/[^a-zA-Z0-9_-]/g,'');
+          const isGame=!!c.game;
+          const label=isGame?`<b>${escapeHtml(c.game)}</b><br><span style="font-size:.72rem;">UID: ${escapeHtml(c.gameUID||'-')}</span>`:escapeHtml(c.package||'Nạp ví')+'<br><span style="font-size:.72rem;">'+escapeHtml(c.memo||c.uid||'-')+'</span>';
+          const action=isGame?`<button style="background:#0084ff;color:#fff;border:none;padding:5px 8px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="completeGameOrder('${id}')">Hoàn tất</button>`:`<button style="background:#2e7d32;color:#fff;border:none;padding:5px 8px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="approveFirebaseOrder('${id}')">Duyệt</button>`;
+          return `<tr><td>${escapeHtml(c.user||'Khách')}</td><td>${label}</td><td>${(Number(c.price)||0).toLocaleString('vi-VN')}đ</td><td>${action}</td></tr>`;
+        }).join('');
+      },err=>{console.error(err);tbody.innerHTML='<tr><td colspan="4" style="text-align:center;">Không đọc được đơn từ Firebase.</td></tr>';});
+    }
+
+    function approveFirebaseOrder(orderId){
+      if(currentUser!==ADMIN_ACC){showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');return;}
+      const orderRef=db.ref('orders/'+orderId);
+      orderRef.once('value').then(s=>{
+        const c=s.val(); if(!c){throw new Error('Không tìm thấy đơn.');}
+        if(c.status!=='pending'||c.game){throw new Error('Đơn này không phải đơn nạp ví đang chờ.');}
+        const amount=Number(c.price)||0,user=c.user;if(!user||amount<=0)throw new Error('Dữ liệu đơn không hợp lệ.');
+        return db.ref('balances/'+encodeURIComponent(user)).transaction(v=>(Number(v)||0)+amount).then(r=>{if(!r.committed)throw new Error('Không cập nhật được số dư.');return orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:ADMIN_ACC});});
+      }).then(()=>{showPopup('success','ĐÃ DUYỆT','Đã cộng tiền cho khách và đánh dấu đơn thành công.');renderAdminCards();})
+      .catch(err=>showPopup('error','LỖI DUYỆT ĐƠN',err.message||'Không thể duyệt đơn.'));
+    }
+
+    function completeGameOrder(orderId){
+      if(currentUser!==ADMIN_ACC){showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');return;}
+      const orderRef=db.ref('orders/'+orderId);
+      orderRef.once('value').then(s=>{
+        const c=s.val(); if(!c)throw new Error('Không tìm thấy đơn.');
+        if(c.status!=='processing'||!c.game)throw new Error('Đơn này không ở trạng thái đang xử lý.');
+        return orderRef.update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:ADMIN_ACC});
+      }).then(()=>{showPopup('success','ĐÃ HOÀN TẤT','Đơn nạp game đã chuyển sang trạng thái thành công.');renderAdminCards();})
+      .catch(err=>showPopup('error','LỖI HOÀN TẤT',err.message||'Không thể hoàn tất đơn.'));
+    }
+
+    function approveCard(id){return approveFirebaseOrder(String(id));}
+    
+    function adminAddMoney() {
 
       const u = document.getElementById('admUser').value.trim();
 
@@ -2168,72 +1913,27 @@
 
     }
 
-    function confirmPurchase() {
-      if(!currentUser) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!');
-        return;
-      }
-
-      const uid = document.getElementById('gameUID').value.trim();
-      if(!uid) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!'); return; }
-      if(!selectedPriceObj) { showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!'); return; }
-
-      const amount = Number(selectedPriceObj.price);
-      if(!Number.isFinite(amount) || amount <= 0) {
-        showPopup('error', 'THẤT BẠI', 'Số tiền thanh toán không hợp lệ!');
-        return;
-      }
-
-      // Giữ nguyên giao diện/chức năng cũ, chỉ thay phần trừ số dư:
-      // Firebase là nguồn số dư chính và transaction giúp tránh trừ sai khi bấm nhiều lần.
-      if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ!');
-        return;
-      }
-
-      const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-      const btn = document.getElementById('btnPayAction');
-
-      btn.disabled = true;
-
-      balanceRef.transaction(current => {
-        const balance = Number(current) || 0;
-        if(balance < amount) return;
-        return balance - amount;
-      }).then(result => {
-        if(!result.committed) {
-          throw new Error('Số dư không đủ.');
-        }
-
-        // Đồng bộ localStorage để phần hiển thị cũ của trang không bị lệch.
-        const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-        balances[currentUser] = Number(result.snapshot.val()) || 0;
-        localStorage.setItem('sys_balances', JSON.stringify(balances));
-        updateUI();
-
-        document.getElementById('btnPayAction').style.display = 'none';
-        document.getElementById('processingArea').style.display = 'block';
-
-        return new Promise(resolve => setTimeout(resolve, 3000));
-      }).then(() => {
-        document.getElementById('processingArea').style.display = 'none';
-        document.getElementById('btnPayAction').style.display = 'flex';
-        showPopup('success', 'NẠP THÀNH CÔNG', `Đã thanh toán gói ${selectedPriceObj.label} cho ID: ${uid}!`);
-      }).catch(err => {
-        document.getElementById('processingArea').style.display = 'none';
-        document.getElementById('btnPayAction').style.display = 'flex';
-
-        if(err.message === 'Số dư không đủ.') {
-          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', 'Tài khoản không đủ tiền, vui lòng nạp thêm!');
-          openDepositModal('qr');
-        } else {
-          showPopup('error', 'LỖI GIAO DỊCH', err.message || 'Không thể thanh toán!');
-        }
-      }).finally(() => {
-        btn.disabled = false;
-      });
+    function confirmPurchase(){
+      if(!currentUser){showPopup('error','THẤT BẠI','Vui lòng đăng nhập tài khoản!');return;}
+      const uid=document.getElementById('gameUID').value.trim();
+      if(!uid){showPopup('error','THẤT BẠI','Vui lòng nhập ID Game!');return;}
+      if(!selectedPriceObj){showPopup('error','THẤT BẠI','Vui lòng chọn gói quy đổi!');return;}
+      if(typeof db==='undefined'||!db||typeof db.ref!=='function'){showPopup('error','LỖI HỆ THỐNG','Không kết nối được máy chủ. Vui lòng thử lại!');return;}
+      const price=Number(selectedPriceObj.price)||0;if(price<=0){showPopup('error','DỮ LIỆU LỖI','Gói nạp không hợp lệ!');return;}
+      const btn=document.getElementById('btnPayAction'),processing=document.getElementById('processingArea');
+      btn.disabled=true;btn.style.opacity='.6';processing.style.display='block';
+      const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
+      balanceRef.transaction(v=>{const bal=Number(v)||0;if(bal<price)return;return bal-price;}).then(result=>{
+        if(!result.committed)throw new Error('INSUFFICIENT_BALANCE');
+        const orderRef=db.ref('orders').push();
+        return orderRef.set({id:orderRef.key,user:currentUser,package:'Nạp Game',game:selectedGame,gameUID:uid,price:price,label:selectedPriceObj.label,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'processing'});
+      }).then(()=>{
+        showPopup('success','ĐÃ TIẾP NHẬN ĐƠN',`Đã trừ ${price.toLocaleString('vi-VN')}đ. Đơn ${selectedGame} cho UID ${uid} đang được xử lý.`);
+      }).catch(err=>{
+        if(err.message==='INSUFFICIENT_BALANCE'){showPopup('error','SỐ DƯ KHÔNG ĐỦ','Tài khoản không đủ tiền, vui lòng nạp thêm!');openDepositModal('qr');}
+        else showPopup('error','THANH TOÁN THẤT BẠI',err.message||'Không thể tạo đơn. Số dư chưa được trừ.');
+      }).finally(()=>{processing.style.display='none';btn.disabled=false;btn.style.opacity='1';});
     }
-
     window.onload = function() {
 
       syncAdminData();
@@ -2249,24 +1949,6 @@
     };
 
   </script>
-
-
-  <footer id="siteFooter" style="margin-top:20px;background:#fff;border-top:1px solid #e4e6eb;padding:22px 15px;color:#65676b;font-size:.78rem;line-height:1.65;">
-    <div style="max-width:600px;margin:auto;text-align:center;">
-      <div style="font-weight:800;color:#1c1e21;margin-bottom:6px;">THÔNG TIN ĐƠN VỊ</div>
-      <div>CÔNG TY CỔ PHẦN [TÊN ĐƠN VỊ CỦA BẠN]</div>
-      <div>Giấy CNĐKKD số [SỐ ĐĂNG KÝ KINH DOANH THẬT]</div>
-      <div>Cơ quan cấp: [CƠ QUAN CẤP]</div>
-      <div>Địa chỉ trụ sở chính: [ĐỊA CHỈ TRỤ SỞ THẬT]</div>
-
-      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px 16px;margin-top:12px;">
-        <a href="#faq" style="color:#0084ff;text-decoration:none;">Câu hỏi thường gặp</a>
-        <a href="#support" style="color:#0084ff;text-decoration:none;">Trung tâm trợ giúp</a>
-        <a href="#terms" style="color:#0084ff;text-decoration:none;">Điều khoản dịch vụ</a>
-        <a href="#privacy" style="color:#0084ff;text-decoration:none;">Chính sách bảo mật</a>
-      </div>
-    </div>
-  </footer>
 
 </body>
 
