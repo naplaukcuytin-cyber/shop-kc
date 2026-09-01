@@ -111,6 +111,15 @@
     }
 
     .balance-text { color: var(--success-green); font-weight: bold; font-size: 0.85rem; }
+    .admin-customer-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:12px;margin:10px 0;}
+    .admin-customer-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+    .admin-customer-table th,.admin-customer-table td{padding:9px 7px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:middle;}
+    .admin-customer-table th{background:#f1f5f9;font-weight:800;color:#334155;position:sticky;top:0;z-index:1;}
+    .admin-balance-live{font-weight:900;color:#15803d;white-space:nowrap;}
+    .fraud-btn{background:#7c3aed;color:#fff;border:none;padding:7px 9px;border-radius:8px;font-weight:800;cursor:pointer;white-space:nowrap;}
+    .note-warning{border-color:#fed7aa!important;background:#fff7ed!important;color:#9a3412!important;}
+    .note-success{border-color:#bbf7d0!important;background:#f0fdf4!important;color:#166534!important;}
+    .admin-scroll{max-height:330px;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;background:#fff;}
 
     .container { max-width: 600px; margin: 15px auto; padding: 0 15px; }
 
@@ -284,9 +293,6 @@
 
     /* Custom Popup Thông báo Chuyên nghiệp */
 
-    body.game-mode .home-only { display:none !important; }
-    body.game-mode #gameTopupPage { display:block; }
-
     .custom-popup {
 
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -316,9 +322,6 @@
     .popup-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; }
 
     .popup-desc { color: #555; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4; }
-    .popup-effect { position:relative; height:0; overflow:visible; pointer-events:none; z-index:5; }
-    .popup-currency { position:absolute; top:-145px; font-size:22px; opacity:0; animation:popupCurrencyFall 1.55s ease-in forwards; }
-    @keyframes popupCurrencyFall { 0%{transform:translate3d(0,-20px,0) rotate(0deg) scale(.75);opacity:0} 12%{opacity:1} 100%{transform:translate3d(var(--dx),105px,0) rotate(var(--rot)) scale(1.05);opacity:0} }
 
     .popup-btn {
 
@@ -339,16 +342,46 @@
     .strength-strong { color: #2e7d32; }
   .slide-item { position:relative; overflow:hidden; border-radius:14px; }
   .slide-item img { position:relative; z-index:1; }
-  .led-edge { position:absolute; z-index:4; pointer-events:none; border-radius:999px; opacity:.98; filter:drop-shadow(0 0 5px rgba(0,229,255,.7)); }
-  .led-edge.top,.led-edge.bottom { height:4px; left:6px; right:6px; background:linear-gradient(90deg,#ff1744,#ff9100,#ffea00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744); background-size:280% 100%; animation:ledH 2.4s linear infinite; }
-  .led-edge.top { top:0; animation-delay:0s; }
-  .led-edge.bottom { bottom:0; animation-delay:-1.2s; }
-  .led-edge.left,.led-edge.right { width:4px; top:6px; bottom:6px; background:linear-gradient(180deg,#ff1744,#ff9100,#ffea00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744); background-size:100% 280%; animation:ledV 2.4s linear infinite; }
-  .led-edge.left { left:0; animation-delay:-1.8s; }
-  .led-edge.right { right:0; animation-delay:-.6s; }
-  @keyframes ledH { from { background-position:100% 0; } to { background-position:-180% 0; } }
-  @keyframes ledV { from { background-position:0 100%; } to { background-position:0 -180%; } }
-
+  /* LED 7 màu chạy nối đuôi quanh đúng 4 mép ảnh */
+  .slide-item { position:relative; overflow:hidden; border-radius:14px; }
+  .slide-item img { position:relative; z-index:1; display:block; }
+  .led-edge {
+    position:absolute; z-index:4; pointer-events:none; border-radius:999px;
+    opacity:.98; filter:drop-shadow(0 0 5px rgba(255,255,255,.75));
+    --led-speed: 2.4s;
+  }
+  .led-edge.top,.led-edge.bottom {
+    height:4px; left:5px; right:5px;
+    background:linear-gradient(90deg,
+      #ff1744 0%, #ff9100 14%, #ffee00 28%, #00e676 42%,
+      #00e5ff 56%, #2979ff 70%, #d500f9 84%, #ff1744 100%);
+    background-size:320% 100%;
+    animation:ledChaseH var(--led-speed) linear infinite;
+  }
+  .led-edge.top { top:0; }
+  .led-edge.bottom { bottom:0; animation-delay:calc(var(--led-speed) / -2); }
+  .led-edge.left,.led-edge.right {
+    width:4px; top:5px; bottom:5px;
+    background:linear-gradient(180deg,
+      #ff1744 0%, #ff9100 14%, #ffee00 28%, #00e676 42%,
+      #00e5ff 56%, #2979ff 70%, #d500f9 84%, #ff1744 100%);
+    background-size:100% 320%;
+    animation:ledChaseV var(--led-speed) linear infinite;
+  }
+  .led-edge.left { left:0; animation-delay:calc(var(--led-speed) / -4); }
+  .led-edge.right { right:0; animation-delay:calc(var(--led-speed) * -3 / 4); }
+  @keyframes ledChaseH {
+    from { background-position:320% 0; }
+    to { background-position:-120% 0; }
+  }
+  @keyframes ledChaseV {
+    from { background-position:0 320%; }
+    to { background-position:0 -120%; }
+  }
+  .slide-item.led-off .led-edge { display:none; }
+  .slide-item.led-soft .led-edge { opacity:.7; filter:drop-shadow(0 0 3px rgba(255,255,255,.45)); }
+  .slide-item.led-fast .led-edge { --led-speed:1.35s; }
+  .slide-item.led-slow .led-edge { --led-speed:3.8s; }
   /* Trang nạp riêng từng game */
   .game-page{display:none;margin-top:15px}
   .game-page.active{display:block}
@@ -418,26 +451,7 @@
   .demo-row{opacity:.78}
   .demo-row .public-history-money span{color:#b7791f}
   @keyframes historySlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-
-    .qr-mini-btn {
-      border: 1px solid #0084ff;
-      background: #fff;
-      color: #0084ff;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: .78rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .qr-upload { margin-top: 12px; padding: 10px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; }
-    .qr-upload-title { font-size: .78rem; color: #333; margin-bottom: 7px; }
-    .qr-upload-title span { color: #777; font-weight: 400; }
-    .qr-file-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; background: #f0f6ff; color: #0084ff; border: 1px solid #cfe3ff; font-size: .76rem; font-weight: 600; cursor: pointer; }
-    .qr-file-name { margin-left: 7px; font-size: .72rem; color: #777; }
-    #qrProofPreview { display: none; max-width: 110px; max-height: 90px; margin-top: 8px; border-radius: 7px; border: 1px solid #ddd; }
-
-  </style>
+</style>
 
 <!-- Firebase SDK v8 -->
 
@@ -473,102 +487,6 @@
   const db = firebase.database();
   const storage = firebase.storage();
 
-  function applyLedConfig(c) {
-    const cfg = c || {};
-    const enabled = cfg.ledEnabled !== false;
-    const speed = Math.max(700, Number(cfg.ledSpeed) || 2400);
-    const effect = cfg.ledEffect || 'chase7';
-    let st = document.getElementById('firebaseLedStyle');
-    if (!st) { st = document.createElement('style'); st.id = 'firebaseLedStyle'; document.head.appendChild(st); }
-    let duration = speed, opacity = 0.98, filter = 'drop-shadow(0 0 5px rgba(0,229,255,.7))';
-    if (effect === 'fast') duration = Math.max(650, speed * .55);
-    if (effect === 'slow') duration = speed * 1.7;
-    if (effect === 'soft') { opacity=.55; filter='drop-shadow(0 0 3px rgba(0,229,255,.35))'; }
-    if (effect === 'sparkle') filter='drop-shadow(0 0 8px rgba(255,255,255,.95))';
-    st.textContent = `.led-edge{animation-duration:${duration}ms!important;opacity:${opacity}!important;filter:${filter}!important}${enabled?'':'.led-edge{display:none!important}'}`;
-  }
-
-  function listenSiteConfig() {
-    db.ref('siteConfig').on('value', snap => {
-      const c = snap.val() || {};
-      applyLedConfig(c);
-      const ann = c.announcement || '';
-      const el = document.getElementById('adminAnnouncement');
-      if (el && ann) el.innerText = ann;
-    });
-  }
-
-  let customerNoticeBoundUser = '';
-  let customerNoticeRef = null;
-  let customerNoticeHandler = null;
-
-  function stopCustomerNoticeListener(){
-    if(customerNoticeRef && customerNoticeHandler){
-      customerNoticeRef.off('child_added', customerNoticeHandler);
-    } else if(customerNoticeRef){
-      customerNoticeRef.off();
-    }
-    customerNoticeRef = null;
-    customerNoticeHandler = null;
-    customerNoticeBoundUser = '';
-  }
-
-  function listenCustomerNotices(user) {
-    if (!user) return;
-    if (customerNoticeBoundUser === user && customerNoticeRef) return;
-    stopCustomerNoticeListener();
-
-    const ref = db.ref('customerNotices/' + encodeURIComponent(user));
-    const markerKey = 'shown_customer_notice_keys_' + user;
-    let shown = [];
-    try { shown = JSON.parse(localStorage.getItem(markerKey) || '[]'); } catch(e) {}
-    const remember = key => {
-      if (!key) return;
-      shown = shown.filter(k => k !== key);
-      shown.push(key);
-      shown = shown.slice(-100);
-      localStorage.setItem(markerKey, JSON.stringify(shown));
-    };
-
-    let booting = true;
-    let initialKeys = new Set();
-    const handleNotice = (child) => {
-      const key = child.key, n = child.val() || {};
-      if (!key) return;
-      if (booting) return;
-      if (shown.includes(key)) return;
-      remember(key);
-      const type = n.type === 'warning' ? 'error' : 'success';
-      const title = n.type === 'warning' ? '⚠️ CẢNH BÁO' : '🔔 THÔNG BÁO';
-      const amount = Number(n.amount || 0);
-      const amountLine = amount ? `\n\nSố tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.abs(amount).toLocaleString('vi-VN')}đ` : '';
-      showPopup(type, title, (n.text || 'Bạn có một thông báo mới từ Admin.') + amountLine);
-    };
-
-    customerNoticeRef = ref;
-    customerNoticeBoundUser = user;
-    customerNoticeHandler = handleNotice;
-    ref.on('child_added', handleNotice);
-
-    ref.once('value').then(snap => {
-      const existing = snap.val() || {};
-      initialKeys = new Set(Object.keys(existing));
-      Object.keys(existing).forEach(k => remember(k));
-      booting = false;
-      // Read once more to catch a notice created while the listener was booting.
-      return ref.once('value');
-    }).then(snap => {
-      const all = snap.val() || {};
-      Object.keys(all).forEach(k => {
-        if (!initialKeys.has(k) && !shown.includes(k)) {
-          handleNotice({key:k, val:()=>all[k]});
-        }
-      });
-    }).catch(err => console.error('Lỗi đọc thông báo Admin:', err));
-  }
-
-  listenSiteConfig();
-
 </script>
 
 </head>
@@ -590,7 +508,6 @@
     <div class="popup-title" id="popupTitle">THÔNG BÁO</div>
 
     <div class="popup-desc" id="popupDesc">Nội dung thông báo ở đây.</div>
-    <div class="popup-effect" id="popupEffect" aria-hidden="true"></div>
 
     <button class="popup-btn" onclick="closeCustomPopup()">ĐÃ HỂU</button>
 
@@ -737,7 +654,7 @@
 
     <!-- Banner Slide Carousel -->
 
-    <div class="banner-wrapper home-only">
+    <div class="banner-wrapper">
 
       <div class="slider-track" id="sliderTrack">
 
@@ -749,7 +666,7 @@
 
     </div>
 
-    <div class="slider-controls home-only">
+    <div class="slider-controls">
 
       <div style="display:flex; align-items:center; gap:6px;">
 
@@ -777,12 +694,18 @@
 
     <!-- Thông báo Ưu đãi Mức nạp từ Admin -->
 
-    <div class="home-only" style="background:#fff3cd; border:1px solid #ffeba2; padding:12px 15px; border-radius:16px; margin-bottom:15px; color:#856404; font-size:0.85rem;">
+    <div style="background:#fff3cd; border:1px solid #ffeba2; padding:12px 15px; border-radius:16px; margin-bottom:15px; color:#856404; font-size:0.85rem;">
 
       <i class="fa-solid fa-bullhorn" style="margin-right:5px; color:#d39e00;"></i>
 
       <b>THÔNG BÁO TỪ HỆ THỐNG:</b> <span id="adminAnnouncement">Áp dụng chương trình ưu đãi mức nạp từ 50,000đ trở lên nhận x15 lần số tài nguyên (Kim cương, Quân huy...)!</span>
 
+    </div>
+
+    <div id="customerNoteBox" style="display:none;margin-bottom:15px;padding:14px 16px;border-radius:16px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;box-shadow:0 4px 14px rgba(37,99,235,.06);">
+      <div id="customerNoteTitle" style="font-weight:800;margin-bottom:5px;"></div>
+      <div id="customerNoteText" style="line-height:1.55;"></div>
+      <div id="customerNoteTime" style="margin-top:7px;font-size:.75rem;color:#64748b;"></div>
     </div>
 
     <!-- Khung Danh Mục Trò Chơi Nạp Thẻ -->
@@ -823,7 +746,7 @@
 
       <div class="game-grid" id="gameGrid">
 
-        <div class="game-card-item selected" data-category="garena" onclick="selectGame(this, 'Free Fire')">
+        <div class="game-card-item" data-category="garena" onclick="selectGame(this, 'Free Fire')">
 
           <span class="badge-auto">AUTO</span>
 
@@ -831,7 +754,7 @@
 
           <div class="game-name">Free Fire</div>
 
-          <div class="game-status-btn">✔ ĐANG CHỌN</div>
+          <div class="game-status-btn">Bấm nạp</div>
 
         </div>
 
@@ -1151,6 +1074,11 @@
       <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('historyModal')"></i>
       <h3 style="color:#0084ff;text-align:center;margin-bottom:6px;">LỊCH SỬ GIAO DỊCH</h3>
       <p style="text-align:center;color:#65676b;font-size:.8rem;margin-bottom:15px;">Theo dõi đơn nạp ví và đơn nạp game của tài khoản</p>
+      <div style="display:flex;gap:8px;overflow:auto;margin-bottom:12px;">
+        <button class="history-filter active" data-filter="all" onclick="setHistoryFilter('all',this)">Tất cả</button>
+        <button class="history-filter" data-filter="game" onclick="setHistoryFilter('game',this)">Nạp KC / Game</button>
+        <button class="history-filter" data-filter="web" onclick="setHistoryFilter('web',this)">Nạp web</button>
+      </div>
       <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div>
       <div style="overflow-x:auto;">
         <table>
@@ -1171,45 +1099,55 @@
 
       <h3 style="color:#ff3b30; text-align:center; margin-bottom:15px;">BẢNG ĐIỀU KHIỂN ADMIN</h3>
 
-      <a href="admin.html" target="_blank" style="display: block; padding: 10px 15px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin-top: 10px; text-align: center; font-weight: bold;">📥 Quản Lý Đơn Nạp (SheetDB)</a>
+      <a href="admin.html" target="_blank" style="display:block;padding:10px 15px;background:#3b82f6;color:white;text-decoration:none;border-radius:8px;margin-top:10px;text-align:center;font-weight:bold;">📥 Quản Lý Đơn Nạp (SheetDB)</a>
 
-      <div style="background:#fff3cd; padding:12px; border-radius:10px; margin-bottom:15px; margin-top:15px;">
-
+      <div style="background:#fff3cd;padding:12px;border-radius:10px;margin:15px 0;">
         <label><b>Thông Báo Mức Nạp Khách Hàng:</b></label>
-
         <textarea class="form-control" id="admNoticeInput" style="margin-top:5px;" rows="2"></textarea>
-
-        <button style="margin-top:8px; background:#d39e00; color:white; border:none; padding:8px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
-
+        <button style="margin-top:8px;background:#d39e00;color:white;border:none;padding:8px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;" onclick="adminSaveAnnouncement()">Lưu Thông Báo</button>
       </div>
 
-      <div style="background:#f0f2f5; padding:12px; border-radius:10px; margin-bottom:15px;">
+      <div class="admin-customer-card">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+          <div>
+            <div style="font-weight:900;color:#111827;">👥 DANH SÁCH KHÁCH HÀNG</div>
+            <div style="font-size:.75rem;color:#64748b;margin-top:3px;">Tên khách và số dư được lưu cố định trên hệ thống; số dư cập nhật theo thời gian thực.</div>
+          </div>
+          <span id="adminCustomerCount" style="font-weight:900;color:#0084ff;">0 khách</span>
+        </div>
+        <div class="admin-scroll" style="margin-top:10px;">
+          <table class="admin-customer-table">
+            <thead><tr><th>Tên khách</th><th>Tài khoản</th><th>Số dư</th><th>Kiểm tra</th></tr></thead>
+            <tbody id="adminCustomerTable"><tr><td colspan="4" style="text-align:center;padding:18px;">Đang tải danh sách...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
 
-        <label><b>Cộng / Trừ Tiền Khách Hàng:</b></label>
-
+      <div id="adminMoneyPanel" style="background:#f0f2f5;padding:12px;border-radius:10px;margin-bottom:15px;">
+        <label><b>💰 CỘNG / TRỪ TIỀN KHÁCH HÀNG</b></label>
+        <div style="font-size:.74rem;color:#64748b;margin:4px 0 7px;">Nhập số dương để cộng tiền, số âm để trừ/thu hồi tiền. Thao tác sẽ cập nhật Firebase ngay lập tức.</div>
         <input type="text" class="form-control" id="admUser" placeholder="Tên User Khách" style="margin-top:5px;">
-
         <input type="number" class="form-control" id="admAmount" placeholder="Số tiền (+/- VNĐ)" style="margin-top:5px;">
+        <input type="text" class="form-control" id="admMoneyNote" placeholder="Ghi chú cho khách (cảnh báo / chúc mừng / lý do điều chỉnh)" style="margin-top:5px;">
+        <button style="margin-top:8px;background:#2e7d32;color:white;border:none;padding:10px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
+      </div>
 
-        <button style="margin-top:8px; background:#2e7d32; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="adminAddMoney()">Cập Nhật Số Dư</button>
-
+      <div style="background:#eef2ff;padding:12px;border-radius:10px;margin-bottom:15px;">
+        <label><b>📝 GỬI GHI CHÚ RIÊNG CHO KHÁCH</b></label>
+        <select id="admNoteType" class="form-control" style="margin-top:5px;">
+          <option value="success">🎉 Chúc mừng / Thông báo tốt</option>
+          <option value="warning">⚠️ Cảnh báo / Lưu ý</option>
+        </select>
+        <input type="text" class="form-control" id="admNoteUser" placeholder="Tài khoản khách" style="margin-top:5px;">
+        <textarea class="form-control" id="admNoteText" rows="3" placeholder="Nội dung ghi chú khách sẽ nhìn thấy" style="margin-top:5px;"></textarea>
+        <button style="margin-top:8px;background:#4f46e5;color:#fff;border:none;padding:10px;border-radius:8px;font-weight:800;width:100%;cursor:pointer;" onclick="adminSendCustomerNote()">Gửi Ghi Chú</button>
       </div>
 
       <h4>Đơn Nạp Đang Xử Lý:</h4>
-
       <table>
-
-        <thead>
-
-          <tr><th>Khách</th><th>Đơn / UID</th><th>Số tiền</th><th>Thao tác</th></tr>
-
-        </thead>
-
+        <thead><tr><th>Khách</th><th>Đơn / UID</th><th>Số tiền</th><th>Thao tác</th></tr></thead>
         <tbody id="admCardTable"></tbody>
-
-      </table>
-
-    </div>
+      </table>    </div>
 
   </div>
 
@@ -1281,7 +1219,7 @@
 
     let currentSlide = 0;
 
-    let selectedGame = 'Free Fire';
+    let selectedGame = null;
 
     let selectedPriceObj = null;
 
@@ -1337,7 +1275,7 @@
 
     }, { passive: false });
 
-    function showPopup(type, title, message, currencyUnit) {
+    function showPopup(type, title, message) {
 
       const popup = document.getElementById('customPopup');
 
@@ -1363,25 +1301,8 @@
 
       }
 
-      const effect = document.getElementById('popupEffect');
-      if(effect){
-        effect.innerHTML='';
-        const unit=String(currencyUnit||'').toLowerCase();
-        const symbol = unit.includes('quân huy') ? '🪙' : unit.includes('kim cương') || unit.includes('knb') ? '💎' : unit.includes('fc') || unit.includes('coin') ? '🪙' : '';
-        if(symbol){
-          for(let i=0;i<12;i++){
-            const el=document.createElement('span');
-            el.className='popup-currency';
-            el.textContent=symbol;
-            el.style.left=(8+Math.random()*84)+'%';
-            el.style.setProperty('--dx',((Math.random()*80)-40)+'px');
-            el.style.setProperty('--rot',((Math.random()*300)-150)+'deg');
-            el.style.animationDelay=(Math.random()*.35)+'s';
-            effect.appendChild(el);
-          }
-        }
-      }
       popup.classList.add('active');
+
     }
 
     function closeCustomPopup() {
@@ -1509,7 +1430,6 @@
       if(list) list.style.display='none';
       if(legacy) legacy.style.display='none';
       if(page) page.classList.add('active');
-      document.body.classList.add('game-mode');
       const img=document.getElementById('gamePageThumb'); if(img) img.src=gameImage(gameName);
       const title=document.getElementById('gamePageTitle'); if(title) title.innerText='NẠP '+String(gameName).toUpperCase();
       const sub=document.getElementById('gamePageSub'); if(sub) sub.innerText='Chọn gói '+gameUnit(gameName)+' bên dưới';
@@ -1521,7 +1441,6 @@
 
     function backToGameList(){
       document.getElementById('gameTopupPage')?.classList.remove('active');
-      document.body.classList.remove('game-mode');
       const list=document.querySelector('#gameGrid')?.closest('.main-card');
       const legacy=document.getElementById('legacyPayCard');
       if(list) list.style.display='block';
@@ -1639,7 +1558,9 @@
 
         localStorage.setItem('sys_users', JSON.stringify(users));
         if(typeof db !== 'undefined' && db) {
-          db.ref('userProfiles/' + encodeURIComponent(u)).set({user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,source:'website'}).catch(e=>console.warn('Không ghi được hồ sơ Firebase:',e));
+          const profileData={user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,source:'website',active:true};
+          db.ref('userProfiles/' + encodeURIComponent(u)).set(profileData).catch(e=>console.warn('Không ghi được hồ sơ Firebase:',e));
+          db.ref('customerRegistry/' + encodeURIComponent(u)).update({user:u,displayName:dName,createdAt:firebase.database.ServerValue.TIMESTAMP,active:true}).catch(e=>console.warn('Không ghi được danh sách khách Firebase:',e));
         }
 
         localStorage.setItem('sys_profiles', JSON.stringify(profiles));
@@ -1653,13 +1574,15 @@
         if((u === ADMIN_ACC && p === ADMIN_PASS) || (users[u] && users[u] === p)) {
 
           currentUser = u;
-          listenCustomerNotices(currentUser);
 
           localStorage.setItem('session_user_permanent', u);
 
           closeModal('authModal');
 
           updateUI();
+          if(typeof db !== 'undefined' && db && u !== ADMIN_ACC) {
+            db.ref('customerRegistry/' + encodeURIComponent(u)).update({user:u,displayName:profiles[u] || u,active:true,lastSeenAt:firebase.database.ServerValue.TIMESTAMP}).catch(()=>{});
+          }
 
           showPopup('success', 'THÀNH CÔNG', `Chào mừng ${profiles[u] || u}!`);
 
@@ -1675,7 +1598,6 @@
 
     function logout() {
 
-      stopCustomerNoticeListener();
       currentUser = null;
 
       localStorage.removeItem('session_user_permanent');
@@ -1684,10 +1606,25 @@
 
     }
 
-    function normalizeCustomerBalanceValue(raw) {
-      if(raw && typeof raw === 'object') raw = raw.balance ?? raw.amount ?? raw.money ?? raw.wallet ?? raw.value ?? 0;
+    function normalizeCustomerBalance(raw) {
+      if (raw && typeof raw === 'object') {
+        raw = raw.balance ?? raw.amount ?? raw.money ?? raw.wallet ?? raw.value ?? 0;
+      }
       const n = Number(raw);
-      return Number.isFinite(n) ? Math.max(0,n) : 0;
+      return Number.isFinite(n) ? Math.max(0, n) : 0;
+    }
+
+    function refreshCustomerBalanceRealtime() {
+      if (!currentUser || currentUser === ADMIN_ACC || typeof db === 'undefined' || !db || typeof db.ref !== 'function') return;
+      const ref = db.ref('balances/' + encodeURIComponent(currentUser));
+      ref.once('value').then(snap => {
+        const balance = normalizeCustomerBalance(snap.val());
+        const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+        localBalances[currentUser] = balance;
+        localStorage.setItem('sys_balances', JSON.stringify(localBalances));
+        const el = document.getElementById('balanceText');
+        if (el) el.innerText = balance.toLocaleString('vi-VN');
+      }).catch(err => console.error('Lỗi làm mới số dư:', err));
     }
 
     function updateUI() {
@@ -1697,7 +1634,6 @@
       const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
 
       if(currentUser) {
-        listenCustomerNotices(currentUser);
 
         document.getElementById('btnLogin').style.display = 'none';
 
@@ -1707,74 +1643,29 @@
 
         document.getElementById('balanceText').innerText = (balances[currentUser] || 0).toLocaleString();
 
-        document.getElementById('requireLoginNotice').style.display = 'none';
-
-        document.getElementById('payForm').style.display = 'block';
+        if(typeof db !== 'undefined' && db && currentUser !== ADMIN_ACC) {
+          ensureCustomerRegistry(currentUser, profiles[currentUser] || currentUser);
+        }
 
         // Số dư thật nằm trên Firebase, không dùng localStorage làm nguồn chính.
 
         if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
 
-          // Firebase /balances là nguồn số dư duy nhất.
-          // Đồng bộ realtime cả key chuẩn (encodeURIComponent) và key cũ.
-          let customerBalanceListener = null;
-          let customerBalanceRootListener = null;
-          const updateCustomerBalanceUI = balance => {
-            const safeBalance = normalizeCustomerBalanceValue(balance);
-            try {
-              const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-              localBalances[currentUser] = safeBalance;
-              localStorage.setItem('sys_balances', JSON.stringify(localBalances));
-            } catch(e) {}
+          const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
+
+          // Firebase là nguồn số dư chính. Nếu tài khoản cũ chỉ còn số dư trong
+          // cache local và Firebase chưa có node, đồng bộ một lần sang Firebase
+          // để số tiền đang hiển thị có thể sử dụng được khi thanh toán.
+          balanceRef.off('value');
+
+          balanceRef.on('value', snap => {
+            const balance = normalizeCustomerBalance(snap.val());
+            const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+            localBalances[currentUser] = balance;
+            localStorage.setItem('sys_balances', JSON.stringify(localBalances));
             const el = document.getElementById('balanceText');
-            if(el) el.innerText = safeBalance.toLocaleString('vi-VN');
-          };
-
-          const encodedKey = encodeURIComponent(currentUser);
-          const encodedBalanceRef = db.ref('balances/' + encodedKey);
-          const rawBalanceRef = db.ref('balances/' + currentUser);
-          let encodedExists = false;
-
-          // Ưu tiên key chuẩn mà Admin sử dụng.
-          encodedBalanceRef.off('value');
-          encodedBalanceRef.on('value', snap => {
-            encodedExists = snap.val() !== null && snap.val() !== undefined;
-            if(encodedExists) updateCustomerBalanceUI(snap.val());
+            if(el) el.innerText = balance.toLocaleString();
           }, err => console.error('Lỗi đọc số dư Firebase:', err));
-
-          // Tương thích dữ liệu cũ chưa encode.
-          if(currentUser !== encodedKey) {
-            rawBalanceRef.off('value');
-            rawBalanceRef.on('value', snap => {
-              if(!encodedExists) updateCustomerBalanceUI(snap.val());
-            }, err => console.warn('Lỗi đọc số dư key cũ:', err));
-          }
-
-          // Root listener làm lớp dự phòng: nếu dữ liệu đang nằm ở key cũ,
-          // khách vẫn cập nhật ngay khi Admin thay đổi số dư.
-          db.ref('balances').off('value');
-          db.ref('balances').on('value', snap => {
-            const all = snap.val() || {};
-            if(Object.prototype.hasOwnProperty.call(all, encodedKey)) {
-              updateCustomerBalanceUI(all[encodedKey]);
-              return;
-            }
-            if(Object.prototype.hasOwnProperty.call(all, currentUser)) {
-              updateCustomerBalanceUI(all[currentUser]);
-              return;
-            }
-            // Một số bản cũ lưu username dưới key đã encode một phần.
-            const found = Object.keys(all).find(k => {
-              try { return decodeURIComponent(k) === currentUser; } catch(e) { return false; }
-            });
-            if(found) updateCustomerBalanceUI(all[found]);
-          }, err => console.warn('Lỗi đồng bộ balances:', err));
-
-          // Đọc ngay khi đăng nhập.
-          encodedBalanceRef.once('value').then(snap => {
-            if(snap.val() !== null && snap.val() !== undefined) updateCustomerBalanceUI(snap.val());
-            else if(currentUser !== encodedKey) return rawBalanceRef.once('value').then(rs => updateCustomerBalanceUI(rs.val()));
-          }).catch(err => console.error('Lỗi lấy số dư ban đầu:', err));
 
           // Realtime trạng thái đơn: khách sẽ biết ngay khi Admin duyệt/hủy.
 
@@ -1810,41 +1701,80 @@
 
             const latest = Object.values(orders).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0))[0];
 
-            // Không lấy balanceAfter trong order để ghi đè giao diện.
-            // balanceAfter chỉ là log; số dư hiển thị luôn lấy trực tiếp từ /balances.
-            if(latest && (latest.status === 'approved' || latest.status === 'success') && !latest.game) {
-              encodedBalanceRef.once('value').then(bs => {
-                if(bs.val() !== null && bs.val() !== undefined) updateCustomerBalanceUI(bs.val());
-              }).catch(e => console.warn('Không refresh được số dư sau duyệt:', e));
-            }
+            if(latest && (latest.status === 'approved' || latest.status === 'success')) {
 
-            if(latest && (latest.status === 'approved' || latest.status === 'success') && !latest.game) {
               const marker = latest.id || latest.timestamp;
+
               if(localStorage.getItem('last_customer_notice') !== String(marker)) {
+
                 localStorage.setItem('last_customer_notice', String(marker));
-                const shownAmount = Number(latest.price)||0;
-                const bal = Number(latest.balanceAfter);
-                const detail = Number.isFinite(bal)
-                  ? `Đơn nạp ${shownAmount.toLocaleString('vi-VN')}đ đã được Admin duyệt. Số dư hiện tại: ${bal.toLocaleString('vi-VN')}đ.`
-                  : `Đơn nạp ${shownAmount.toLocaleString('vi-VN')}đ đã được Admin duyệt và cộng vào ví.`;
-                showPopup('success', 'NẠP TIỀN THÀNH CÔNG', detail);
+
+                showPopup('success', 'NẠP TIỀN THÀNH CÔNG', 'Admin đã duyệt đơn nạp. Số dư của bạn đã được cập nhật!');
+
               }
+
             }
 
           }, err => console.error('Lỗi đọc trạng thái đơn:', err));
+
+          // THÔNG BÁO ADMIN: chỉ dùng một kênh customerNotices để tránh đọc trùng
+          // và tạo popup lặp lại. Mỗi tài khoản có marker riêng.
+          const customerNoticeRef = db.ref('customerNotices/' + encodeURIComponent(currentUser));
+          customerNoticeRef.off('value');
+          const renderLatestCustomerNotice = (snap) => {
+            const notes=[];
+            snap.forEach(child => notes.push({id:child.key,...(child.val()||{})}));
+            notes.sort((a,b)=>{
+              const ta=Number(a.timestamp)||0, tb=Number(b.timestamp)||0;
+              return tb-ta || String(b.id).localeCompare(String(a.id));
+            });
+            const latest=notes[0];
+            const box=document.getElementById('customerNoteBox');
+            if(!box || !latest) { if(box) box.style.display='none'; return; }
+
+            const type=latest.type==='warning'?'warning':'success';
+            const amount=Number(latest.amount)||0;
+            const amountText=amount
+              ? ` Số tiền ${amount>0?'cộng':'trừ'}: ${amount>0?'+':'-'}${Math.abs(amount).toLocaleString('vi-VN')}đ.`
+              : '';
+            let message=String(latest.text||'').trim();
+            if(amountText && !message.includes(Math.abs(amount).toLocaleString('vi-VN'))) message += amountText;
+            if(latest.newBalance!==undefined && !message.includes('Số dư hiện tại')) {
+              message += ` Số dư hiện tại: ${Number(latest.newBalance||0).toLocaleString('vi-VN')}đ.`;
+            }
+
+            box.classList.remove('note-warning','note-success');
+            box.classList.add(type==='warning'?'note-warning':'note-success');
+            document.getElementById('customerNoteTitle').innerText=
+              type==='warning' ? '⚠️ CẢNH BÁO TỪ ADMIN' : '🎉 CHÚC MỪNG / TRI ÂN';
+            document.getElementById('customerNoteText').innerText=message;
+            document.getElementById('customerNoteTime').innerText=latest.time || formatHistoryTime(latest.timestamp);
+            box.style.display='block';
+
+            // Popup chỉ hiện đúng 1 lần cho đúng thông báo của đúng tài khoản.
+            // Không dùng marker chung cho mọi tài khoản và không chạy lại popup khi Firebase phát value nhiều lần.
+            const marker=String(latest.id||latest.timestamp||'');
+            const markerKey='last_customer_notice_marker_'+encodeURIComponent(currentUser);
+            if(marker && localStorage.getItem(markerKey)!==marker){
+              localStorage.setItem(markerKey,marker);
+              showPopup(
+                type==='warning'?'error':'success',
+                type==='warning'?'CẢNH BÁO':'CHÚC MỪNG / TRI ÂN',
+                message
+              );
+            }
+          };
+          customerNoticeRef.on('value', renderLatestCustomerNotice, err => console.error('Lỗi đọc thông báo Admin:',err));
+          refreshCustomerBalanceRealtime();
+
 
         }
 
       } else {
 
-        stopCustomerNoticeListener();
         document.getElementById('btnLogin').style.display = 'flex';
 
         document.getElementById('userProfile').style.display = 'none';
-
-        document.getElementById('requireLoginNotice').style.display = 'block';
-
-        document.getElementById('payForm').style.display = 'none';
 
       }
 
@@ -2056,10 +1986,28 @@
         });
     }
 
+    let currentHistoryFilter = 'all';
+    let currentHistoryItems = [];
+
+    function setHistoryFilter(filter, btn) {
+      currentHistoryFilter = filter || 'all';
+      document.querySelectorAll('.history-filter').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderUserHistory(currentHistoryItems);
+    }
+
+    function historyCategory(x) {
+      return x && x.game && x.game !== '-' ? 'game' : 'web';
+    }
+
     function renderUserHistory(items) {
       const tbody = document.getElementById('userHistoryTable');
       const summary = document.getElementById('historySummary');
-      const list = Array.isArray(items) ? items.slice() : [];
+      currentHistoryItems = Array.isArray(items) ? items.slice() : [];
+      let list = currentHistoryItems.slice();
+
+      if(currentHistoryFilter === 'game') list = list.filter(x => historyCategory(x) === 'game');
+      if(currentHistoryFilter === 'web') list = list.filter(x => historyCategory(x) === 'web');
 
       list.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
 
@@ -2069,26 +2017,23 @@
 
       summary.innerHTML = `
         <div style="background:#fff3cd;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#856404;">${processing}</b><br>
-          <span style="font-size:.72rem;">Đang xử lý</span>
+          <b style="color:#856404;">${processing}</b><br><span style="font-size:.72rem;">Đang xử lý</span>
         </div>
         <div style="background:#e8f5e9;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#2e7d32;">${success}</b><br>
-          <span style="font-size:.72rem;">Thành công</span>
+          <b style="color:#2e7d32;">${success}</b><br><span style="font-size:.72rem;">Thành công</span>
         </div>
         <div style="background:#ffebee;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#c62828;">${failed}</b><br>
-          <span style="font-size:.72rem;">Thất bại</span>
+          <b style="color:#c62828;">${failed}</b><br><span style="font-size:.72rem;">Thất bại</span>
         </div>`;
 
       if(!list.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có giao dịch ở mục này.</td></tr>';
         return;
       }
 
       tbody.innerHTML = list.map(x => {
         const status = ['approved','success','completed'].includes(x.status)
-          ? '<span style="color:#2e7d32;font-weight:700;">✔ Thành công</span>'
+          ? '<span class="history-success"><span class="history-check">✓</span> Thành công</span>'
           : ['failed','cancelled','rejected'].includes(x.status)
           ? '<span style="color:#c62828;font-weight:700;">✖ Thất bại</span>'
           : '<span style="color:#fb8c00;font-weight:700;">⏳ Đang xử lý</span>';
@@ -2152,56 +2097,141 @@
 
     }
 
+    let adminCustomerProfiles = {};
+    let adminCustomerBalances = {};
+    let adminCustomerRegistry = {};
+    let adminCustomerListenersStarted = false;
+
+    function ensureCustomerRegistry(u, displayName) {
+      if(!u || u === ADMIN_ACC || typeof db === 'undefined' || !db || typeof db.ref !== 'function') return;
+      db.ref('customerRegistry/' + encodeURIComponent(u)).update({
+        user:u,
+        displayName:displayName || u,
+        active:true,
+        updatedAt:firebase.database.ServerValue.TIMESTAMP
+      }).catch(()=>{});
+    }
+
+    function focusMoneyForCustomer(user) {
+      const input=document.getElementById('admUser');
+      const panel=document.getElementById('adminMoneyPanel');
+      if(input) { input.value=user; input.focus(); }
+      if(panel) { panel.scrollIntoView({behavior:'smooth',block:'center'}); panel.style.boxShadow='0 0 0 3px rgba(79,70,229,.25)'; setTimeout(()=>panel.style.boxShadow='',1200); }
+      showAdminFraudSummary(user);
+    }
+
+    function showAdminFraudSummary(user) {
+      if(!user || typeof db==='undefined' || !db) return;
+      db.ref('orders').orderByChild('user').equalTo(user).once('value').then(snap=>{
+        let total=0, pending=0, approved=0, game=0, count=0;
+        snap.forEach(child=>{
+          const o=child.val()||{}; count++;
+          const amount=Number(o.price)||0;
+          total+=amount;
+          if(o.status==='pending'||o.status==='processing') pending++;
+          if(o.status==='approved'||o.status==='success'||o.status==='completed') approved++;
+          if(o.game) game++;
+        });
+        const bal=Number(adminCustomerBalances[user])||0;
+        showPopup('success','KIỂM TRA GIAO DỊCH',
+          'Khách: '+user+' | Số dư hiện tại: '+bal.toLocaleString('vi-VN')+'đ | Tổng đơn: '+count+' | Đơn đã duyệt/hoàn tất: '+approved+' | Đơn đang chờ: '+pending+' | Đơn game: '+game+'.');
+      }).catch(()=>{});
+    }
+
+    function renderAdminCustomers() {
+      const tbody=document.getElementById('adminCustomerTable');
+      const countEl=document.getElementById('adminCustomerCount');
+      if(!tbody) return;
+      const merged={};
+      [adminCustomerRegistry,adminCustomerProfiles].forEach(src=>Object.keys(src||{}).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]={...(merged[u]||{}),...(src[u]||{})};
+      }));
+      Object.keys(adminCustomerBalances||{}).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]=merged[u]||{user:u,displayName:u};
+      });
+      const localProfiles=JSON.parse(localStorage.getItem('sys_profiles')||'{}');
+      Object.keys(localProfiles).forEach(u=>{
+        if(!u || u===ADMIN_ACC) return;
+        merged[u]=merged[u]||{};
+        merged[u].user=u;
+        merged[u].displayName=merged[u].displayName||localProfiles[u]||u;
+      });
+      const users=Object.keys(merged).sort((a,b)=>String(merged[a].displayName||a).localeCompare(String(merged[b].displayName||b),'vi'));
+      if(countEl) countEl.innerText=users.length+' khách';
+      if(!users.length){ tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:18px;">Chưa có khách hàng.</td></tr>'; return; }
+      tbody.innerHTML=users.map(u=>{
+        const c=merged[u]||{};
+        const name=escapeHistoryHtml(c.displayName||u);
+        const user=escapeHistoryHtml(u);
+        const bal=(Number(adminCustomerBalances[u])||0).toLocaleString('vi-VN');
+        return `<tr><td><b>${name}</b></td><td>${user}</td><td class="admin-balance-live">${bal}đ</td><td><button class="fraud-btn" onclick="focusMoneyForCustomer(${JSON.stringify(u).replace(/</g,'\\u003c')})">🔎 Kiểm tra gian lận</button></td></tr>`;
+      }).join('');
+    }
+
+    function startAdminCustomerRealtime() {
+      if(adminCustomerListenersStarted || typeof db==='undefined' || !db || typeof db.ref!=='function') return;
+      adminCustomerListenersStarted=true;
+      db.ref('customerRegistry').on('value',snap=>{
+        adminCustomerRegistry={};
+        snap.forEach(child=>{ const c=child.val()||{}; const u=c.user||decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerRegistry[u]=c; });
+        renderAdminCustomers();
+      });
+      db.ref('userProfiles').on('value',snap=>{
+        adminCustomerProfiles={};
+        snap.forEach(child=>{ const c=child.val()||{}; const u=c.user||decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerProfiles[u]=c; });
+        renderAdminCustomers();
+      });
+      db.ref('balances').on('value',snap=>{
+        adminCustomerBalances={};
+        snap.forEach(child=>{ const u=decodeURIComponent(child.key); if(u&&u!==ADMIN_ACC) adminCustomerBalances[u]=Number(child.val())||0; });
+        renderAdminCustomers();
+      });
+      // Đồng bộ các hồ sơ local cũ sang registry để không bị mất tên khách khỏi danh sách.
+      const localProfiles=JSON.parse(localStorage.getItem('sys_profiles')||'{}');
+      Object.keys(localProfiles).forEach(u=>{ if(u!==ADMIN_ACC) ensureCustomerRegistry(u,localProfiles[u]); });
+      renderAdminCustomers();
+    }
+
     function renderAdminCards() {
       const tbody = document.getElementById('admCardTable');
       if(!tbody) return;
-
+      startAdminCustomerRealtime();
       if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không kết nối được Firebase.</td></tr>';
         return;
       }
-
       const ordersRef = db.ref('orders');
       ordersRef.off('value');
-
       ordersRef.on('value', (snapshot) => {
         tbody.innerHTML = '';
         const orders = [];
-
         snapshot.forEach(child => {
           const c = child.val() || {};
-          if(c.status === 'pending' || c.status === 'processing') {
-            orders.push({ id: child.key, ...c });
-          }
+          if(c.status === 'pending' || c.status === 'processing') orders.push({ id: child.key, ...c });
         });
-
         orders.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
-
         if(!orders.length) {
           tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Không có đơn đang xử lý.</td></tr>';
           return;
         }
-
         orders.forEach(c => {
           const safeId = String(c.id || '').replace(/[^a-zA-Z0-9_-]/g, '');
           const isGame = !!c.game;
-          const user = escapeHistoryHtml(c.user || 'Khách');
+          const rawUser = c.user || 'Khách';
+          const user = escapeHistoryHtml(rawUser);
+          const customerName = escapeHistoryHtml((adminCustomerProfiles[rawUser]||adminCustomerRegistry[rawUser]||{}).displayName || rawUser);
+          const liveBalance = (Number(adminCustomerBalances[rawUser]) || 0).toLocaleString('vi-VN');
           const amount = (Number(c.price) || 0).toLocaleString('vi-VN');
-
+          ensureCustomerRegistry(rawUser, (adminCustomerProfiles[rawUser]||adminCustomerRegistry[rawUser]||{}).displayName || rawUser);
           const detail = isGame
             ? `<b>${escapeHistoryHtml(c.game)}</b><br><span style="font-size:.72rem;">UID: ${escapeHistoryHtml(c.gameUID || '-')}</span>`
             : `${escapeHistoryHtml(c.package || 'Nạp ví')}<br><span style="font-size:.72rem;">${escapeHistoryHtml(c.memo || c.uid || 'Không có')}</span>`;
-
           const action = isGame
             ? `<button style="background:#0084ff;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="completeGameOrder('${safeId}')">Hoàn tất</button>`
             : `<button style="background:#2e7d32;color:#fff;border:none;padding:6px 9px;border-radius:6px;font-weight:700;cursor:pointer;" onclick="approveFirebaseOrder('${safeId}')">Duyệt</button>`;
-
-          tbody.innerHTML += `<tr>
-            <td>${user}</td>
-            <td>${detail}<br><span style="font-size:.7rem;color:#fb8c00;">${isGame ? 'Đang xử lý' : 'Chờ duyệt'}</span></td>
-            <td>${amount}đ</td>
-            <td>${action}</td>
-          </tr>`;
+          tbody.innerHTML += `<tr><td><b>${customerName}</b><br><span style="font-size:.72rem;color:#64748b;">${user}</span><br><span class="admin-balance-live" style="font-size:.75rem;">Số dư: ${liveBalance}đ</span></td><td>${detail}<br><span style="font-size:.7rem;color:#fb8c00;">${isGame ? 'Đang xử lý' : 'Chờ duyệt'}</span></td><td>${amount}đ</td><td>${action}</td></tr>`;
         });
       }, err => {
         console.error('Firebase orders listener:', err);
@@ -2239,60 +2269,98 @@
       });
     }
 
-    function normalizeAdminBalanceValue(raw) {
-      if(raw && typeof raw === 'object') raw = raw.balance ?? raw.amount ?? raw.money ?? raw.wallet ?? raw.value ?? 0;
-      const n = Number(raw); return Number.isFinite(n) ? n : 0;
-    }
-    function adjustAdminBalanceVerified(user, delta) {
-      user=String(user||'').trim(); delta=Number(delta);
-      if(!user || !Number.isFinite(delta) || delta===0) return Promise.reject(new Error('Dữ liệu cộng/trừ không hợp lệ.'));
-      const ref=db.ref('balances/'+encodeURIComponent(user));
-      return ref.transaction(raw=>{
-        const current=normalizeAdminBalanceValue(raw);
-        const next=current+delta;
-        if(next<0) return;
-        return next;
-      }).then(result=>{
-        const after=normalizeAdminBalanceValue(result && result.snapshot ? result.snapshot.val() : null);
-        if(!result || !result.committed){
-          const err=new Error('INSUFFICIENT_BALANCE');
-          err.currentBalance=after;
-          throw err;
-        }
-        return ref.once('value').then(s=>{
-          const verified=normalizeAdminBalanceValue(s.val());
-          if(verified!==after) throw new Error('Không xác minh được số dư sau khi cập nhật.');
-          return verified;
-        });
-      });
-    }
     function approveFirebaseOrder(orderId) {
-      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!'); return; }
-      const orderRef=db.ref('orders/'+orderId);
-      orderRef.transaction(raw=>{
-        if(!raw || raw.status!=='pending') return;
-        return Object.assign({},raw,{status:'approving',approvingBy:ADMIN_ACC,approvingAt:Date.now()});
-      }).then(lock=>{
-        if(!lock || !lock.committed) throw new Error('Đơn không còn chờ duyệt hoặc đang được xử lý.');
-        const c=lock.snapshot.val()||{};
-        const user=String(c.user||'').trim(), amount=Number(c.price)||0;
-        if(!user||amount<=0) throw new Error('Đơn nạp không có dữ liệu hợp lệ!');
-        return adjustAdminBalanceVerified(user,amount).then(newBal=>{
-          return orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:ADMIN_ACC,approvedAmount:amount,balanceAfter:newBal}).then(()=>{
-            const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}'); balances[user]=newBal; localStorage.setItem('sys_balances',JSON.stringify(balances));
-            return db.ref('customerNotices/'+encodeURIComponent(user)).push({user:user,type:'success',text:'Nạp tiền thành công! Đơn '+amount.toLocaleString('vi-VN')+'đ đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+newBal.toLocaleString('vi-VN')+'đ.',amount:amount,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'}).catch(e=>console.warn('Không gửi được thông báo khách:',e));
+
+      if(currentUser !== ADMIN_ACC) {
+
+        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
+
+        return;
+
+      }
+
+      if(!orderId || typeof db === 'undefined' || !db) {
+
+        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
+
+        return;
+
+      }
+
+      const orderRef = db.ref('orders/' + orderId);
+
+      orderRef.once('value').then(snapshot => {
+
+        const c = snapshot.val();
+
+        if(!c) {
+
+          showPopup('error', 'KHÔNG TÌM THẤY', 'Đơn nạp không còn tồn tại!');
+
+          return;
+
+        }
+
+        if(c.status !== 'pending') {
+
+          showPopup('error', 'ĐÃ XỬ LÝ', 'Đơn này đã được xử lý trước đó!');
+
+          return;
+
+        }
+
+        const amount = Number(c.price) || 0;
+
+        const user = c.user;
+
+        if(!user || amount <= 0) {
+
+          showPopup('error', 'DỮ LIỆU LỖI', 'Đơn nạp không có dữ liệu hợp lệ!');
+
+          return;
+
+        }
+
+        const balanceRef = db.ref('balances/' + encodeURIComponent(user));
+
+        return balanceRef.transaction(current => (Number(current) || 0) + amount)
+
+          .then(() => orderRef.update({
+
+            status: 'approved',
+
+            approvedAt: firebase.database.ServerValue.TIMESTAMP,
+
+            approvedBy: ADMIN_ACC
+
+          }))
+
+          .then(() => {
+
+            // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
+
+            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+
+            balances[user] = (balances[user] || 0) + amount;
+
+            localStorage.setItem('sys_balances', JSON.stringify(balances));
+
+            localStorage.setItem('last_approved_user', user);
+
+            showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
+
           });
-        }).catch(err=>{
-          if(err&&err.message==='INSUFFICIENT_BALANCE'){
-            return orderRef.transaction(cur=>{
-              if(cur&&cur.status==='approving') return Object.assign({},cur,{status:'pending',approvingBy:null,approvingAt:null});
-              return;
-            }).then(()=>{throw err;});
-          }
-          throw err;
-        });
-      }).then(()=>showPopup('success','THÀNH CÔNG','Đã duyệt đơn nạp và cộng tiền vào số dư khách.')).catch(err=>showPopup('error','LỖI DUYỆT ĐƠN',err.message||'Không thể cập nhật số dư!'));
+
+      }).catch(err => {
+
+        console.error('Approve order error:', err);
+
+        showPopup('error', 'LỖI DUYỆT ĐƠN', err.message || 'Không thể duyệt đơn!');
+
+      });
+
     }
+
     function approveCard(id) {
 
       return approveFirebaseOrder(String(id));
@@ -2300,20 +2368,50 @@
     }
 
     function adminAddMoney() {
-      const u=document.getElementById('admUser').value.trim();
-      const amt=Number(document.getElementById('admAmount').value);
-      if(!u||!Number.isFinite(amt)||amt===0){showPopup('error','THẤT BẠI','Vui lòng nhập đúng tên khách và số tiền khác 0!');return;}
-      if(u===ADMIN_ACC){showPopup('error','THẤT BẠI','Không được thay đổi số dư tài khoản Admin!');return;}
-      adjustAdminBalanceVerified(u,amt).then(newBal=>{
-        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}'); balances[u]=newBal; localStorage.setItem('sys_balances',JSON.stringify(balances));
-        const type=amt>0?'success':'warning';
-        const text=amt>0?`Admin vừa cộng ${Math.abs(amt).toLocaleString('vi-VN')}đ vào ví của bạn.`:`Admin vừa trừ ${Math.abs(amt).toLocaleString('vi-VN')}đ khỏi ví của bạn.`;
-        return db.ref('customerNotices/'+encodeURIComponent(u)).push({user:u,type,text:text+` Số dư hiện tại: ${newBal.toLocaleString('vi-VN')}đ.`,amount:amt,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'}).then(()=>newBal);
-      }).then(newBal=>showPopup('success','THÀNH CÔNG',`Đã ${amt>0?'cộng':'trừ'} ${Math.abs(amt).toLocaleString('vi-VN')}đ cho ${u}. Số dư mới: ${newBal.toLocaleString('vi-VN')}.`)).catch(err=>{
-        if(err && err.message==='INSUFFICIENT_BALANCE') showPopup('error','SỐ DƯ KHÔNG ĐỦ',`Số dư hiện tại của ${u} không đủ để trừ ${Math.abs(amt).toLocaleString('vi-VN')}đ.`);
-        else showPopup('error','LỖI FIREBASE',err.message||'Không thể cập nhật số dư!');
-      });
+      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ Admin mới được điều chỉnh số dư.'); return; }
+      const u = document.getElementById('admUser').value.trim();
+      const amt = Number(document.getElementById('admAmount').value);
+      const note = document.getElementById('admMoneyNote')?.value.trim() || '';
+      if(!u || !Number.isFinite(amt) || amt===0) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tài khoản và số tiền khác 0!'); return; }
+      if(u === ADMIN_ACC) { showPopup('error','TỪ CHỐI','Không được tự điều chỉnh số dư Admin.'); return; }
+      const ref = db.ref('balances/' + encodeURIComponent(u));
+      ref.transaction(current => {
+        const next=(Number(current)||0)+amt;
+        if(next<0) return;
+        return next;
+      }).then(result=>{
+        if(!result.committed) throw new Error('Số dư không đủ để trừ khoản này.');
+        const newBalance=Number(result.snapshot.val())||0;
+        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+        balances[u]=newBalance; localStorage.setItem('sys_balances',JSON.stringify(balances));
+        ensureCustomerRegistry(u,(adminCustomerProfiles[u]||{}).displayName||u);
+        const title=amt>0?'🎉 Admin cộng tiền':'⚠️ Admin điều chỉnh số dư';
+        const defaultText=amt>0?'Tài khoản của bạn vừa được cộng '+Math.abs(amt).toLocaleString('vi-VN')+'đ. Số dư hiện tại: '+newBalance.toLocaleString('vi-VN')+'đ.':'Tài khoản của bạn vừa được trừ '+Math.abs(amt).toLocaleString('vi-VN')+'đ. Số dư hiện tại: '+newBalance.toLocaleString('vi-VN')+'đ.';
+        const finalNote=note || defaultText;
+          const noteRef=db.ref('customerNotices/'+encodeURIComponent(u)).push();
+        return noteRef.set({type:amt>0?'success':'warning',text:finalNote,timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString('vi-VN'),admin:ADMIN_ACC,amount:amt,newBalance:newBalance,source:'balance_adjustment'}).then(()=>{
+          showPopup('success','CẬP NHẬT THÀNH CÔNG','Đã cập nhật số dư cho '+u+'. Số dư mới: '+newBalance.toLocaleString('vi-VN')+'đ.');
+          document.getElementById('admAmount').value='';
+          if(document.getElementById('admMoneyNote')) document.getElementById('admMoneyNote').value='';
+          renderAdminCustomers();
+        });
+      }).catch(err=>showPopup('error','LỖI CẬP NHẬT SỐ DƯ',err.message||'Không thể cập nhật số dư!'));
     }
+
+    function adminSendCustomerNote() {
+      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ Admin mới được gửi ghi chú.'); return; }
+      const u=document.getElementById('admNoteUser').value.trim();
+      const text=document.getElementById('admNoteText').value.trim();
+      const type=document.getElementById('admNoteType').value;
+      if(!u || !text) { showPopup('error','THIẾU THÔNG TIN','Vui lòng nhập tài khoản khách và nội dung ghi chú.'); return; }
+      ensureCustomerRegistry(u,(adminCustomerProfiles[u]||{}).displayName||u);
+      db.ref('customerNotices/'+encodeURIComponent(u)).push({type:type==='warning'?'warning':'success',text:text,timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString('vi-VN'),admin:ADMIN_ACC,source:'admin_note'}).then(()=>{
+        showPopup('success','ĐÃ GỬI','Ghi chú đã được gửi và khách sẽ thấy ngay.');
+        document.getElementById('admNoteText').value='';
+        document.getElementById('admNoteUser').value='';
+      }).catch(err=>showPopup('error','LỖI GỬI GHI CHÚ',err.message||'Không thể gửi ghi chú!'));
+    }
+
     function adminSaveAnnouncement() {
 
       const txt = document.getElementById('admNoticeInput').value.trim();
@@ -2328,119 +2426,68 @@
 
     }
 
+    function checkAdminApproval() {}
+
     function confirmPurchase() {
       if(!currentUser) {
         showPopup('error', 'THẤT BẠI', 'Vui lòng đăng nhập tài khoản!');
         return;
       }
-
-      const uid = (document.getElementById('gamePageUID')?.value || '').trim();
-      if(!uid) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng nhập ID Game!');
-        return;
-      }
-      if(!selectedPriceObj) {
-        showPopup('error', 'THẤT BẠI', 'Vui lòng chọn gói quy đổi!');
-        return;
-      }
+      const uid=(document.getElementById('gamePageUID')?.value||'').trim();
+      if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
+      if(!selectedGame){showPopup('error','CHƯA CHỌN GAME','Vui lòng chọn game trước.');return;}
+      if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn gói nạp.');return;}
       if(typeof db === 'undefined' || !db || typeof db.ref !== 'function') {
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được máy chủ. Vui lòng thử lại!');
+        showPopup('error','LỖI HỆ THỐNG','Không kết nối được máy chủ. Vui lòng thử lại!');
         return;
       }
-
-      const price = Number(selectedPriceObj.price) || 0;
-      if(price <= 0) {
-        showPopup('error', 'DỮ LIỆU LỖI', 'Gói nạp không hợp lệ!');
-        return;
-      }
-
-      const encodedBalanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-      const rawBalanceRef = db.ref('balances/' + currentUser);
-      const btn = document.getElementById('gamePagePayBtn');
-      const processing = document.getElementById('processingArea');
-      if(btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-      if(processing) processing.style.display = 'block';
-
-      function resolveBalanceRef() {
-        return encodedBalanceRef.once('value').then(es => {
-          if(es.val() !== null && es.val() !== undefined) return encodedBalanceRef;
-          if(currentUser !== encodeURIComponent(currentUser)) {
-            return rawBalanceRef.once('value').then(rs => rs.val() !== null && rs.val() !== undefined ? rawBalanceRef : encodedBalanceRef);
-          }
-          return encodedBalanceRef;
-        });
-      }
-
-      function spendBalance() {
-        return resolveBalanceRef().then(balanceRef => balanceRef.transaction(raw=>{
-          const current=normalizeCustomerBalanceValue(raw);
-          if(current < price) return;
-          return current-price;
-        }).then(result=>{
-          const actual=normalizeCustomerBalanceValue(result && result.snapshot ? result.snapshot.val() : null);
-          if(!result || !result.committed){
-            const err=new Error('INSUFFICIENT_BALANCE');
-            err.currentBalance=actual;
-            throw err;
-          }
-          return balanceRef.once('value').then(snap=>{
-            const verified=normalizeCustomerBalanceValue(snap.val());
-            if(verified!==actual){
-              const err=new Error('BALANCE_VERIFY_FAILED');
-              err.currentBalance=verified;
-              throw err;
-            }
-            return verified;
-          });
-        }));
-      }
-
-      let spentBalance = null;
-      spendBalance().then(newBalance => {
-        spentBalance = newBalance;
-        const orderRef = db.ref('orders').push();
-        return orderRef.set({
-          id: orderRef.key,
-          user: currentUser,
-          displayName: getRegisteredName(),
-          package: 'Nạp Game',
-          game: selectedGame,
-          gameUID: uid,
-          price: price,
-          label: selectedPriceObj.label,
-          time: new Date().toLocaleString('vi-VN'),
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          status: 'processing'
-        });
-      }).then(() => {
-        try {
-          const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-          balances[currentUser] = Number(spentBalance) || 0;
-          localStorage.setItem('sys_balances', JSON.stringify(balances));
-        } catch(e) {}
-        const el = document.getElementById('balanceText');
-        if(el) el.innerText = Number(spentBalance).toLocaleString('vi-VN');
-        showPopup('success', 'ĐÃ TIẾP NHẬN ĐƠN',
-          `Đơn ${selectedGame} cho UID ${uid} đã được tiếp nhận. Số dư còn lại: ${Number(spentBalance).toLocaleString('vi-VN')}đ.`, gameUnit(selectedGame));
-        loadPublicRecentHistory();
-      }).catch(err => {
-        console.error('Lỗi thanh toán game:', err);
-        if(err && err.message === 'INSUFFICIENT_BALANCE') {
-          const actual = Number(err.currentBalance);
-          const detail = Number.isFinite(actual)
-            ? `Số dư thực tế hiện tại: ${actual.toLocaleString('vi-VN')}đ. Số tiền cần thanh toán: ${price.toLocaleString('vi-VN')}đ.`
-            : 'Không đọc được số dư từ máy chủ. Vui lòng thử lại.';
-          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', detail);
+      const price=Number(selectedPriceObj.price)||0;
+      if(price<=0){showPopup('error','DỮ LIỆU LỖI','Gói nạp không hợp lệ!');return;}
+      const balanceRef=db.ref('balances/'+encodeURIComponent(currentUser));
+      const btn=document.getElementById('gamePagePayBtn');
+      if(btn){btn.disabled=true;btn.style.opacity='.6';}
+      balanceRef.transaction(current=>{
+        let balance;
+        if(current === null || typeof current === 'undefined') {
+          const cached=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+          balance=Number(cached[currentUser])||0;
         } else {
-          showPopup('error', 'THANH TOÁN THẤT BẠI',
-            err.message || 'Không thể tạo đơn. Vui lòng thử lại.');
+          balance=Number(current)||0;
         }
-      }).finally(() => {
-        if(processing) processing.style.display = 'none';
-        if(btn) { btn.disabled = false; btn.style.opacity = '1'; }
-      });
+        if(balance<price) return;
+        return balance-price;
+      }).then(result=>{
+        if(!result.committed) throw new Error('INSUFFICIENT_BALANCE');
+        const orderRef=db.ref('orders').push();
+        return orderRef.set({id:orderRef.key,user:currentUser,displayName:getRegisteredName(),package:'Nạp Game',game:selectedGame,gameUID:uid,price:price,label:selectedPriceObj.label,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,status:'processing'});
+      }).then(()=>{
+        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}');
+        balances[currentUser]=Math.max(0,(Number(balances[currentUser])||0)-price);
+        localStorage.setItem('sys_balances',JSON.stringify(balances));
+        updateUI();
+        showPopup('success','ĐÃ TIẾP NHẬN ĐƠN','Đã trừ '+price.toLocaleString('vi-VN')+'đ khỏi số dư. Đơn '+selectedGame+' cho UID '+uid+' đang được xử lý.');
+        loadPublicRecentHistory();
+      }).catch(err=>{
+        console.error('Lỗi thanh toán game:',err);
+        if(err&&err.message==='INSUFFICIENT_BALANCE'){showPopup('error','SỐ DƯ KHÔNG ĐỦ','Tài khoản không đủ tiền, vui lòng nạp thêm!');openDepositModal('qr');}
+        else showPopup('error','THANH TOÁN THẤT BẠI',err.message||'Không thể tạo đơn. Số dư chưa được trừ.');
+      }).finally(()=>{if(btn){btn.disabled=false;btn.style.opacity='1';}});
     }
 
+    window.onload = function() {
+
+      syncAdminData();
+
+      const savedUser = localStorage.getItem('session_user_permanent');
+
+      if(savedUser) currentUser = savedUser;
+
+      updateUI();
+      loadPublicRecentHistory();
+
+    };
+
+  
     const demoRecentTopups = [
       {name:'Minh Anh',game:'Free Fire',amount:100000,unit:'Kim Cương',demo:true},
       {name:'Huy Hoàng',game:'Liên Quân Mobile',amount:200000,unit:'Quân Huy',demo:true},
@@ -2487,23 +2534,40 @@
       db.ref('orders').on('value',window.__publicHistoryListener);
     }
 
+    function applyLedConfig(cfg) {
+      const c = cfg || {};
+      const enabled = c.ledEnabled !== false;
+      const effect = String(c.ledEffect || 'chase7');
+      const speed = Number(c.ledSpeed || 2400);
+      document.querySelectorAll('.slide-item').forEach(el => {
+        el.classList.toggle('led-off', !enabled);
+        el.classList.remove('led-soft','led-fast','led-slow');
+        if(effect === 'soft') el.classList.add('led-soft');
+        if(effect === 'fast') el.classList.add('led-fast');
+        if(effect === 'slow') el.classList.add('led-slow');
+        el.style.setProperty('--led-speed', Math.max(700, Math.min(8000, speed)) + 'ms');
+      });
+    }
 
-    window.onload = function() {
 
-      syncAdminData();
+    db.ref('siteConfig').on('value', function(snap) {
+      const cfg = snap.val() || {};
+      const annEl = document.getElementById('adminAnnouncement');
+      if(annEl && cfg.announcement) annEl.innerText = cfg.announcement;
+      applyLedConfig(cfg);
+      // Đồng bộ cấu hình game/giá từ Admin sang trang khách realtime.
+      if(cfg.gameConfig && typeof cfg.gameConfig === 'object') {
+        Object.keys(cfg.gameConfig).forEach(function(name){
+          if(cfg.gameConfig[name] && typeof cfg.gameConfig[name] === 'object') gameConfig[name] = cfg.gameConfig[name];
+        });
+        renderPriceGrid();
+        if(document.getElementById('gameTopupPage')?.classList.contains('active')) renderGamePagePrices();
+      }
+    });
 
-      const savedUser = localStorage.getItem('session_user_permanent');
 
-      if(savedUser) { currentUser = savedUser; listenCustomerNotices(currentUser); }
 
-      renderPriceGrid();
-      loadPublicRecentHistory();
-
-      updateUI();
-
-    };
-
-  </script>
+</script>
 
 </body>
 
