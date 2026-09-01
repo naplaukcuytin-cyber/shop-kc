@@ -1059,17 +1059,7 @@ Chính sách bảo mật
 
           <label>Nhập Số Tiền Cần Nạp (VNĐ)</label>
 
-     <input
-  type="text"
-  class="form-control"
-  id="qrAmount"
-  value="50000"
-  min="20000"
-  max="10000000"
-  inputmode="numeric"
-  autocomplete="off"
-  oninput="this.value=this.value.replace(/\D/g,'')"
->
+          <input type="number" class="form-control" id="qrAmount" value="50000" min="20000" max="10000000">
           <div class="qr-warning">⚠️ Mức nạp: tối thiểu 20.000đ • tối đa 10.000.000đ. Chuyển đúng số tiền và đúng nội dung hiển thị.</div>
 
         </div>
@@ -2794,7 +2784,6 @@ if(box) {
         if(document.getElementById('gameTopupPage')?.classList.contains('active')) renderGamePagePrices();
       }
     });
-
 
 
 </script>
