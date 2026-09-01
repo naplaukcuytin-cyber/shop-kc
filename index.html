@@ -2120,96 +2120,33 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
       });
     }
 
-    function approveFirebaseOrder(orderId) {
-
-      if(currentUser !== ADMIN_ACC) {
-
-        showPopup('error', 'TỪ CHỐI TRUY CẬP', 'Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!');
-
-        return;
-
-      }
-
-      if(!orderId || typeof db === 'undefined' || !db) {
-
-        showPopup('error', 'LỖI HỆ THỐNG', 'Không kết nối được Firebase!');
-
-        return;
-
-      }
-
-      const orderRef = db.ref('orders/' + orderId);
-
-      orderRef.once('value').then(snapshot => {
-
-        const c = snapshot.val();
-
-        if(!c) {
-
-          showPopup('error', 'KHÔNG TÌM THẤY', 'Đơn nạp không còn tồn tại!');
-
-          return;
-
-        }
-
-        if(c.status !== 'pending') {
-
-          showPopup('error', 'ĐÃ XỬ LÝ', 'Đơn này đã được xử lý trước đó!');
-
-          return;
-
-        }
-
-        const amount = Number(c.price) || 0;
-
-        const user = c.user;
-
-        if(!user || amount <= 0) {
-
-          showPopup('error', 'DỮ LIỆU LỖI', 'Đơn nạp không có dữ liệu hợp lệ!');
-
-          return;
-
-        }
-
-        const balanceRef = db.ref('balances/' + encodeURIComponent(user));
-
-        return balanceRef.transaction(current => (Number(current) || 0) + amount)
-
-          .then(() => orderRef.update({
-
-            status: 'approved',
-
-            approvedAt: firebase.database.ServerValue.TIMESTAMP,
-
-            approvedBy: ADMIN_ACC
-
-          }))
-
-          .then(() => {
-
-            // Đồng bộ số dư trên thiết bị admin nếu admin đang dùng cùng tài khoản.
-
-            const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-            balances[user] = (balances[user] || 0) + amount;
-
-            localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-            localStorage.setItem('last_approved_user', user);
-
-            showPopup('success', 'THÀNH CÔNG', 'Đã duyệt nạp thành công!');
-
-          });
-
-      }).catch(err => {
-
-        console.error('Approve order error:', err);
-
-        showPopup('error', 'LỖI DUYỆT ĐƠN', err.message || 'Không thể duyệt đơn!');
-
+    function normalizeAdminBalanceValue(raw) {
+      if(raw && typeof raw === 'object') raw = raw.balance ?? raw.amount ?? raw.money ?? raw.wallet ?? raw.value ?? 0;
+      const n = Number(raw); return Number.isFinite(n) ? n : 0;
+    }
+    function adjustAdminBalanceVerified(user, delta) {
+      user=String(user||'').trim(); delta=Number(delta);
+      if(!user || !Number.isFinite(delta) || delta===0) return Promise.reject(new Error('Dữ liệu cộng/trừ không hợp lệ.'));
+      const ref=db.ref('balances/'+encodeURIComponent(user));
+      return ref.transaction(raw=>normalizeAdminBalanceValue(raw)+delta).then(result=>{
+        if(!result || !result.committed) throw new Error('Firebase không cho phép cập nhật số dư.');
+        return ref.once('value').then(s=>normalizeAdminBalanceValue(s.val()));
       });
+    }
 
+    function approveFirebaseOrder(orderId) {
+      if(currentUser !== ADMIN_ACC) { showPopup('error','TỪ CHỐI TRUY CẬP','Chỉ duy nhất Tài khoản Admin mới có quyền truy cập!'); return; }
+      const orderRef=db.ref('orders/'+orderId);
+      orderRef.once('value').then(snap=>{
+        const c=snap.val(); if(!c) throw new Error('Đơn nạp không còn tồn tại!');
+        if(c.status!=='pending') throw new Error('Đơn này đã được xử lý trước đó!');
+        const user=String(c.user||'').trim(), amount=Number(c.price)||0;
+        if(!user||amount<=0) throw new Error('Đơn nạp không có dữ liệu hợp lệ!');
+        return adjustAdminBalanceVerified(user,amount).then(newBal=>orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:ADMIN_ACC,approvedAmount:amount,balanceAfter:newBal}).then(()=>{
+          const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}'); balances[user]=newBal; localStorage.setItem('sys_balances',JSON.stringify(balances)); localStorage.setItem('last_approved_user',user);
+          showPopup('success','THÀNH CÔNG',`Đã duyệt ${amount.toLocaleString('vi-VN')}đ. Số dư mới: ${newBal.toLocaleString('vi-VN')}đ.`);
+        }));
+      }).catch(err=>showPopup('error','LỖI DUYỆT ĐƠN',err.message||'Không thể duyệt đơn!'));
     }
 
     function approveCard(id) {
@@ -2219,35 +2156,16 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
     }
 
     function adminAddMoney() {
-
-      const u = document.getElementById('admUser').value.trim();
-
-      const amt = parseInt(document.getElementById('admAmount').value);
-
-      if(!u || isNaN(amt)) { showPopup('error', 'THẤT BẠI', 'Vui lòng nhập đúng tên và số tiền!'); return; }
-
-      const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
-      balances[u] = (balances[u] || 0) + amt;
-
-      localStorage.setItem('sys_balances', JSON.stringify(balances));
-
-      if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
-
-        db.ref('balances/' + encodeURIComponent(u)).transaction(current => (Number(current) || 0) + amt)
-
-          .then(() => showPopup('success', 'THÀNH CÔNG', 'Đã cộng tiền vào số dư Firebase của khách!'))
-
-          .catch(err => showPopup('error', 'LỖI FIREBASE', err.message || 'Không thể cập nhật số dư!'));
-
-        return;
-
-      }
-
-      showPopup('success', 'THÀNH CÔNG', `Đã cập nhật số dư cho ${u}!`);
-
-      updateUI();
-
+      const u=document.getElementById('admUser').value.trim();
+      const amt=Number(document.getElementById('admAmount').value);
+      if(!u||!Number.isFinite(amt)||amt===0){showPopup('error','THẤT BẠI','Vui lòng nhập đúng tên khách và số tiền khác 0!');return;}
+      if(u===ADMIN_ACC){showPopup('error','THẤT BẠI','Không được thay đổi số dư tài khoản Admin!');return;}
+      adjustAdminBalanceVerified(u,amt).then(newBal=>{
+        const balances=JSON.parse(localStorage.getItem('sys_balances')||'{}'); balances[u]=newBal; localStorage.setItem('sys_balances',JSON.stringify(balances));
+        const type=amt>0?'success':'warning';
+        const text=amt>0?`🎉 Chúc mừng! Admin vừa tặng/tri ân ${(Math.abs(amt)).toLocaleString('vi-VN')}đ vào ví của bạn. Số tiền cộng: +${Math.abs(amt).toLocaleString('vi-VN')}đ.`:`⚠️ Cảnh báo: Admin vừa trừ ${Math.abs(amt).toLocaleString('vi-VN')}đ khỏi số dư tài khoản của bạn. Số tiền trừ: -${Math.abs(amt).toLocaleString('vi-VN')}đ.`;
+        return db.ref('customerNotices/'+encodeURIComponent(u)).push({user:u,type,text:text+` Số dư hiện tại: ${newBal.toLocaleString('vi-VN')}đ.`,amount:amt,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'}).catch(()=>null).then(()=>newBal);
+      }).then(newBal=>showPopup('success',amt>0?'🎉 CHÚC MỪNG':'⚠️ CẢNH BÁO',`Đã ${amt>0?'cộng':'trừ'} ${Math.abs(amt).toLocaleString('vi-VN')}đ cho ${u}. Số dư mới: ${newBal.toLocaleString('vi-VN')}đ.`)).catch(err=>showPopup('error','LỖI FIREBASE',err.message||'Không thể cập nhật số dư!'));
     }
 
     function adminSaveAnnouncement() {
