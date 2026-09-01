@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Đơn Nạp - Shop KC</title>
-    <!-- Firebase SDK v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
@@ -22,20 +21,12 @@
     </style>
 </head>
 <body>
-
     <h2>DANH SÁCH ĐƠN NẠP TIỀN (REALTIME)</h2>
-
     <table>
         <thead>
             <tr>
-                <th>Mã Đơn</th>
-                <th>Tài Khoản</th>
-                <th>Gói Nạp</th>
-                <th>Số Tiền</th>
-                <th>Nội Dung/Memo</th>
-                <th>Thời Gian</th>
-                <th>Trạng Thái</th>
-                <th>Thao Tác</th>
+                <th>Mã Đơn</th><th>Tài Khoản</th><th>Gói Nạp</th><th>Số Tiền</th>
+                <th>Nội Dung/Memo</th><th>Thời Gian</th><th>Trạng Thái</th><th>Thao Tác</th>
             </tr>
         </thead>
         <tbody id="orderTableBody">
@@ -44,7 +35,6 @@
     </table>
 
     <script>
-        // Cấu hình chuẩn Firebase shop-kc của mày
         const firebaseConfig = {
             apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
             authDomain: "shop-kc.firebaseapp.com",
@@ -55,10 +45,10 @@
             measurementId: "G-Q9VN7NZHR0",
             databaseURL: "https://shop-kc-default-rtdb.firebaseio.com"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Lắng nghe dữ liệu realtime từ Firebase
         db.ref('orders').on('value', (snapshot) => {
             const tbody = document.getElementById('orderTableBody');
             tbody.innerHTML = '';
@@ -72,9 +62,10 @@
             Object.keys(data).reverse().forEach(key => {
                 const order = data[key];
                 const tr = document.createElement('tr');
-                
+
                 let statusText = 'Chờ duyệt';
                 let statusClass = 'status-pending';
+
                 if (order.status === 'approved') {
                     statusText = 'Đã duyệt';
                     statusClass = 'status-approved';
@@ -100,12 +91,75 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }, (error) => {
+            console.error(error);
+            document.getElementById('orderTableBody').innerHTML =
+                '<tr><td colspan="8">Không đọc được Firebase: ' +
+                String(error.message || error) + '</td></tr>';
         });
 
         function updateStatus(orderId, status) {
-            db.ref('orders/' + orderId).update({ status: status })
-            .then(() => alert('Cập nhật thành công!'))
-            .catch(err => alert('Lỗi: ' + err.message));
+            const orderRef = db.ref('orders/' + orderId);
+
+            orderRef.once('value').then(snapshot => {
+                const order = snapshot.val();
+
+                if (!order) {
+                    throw new Error('Không tìm thấy đơn nạp.');
+                }
+
+                // Hủy đơn: chỉ đổi trạng thái, không cộng tiền.
+                if (status === 'rejected') {
+                    return orderRef.update({
+                        status: 'rejected',
+                        updatedAt: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+
+                // Đã duyệt rồi thì tuyệt đối không cộng lần 2.
+                if (order.status === 'approved') {
+                    throw new Error('Đơn này đã được duyệt trước đó.');
+                }
+
+                const user = String(order.user || '').trim();
+                const amount = Number(order.price || 0);
+
+                if (!user) throw new Error('Đơn không có tài khoản khách.');
+                if (!Number.isFinite(amount) || amount <= 0) {
+                    throw new Error('Số tiền trong đơn không hợp lệ.');
+                }
+
+                // QUAN TRỌNG:
+                // Phải dùng đúng key mà trang khách dùng để đọc số dư.
+                // Nếu trang khách của mày đang đọc balances/<username>,
+                // dòng này sẽ cộng tiền đúng vào tài khoản đó.
+                const balanceRef = db.ref('balances/' + encodeURIComponent(user));
+
+                return balanceRef.transaction(currentBalance => {
+                    return (Number(currentBalance) || 0) + amount;
+                }).then(result => {
+                    if (!result.committed) {
+                        throw new Error('Firebase không commit được số dư.');
+                    }
+
+                    return orderRef.update({
+                        status: 'approved',
+                        approvedAt: firebase.database.ServerValue.TIMESTAMP,
+                        approvedAmount: amount
+                    });
+                });
+            }).then(() => {
+                alert(
+                    status === 'approved'
+                        ? 'Đã duyệt đơn và cộng ' +
+                          Number(arguments[0] ? 0 : 0) +
+                          'đ vào tài khoản khách!'
+                        : 'Đã hủy đơn!'
+                );
+            }).catch(err => {
+                console.error('Lỗi updateStatus:', err);
+                alert('Lỗi: ' + (err.message || err));
+            });
         }
     </script>
 </body>
