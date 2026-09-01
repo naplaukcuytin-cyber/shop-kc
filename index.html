@@ -361,7 +361,24 @@
     .qr-file-name { margin-left: 7px; font-size: .72rem; color: #777; }
     #qrProofPreview { display: none; max-width: 110px; max-height: 90px; margin-top: 8px; border-radius: 7px; border: 1px solid #ddd; }
 
-  </style>
+  
+  .history-filter{border:0;background:#eef2f7;color:#5f6b7a;border-radius:10px;padding:8px 13px;font-weight:700;white-space:nowrap;cursor:pointer}
+  .history-filter.active{background:#0084ff;color:#fff}
+  .popup-icon-box.success{animation:successPop .55s ease both}
+  .popup-icon-box.success i{animation:checkPulse 1.2s ease-in-out infinite}
+  @keyframes successPop{0%{transform:scale(.65);opacity:.2}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+  @keyframes checkPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  .led-edge.top,.led-edge.bottom{
+    background:linear-gradient(90deg,transparent 0%,#00e5ff 15%,#fff 22%,#a855f7 30%,#ff3b81 36%,#00e5ff 44%,transparent 55%);
+  }
+  .led-edge.left,.led-edge.right{
+    background:linear-gradient(180deg,transparent 0%,#00e5ff 15%,#fff 22%,#a855f7 30%,#ff3b81 36%,#00e5ff 44%,transparent 55%);
+  }
+
+  .history-success{display:inline-flex;align-items:center;gap:5px;color:#2e7d32;font-weight:700}
+  .history-check{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2e7d32;color:#fff;font-size:12px;line-height:18px;animation:historyCheckPulse 1.5s ease-in-out infinite}
+  @keyframes historyCheckPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(46,125,50,.25)}50%{transform:scale(1.12);box-shadow:0 0 0 6px rgba(46,125,50,0)}}
+</style>
 
 <!-- Firebase SDK v8 -->
 
@@ -990,6 +1007,11 @@
       <i class="fa-solid fa-xmark" style="position:absolute;top:15px;right:15px;cursor:pointer;" onclick="closeModal('historyModal')"></i>
       <h3 style="color:#0084ff;text-align:center;margin-bottom:6px;">LỊCH SỬ GIAO DỊCH</h3>
       <p style="text-align:center;color:#65676b;font-size:.8rem;margin-bottom:15px;">Theo dõi đơn nạp ví và đơn nạp game của tài khoản</p>
+      <div style="display:flex;gap:8px;overflow:auto;margin-bottom:12px;">
+        <button class="history-filter active" data-filter="all" onclick="setHistoryFilter('all',this)">Tất cả</button>
+        <button class="history-filter" data-filter="game" onclick="setHistoryFilter('game',this)">Nạp KC / Game</button>
+        <button class="history-filter" data-filter="web" onclick="setHistoryFilter('web',this)">Nạp web</button>
+      </div>
       <div id="historySummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"></div>
       <div style="overflow-x:auto;">
         <table>
@@ -1797,10 +1819,28 @@
         });
     }
 
+    let currentHistoryFilter = 'all';
+    let currentHistoryItems = [];
+
+    function setHistoryFilter(filter, btn) {
+      currentHistoryFilter = filter || 'all';
+      document.querySelectorAll('.history-filter').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderUserHistory(currentHistoryItems);
+    }
+
+    function historyCategory(x) {
+      return x && x.game && x.game !== '-' ? 'game' : 'web';
+    }
+
     function renderUserHistory(items) {
       const tbody = document.getElementById('userHistoryTable');
       const summary = document.getElementById('historySummary');
-      const list = Array.isArray(items) ? items.slice() : [];
+      currentHistoryItems = Array.isArray(items) ? items.slice() : [];
+      let list = currentHistoryItems.slice();
+
+      if(currentHistoryFilter === 'game') list = list.filter(x => historyCategory(x) === 'game');
+      if(currentHistoryFilter === 'web') list = list.filter(x => historyCategory(x) === 'web');
 
       list.sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0));
 
@@ -1810,26 +1850,23 @@
 
       summary.innerHTML = `
         <div style="background:#fff3cd;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#856404;">${processing}</b><br>
-          <span style="font-size:.72rem;">Đang xử lý</span>
+          <b style="color:#856404;">${processing}</b><br><span style="font-size:.72rem;">Đang xử lý</span>
         </div>
         <div style="background:#e8f5e9;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#2e7d32;">${success}</b><br>
-          <span style="font-size:.72rem;">Thành công</span>
+          <b style="color:#2e7d32;">${success}</b><br><span style="font-size:.72rem;">Thành công</span>
         </div>
         <div style="background:#ffebee;padding:9px;border-radius:10px;text-align:center;">
-          <b style="color:#c62828;">${failed}</b><br>
-          <span style="font-size:.72rem;">Thất bại</span>
+          <b style="color:#c62828;">${failed}</b><br><span style="font-size:.72rem;">Thất bại</span>
         </div>`;
 
       if(!list.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có lịch sử giao dịch.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Chưa có giao dịch ở mục này.</td></tr>';
         return;
       }
 
       tbody.innerHTML = list.map(x => {
         const status = ['approved','success','completed'].includes(x.status)
-          ? '<span style="color:#2e7d32;font-weight:700;">✔ Thành công</span>'
+          ? '<span class="history-success"><span class="history-check">✓</span> Thành công</span>'
           : ['failed','cancelled','rejected'].includes(x.status)
           ? '<span style="color:#c62828;font-weight:700;">✖ Thất bại</span>'
           : '<span style="color:#fb8c00;font-weight:700;">⏳ Đang xử lý</span>';
