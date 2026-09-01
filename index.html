@@ -373,6 +373,23 @@
   .slide-item.led-soft .led-edge { opacity:.7; filter:drop-shadow(0 0 3px rgba(255,255,255,.45)); }
   .slide-item.led-fast .led-edge { --led-speed:1.35s; }
   .slide-item.led-slow .led-edge { --led-speed:3.8s; }
+  /* Trang nạp riêng từng game */
+  .game-page{display:none;margin-top:15px}
+  .game-page.active{display:block}
+  .game-page-card{background:#fff;border:1px solid #e4e6eb;border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(20,30,50,.06)}
+  .game-page-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .game-page-head img{width:64px;height:64px;border-radius:16px;object-fit:cover}
+  .game-page-title{font-size:1.25rem;font-weight:800;margin:0}
+  .game-page-sub{font-size:.82rem;color:#697386;margin-top:4px}
+  .back-game-btn{border:0;background:#eef1f5;color:#4d5868;border-radius:11px;padding:9px 12px;font-weight:700;cursor:pointer;margin-bottom:12px}
+  .game-unit-note{padding:11px 13px;background:#f4f9ff;border:1px solid #dbeafe;border-radius:12px;color:#1756a3;font-size:.85rem;margin-bottom:14px}
+  .game-page .price-grid{margin-top:8px}
+  .commit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px}
+  .commit-card{background:#f4fff5;border:1px dashed #36b37e;border-radius:14px;padding:14px;line-height:1.55}
+  .commit-card h4{margin:0 0 7px;font-size:.92rem}
+  .commit-card p{margin:0;color:#59636f;font-size:.8rem}
+  @media(max-width:520px){.commit-grid{grid-template-columns:1fr}}
+
  to { background-position:0 -120%; } }
 
 
@@ -417,7 +434,7 @@
 
   const firebaseConfig = {
 
-    apiKey: "AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs",
+    apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
 
     authDomain: "shop-kc.firebaseapp.com",
 
@@ -793,9 +810,34 @@
 
     </div>
 
+    <!-- Trang nạp riêng từng game -->
+    <section id="gameTopupPage" class="game-page">
+      <button class="back-game-btn" onclick="backToGameList()"><i class="fa-solid fa-arrow-left"></i> Chọn game khác</button>
+      <div class="game-page-card">
+        <div class="game-page-head">
+          <img id="gamePageThumb" src="freefire.jpg.PNG" alt="Game">
+          <div><h2 class="game-page-title" id="gamePageTitle">NẠP FREE FIRE</h2><div class="game-page-sub" id="gamePageSub">Chọn gói nạp bên dưới</div></div>
+        </div>
+        <div class="game-unit-note" id="gameUnitNote">Đơn vị nhận: Kim Cương</div>
+        <div class="form-group">
+          <label>Nhập ID Game / UID</label>
+          <input type="text" class="form-control" id="gamePageUID" placeholder="Nhập ID Game của bạn">
+        </div>
+        <label style="font-size:.85rem;font-weight:600;">Chọn gói nạp</label>
+        <div class="price-grid" id="gamePagePriceGrid"></div>
+        <button class="btn-login-main" id="gamePagePayBtn" style="width:100%;justify-content:center;margin-top:15px;padding:12px;" onclick="confirmGamePagePurchase()">NẠP NGAY</button>
+        <div class="commit-grid">
+          <div class="commit-card"><h4>✓ Xử lý đúng thông tin</h4><p>Kiểm tra ID/UID và gói nạp trước khi xác nhận đơn.</p></div>
+          <div class="commit-card"><h4>✓ Theo dõi giao dịch</h4><p>Đơn nạp được lưu vào lịch sử để khách và Admin cùng kiểm tra.</p></div>
+          <div class="commit-card"><h4>✓ Minh bạch trạng thái</h4><p>Trạng thái đơn được cập nhật theo dữ liệu hệ thống realtime.</p></div>
+          <div class="commit-card"><h4>✓ Hỗ trợ khi có lỗi</h4><p>Nếu giao dịch gặp sự cố, hãy giữ lại mã đơn và liên hệ hỗ trợ.</p></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Khung Nhập ID & Chọn Gói Nạp -->
 
-    <div class="main-card">
+    <div class="main-card" id="legacyPayCard">
 
       <h3 style="margin-bottom:15px; font-size:1rem; color:#0084ff;" id="gameSelectTitle">THANH TOÁN ĐƠN HÀNG: FREE FIRE</h3>
 
@@ -1340,70 +1382,93 @@
 
     }
 
+    function gameImage(gameName){
+      const map={'Free Fire':'freefire.jpg.PNG','Liên Quân Mobile':'lq.PNG','FC Mobile VN':'fc.JPG','FC Online (VN)':'fcc.JPG','FC Online M (VN)':'fcc.JPG','Delta Force':'dt.WEBP','Nạp Sò':'so.PNG','Cái thế tranh hùng':'ct.JPG'};
+      return map[gameName] || 'freefire.jpg.PNG';
+    }
+
+    function gameUnit(gameName){
+      const map={'Free Fire':'Kim Cương','Liên Quân Mobile':'Quân Huy','FC Mobile VN':'FC Points','FC Online (VN)':'FC Points','FC Online M (VN)':'FC Points','Delta Force':'Kim Cương','Nạp Sò':'Sò','Cái thế tranh hùng':'Kim Cương'};
+      return map[gameName] || 'Kim Cương';
+    }
+
+    function getGameConfig(gameName){
+      if(gameConfig && gameConfig[gameName]) return gameConfig[gameName];
+      return {unit:gameUnit(gameName),rates:gameConfig && gameConfig['Free Fire'] ? gameConfig['Free Fire'].rates : []};
+    }
+
     function selectGame(el, gameName) {
-
       document.querySelectorAll('.game-card-item').forEach(c => {
-
         c.classList.remove('selected');
-
-        c.querySelector('.game-status-btn').innerText = 'Bấm nạp';
-
+        const b=c.querySelector('.game-status-btn'); if(b) b.innerText='Bấm nạp';
       });
-
-      if(el) {
-
-        el.classList.add('selected');
-
-        el.querySelector('.game-status-btn').innerText = '✔ ĐANG CHỌN';
-
-      }
-
+      if(el){el.classList.add('selected');const b=el.querySelector('.game-status-btn');if(b)b.innerText='✔ ĐANG CHỌN';}
       selectedGame = gameName;
-
-      document.getElementById('gameSelectTitle').innerText = `THANH TOÁN ĐƠN HÀNG: ${gameName.toUpperCase()}`;
-
-      renderPriceGrid();
-
+      openGameTopupPage(gameName);
     }
 
     function quickSelectGame(gameName) {
-
       closeSidebar();
+      const item=[...document.querySelectorAll('.game-card-item')].find(item=>item.querySelector('.game-name')?.innerText===gameName);
+      selectGame(item || null, gameName);
+    }
 
-      document.querySelectorAll('.game-card-item').forEach(item => {
+    function openGameTopupPage(gameName){
+      selectedGame=gameName;
+      const page=document.getElementById('gameTopupPage');
+      const list=document.querySelector('#gameGrid')?.closest('.main-card');
+      const legacy=document.getElementById('legacyPayCard');
+      if(list) list.style.display='none';
+      if(legacy) legacy.style.display='none';
+      if(page) page.classList.add('active');
+      const img=document.getElementById('gamePageThumb'); if(img) img.src=gameImage(gameName);
+      const title=document.getElementById('gamePageTitle'); if(title) title.innerText='NẠP '+String(gameName).toUpperCase();
+      const sub=document.getElementById('gamePageSub'); if(sub) sub.innerText='Chọn gói '+gameUnit(gameName)+' bên dưới';
+      const note=document.getElementById('gameUnitNote'); if(note) note.innerText='Đơn vị nhận: '+gameUnit(gameName);
+      const uid=document.getElementById('gamePageUID'); if(uid){uid.value=document.getElementById('gameUID')?.value||'';}
+      renderGamePagePrices();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
 
-        if(item.querySelector('.game-name').innerText === gameName) { selectGame(item, gameName); }
+    function backToGameList(){
+      document.getElementById('gameTopupPage')?.classList.remove('active');
+      const list=document.querySelector('#gameGrid')?.closest('.main-card');
+      const legacy=document.getElementById('legacyPayCard');
+      if(list) list.style.display='block';
+      if(legacy) legacy.style.display='none';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
 
+    function renderGamePagePrices(){
+      const conf=getGameConfig(selectedGame);
+      const grid=document.getElementById('gamePagePriceGrid');
+      if(!grid)return;
+      grid.innerHTML=''; selectedPriceObj=null;
+      (conf.rates||[]).forEach(r=>{
+        grid.innerHTML += `<div class="price-box" onclick="selectGamePagePrice(this, ${Number(r.p)||0}, '${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}')"><b>💎 ${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}</b><div style="color:#0084ff;font-weight:bold;margin-top:4px;">${(Number(r.p)||0).toLocaleString('vi-VN')}đ</div></div>`;
       });
+    }
 
+    function selectGamePagePrice(el,price,label){
+      document.querySelectorAll('#gamePagePriceGrid .price-box').forEach(p=>p.classList.remove('selected'));
+      if(el)el.classList.add('selected');
+      selectedPriceObj={price:Number(price),label:String(label)};
+    }
+
+    function confirmGamePagePurchase(){
+      const uid=(document.getElementById('gamePageUID')?.value||'').trim();
+      if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
+      if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn một gói nạp.');return;}
+      const legacyUid=document.getElementById('gameUID'); if(legacyUid) legacyUid.value=uid;
+      confirmPurchase();
     }
 
     function renderPriceGrid() {
-
-      const conf = gameConfig[selectedGame] || gameConfig['Free Fire'];
-
-      const grid = document.getElementById('priceGridArea');
-
-      grid.innerHTML = '';
-
-      selectedPriceObj = null;
-
-      conf.rates.forEach(r => {
-
-        grid.innerHTML += `
-
-          <div class="price-box" onclick="selectPrice(this, ${r.p}, '${r.v} ${conf.unit}')">
-
-            <b>💎 ${r.v} ${conf.unit}</b>
-
-            <div style="color:#0084ff; font-weight:bold; margin-top:4px;">${r.p.toLocaleString()}đ</div>
-
-          </div>
-
-        `;
-
-      });
-
+      const conf=getGameConfig(selectedGame);
+      const grid=document.getElementById('priceGridArea');
+      if(!grid)return;
+      grid.innerHTML=''; selectedPriceObj=null;
+      (conf.rates||[]).forEach(r=>{grid.innerHTML += `<div class="price-box" onclick="selectPrice(this, ${Number(r.p)||0}, '${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}')"><b>💎 ${escapeHistoryHtml(String(r.v||''))} ${escapeHistoryHtml(String(conf.unit||gameUnit(selectedGame)))}</b><div style="color:#0084ff;font-weight:bold;margin-top:4px;">${(Number(r.p)||0).toLocaleString('vi-VN')}đ</div></div>`;});
     }
 
     function selectPrice(el, price, label) {
@@ -2328,6 +2393,14 @@
       const annEl = document.getElementById('adminAnnouncement');
       if(annEl && cfg.announcement) annEl.innerText = cfg.announcement;
       applyLedConfig(cfg);
+      // Đồng bộ cấu hình game/giá từ Admin sang trang khách realtime.
+      if(cfg.gameConfig && typeof cfg.gameConfig === 'object') {
+        Object.keys(cfg.gameConfig).forEach(function(name){
+          if(cfg.gameConfig[name] && typeof cfg.gameConfig[name] === 'object') gameConfig[name] = cfg.gameConfig[name];
+        });
+        renderPriceGrid();
+        if(document.getElementById('gameTopupPage')?.classList.contains('active')) renderGamePagePrices();
+      }
     });
 
 
