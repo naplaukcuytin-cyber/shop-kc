@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Trị – Admin Pro</title>
+    <title>Hệ Thống Quản Trị – Admin Local</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,65 +16,38 @@
             --border: #334155;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; }
 
         .header-card {
             background: var(--panel);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
         }
 
-        .header-title {
-            font-size: 22px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #38bdf8;
-        }
+        .header-title { font-size: 20px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
 
-        .btn-refresh {
-            background: linear-gradient(135deg, #0284c7, #0284c7);
-            color: white;
+        .btn-group-head { display: flex; gap: 10px; }
+        
+        .btn {
             border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
-            transition: all 0.2s;
+            transition: 0.2s;
+            font-size: 13px;
         }
-
-        .btn-refresh:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
+        .btn-refresh { background: #0284c7; color: white; }
+        .btn-clear { background: #ef4444; color: white; }
+        .btn:hover { opacity: 0.9; }
 
         .table-card {
             background: var(--panel);
@@ -85,79 +58,33 @@
             overflow-x: auto;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { color: #94a3b8; font-size: 12px; text-transform: uppercase; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        td { padding: 16px; border-bottom: 1px solid #1e293b; font-size: 14px; }
 
-        th {
-            color: #94a3b8;
-            font-size: 13px;
-            text-transform: uppercase;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #1e293b;
-            font-size: 14px;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
         .status-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
         .status-approved { background: rgba(16, 185, 129, 0.2); color: #34d399; }
         .status-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-        .btn-group {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-action {
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            color: white;
-        }
-
+        .btn-act { border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; color: white; margin-right: 4px; }
         .btn-approve { background: var(--success); }
-        .btn-reject { background: var(--danger); }
+        .btn-reject { background: #f59e0b; }
         .btn-delete { background: #475569; }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #94a3b8;
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-card">
-        <div class="header-title">
-            ⚡ QUẢN LÝ NẠP TIỀN
+        <div class="header-title">⚡ QUẢN LÝ NẠP TIỀN (LOCAL)</div>
+        <div class="btn-group-head">
+            <button class="btn btn-refresh" onclick="loadOrders()">🔄 Tải Lại Dữ Liệu</button>
+            <button class="btn btn-clear" onclick="clearAllOrders()">🗑️ Xóa Tất Cả</button>
         </div>
-        <button class="btn-refresh" onclick="loadData()">
-            🔄 Tải Lại Dữ Liệu
-        </button>
     </div>
 
     <div class="table-card">
@@ -173,95 +100,83 @@
                     <th>Thao Tác</th>
                 </tr>
             </thead>
-            <tbody id="order-list">
-                <!-- Dữ liệu sẽ đổ vào đây -->
-            </tbody>
+            <tbody id="order-list"></tbody>
         </table>
         <div id="empty-box" class="empty-state" style="display: none;">
             <div class="empty-icon">☕</div>
-            <h3>Tuyệt vời! Không còn đơn nào chờ duyệt.</h3>
-            <p style="margin-top: 6px; font-size: 13px;">Thư giãn thôi, hệ thống đang sạch sẽ.</p>
+            <h3>Tuyệt vời! Không có đơn nào.</h3>
+            <p style="margin-top: 6px; font-size: 13px;">Hệ thống chưa ghi nhận đơn nạp mới.</p>
         </div>
     </div>
 </div>
 
 <script>
-    const API_URL = "https://sheetdb.io/api/v1/ukuqfpsb9yvzi";
-
-    async function loadData() {
+    function loadOrders() {
         const tbody = document.getElementById('order-list');
         const emptyBox = document.getElementById('empty-box');
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Đang tải dữ liệu...</td></tr>';
         
-        try {
-            const res = await fetch(API_URL);
-            const data = await res.json();
+        // Lấy dữ liệu từ LocalStorage
+        const orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
+        
+        tbody.innerHTML = '';
+
+        if (orders.length === 0) {
+            emptyBox.style.display = 'block';
+            return;
+        }
+
+        emptyBox.style.display = 'none';
+
+        orders.forEach((item, index) => {
+            const tr = document.createElement('tr');
             
-            tbody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                emptyBox.style.display = 'block';
-                return;
-            }
+            let statusClass = 'status-pending';
+            let statusText = 'Chờ duyệt';
+            if (item.status === 'approved') { statusClass = 'status-approved'; statusText = 'Đã duyệt'; }
+            if (item.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Đã hủy'; }
 
-            emptyBox.style.display = 'none';
+            tr.innerHTML = `
+                <td><b>${item.user || 'Khách'}</b></td>
+                <td>${item.package || 'N/A'}</td>
+                <td style="color: #38bdf8; font-weight: 600;">${Number(item.price || 0).toLocaleString()}đ</td>
+                <td><code>${item.uid || 'Không có'}</code></td>
+                <td style="font-size: 12px; color: #94a3b8;">${item.time || ''}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>
+                    <button class="btn-act btn-approve" onclick="updateStatus(${index}, 'approved')">Duyệt</button>
+                    <button class="btn-act btn-reject" onclick="updateStatus(${index}, 'rejected')">Hủy</button>
+                    <button class="btn-act btn-delete" onclick="deleteOrder(${index})">Xóa</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
-            data.reverse().forEach(item => {
-                const tr = document.createElement('tr');
-                
-                let statusClass = 'status-pending';
-                let statusText = 'Chờ duyệt';
-                if (item.status === 'approved') { statusClass = 'status-approved'; statusText = 'Đã duyệt'; }
-                if (item.status === 'rejected') { statusClass = 'status-rejected'; statusText = 'Đã hủy'; }
-
-                tr.innerHTML = `
-                    <td><b>${item.user || 'Khách'}</b></td>
-                    <td>${item.package || 'N/A'}</td>
-                    <td style="color: #38bdf8; font-weight: 600;">${Number(item.price || 0).toLocaleString()}đ</td>
-                    <td><code>${item.uid || 'Không có'}</code></td>
-                    <td style="font-size: 12px; color: #94a3b8;">${item.time || ''}</td>
-                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn-action btn-approve" onclick="updateStatus('${item.id}', 'approved')">Duyệt</button>
-                            <button class="btn-action btn-reject" onclick="updateStatus('${item.id}', 'rejected')">Hủy</button>
-                            <button class="btn-action btn-delete" onclick="deleteOrder('${item.id}')">Xóa</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        } catch (err) {
-            console.error("Lỗi tải dữ liệu:", err);
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#ef4444;">Lỗi tải dữ liệu từ SheetDB!</td></tr>';
+    function updateStatus(index, status) {
+        let orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
+        if(orders[index]) {
+            orders[index].status = status;
+            localStorage.setItem('shop_orders', JSON.stringify(orders));
+            loadOrders();
         }
     }
 
-    async function updateStatus(id, status) {
-        try {
-            await fetch(`${API_URL}/id/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: { status: status } })
-            });
-            loadData();
-        } catch (err) {
-            alert('Không thể cập nhật trạng thái!');
-        }
+    function deleteOrder(index) {
+        if (!confirm('Xóa đơn này?')) return;
+        let orders = JSON.parse(localStorage.getItem('shop_orders')) || [];
+        orders.splice(index, 1);
+        localStorage.setItem('shop_orders', JSON.stringify(orders));
+        loadOrders();
     }
 
-    async function deleteOrder(id) {
-        if (!confirm('Bạn có chắc muốn xóa đơn này?')) return;
-        try {
-            await fetch(`${API_URL}/id/${id}`, { method: 'DELETE' });
-            loadData();
-        } catch (err) {
-            alert('Không thể xóa đơn!');
-        }
+    function clearAllOrders() {
+        if (!confirm('Xóa sạch toàn bộ đơn hàng?')) return;
+        localStorage.removeItem('shop_orders');
+        loadOrders();
     }
 
-    // Tự động tải dữ liệu khi mở trang
-    loadData();
+    // Tự động tải dữ liệu khi mở
+    loadOrders();
 </script>
 
 </body>
