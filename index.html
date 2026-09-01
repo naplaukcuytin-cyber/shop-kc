@@ -1625,63 +1625,7 @@ if (uid) {
       selectedPriceObj={price:Number(price),label:String(label)};
     }
 
-    function confirmGamePagePurchase() {
-  const uid = (document.getElementById('gamePageUID')?.value || '').trim();
-
-  const minimumUidLengthByGame = {
-    'Free Fire': 9,
-    'Liên Quân Mobile': 9,
-    'FC Mobile VN': 9,
-    'FC Online (VN)': 9,
-    'FC Online M (VN)': 9,
-    'Delta Force': 9,
-    'Nạp Sò': 9,
-    'Cái thế tranh hùng': 9
-  };
-
-  const minimumUidLength = minimumUidLengthByGame[selectedGame] || 9;
-
-  if (!uid) {
-    showPopup(
-      'error',
-      'THIẾU ID GAME',
-      'Vui lòng nhập ID Game / UID.'
-    );
-    return;
-  }
-
-  if (!/^\d+$/.test(uid)) {
-    showPopup(
-      'error',
-      'ID KHÔNG HỢP LỆ',
-      'ID Game / UID chỉ được chứa chữ số.'
-    );
-    document.getElementById('gamePageUID')?.focus();
-    return;
-  }
-
-  if (uid.length < minimumUidLength) {
-    showPopup(
-      'error',
-      'ID QUÁ NGẮN',
-      'ID Game / UID của ' + selectedGame +
-      ' cần tối thiểu ' + minimumUidLength + ' chữ số.'
-    );
-    document.getElementById('gamePageUID')?.focus();
-    return;
-  }
-
-  if (!selectedPriceObj) {
-    showPopup(
-      'error',
-      'CHƯA CHỌN GÓI',
-      'Vui lòng chọn một gói nạp.'
-    );
-    return;
-  }
-
-  confirmPurchase();
-}
+    function confirmGamePagePurchase(){
       const uid=(document.getElementById('gamePageUID')?.value||'').trim();
       if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
       if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn một gói nạp.');return;}
@@ -2786,7 +2730,7 @@ if(box) {
     });
 
 
-ư
+
 </script>
 
 </body>
