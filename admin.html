@@ -8,10 +8,11 @@
 @keyframes adminLedPreview{from{background-position:100% 0}to{background-position:-100% 0}} </style></head><body>
 <header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Thu hồi số dư • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button></div></div></header>
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('recover',this)">Thu hồi số dư</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
+<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('cardhistory',this)">Lịch sử nạp thẻ</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('recover',this)">Thu hồi số dư</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và thu hồi/trừ lại số dư. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 
+<section id="cardhistory" style="display:none"><div class="card"><b>LỊCH SỬ NẠP THẺ</b><p class="muted">Bấm từng giao dịch để xem đầy đủ số thẻ/Seri, tài khoản, mệnh giá và ngày giờ nạp.</p><div class="actions"><button class="btn btn-gray" onclick="renderCardHistory(lastOrders,'all')">Tất cả</button><button class="btn btn-orange" onclick="renderCardHistory(lastOrders,'garena_card')">Thẻ Garena</button><button class="btn btn-purple" onclick="renderCardHistory(lastOrders,'phone_card')">Thẻ điện thoại</button></div><div class="table" style="margin-top:10px"><table style="min-width:720px"><thead><tr><th>Tài khoản</th><th>Loại thẻ</th><th>Mệnh giá</th><th>Trạng thái</th><th>Ngày giờ</th><th>Chi tiết</th></tr></thead><tbody id="cardHistoryBody"></tbody></table></div></div></section>
 <section id="users" style="display:none"><div class="card"><b>KHÁCH HÀNG / KIỂM TRA GIAN LẬN</b><p class="muted">Chỉ hiển thị tên tài khoản, tên đăng ký và thời gian đăng ký. Không lấy mật khẩu.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+/-)</label><input id="admAmount" type="number" placeholder="Ví dụ 100000 hoặc -100000"></div></div><div class="actions"><button class="btn btn-primary" onclick="adminAdjustMoney()">Cập nhật số dư</button></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Tài khoản</th><th>Tên đăng ký</th><th>Đăng ký lúc</th><th>Số dư</th><th>Đánh dấu</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
 <section id="recover" style="display:none">
   <div class="card">
@@ -76,6 +77,7 @@
 <div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div></section>
 <section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
 </div>
+<div class="modal" id="orderDetailModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeOrderDetail()">Đóng</button><h3>CHI TIẾT GIAO DỊCH</h3><div id="orderDetailContent" style="line-height:1.8"></div></div></div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
 const ADMIN_ACC='phong 23112007';
@@ -125,9 +127,39 @@ function adminRecoverBalance(user, amount, reason){
     if(!r.committed) throw new Error('Số dư không đủ hoặc Firebase không thể cập nhật.');
     return db.ref('balance_recoveries').push({
       user:user,amount:amount,reason:reason||'Admin thu hồi số dư',
+      time:new Date().toLocaleString('vi-VN'),
       status:'completed',admin:ADMIN_ACC,
       timestamp:firebase.database.ServerValue.TIMESTAMP
     });
   });
 }
+
+function renderCardHistory(data,filter){
+  const body=document.getElementById('cardHistoryBody'); if(!body)return;
+  let rows=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>['phone_card','garena_card'].includes(o.type));
+  if(filter&&filter!=='all') rows=rows.filter(o=>o.type===filter);
+  rows.sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+  body.innerHTML=rows.map(o=>`<tr onclick="openOrderDetail('${esc(o.id)}')" style="cursor:pointer"><td><b>${esc(o.user||'Khách')}</b></td><td>${esc(o.provider||o.package||(o.type==='garena_card'?'Thẻ Garena':'Thẻ điện thoại'))}</td><td>${fmt(o.price)}</td><td>${badge(o.status)}</td><td>${esc(o.time||when(o.timestamp))}</td><td><button class="btn btn-primary" onclick="event.stopPropagation();openOrderDetail('${esc(o.id)}')">Chi tiết</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Chưa có lịch sử nạp thẻ.</td></tr>';
+}
+function openOrderDetail(id){
+  const o=lastOrders[id]; if(!o)return;
+  const isCard=['phone_card','garena_card'].includes(o.type);
+  const type=o.type==='garena_card'?'Thẻ Garena':(o.type==='phone_card'?'Thẻ điện thoại':(o.game?'Nạp game':'Nạp ví / QR'));
+  document.getElementById('orderDetailContent').innerHTML=`<div><b>Tài khoản:</b> ${esc(o.user||'Khách')}</div><div><b>Tên đăng ký:</b> ${esc(o.displayName||'-')}</div><div><b>Loại giao dịch:</b> ${esc(type)}</div>${o.provider?`<div><b>Nhà mạng:</b> ${esc(o.provider)}</div>`:''}${o.game?`<div><b>Game:</b> ${esc(o.game)}</div><div><b>UID:</b> ${esc(o.gameUID||'-')}</div>`:''}<div><b>Mệnh giá:</b> ${fmt(o.price)}</div>${isCard?`<div style="margin-top:10px;padding:12px;background:#f8fafc;border:1px solid var(--line);border-radius:12px"><div><b>Seri:</b> <span style="user-select:text">${esc(o.seri||'-')}</span></div><div><b>Số thẻ / PIN đầy đủ:</b> <span style="font-family:monospace;user-select:text;word-break:break-all">${esc(o.pin||'-')}</span></div></div>`:''}${o.memo?`<div><b>Nội dung:</b> ${esc(o.memo)}</div>`:''}<div><b>Thời gian:</b> ${esc(o.time||when(o.timestamp))}</div><div><b>Trạng thái:</b> ${badge(o.status)}</div>${o.proofImage?`<div class="actions"><button class="btn btn-gray" onclick="closeOrderDetail();openProof('${esc(o.proofImage)}')">Xem ảnh xác nhận</button></div>`:''}`;
+  document.getElementById('orderDetailModal').classList.add('active');
+}
+function closeOrderDetail(){document.getElementById('orderDetailModal').classList.remove('active')}
+const _renderOrdersOriginal=renderOrders;
+renderOrders=function(data){
+  _renderOrdersOriginal(data);
+  renderCardHistory(lastOrders,'all');
+  document.querySelectorAll('#ordersBody tr').forEach(tr=>{
+    const btn=tr.querySelector('button.btn-gray');
+    if(btn && btn.textContent.includes('Xem chi tiết')) return;
+  });
+  document.querySelectorAll('#recent > div').forEach((el,i)=>{
+    el.style.cursor='pointer';
+    el.onclick=function(){const all=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));if(all[i])openOrderDetail(all[i].id)};
+  });
+};
 </script></body></html>
