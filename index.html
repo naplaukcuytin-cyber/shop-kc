@@ -1437,47 +1437,69 @@
     }
 
     function updateUI() {
-
       const balances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
-
       const profiles = JSON.parse(localStorage.getItem('sys_profiles') || '{}');
 
       if(currentUser) {
-
         document.getElementById('btnLogin').style.display = 'none';
-
         document.getElementById('userProfile').style.display = 'flex';
-
         document.getElementById('displayNameText').innerText = profiles[currentUser] || currentUser;
-
         document.getElementById('balanceText').innerText = (balances[currentUser] || 0).toLocaleString();
-
         document.getElementById('requireLoginNotice').style.display = 'none';
-
         document.getElementById('payForm').style.display = 'block';
 
+        // Số dư thật nằm trên Firebase, không dùng localStorage làm nguồn chính.
+        if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
+          const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
+          balanceRef.off('value');
+          balanceRef.on('value', snap => {
+            const balance = Number(snap.val()) || 0;
+            const localBalances = JSON.parse(localStorage.getItem('sys_balances') || '{}');
+            localBalances[currentUser] = balance;
+            localStorage.setItem('sys_balances', JSON.stringify(localBalances));
+            const el = document.getElementById('balanceText');
+            if(el) el.innerText = balance.toLocaleString();
+          }, err => console.error('Lỗi đọc số dư Firebase:', err));
+
+          // Realtime trạng thái đơn: khách sẽ biết ngay khi Admin duyệt/hủy.
+          const userOrdersRef = db.ref('orders').orderByChild('user').equalTo(currentUser);
+          userOrdersRef.off('value');
+          userOrdersRef.on('value', snap => {
+            const cards = JSON.parse(localStorage.getItem('sys_cards') || '[]');
+            const orders = snap.val() || {};
+            let changed = false;
+            Object.keys(orders).forEach(key => {
+              const order = orders[key];
+              const idx = cards.findIndex(c => c.firebaseOrderId === key || String(c.id) === String(key));
+              if(idx >= 0) {
+                const newStatus = order.status === 'approved' || order.status === 'success' ? 'success' : order.status;
+                if(cards[idx].status !== newStatus) { cards[idx].status = newStatus; changed = true; }
+              }
+            });
+            if(changed) localStorage.setItem('sys_cards', JSON.stringify(cards));
+
+            const latest = Object.values(orders).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0))[0];
+            if(latest && (latest.status === 'approved' || latest.status === 'success')) {
+              const marker = latest.id || latest.timestamp;
+              if(localStorage.getItem('last_customer_notice') !== String(marker)) {
+                localStorage.setItem('last_customer_notice', String(marker));
+                showPopup('success', 'NẠP TIỀN THÀNH CÔNG', 'Admin đã duyệt đơn nạp. Số dư của bạn đã được cập nhật!');
+              }
+            }
+          }, err => console.error('Lỗi đọc trạng thái đơn:', err));
+        }
       } else {
-
         document.getElementById('btnLogin').style.display = 'flex';
-
         document.getElementById('userProfile').style.display = 'none';
-
         document.getElementById('requireLoginNotice').style.display = 'block';
-
         document.getElementById('payForm').style.display = 'none';
-
       }
 
       const ann = localStorage.getItem('sys_announcement');
-
       if(ann) {
-
         document.getElementById('adminAnnouncement').innerText = ann;
-
         document.getElementById('admNoticeInput').value = ann;
-
       }
-
     }
 
     function openDepositModal(tab) {
@@ -1808,7 +1830,7 @@
         const balanceRef = db.ref('balances/' + encodeURIComponent(user));
         return balanceRef.transaction(current => (Number(current) || 0) + amount)
           .then(() => orderRef.update({
-            status: 'success',
+            status: 'approved',
             approvedAt: firebase.database.ServerValue.TIMESTAMP,
             approvedBy: ADMIN_ACC
           }))
@@ -1844,6 +1866,13 @@
       balances[u] = (balances[u] || 0) + amt;
 
       localStorage.setItem('sys_balances', JSON.stringify(balances));
+
+      if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
+        db.ref('balances/' + encodeURIComponent(u)).transaction(current => (Number(current) || 0) + amt)
+          .then(() => showPopup('success', 'THÀNH CÔNG', 'Đã cộng tiền vào số dư Firebase của khách!'))
+          .catch(err => showPopup('error', 'LỖI FIREBASE', err.message || 'Không thể cập nhật số dư!'));
+        return;
+      }
 
       showPopup('success', 'THÀNH CÔNG', `Đã cập nhật số dư cho ${u}!`);
 
