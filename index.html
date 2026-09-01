@@ -365,6 +365,25 @@
   firebase.initializeApp(firebaseConfig);
 
   const db = firebase.database();
+  // CMS trang chủ: đọc nội dung do Admin lưu trong Firebase
+  function applySiteConfig(cfg) {
+    if (!cfg) return;
+    if (cfg.siteTitle) document.title = cfg.siteTitle;
+    const ann = document.getElementById('adminAnnouncement');
+    if (ann && cfg.announcement) ann.textContent = cfg.announcement;
+    const event = document.querySelector('.slider-controls > div:first-child');
+    if (event && cfg.eventTitle) event.innerHTML = '<span style="color:#2e7d32;">🟢</span> ' + cfg.eventTitle.replace(/[&<>"\']/g, '');
+    const slides = document.querySelectorAll('#sliderTrack .slide-item img');
+    if (slides[0] && cfg.banner1) slides[0].src = cfg.banner1;
+    if (slides[1] && cfg.banner2) slides[1].src = cfg.banner2;
+    if (cfg.gameConfig && typeof cfg.gameConfig === 'object') {
+      Object.keys(cfg.gameConfig).forEach(k => gameConfig[k] = cfg.gameConfig[k]);
+      if (typeof renderPriceGrid === 'function') renderPriceGrid();
+    }
+    localStorage.setItem('sys_announcement', cfg.announcement || '');
+  }
+  db.ref('siteConfig').on('value', snap => applySiteConfig(snap.val() || {}));
+
 
 </script>
 
