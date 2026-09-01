@@ -1715,10 +1715,10 @@
 
         if(typeof db !== 'undefined' && db && typeof db.ref === 'function') {
 
-          // Firebase /balances là nguồn số dư duy nhất. Đồng bộ trực tiếp
-          // từ cả key đã encode và key cũ chưa encode để tương thích dữ liệu cũ.
-          const encodedBalanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
-          const rawBalanceRef = db.ref('balances/' + currentUser);
+          // Firebase /balances là nguồn số dư duy nhất.
+          // Đồng bộ realtime cả key chuẩn (encodeURIComponent) và key cũ.
+          let customerBalanceListener = null;
+          let customerBalanceRootListener = null;
           const updateCustomerBalanceUI = balance => {
             const safeBalance = normalizeCustomerBalanceValue(balance);
             try {
@@ -1730,31 +1730,50 @@
             if(el) el.innerText = safeBalance.toLocaleString('vi-VN');
           };
 
-          // Key chuẩn mà Admin hiện tại sử dụng.
+          const encodedKey = encodeURIComponent(currentUser);
+          const encodedBalanceRef = db.ref('balances/' + encodedKey);
+          const rawBalanceRef = db.ref('balances/' + currentUser);
+          let encodedExists = false;
+
+          // Ưu tiên key chuẩn mà Admin sử dụng.
           encodedBalanceRef.off('value');
           encodedBalanceRef.on('value', snap => {
-            const raw = snap.val();
-            // Nếu key chuẩn có dữ liệu thì luôn ưu tiên nó.
-            if(raw !== null && raw !== undefined) updateCustomerBalanceUI(raw);
+            encodedExists = snap.val() !== null && snap.val() !== undefined;
+            if(encodedExists) updateCustomerBalanceUI(snap.val());
           }, err => console.error('Lỗi đọc số dư Firebase:', err));
 
-          // Tương thích tài khoản được tạo bởi bản cũ.
-          if(currentUser !== encodeURIComponent(currentUser)) {
+          // Tương thích dữ liệu cũ chưa encode.
+          if(currentUser !== encodedKey) {
             rawBalanceRef.off('value');
             rawBalanceRef.on('value', snap => {
-              // Chỉ dùng key cũ khi key chuẩn chưa tồn tại.
-              encodedBalanceRef.once('value').then(es => {
-                if(es.val() === null || es.val() === undefined) updateCustomerBalanceUI(snap.val());
-              }).catch(()=>{});
+              if(!encodedExists) updateCustomerBalanceUI(snap.val());
             }, err => console.warn('Lỗi đọc số dư key cũ:', err));
           }
 
-          // Đọc một lần ngay khi mở/đăng nhập để không phải chờ event listener.
+          // Root listener làm lớp dự phòng: nếu dữ liệu đang nằm ở key cũ,
+          // khách vẫn cập nhật ngay khi Admin thay đổi số dư.
+          db.ref('balances').off('value');
+          db.ref('balances').on('value', snap => {
+            const all = snap.val() || {};
+            if(Object.prototype.hasOwnProperty.call(all, encodedKey)) {
+              updateCustomerBalanceUI(all[encodedKey]);
+              return;
+            }
+            if(Object.prototype.hasOwnProperty.call(all, currentUser)) {
+              updateCustomerBalanceUI(all[currentUser]);
+              return;
+            }
+            // Một số bản cũ lưu username dưới key đã encode một phần.
+            const found = Object.keys(all).find(k => {
+              try { return decodeURIComponent(k) === currentUser; } catch(e) { return false; }
+            });
+            if(found) updateCustomerBalanceUI(all[found]);
+          }, err => console.warn('Lỗi đồng bộ balances:', err));
+
+          // Đọc ngay khi đăng nhập.
           encodedBalanceRef.once('value').then(snap => {
             if(snap.val() !== null && snap.val() !== undefined) updateCustomerBalanceUI(snap.val());
-            else if(currentUser !== encodeURIComponent(currentUser)) {
-              return rawBalanceRef.once('value').then(rs => updateCustomerBalanceUI(rs.val()));
-            }
+            else if(currentUser !== encodedKey) return rawBalanceRef.once('value').then(rs => updateCustomerBalanceUI(rs.val()));
           }).catch(err => console.error('Lỗi lấy số dư ban đầu:', err));
 
           // Realtime trạng thái đơn: khách sẽ biết ngay khi Admin duyệt/hủy.
@@ -2335,18 +2354,27 @@
         return;
       }
 
-      const balanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
+      const encodedBalanceRef = db.ref('balances/' + encodeURIComponent(currentUser));
+      const rawBalanceRef = db.ref('balances/' + currentUser);
       const btn = document.getElementById('gamePagePayBtn');
       const processing = document.getElementById('processingArea');
       if(btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
       if(processing) processing.style.display = 'block';
 
-      // Trừ tiền bằng Firebase transaction nguyên tử. Firebase là nguồn số dư duy nhất;
-      // localStorage chỉ dùng làm cache hiển thị, không được dùng để ghi đè số dư máy chủ.
+      function resolveBalanceRef() {
+        return encodedBalanceRef.once('value').then(es => {
+          if(es.val() !== null && es.val() !== undefined) return encodedBalanceRef;
+          if(currentUser !== encodeURIComponent(currentUser)) {
+            return rawBalanceRef.once('value').then(rs => rs.val() !== null && rs.val() !== undefined ? rawBalanceRef : encodedBalanceRef);
+          }
+          return encodedBalanceRef;
+        });
+      }
+
       function spendBalance() {
-        return balanceRef.transaction(raw=>{
+        return resolveBalanceRef().then(balanceRef => balanceRef.transaction(raw=>{
           const current=normalizeCustomerBalanceValue(raw);
-          if(current<price) return;
+          if(current < price) return;
           return current-price;
         }).then(result=>{
           const actual=normalizeCustomerBalanceValue(result && result.snapshot ? result.snapshot.val() : null);
@@ -2364,7 +2392,7 @@
             }
             return verified;
           });
-        });
+        }));
       }
 
       let spentBalance = null;
