@@ -2312,12 +2312,32 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
       btn.style.opacity = '0.6';
       if(processing) processing.style.display = 'block';
 
-      balanceRef.transaction(current => {
-        const balance = Number(current) || 0;
-        if(balance < price) return;
-        return balance - price;
+      // Đọc số dư hiện tại trước khi giao dịch để tránh trường hợp Firebase
+      // transaction dùng giá trị cache cũ (khi Admin vừa cộng tiền realtime).
+      // Sau đó transaction lại một lần nếu lần đầu bị hủy do cache chưa đồng bộ.
+      const spendBalance = () => balanceRef.once('value').then(snap => {
+        const currentBalance = Number(snap.val()) || 0;
+        if(currentBalance < price) {
+          const err = new Error('INSUFFICIENT_BALANCE');
+          err.currentBalance = currentBalance;
+          throw err;
+        }
+        return balanceRef.transaction(current => {
+          const balance = Number(current) || 0;
+          if(balance < price) return;
+          return balance - price;
+        });
+      });
+
+      spendBalance().then(result => {
+        if(result.committed) return result;
+        // Firebase có thể trả về committed=false khi client vừa nhận dữ liệu
+        // mới từ server. Đọc lại số dư rồi thử transaction thêm đúng 1 lần.
+        return spendBalance().then(retry => {
+          if(!retry.committed) throw new Error('INSUFFICIENT_BALANCE');
+          return retry;
+        });
       }).then(result => {
-        if(!result.committed) throw new Error('INSUFFICIENT_BALANCE');
 
         const orderRef = db.ref('orders').push();
         return orderRef.set({
@@ -2344,8 +2364,11 @@ Số tiền ${amount > 0 ? 'cộng' : 'trừ'}: ${amount > 0 ? '+' : '-'}${Math.
       }).catch(err => {
         console.error('Lỗi thanh toán game:', err);
         if(err && err.message === 'INSUFFICIENT_BALANCE') {
-          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', 'Tài khoản không đủ tiền, vui lòng nạp thêm!');
-          openDepositModal('qr');
+          const actual = Number(err.currentBalance);
+          const detail = Number.isFinite(actual)
+            ? `Số dư thực tế hiện tại: ${actual.toLocaleString('vi-VN')}đ. Số tiền cần thanh toán: ${price.toLocaleString('vi-VN')}đ.`
+            : 'Vui lòng tải lại trang để đồng bộ số dư rồi thử lại.';
+          showPopup('error', 'SỐ DƯ KHÔNG ĐỦ', detail);
         } else {
           showPopup('error', 'THANH TOÁN THẤT BẠI',
             err.message || 'Không thể tạo đơn. Số dư chưa được trừ.');
