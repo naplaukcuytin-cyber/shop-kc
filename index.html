@@ -944,7 +944,16 @@
         <div class="game-unit-note" id="gameUnitNote">Đơn vị nhận: Kim Cương</div>
         <div class="form-group">
           <label>Nhập ID Game / UID</label>
-          <input type="text" class="form-control" id="gamePageUID" placeholder="Nhập ID Game của bạn">
+       <input
+  type="text"
+  class="form-control"
+  id="gamePageUID"
+  placeholder="Nhập ID Game của bạn (tối thiểu 9 số)"
+  inputmode="numeric"
+  autocomplete="off"
+  maxlength="20"
+  oninput="this.value=this.value.replace(/\D/g,'')"
+>
         </div>
         <label style="font-size:.85rem;font-weight:600;">Chọn gói nạp</label>
         <div class="price-grid" id="gamePagePriceGrid"></div>
@@ -1050,7 +1059,17 @@ Chính sách bảo mật
 
           <label>Nhập Số Tiền Cần Nạp (VNĐ)</label>
 
-          <input type="number" class="form-control" id="qrAmount" value="50000" min="20000" max="10000000">
+     <input
+  type="text"
+  class="form-control"
+  id="qrAmount"
+  value="50000"
+  min="20000"
+  max="10000000"
+  inputmode="numeric"
+  autocomplete="off"
+  oninput="this.value=this.value.replace(/\D/g,'')"
+>
           <div class="qr-warning">⚠️ Mức nạp: tối thiểu 20.000đ • tối đa 10.000.000đ. Chuyển đúng số tiền và đúng nội dung hiển thị.</div>
 
         </div>
@@ -1567,7 +1586,26 @@ function openGameTopupPage(gameName){
       const title=document.getElementById('gamePageTitle'); if(title) title.innerText='NẠP '+String(gameName).toUpperCase();
       const sub=document.getElementById('gamePageSub'); if(sub) sub.innerText='Chọn gói '+gameUnit(gameName)+' bên dưới';
       const note=document.getElementById('gameUnitNote'); if(note) note.innerText='Đơn vị nhận: '+gameUnit(gameName);
-      const uid=document.getElementById('gamePageUID'); if(uid && !uid.value) uid.value='';
+      const minimumUidLengthByGame = {
+  'Free Fire': 8,
+  'Liên Quân Mobile': 9,
+  'FC Mobile VN': 9,
+  'FC Online (VN)': 9,
+  'FC Online M (VN)': 9,
+  'Delta Force': 9,
+  'Nạp Sò': 9,
+  'Cái thế tranh hùng': 9
+};
+
+const uid = document.getElementById('gamePageUID');
+const minimumUidLength = minimumUidLengthByGame[gameName] || 9;
+
+if (uid) {
+  uid.value = '';
+  uid.minLength = minimumUidLength;
+  uid.placeholder =
+    'Nhập ID Game của bạn (tối thiểu ' + minimumUidLength + ' số)';
+}
       renderGamePagePrices();
       window.scrollTo({top:0,behavior:'smooth'});
     }
@@ -1597,7 +1635,63 @@ function openGameTopupPage(gameName){
       selectedPriceObj={price:Number(price),label:String(label)};
     }
 
-    function confirmGamePagePurchase(){
+    function confirmGamePagePurchase() {
+  const uid = (document.getElementById('gamePageUID')?.value || '').trim();
+
+  const minimumUidLengthByGame = {
+    'Free Fire': 9,
+    'Liên Quân Mobile': 9,
+    'FC Mobile VN': 9,
+    'FC Online (VN)': 9,
+    'FC Online M (VN)': 9,
+    'Delta Force': 9,
+    'Nạp Sò': 9,
+    'Cái thế tranh hùng': 9
+  };
+
+  const minimumUidLength = minimumUidLengthByGame[selectedGame] || 9;
+
+  if (!uid) {
+    showPopup(
+      'error',
+      'THIẾU ID GAME',
+      'Vui lòng nhập ID Game / UID.'
+    );
+    return;
+  }
+
+  if (!/^\d+$/.test(uid)) {
+    showPopup(
+      'error',
+      'ID KHÔNG HỢP LỆ',
+      'ID Game / UID chỉ được chứa chữ số.'
+    );
+    document.getElementById('gamePageUID')?.focus();
+    return;
+  }
+
+  if (uid.length < minimumUidLength) {
+    showPopup(
+      'error',
+      'ID QUÁ NGẮN',
+      'ID Game / UID của ' + selectedGame +
+      ' cần tối thiểu ' + minimumUidLength + ' chữ số.'
+    );
+    document.getElementById('gamePageUID')?.focus();
+    return;
+  }
+
+  if (!selectedPriceObj) {
+    showPopup(
+      'error',
+      'CHƯA CHỌN GÓI',
+      'Vui lòng chọn một gói nạp.'
+    );
+    return;
+  }
+
+  confirmPurchase();
+}
       const uid=(document.getElementById('gamePageUID')?.value||'').trim();
       if(!uid){showPopup('error','THIẾU ID GAME','Vui lòng nhập ID Game / UID.');return;}
       if(!selectedPriceObj){showPopup('error','CHƯA CHỌN GÓI','Vui lòng chọn một gói nạp.');return;}
