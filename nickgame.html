@@ -1,0 +1,2012 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nick Game - SHOP KC</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 30px));
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header-inner {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .logo {
+            text-decoration: none;
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #6366f1;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #dbe0e8;
+            border-radius: 12px;
+            padding: 0 45px 0 15px;
+            outline: none;
+            background: #f8fafc;
+            transition: .2s;
+        }
+
+        .search-box input:focus {
+            border-color: #6366f1;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 12px;
+            color: #6b7280;
+        }
+
+        .header-btn {
+            height: 42px;
+            padding: 0 16px;
+            border-radius: 11px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .header-btn.primary {
+            border: none;
+            color: white;
+            background: #6366f1;
+        }
+
+        /* HERO */
+
+        .hero {
+            margin-top: 25px;
+            padding: 38px 25px;
+            border-radius: 22px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827 0%,
+                    #312e81 48%,
+                    #7c3aed 100%
+                );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero:before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.07);
+            top: -160px;
+            right: -50px;
+        }
+
+        .hero:after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.05);
+            bottom: -130px;
+            left: -70px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: clamp(28px, 5vw, 46px);
+            font-weight: 900;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 700px;
+            line-height: 1.7;
+            color: rgba(255,255,255,.85);
+        }
+
+        /* FILTER */
+
+        .filter-bar {
+            margin-top: 25px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            border: 1px solid #e5e7eb;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            color: white;
+            border-color: #6366f1;
+            background: #6366f1;
+        }
+
+        /* PRODUCTS */
+
+        .section-head {
+            margin-top: 30px;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .section-head p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .product-grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fill, minmax(250px, 1fr));
+            gap: 18px;
+            padding-bottom: 50px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0,0,0,.04);
+            transition: .2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.08);
+        }
+
+        .product-image {
+            height: 180px;
+            background: #eef2ff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+        }
+
+        .game-tag {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            padding: 6px 9px;
+            border-radius: 8px;
+            background: rgba(17,24,39,.82);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .product-body {
+            padding: 16px;
+        }
+
+        .product-name {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        .product-desc {
+            min-height: 42px;
+            margin: 8px 0;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 13px;
+        }
+
+        .price {
+            color: #ef4444;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .buy-btn {
+            border: 0;
+            color: white;
+            background: #6366f1;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .buy-btn:hover {
+            background: #4f46e5;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            background: white;
+            border: 1px dashed #d1d5db;
+            border-radius: 16px;
+            padding: 55px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+
+        /* MODAL */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.62);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(480px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,.25);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .close-btn {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 9px;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-product {
+            display: flex;
+            gap: 14px;
+            padding: 13px;
+            border-radius: 13px;
+            background: #f8fafc;
+            margin-bottom: 18px;
+        }
+
+        .modal-product img {
+            width: 75px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 9px;
+        }
+
+        .modal-product-info {
+            flex: 1;
+        }
+
+        .modal-product-name {
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .modal-product-price {
+            color: #ef4444;
+            font-weight: 900;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 45px;
+            padding: 0 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 47px;
+            border: 0;
+            border-radius: 11px;
+            color: white;
+            background: #6366f1;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .submit-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .note {
+            margin-top: 12px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #6b7280;
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 5000;
+            background: #111827;
+            color: white;
+            padding: 13px 17px;
+            border-radius: 11px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: .25s;
+            font-size: 14px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 10px;
+            padding: 35px 20px 80px;
+            background: #111827;
+            color: #d1d5db;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        footer h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        footer p {
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: min(100% - 20px, 1180px);
+            }
+
+            .header-inner {
+                min-height: 62px;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .header-btn.login {
+                display: none;
+            }
+
+            .hero {
+                margin-top: 15px;
+                padding: 30px 20px;
+            }
+
+            .hero h1 {
+                font-size: 31px;
+            }
+
+            .product-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0,1fr));
+                gap: 10px;
+            }
+
+            .product-image {
+                height: 125px;
+            }
+
+            .product-body {
+                padding: 11px;
+            }
+
+            .product-name {
+                font-size: 14px;
+            }
+
+            .product-desc {
+                font-size: 11px;
+                min-height: 35px;
+            }
+
+            .price {
+                font-size: 14px;
+            }
+
+            .buy-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .section-head h2 {
+                font-size: 21px;
+            }
+
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 2000;
+                height: 64px;
+                background: rgba(255,255,255,.97);
+                border-top: 1px solid #e5e7eb;
+                justify-content: space-around;
+                box-shadow: 0 -5px 20px rgba(0,0,0,.06);
+            }
+
+            .mobile-nav a {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                text-decoration: none;
+                gap: 4px;
+                font-size: 10px;
+                color: #6b7280;
+                font-weight: 700;
+            }
+
+            .mobile-nav a.active {
+                color: #6366f1;
+            }
+
+            .mobile-nav svg {
+                width: 20px;
+                height: 20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            SHOP <span>KC</span>
+        </a>
+
+        <div class="search-box">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Tìm nick game..."
+                autocomplete="off"
+            >
+
+            <div class="search-icon">
+
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+
+            </div>
+
+        </div>
+
+        <button
+            class="header-btn login"
+            onclick="showLoginInfo()"
+        >
+            Đăng nhập
+        </button>
+
+        <button
+            class="header-btn primary"
+            onclick="showDepositInfo()"
+        >
+            Nạp tiền
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>🎮 NICK GAME</h1>
+
+            <p>
+                Kho nick game cập nhật liên tục.
+                Chọn nick bạn thích và đặt mua nhanh chóng.
+                Sản phẩm được quản lý trực tiếp trên hệ thống SHOP KC.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FILTER -->
+
+    <div class="filter-bar">
+
+        <button
+            class="filter-btn active"
+            data-game="all"
+            onclick="setGameFilter('all', this)"
+        >
+            Tất cả
+        </button>
+
+        <button
+            class="filter-btn"
+            data-game="Free Fire"
+            onclick="setGameFilter('Free Fire', this)"
+        >
+            🔥 Free Fire
+        </button>
+
+        <button
+            class="filter-btn"
+            data-game="Liên Quân"
+            onclick="setGameFilter('Liên Quân', this)"
+        >
+            ⚔️ Liên Quân
+        </button>
+
+        <button
+            class="filter-btn"
+            data-game="PUBG"
+            onclick="setGameFilter('PUBG', this)"
+        >
+            🔫 PUBG
+        </button>
+
+        <button
+            class="filter-btn"
+            data-game="Khác"
+            onclick="setGameFilter('Khác', this)"
+        >
+            🎮 Game khác
+        </button>
+
+    </div>
+
+
+    <!-- TITLE -->
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>Danh sách Nick Game</h2>
+
+            <p id="productCount">
+                Đang tải sản phẩm...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+
+    <div
+        id="productGrid"
+        class="product-grid"
+    >
+
+        <div class="loading">
+            ⏳ Đang tải danh sách nick...
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <h3>SHOP KC</h3>
+
+            <p>
+                Hệ thống mua bán Nick Game
+                và sản phẩm game trực tuyến.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3>Sản phẩm</h3>
+
+            <p>
+                Nick Free Fire
+            </p>
+
+            <p>
+                Nick Liên Quân
+            </p>
+
+            <p>
+                Nick PUBG
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3>Hỗ trợ</h3>
+
+            <p>
+                Mọi đơn hàng được ghi nhận
+                trên hệ thống để quản trị viên
+                xử lý.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+
+    <a
+        href="index.html"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+
+        Trang chủ
+
+    </a>
+
+    <a
+        href="nickgame.html"
+        class="active"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+            <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+            <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+            <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+        </svg>
+
+        Nick Game
+
+    </a>
+
+    <a
+        href="#"
+        onclick="showDepositInfo(); return false;"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M12 2v20"></path>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+
+        Nạp tiền
+
+    </a>
+
+    <a
+        href="#"
+        onclick="showLoginInfo(); return false;"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+
+        Tài khoản
+
+    </a>
+
+</nav>
+
+
+<!-- BUY MODAL -->
+
+<div
+    id="buyModal"
+    class="modal-overlay"
+    onclick="closeModalOutside(event)"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Đặt mua Nick</h3>
+
+            <button
+                class="close-btn"
+                onclick="closeBuyModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div
+                id="selectedProduct"
+                class="modal-product"
+            >
+            </div>
+
+
+            <form
+                id="buyForm"
+                onsubmit="submitOrder(event)"
+            >
+
+                <div class="form-group">
+
+                    <label>
+                        Tài khoản / Email
+                    </label>
+
+                    <input
+                        id="buyerContact"
+                        type="text"
+                        placeholder="Nhập tài khoản hoặc email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Số điện thoại
+                    </label>
+
+                    <input
+                        id="buyerPhone"
+                        type="tel"
+                        placeholder="Nhập số điện thoại"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Ghi chú
+                    </label>
+
+                    <input
+                        id="buyerNote"
+                        type="text"
+                        placeholder="Ghi chú nếu có"
+                    >
+
+                </div>
+
+
+                <button
+                    id="submitOrderBtn"
+                    class="submit-btn"
+                    type="submit"
+                >
+                    XÁC NHẬN ĐẶT MUA
+                </button>
+
+            </form>
+
+
+            <div class="note">
+
+                Sau khi gửi đơn, quản trị viên sẽ kiểm tra
+                và xử lý đơn hàng. Không nhập mật khẩu
+                tài khoản game vào biểu mẫu này.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script>
+
+    /* =====================================
+       FIREBASE CONFIG
+    ===================================== */
+
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
+
+        authDomain:
+            "shop-kc.firebaseapp.com",
+
+        projectId:
+            "shop-kc",
+
+        storageBucket:
+            "shop-kc.firebasestorage.app",
+
+        messagingSenderId:
+            "1073242689799",
+
+        appId:
+            "1:1073242689799:web:41d0dc7795eb74a93df5a2",
+
+        measurementId:
+            "G-Q9VN7NZHR0",
+
+        databaseURL:
+            "https://shop-kc-default-rtdb.firebaseio.com"
+
+    };
+
+
+    /* =====================================
+       INIT FIREBASE
+    ===================================== */
+
+    let db = null;
+
+    try {
+
+        if (!firebase.apps.length) {
+
+            firebase.initializeApp(
+                firebaseConfig
+            );
+
+        }
+
+        db =
+            firebase.database();
+
+    } catch (error) {
+
+        console.error(
+            "Firebase error:",
+            error
+        );
+
+    }
+
+
+    /* =====================================
+       DATA
+    ===================================== */
+
+    let products = [];
+
+    let currentFilter = "all";
+
+    let selectedProduct = null;
+
+
+    /* =====================================
+       FORMAT MONEY
+    ===================================== */
+
+    function formatMoney(value) {
+
+        const number =
+            Number(value) || 0;
+
+        return number.toLocaleString(
+            "vi-VN"
+        ) + "₫";
+
+    }
+
+
+    /* =====================================
+       ESCAPE HTML
+    ===================================== */
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================
+       LOAD PRODUCTS REALTIME
+    ===================================== */
+
+    function startRealtimeProducts() {
+
+        if (!db) {
+
+            showEmpty(
+                "Không thể kết nối Firebase."
+            );
+
+            return;
+
+        }
+
+
+        db.ref("products").on(
+
+            "value",
+
+            snapshot => {
+
+                const data =
+                    snapshot.val() || {};
+
+                products = [];
+
+
+                Object.keys(data)
+                    .forEach(key => {
+
+                        const item =
+                            data[key];
+
+                        if (!item)
+                            return;
+
+
+                        if (
+                            item.hidden === true ||
+                            item.active === false
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        products.push({
+
+                            id: key,
+
+                            ...item
+
+                        });
+
+                    });
+
+
+                products.sort(
+                    (a,b) =>
+                        Number(
+                            b.createdAt || 0
+                        ) -
+                        Number(
+                            a.createdAt || 0
+                        )
+                );
+
+
+                renderProducts();
+
+            },
+
+            error => {
+
+                console.error(
+                    error
+                );
+
+                showEmpty(
+                    "Không thể tải danh sách sản phẩm."
+                );
+
+            }
+
+        );
+
+    }
+
+
+    /* =====================================
+       FILTER
+    ===================================== */
+
+    function setGameFilter(
+        game,
+        button
+    ) {
+
+        currentFilter =
+            game;
+
+
+        document
+            .querySelectorAll(
+                ".filter-btn"
+            )
+            .forEach(
+                btn =>
+                    btn.classList.remove(
+                        "active"
+                    )
+            );
+
+
+        if (button) {
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        renderProducts();
+
+    }
+
+
+    /* =====================================
+       GET FILTERED PRODUCTS
+    ===================================== */
+
+    function getFilteredProducts() {
+
+        const keyword =
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                .value
+                .trim()
+                .toLowerCase();
+
+
+        return products.filter(
+            product => {
+
+                const game =
+                    String(
+                        product.game ||
+                        "Khác"
+                    );
+
+
+                const matchesGame =
+                    currentFilter ===
+                    "all" ||
+                    game ===
+                    currentFilter;
+
+
+                const text =
+                    (
+                        String(
+                            product.name ||
+                            ""
+                        ) +
+                        " " +
+                        String(
+                            product.description ||
+                            ""
+                        ) +
+                        " " +
+                        game
+                    )
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    !keyword ||
+                    text.includes(
+                        keyword
+                    );
+
+
+                return (
+                    matchesGame &&
+                    matchesSearch
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
+       RENDER PRODUCTS
+    ===================================== */
+
+    function renderProducts() {
+
+        const grid =
+            document.getElementById(
+                "productGrid"
+            );
+
+        const count =
+            document.getElementById(
+                "productCount"
+            );
+
+
+        const list =
+            getFilteredProducts();
+
+
+        count.textContent =
+            `${list.length} sản phẩm`;
+
+
+        if (!list.length) {
+
+            showEmpty(
+                "Không tìm thấy sản phẩm phù hợp."
+            );
+
+            return;
+
+        }
+
+
+        grid.innerHTML =
+            list
+                .map(
+                    product =>
+                        createProductCard(
+                            product
+                        )
+                )
+                .join("");
+
+    }
+
+
+    /* =====================================
+       PRODUCT CARD
+    ===================================== */
+
+    function createProductCard(
+        product
+    ) {
+
+        const image =
+            product.image ||
+            product.thumbnail ||
+            "";
+
+
+        const game =
+            product.game ||
+            "Khác";
+
+
+        const name =
+            product.name ||
+            "Nick Game";
+
+
+        const description =
+            product.description ||
+            "Nick game đang được mở bán.";
+
+
+        const price =
+            formatMoney(
+                product.price
+            );
+
+
+        let imageHtml;
+
+
+        if (image) {
+
+            imageHtml = `
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(name)}"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div
+                    class="image-placeholder"
+                    style="display:none"
+                >
+                    🎮
+                </div>
+            `;
+
+        } else {
+
+            imageHtml = `
+                <div class="image-placeholder">
+                    🎮
+                </div>
+            `;
+
+        }
+
+
+        return `
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    ${imageHtml}
+
+                    <span class="game-tag">
+                        ${escapeHtml(game)}
+                    </span>
+
+                </div>
+
+
+                <div class="product-body">
+
+                    <h3 class="product-name">
+                        ${escapeHtml(name)}
+                    </h3>
+
+                    <div class="product-desc">
+                        ${escapeHtml(description)}
+                    </div>
+
+
+                    <div class="product-bottom">
+
+                        <div class="price">
+                            ${price}
+                        </div>
+
+                        <button
+                            class="buy-btn"
+                            onclick="
+                                openBuyModal('${escapeHtml(product.id)}')
+                            "
+                        >
+                            MUA NGAY
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    /* =====================================
+       EMPTY
+    ===================================== */
+
+    function showEmpty(
+        message
+    ) {
+
+        const grid =
+            document.getElementById(
+                "productGrid"
+            );
+
+        grid.innerHTML = `
+
+            <div class="empty">
+
+                <div
+                    style="
+                    font-size:42px;
+                    margin-bottom:10px;
+                    "
+                >
+                    📦
+                </div>
+
+                ${escapeHtml(message)}
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =====================================
+       OPEN BUY MODAL
+    ===================================== */
+
+    function openBuyModal(
+        productId
+    ) {
+
+        selectedProduct =
+            products.find(
+                p =>
+                    String(p.id) ===
+                    String(productId)
+            );
+
+
+        if (!selectedProduct) {
+
+            showToast(
+                "Không tìm thấy sản phẩm."
+            );
+
+            return;
+
+        }
+
+
+        const image =
+            selectedProduct.image ||
+            selectedProduct.thumbnail ||
+            "";
+
+
+        const imageHtml =
+            image
+
+                ? `
+                    <img
+                        src="${escapeHtml(image)}"
+                        alt=""
+                    >
+                `
+
+                : `
+                    <div
+                        style="
+                        width:75px;
+                        height:60px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:#eef2ff;
+                        border-radius:9px;
+                        font-size:25px;
+                        "
+                    >
+                        🎮
+                    </div>
+                `;
+
+
+        document.getElementById(
+            "selectedProduct"
+        ).innerHTML = `
+
+            ${imageHtml}
+
+            <div class="modal-product-info">
+
+                <div class="modal-product-name">
+                    ${escapeHtml(
+                        selectedProduct.name ||
+                        "Nick Game"
+                    )}
+                </div>
+
+                <div class="modal-product-price">
+                    ${formatMoney(
+                        selectedProduct.price
+                    )}
+                </div>
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "buyerContact"
+        ).value = "";
+
+
+        document.getElementById(
+            "buyerPhone"
+        ).value = "";
+
+
+        document.getElementById(
+            "buyerNote"
+        ).value = "";
+
+
+        document
+            .getElementById(
+                "buyModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+    }
+
+
+    /* =====================================
+       CLOSE MODAL
+    ===================================== */
+
+    function closeBuyModal() {
+
+        document
+            .getElementById(
+                "buyModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+
+        selectedProduct = null;
+
+    }
+
+
+    function closeModalOutside(
+        event
+    ) {
+
+        if (
+            event.target.id ===
+            "buyModal"
+        ) {
+
+            closeBuyModal();
+
+        }
+
+    }
+
+
+    /* =====================================
+       SUBMIT ORDER
+    ===================================== */
+
+    async function submitOrder(
+        event
+    ) {
+
+        event.preventDefault();
+
+
+        if (!selectedProduct) {
+
+            showToast(
+                "Chưa chọn sản phẩm."
+            );
+
+            return;
+
+        }
+
+
+        if (!db) {
+
+            showToast(
+                "Firebase chưa kết nối."
+            );
+
+            return;
+
+        }
+
+
+        const contact =
+            document
+                .getElementById(
+                    "buyerContact"
+                )
+                .value
+                .trim();
+
+
+        const phone =
+            document
+                .getElementById(
+                    "buyerPhone"
+                )
+                .value
+                .trim();
+
+
+        const note =
+            document
+                .getElementById(
+                    "buyerNote"
+                )
+                .value
+                .trim();
+
+
+        if (!contact || !phone) {
+
+            showToast(
+                "Vui lòng nhập đầy đủ thông tin."
+            );
+
+            return;
+
+        }
+
+
+        const btn =
+            document.getElementById(
+                "submitOrderBtn"
+            );
+
+
+        btn.disabled = true;
+
+        btn.textContent =
+            "ĐANG GỬI ĐƠN...";
+
+
+        try {
+
+            const orderRef =
+                db
+                    .ref("nickOrders")
+                    .push();
+
+
+            const order = {
+
+                productId:
+                    selectedProduct.id,
+
+                productName:
+                    selectedProduct.name ||
+                    "Nick Game",
+
+                game:
+                    selectedProduct.game ||
+                    "Khác",
+
+                price:
+                    Number(
+                        selectedProduct.price
+                    ) || 0,
+
+                image:
+                    selectedProduct.image ||
+                    selectedProduct.thumbnail ||
+                    "",
+
+                buyerContact:
+                    contact,
+
+                buyerPhone:
+                    phone,
+
+                note:
+                    note,
+
+                status:
+                    "pending",
+
+                createdAt:
+                    firebase
+                        .database
+                        .ServerValue
+                        .TIMESTAMP
+
+            };
+
+
+            await orderRef.set(
+                order
+            );
+
+
+            closeBuyModal();
+
+
+            showToast(
+                "Đã gửi đơn mua thành công!"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            showToast(
+                "Gửi đơn thất bại. Vui lòng thử lại."
+            );
+
+        }
+
+
+        btn.disabled = false;
+
+        btn.textContent =
+            "XÁC NHẬN ĐẶT MUA";
+
+    }
+
+
+    /* =====================================
+       SEARCH
+    ===================================== */
+
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .addEventListener(
+            "input",
+            renderProducts
+        );
+
+
+    /* =====================================
+       LOGIN INFO
+    ===================================== */
+
+    function showLoginInfo() {
+
+        alert(
+            "Chức năng tài khoản đang được hoàn thiện.\n\n" +
+            "Bạn có thể liên hệ quản trị viên để được hỗ trợ."
+        );
+
+    }
+
+
+    /* =====================================
+       DEPOSIT INFO
+    ===================================== */
+
+    function showDepositInfo() {
+
+        alert(
+            "Để nạp tiền, vui lòng liên hệ quản trị viên hoặc sử dụng phương thức nạp tiền được cung cấp trên trang chủ."
+        );
+
+    }
+
+
+    /* =====================================
+       TOAST
+    ===================================== */
+
+    let toastTimer;
+
+
+    function showToast(
+        message
+    ) {
+
+        const toast =
+            document.getElementById(
+                "toast"
+            );
+
+
+        toast.textContent =
+            message;
+
+
+        toast.classList.add(
+            "show"
+        );
+
+
+        clearTimeout(
+            toastTimer
+        );
+
+
+        toastTimer =
+            setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                3000
+            );
+
+    }
+
+
+    /* =====================================
+       ESC KEY
+    ===================================== */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeBuyModal();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================
+       START
+    ===================================== */
+
+    startRealtimeProducts();
+
+</script>
+
+</body>
+</html>
