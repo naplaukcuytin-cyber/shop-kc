@@ -1,15 +1,28 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Admin • Shop KC</title>
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><title>Admin • Shop KC</title>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e6eaf0;--green:#159957;--red:#df3f4a;--orange:#f59e0b;--purple:#7c3aed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:14px}.top{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1200px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;white-space:nowrap}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-orange{background:#fff1d6;color:#9a6100}.btn-purple{background:#eee5ff;color:#6230b0}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}.stat{background:#f8fafc;border-radius:12px;padding:14px}.stat b{font-size:23px}.muted{color:var(--muted);font-size:12px}.table{overflow:auto}table{width:100%;min-width:980px;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{font-size:11px;color:var(--muted)}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:11px;font-weight:800}.pending{background:#fff2cc;color:#946200}.processing{background:#e7f1ff;color:#075db5}.approved{background:#dcf8e8;color:#08733e}.rejected{background:#ffe4e5;color:#a91e24}.completed{background:#dcf8e8;color:#08733e}.notice{padding:11px;border-radius:10px;background:#fff8df;color:#806300;font-size:12px}.danger-note{padding:11px;border-radius:10px;background:#ffecee;color:#9e2731;font-size:12px}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.mini-grid{grid-template-columns:1fr}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.active{display:flex}.modal-box{background:#fff;border-radius:16px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:18px}.proof{max-width:180px;max-height:180px;border-radius:10px;border:1px solid var(--line);display:block;margin-top:8px}.search{max-width:360px}.top-actions{display:flex;gap:8px;align-items:center}
 .customer-row-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.live-balance{font-size:16px;font-weight:900;color:#159957}.balance-tools{display:inline-flex;gap:5px;margin-left:8px}.btn-xs{padding:6px 8px!important;font-size:11px}.fraud-panel{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}.notice-ok{background:#e9fff2;color:#08733e;padding:10px;border-radius:10px;font-size:12px}.notice-warn{background:#fff0f1;color:#a91e24;padding:10px;border-radius:10px;font-size:12px}@keyframes adminLedPreview{from{background-position:100% 0}to{background-position:-100% 0}} 
-#adminGate{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#111827,#0f172a);display:flex;align-items:center;justify-content:center;padding:20px;}#adminGate .gate-box{width:min(460px,100%);background:#fff;border-radius:20px;padding:24px;box-shadow:0 25px 70px rgba(0,0,0,.35)}#adminGate h2{margin:0 0 8px;font-size:25px}#adminGate p{color:#697386;font-size:13px;line-height:1.5}#adminGate input{margin-top:8px}#adminGate .gate-msg{min-height:22px;color:#df3f4a;font-weight:800;font-size:12px;margin:8px 0}
-.game-reward-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}@media(max-width:650px){.game-reward-form{grid-template-columns:1fr}}
-</style></head><body><div id="adminGate"><div class="gate-box"><h2>🔐 Đăng nhập Admin</h2><p>Trang quản trị chỉ mở cho tài khoản Firebase có <b>role = admin</b> trong <b>userProfiles/{UID}</b>.</p><label>Tài khoản Admin</label><input id="adminUsername" autocomplete="username" placeholder="Tài khoản Admin"><label>Mật khẩu</label><div style="position:relative"><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Mật khẩu" style="padding-right:50px"><button type="button" onclick="toggleAdminPassword(this)" style="position:absolute;right:8px;top:8px;width:38px;height:38px;border:0;background:transparent;font-size:20px;cursor:pointer" aria-label="Hiện mật khẩu">👁</button></div><div id="adminGateMsg" class="gate-msg"></div><button class="btn btn-primary" style="width:100%" onclick="adminLogin()">Đăng nhập Admin</button></div></div>
+.admin-lock{position:fixed;inset:0;background:linear-gradient(135deg,#0d1117,#202938);z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px}.admin-login-box{width:min(430px,100%);background:#fff;border-radius:26px;padding:28px;box-shadow:0 30px 100px rgba(0,0,0,.35)}.admin-login-box h1{margin:0 0 8px;font-size:28px}.admin-login-box p{color:#697386;line-height:1.5}.admin-login-box input{margin-bottom:10px;padding:14px;border-radius:13px}.admin-login-btn{width:100%;padding:14px;border:0;border-radius:13px;background:#1683ff;color:#fff;font-weight:900;font-size:16px;cursor:pointer}.admin-login-error{min-height:20px;color:#df3f4a;font-size:13px;font-weight:800;margin:8px 0}.admin-logout{background:#ffe4e5;color:#a91e24}.admin-secret-note{background:#fff8df;color:#806300;padding:10px;border-radius:10px;font-size:12px;line-height:1.5}
+</style></head><body>
+<div id="adminLock" class="admin-lock">
+  <form class="admin-login-box" onsubmit="return adminLogin(event)">
+    <div style="font-size:48px;margin-bottom:6px">🔐</div>
+    <h1>Đăng nhập Admin</h1>
+    <p>Trang quản trị Shop KC. Nhập đúng tài khoản và mật khẩu Admin để mở khu quản lý.</p>
+    <label>Tài khoản Admin</label>
+    <input id="adminLoginUser" autocomplete="username" placeholder="admin" required>
+    <label>Mật khẩu Admin</label>
+    <div style="position:relative"><input id="adminLoginPass" type="password" autocomplete="current-password" placeholder="Mật khẩu" required style="padding-right:52px"><button type="button" onclick="toggleAdminPassword()" style="position:absolute;right:8px;top:5px;border:0;background:transparent;font-size:20px;padding:8px;cursor:pointer">👁️</button></div>
+    <div id="adminLoginError" class="admin-login-error"></div>
+    <button class="admin-login-btn" type="submit">ĐĂNG NHẬP QUẢN TRỊ</button>
+    <div class="admin-secret-note" style="margin-top:12px">Đăng nhập bằng tài khoản Admin đã tạo trong Firebase Authentication. Tài khoản phải có <b>role: admin</b> (hoặc <b>admin: true</b>) trong <b>userProfiles</b>.</div>
+  </form>
+</div>
 
-<header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button><button class="btn btn-red" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
+<header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button><button class="btn admin-logout" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
+<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 <section id="withdrawals" style="display:none"><div class="card"><b>YÊU CẦU RÚT TIỀN</b><p class="muted">Khi khách gửi yêu cầu, số dư đã được tạm trừ. Hủy yêu cầu sẽ hoàn lại số dư.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Thông tin nhận</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="withdrawalsBody"></tbody></table></div></div></section>
@@ -31,28 +44,71 @@
 <div id="ledPreview" style="height:14px;border-radius:99px;margin-top:10px;background:linear-gradient(90deg,#ff1744,#ff9100,#ffee00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744);background-size:250% 100%;animation:adminLedPreview 2s linear infinite"></div>
 <div class="notice" style="margin-top:10px">LED chạy quanh mép ảnh. Admin có thể bật/tắt, đổi hiệu ứng và tốc độ; trang khách sẽ nhận cấu hình từ Firebase.</div>
 <div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div></section>
+
+<section id="orderHistory" style="display:none">
+<div class="card">
+  <b>📚 LỊCH SỬ ĐƠN THẬT</b>
+  <p class="muted">Đọc trực tiếp từ <b>orders</b> trong Firebase. Không phải dữ liệu mẫu. Bao gồm cả đơn túi mù đã xé, phần thưởng, số tiền và trạng thái.</p>
+  <input class="search" id="historySearch" placeholder="Tìm tài khoản / túi / phần thưởng..." oninput="renderOrderHistory(lastOrders)">
+  <div class="table" style="margin-top:10px"><table><thead><tr><th>Thời gian</th><th>Tài khoản</th><th>Sản phẩm</th><th>Giá</th><th>Phần thưởng</th><th>Loại</th><th>Trạng thái</th><th>ID đơn</th></tr></thead><tbody id="orderHistoryBody"></tbody></table></div>
+</div>
+</section>
+
+<section id="config" style="display:none">
+<div class="card">
+  <b>💳 CẤU HÌNH THANH TOÁN — LƯU VÀO KHO CŨ</b>
+  <p class="muted">Mọi thay đổi được ghi vào <b>siteConfig/payment</b> của Firebase hiện tại. Trang khách đọc lại cùng kho này, không tạo kho mới.</p>
+  <div class="mini-grid">
+    <div><label>Mã ngân hàng VietQR</label><input id="payBankCode" placeholder="MB"></div>
+    <div><label>Tên ngân hàng</label><input id="payBankName" placeholder="MB Bank"></div>
+  </div>
+  <div class="mini-grid">
+    <div><label>Số tài khoản</label><input id="payAccountNumber" placeholder="Nhập STK thật"></div>
+    <div><label>Tên chủ tài khoản</label><input id="payAccountName" placeholder="SHOP KC"></div>
+  </div>
+  <div class="mini-grid"><div><label>Tiền tố nội dung nạp</label><input id="payMemoPrefix" placeholder="NAP"></div><div><label>Hướng dẫn nạp</label><input id="payDepositGuide" placeholder="Quét QR, chuyển đúng nội dung..."></div></div><label>Nội dung hỗ trợ</label><textarea id="paySupport" placeholder="Thông tin hỗ trợ nạp tiền"></textarea>
+  <div class="actions"><button class="btn btn-primary" onclick="savePaymentConfig()">💾 Lưu thanh toán</button></div>
+</div>
+
+<div class="card">
+  <b>🎮 KHO TÀI KHOẢN GIAO TỰ ĐỘNG</b>
+  <p class="muted">Mỗi tài khoản trong kho sẽ được giao cho khách sau khi họ đăng nhập, đủ số dư và chạm ảnh túi để xé. Trạng thái <b>available</b> là còn hàng, <b>sold</b> là đã giao.</p>
+  <textarea id="rewardInventory" style="min-height:420px;font-family:monospace" placeholder='{"tui-cena-49k":{"acc001":{"account":"acc1","password":"pass1","note":"Đăng nhập bằng tài khoản game"}}}'></textarea>
+  <div class="actions"><button class="btn btn-primary" onclick="saveRewardInventory()">💾 Lưu kho tài khoản</button><button class="btn btn-gray" onclick="loadPaymentAndProducts()">↻ Tải lại</button></div>
+  <div class="notice">Lưu ý: đây là kho giao hàng của Shop. Không cho khách quyền ghi <b>siteConfig/rewardInventory</b> trong Firebase Rules nếu muốn bảo mật; tốt nhất dùng Cloud Function/Admin SDK khi chạy thật.</div>
+</div>
+
+<div class="card">
+  <b>👁️ CƠ CHẾ MỞ / ẨN WEBSITE</b>
+  <p class="muted">Khi tắt, trang khách sẽ bị phủ màn hình “Website đang tạm đóng”. Khi bật, website hoạt động lại. Trạng thái lưu tại <b>siteConfig/siteEnabled</b>.</p>
+  <select id="siteEnabledAdmin"><option value="on">🟢 Đang mở website</option><option value="off">🔴 Đang ẩn website</option></select>
+  <div class="actions"><button class="btn btn-primary" onclick="saveSiteVisibility()">💾 Lưu trạng thái website</button></div>
+</div>
+
+<div class="card">
+  <b>🎁 QUẢN LÝ TÚI MÙ</b>
+  <p class="muted">Chỉnh tên, giá, ảnh, mô tả, lượt bán và danh sách phần thưởng. Dữ liệu lưu tại <b>siteConfig/products</b>; trang khách đọc lại tự động.</p>
+  <textarea id="blindBagProducts" style="min-height:520px;font-family:monospace"></textarea>
+  <div class="actions"><button class="btn btn-primary" onclick="saveBlindBagProducts()">💾 Lưu túi mù</button><button class="btn btn-gray" onclick="loadPaymentAndProducts()">↻ Tải lại kho</button></div>
+</div>
+</section>
 <section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
 const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
-firebase.initializeApp(firebaseConfig);const db=firebase.database();const adminAuth=firebase.auth();let adminUser=null;let adminProfile=null;
+firebase.initializeApp(firebaseConfig);const db=firebase.database();
 const defaultGames={'Free Fire':{unit:'Kim Cương',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]}};
 let lastOrders={},lastWithdrawals={};
-function setAdminGate(message){const g=document.getElementById('adminGate'),m=document.getElementById('adminGateMsg');if(g)g.style.display='flex';if(m)m.textContent=message||'';document.body.style.overflow='hidden'}
-function openAdminApp(){const g=document.getElementById('adminGate');if(g)g.style.display='none';document.body.style.overflow='';}
-function toggleAdminPassword(b){const i=document.getElementById("adminPassword");if(!i)return;const show=i.type==="password";i.type=show?"text":"password";b.textContent=show?"🙈":"👁";} function adminLogin(){const username=String(document.getElementById("adminUsername").value||"").trim(),pw=String(document.getElementById("adminPassword").value||""),msg=document.getElementById("adminGateMsg");if(!username||!pw){msg.textContent="Nhập đủ tài khoản và mật khẩu.";return;}msg.textContent="Đang xác thực Admin...";db.ref("userProfiles").orderByChild("user").equalTo(username).once("value").then(function(s){let profile=null;s.forEach(function(ch){if(!profile)profile=ch.val()||{};});if(!profile||!profile.email)throw new Error("Không tìm thấy tài khoản trong Firebase.");return adminAuth.signInWithEmailAndPassword(String(profile.email),pw);}).then(function(cred){adminUser=cred.user;return db.ref("userProfiles/"+cred.user.uid).once("value")}).then(function(s){adminProfile=s.val()||{};const ok=adminProfile.role==="admin"||adminProfile.admin===true||adminProfile.isAdmin===true;if(!ok){return adminAuth.signOut().then(function(){throw new Error("Tài khoản này không có quyền Admin.");});}sessionStorage.setItem("shopkc_admin_verified","1");openAdminApp();}).catch(function(e){console.error(e);msg.textContent=e.message||"Không thể đăng nhập Admin.";});}
-function adminLogout(){adminAuth.signOut().finally(function(){sessionStorage.removeItem('shopkc_admin_verified');location.href='index.html';});}
-adminAuth.onAuthStateChanged(function(user){if(!user){adminUser=null;adminProfile=null;setAdminGate('Đăng nhập tài khoản Admin để tiếp tục.');return;}adminUser=user;db.ref('userProfiles/'+user.uid).once('value').then(function(s){adminProfile=s.val()||{};const ok=adminProfile.role==='admin'||adminProfile.admin===true||adminProfile.isAdmin===true;if(ok){openAdminApp();}else{setAdminGate('Tài khoản này không có quyền Admin.');}}).catch(function(){setAdminGate('Không đọc được quyền Admin từ Firebase.');});});
-function showTab(id,b){document.querySelectorAll('section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(id==='site'||id==='games')loadSite();}
+function showTab(id,b){document.querySelectorAll('section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(id==='site'||id==='games')loadSite();if(id==='config')loadPaymentAndProducts();if(id==='orderHistory')renderOrderHistory(lastOrders);}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function fmt(n){return (Number(n)||0).toLocaleString('vi-VN')+' đ'}
 function when(ts){if(!ts)return '-';try{return new Date(ts).toLocaleString('vi-VN')}catch(e){return '-'}}
 function badge(st){let t=st==='pending'?'Chờ duyệt':st==='processing'?'Đang xử lý':st==='approved'?'Đã duyệt':st==='completed'?'Hoàn tất':st==='rejected'?'Đã hủy':st;return `<span class="badge ${esc(st)}">${esc(t)}</span>`}
-function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';if(document.getElementById('ledEnabled')) ledEnabled.value=c.ledEnabled===false?'off':'on';if(document.getElementById('ledEffect')) ledEffect.value=c.ledEffect||'chase7';if(document.getElementById('ledSpeed')) ledSpeed.value=String(c.ledSpeed||2400);gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2)}).catch(e=>alert(e.message))}
+function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';if(document.getElementById('ledEnabled')) ledEnabled.value=c.ledEnabled===false?'off':'on';if(document.getElementById('ledEffect')) ledEffect.value=c.ledEffect||'chase7';if(document.getElementById('ledSpeed')) ledSpeed.value=String(c.ledSpeed||2400);gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2);if(document.getElementById('siteEnabledAdmin')) siteEnabledAdmin.value=c.siteEnabled===false?'off':'on'}).catch(e=>alert(e.message))}
 function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim(),ledEnabled:ledEnabled.value==='on',ledEffect:ledEffect.value,ledSpeed:Number(ledSpeed.value)||2400}).then(()=>alert('Đã lưu trang chủ và cấu hình LED.')).catch(e=>alert('Lỗi: '+e.message))}
 function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
-function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
+function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span><br><span class="muted">🎁 ${esc(o.reward||o.result||'Chưa có phần thưởng')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
 function normalizeBalanceValue(raw){
   if(raw && typeof raw==='object'){ raw=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0; }
   const n=Number(raw); return Number.isFinite(n)?n:0;
@@ -118,7 +174,7 @@ function reject(id){
     return u?notifyCustomer(u,'warning','Cảnh báo: Đơn nạp '+fmt(o.price)+' của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.',Number(o.price)||0):null;
   }).then(function(){alert('Đã hủy đơn và gửi cảnh báo cho khách.');}).catch(function(e){alert('Lỗi: '+e.message);});
 }
-function completeGame(id){db.ref('orders/'+id).once('value').then(function(s){var o=s.val();if(!o||o.status!=='processing')throw Error('Đơn game không còn đang xử lý.');var ru=prompt('Nhập TÀI KHOẢN GAME trúng thưởng cho khách:',o.rewardUsername||'');if(ru===null)return null;var rp=prompt('Nhập MẬT KHẨU GAME trúng thưởng cho khách:',o.rewardPassword||'');if(rp===null)return null;var rn=prompt('Ghi chú thêm (có thể bỏ trống):',o.rewardNote||'')||'';return db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:adminUser&&adminUser.email?adminUser.email:'ADMIN',rewardUsername:ru.trim(),rewardPassword:rp.trim(),rewardNote:rn.trim()});}).then(function(result){if(result===null)return;alert('Đã hoàn tất đơn game và lưu tài khoản/mật khẩu trúng thưởng cho khách.');}).catch(function(e){alert('Lỗi: '+e.message)})}
+function completeGame(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val();if(!o||o.status!=='processing')throw Error('Đơn game không còn đang xử lý.');return db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'})}).then(()=>alert('Đã hoàn tất đơn game.')).catch(e=>alert('Lỗi: '+e.message))}
 function renderWithdrawals(data){lastWithdrawals=data||{};let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>o.status==='pending').sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));withdrawPendingCount.textContent=a.length;withdrawalsBody.innerHTML=a.map(o=>`<tr><td><b>${esc(o.user||'')}</b><br>${esc(o.displayName||'')}</td><td>${fmt(o.amount)}</td><td>${esc(o.receiveInfo||'')}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td><button class="btn btn-green" onclick="approveWithdraw('${o.id}')">Đã chuyển</button> <button class="btn btn-red" onclick="rejectWithdraw('${o.id}')">Từ chối + hoàn tiền</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Không có yêu cầu rút.</td></tr>'}
 function approveWithdraw(id){db.ref('withdrawals/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN'}).then(()=>alert('Đã đánh dấu đã chuyển tiền.')).catch(e=>alert('Lỗi: '+e.message))}
 function rejectWithdraw(id){
@@ -188,8 +244,1696 @@ function startCustomerRealtime(){
   db.ref('balances').on('value',s=>{adminBalances={};s.forEach(ch=>{const u=decodeURIComponent(ch.key);const raw=ch.val();let v=raw;if(raw&&typeof raw==='object'){v=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0;}if(u&&u!=='ADMIN')adminBalances[u]=Number(v)||0;});renderUsersFromState();});
   db.ref('orders').on('value',s=>{s.forEach(ch=>{const o=ch.val()||{};const u=String(o.user||'').trim();if(u&&u!=='ADMIN'){adminCustomers[u]={...(adminCustomers[u]||{}),user:u,displayName:o.displayName||adminCustomers[u]?.displayName||u,lastSeenAt:o.timestamp||Date.now()};ensureCustomerRegistry(u,adminCustomers[u].displayName);}});renderUsersFromState();});
 }
+
+let adminUnlocked=false;
+let adminAuth=firebase.auth();
+let adminProfile=null;
+function applyAdminLock(){
+  const lock=document.getElementById('adminLock');
+  if(lock) lock.style.display=adminUnlocked?'none':'flex';
+  document.body.style.overflow=adminUnlocked?'':'hidden';
+}
+function toggleAdminPassword(){const x=document.getElementById('adminLoginPass');if(!x)return;x.type=x.type==='password'?'text':'password';}
+function adminLogin(e){
+  if(e)e.preventDefault();
+  const u=String(document.getElementById('adminLoginUser').value||'').trim();
+  const p=String(document.getElementById('adminLoginPass').value||'');
+  const err=document.getElementById('adminLoginError');
+  if(!u||!p){if(err)err.textContent='Nhập đầy đủ tài khoản và mật khẩu.';return false;}
+  if(err)err.textContent='Đang xác thực Firebase...';
+  db.ref('userProfiles').orderByChild('user').equalTo(u).once('value').then(function(s){
+    let profile=null;
+    s.forEach(function(ch){if(!profile)profile=ch.val()||{};});
+    if(!profile||!profile.email) throw new Error('Không tìm thấy tài khoản Admin trong userProfiles.');
+    const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
+    if(!allowed) throw new Error('Tài khoản này không có quyền Admin.');
+    return adminAuth.signInWithEmailAndPassword(String(profile.email),p).then(function(cred){
+      adminProfile=profile;adminUnlocked=true;applyAdminLock();bootAdmin();
+    });
+  }).catch(function(e){
+    console.error('ADMIN LOGIN',e);
+    if(err)err.textContent=(e&&e.code==='auth/wrong-password')?'Sai mật khẩu Admin.':(e&&e.code==='auth/user-not-found'?'Không tìm thấy tài khoản Firebase.':(e.message||'Đăng nhập Admin thất bại.'));
+    adminUnlocked=false;applyAdminLock();
+  });
+  return false;
+}
+function adminLogout(){adminUnlocked=false;adminProfile=null;adminAuth.signOut().finally(function(){location.reload();});}
+adminAuth.onAuthStateChanged(function(user){
+  if(!user){adminUnlocked=false;applyAdminLock();return;}
+  db.ref('userProfiles/'+user.uid).once('value').then(function(s){
+    const p=s.val()||{};const allowed=p.role==='admin'||p.admin===true||p.isAdmin===true;
+    if(allowed){adminProfile=p;adminUnlocked=true;applyAdminLock();bootAdmin();}
+    else{adminAuth.signOut();adminUnlocked=false;applyAdminLock();}
+  }).catch(function(){adminUnlocked=false;applyAdminLock();});
+});
+applyAdminLock();
+function renderOrderHistory(data){
+  const body=document.getElementById('orderHistoryBody');if(!body)return;
+  const q=String(document.getElementById('historySearch')?.value||'').toLowerCase();
+  let arr=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));
+  if(q)arr=arr.filter(o=>JSON.stringify(o).toLowerCase().includes(q));
+  body.innerHTML=arr.map(o=>`<tr><td>${esc(o.time||when(o.timestamp))}</td><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${esc(o.game||o.package||o.type||'Đơn')}</td><td>${fmt(o.price)}</td><td><b>${esc(o.reward||o.result||'-')}</b></td><td>${esc(o.historyType||o.type||'-')}</td><td>${badge(o.status)}</td><td><span class="muted">${esc(o.id)}</span></td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:18px">Chưa có lịch sử.</td></tr>';
+}
+function defaultBlindBagProducts(){
+  return {
+    "tui-cena-49k":{slug:"tui-cena-49k",title:"Túi Cena 49K",price:49000,sold:9931,image:"https://cenaff.com/assets/uploads/1784820299_484e4d6903910a22.gif",badge:"HOT",description:"Túi mù 49K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-79k":{slug:"tui-cena-79k",title:"Túi Cena 79K",price:79000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820342_72eb5ecca2c2b864.gif",badge:"HOT",description:"Túi mù 79K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-99k":{slug:"tui-cena-99k",title:"Túi Cena 99K",price:99000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820369_76cb811a5486cc85.gif",badge:"HOT",description:"Túi mù 99K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-149k":{slug:"tui-cena-149k",title:"Túi Cena 149K",price:149000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820395_21250a7f4bba4f34.gif",badge:"HOT",description:"Túi mù 149K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-199k":{slug:"tui-cena-199k",title:"Túi Cena 199K",price:199000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820424_5e912c3ea8685c19.gif",badge:"HOT",description:"Túi mù 199K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-249k":{slug:"tui-cena-249k",title:"Túi Cena 249K",price:249000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820459_00aac2e85712a959.gif",badge:"HOT",description:"Túi mù 249K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]},
+    "tui-cena-499k":{slug:"tui-cena-499k",title:"Túi Cena 499K",price:499000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820487_8ef7e16bdc5f2f55.gif",badge:"HOT",description:"Túi mù 499K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]}
+  };
+}
+function loadPaymentAndProducts(){
+  db.ref('siteConfig').once('value').then(s=>{
+    const c=s.val()||{},p=c.payment||{};
+    payBankCode.value=p.bankCode||'MB';payBankName.value=p.bankName||'MB Bank';payAccountNumber.value=p.accountNumber||'';payAccountName.value=p.accountName||'SHOP KC';payMemoPrefix.value=p.memoPrefix||'NAP';payDepositGuide.value=p.depositGuide||'Quét QR và chuyển khoản đúng nội dung.';paySupport.value=p.support||'';
+    siteEnabledAdmin.value=c.siteEnabled===false?'off':'on';
+    blindBagProducts.value=JSON.stringify(c.products&&Object.keys(c.products).length?c.products:defaultBlindBagProducts(),null,2);rewardInventory.value=JSON.stringify(c.rewardInventory||{},null,2);
+  }).catch(e=>alert('Không đọc được kho cũ: '+e.message));
+}
+function savePaymentConfig(){
+  const value={bankCode:payBankCode.value.trim(),bankName:payBankName.value.trim(),accountNumber:payAccountNumber.value.trim(),accountName:payAccountName.value.trim(),memoPrefix:payMemoPrefix.value.trim()||'NAP',depositGuide:payDepositGuide.value.trim(),support:paySupport.value.trim()};
+  if(!value.bankCode||!value.accountNumber||!value.accountName){alert('Vui lòng nhập mã ngân hàng, số tài khoản và tên chủ tài khoản.');return;}
+  db.ref('siteConfig/payment').set(value).then(()=>alert('Đã lưu cấu hình thanh toán vào kho cũ siteConfig/payment.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function saveSiteVisibility(){
+  const enabled=siteEnabledAdmin.value==='on';
+  db.ref('siteConfig/siteEnabled').set(enabled).then(()=>alert(enabled?'Đã MỞ website cho khách.':'Đã ẨN website với khách.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function saveRewardInventory(){
+  let data;
+  try{data=JSON.parse(rewardInventory.value);}catch(e){alert('JSON kho tài khoản không hợp lệ.');return;}
+  if(!data||typeof data!=='object'||Array.isArray(data)){alert('Kho tài khoản phải là object theo từng slug.');return;}
+  const clean={};
+  Object.keys(data).forEach(slug=>{const src=data[slug]&&typeof data[slug]==='object'?data[slug]:{};clean[slug]={};Object.keys(src).forEach(k=>{const x=src[k]||{};clean[slug][k]={account:String(x.account||x.username||x.uid||'').trim(),password:String(x.password||x.pass||'').trim(),note:String(x.note||x.info||'').trim(),status:x.status==='sold'?'sold':'available'};});});
+  db.ref('siteConfig/rewardInventory').set(clean).then(()=>alert('Đã lưu kho tài khoản giao tự động vào Firebase cũ.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function saveBlindBagProducts(){
+  let data;
+  try{data=JSON.parse(blindBagProducts.value);}catch(e){alert('JSON túi mù không hợp lệ.');return;}
+  if(!data||typeof data!=='object'||Array.isArray(data)){alert('Dữ liệu túi mù phải là object.');return;}
+  const clean={};
+  Object.keys(data).forEach(slug=>{const x=data[slug]||{};clean[slug]=Object.assign({},x,{slug:slug,price:Number(x.price)||0,sold:Number(x.sold)||0,rewards:Array.isArray(x.rewards)?x.rewards:[]});});
+  db.ref('siteConfig/products').set(clean).then(()=>alert('Đã lưu toàn bộ túi mù vào kho cũ. Trang khách sẽ đọc cấu hình này.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function bootAdmin(){
+  if(!adminUnlocked)return;
+  applyAdminLock();
+  db.ref('orders').on('value',s=>{renderOrders(s.val());renderOrderHistory(s.val());});
+  db.ref('withdrawals').on('value',s=>renderWithdrawals(s.val()));
+  db.ref('userProfiles').on('value',s=>renderUsers(s.val()));
+  startCustomerRealtime();
+  loadSite();
+}
 function openProof(url){proofImage.src=url;proofModal.classList.add('active')}function closeProof(){proofModal.classList.remove('active');proofImage.src=''}
-db.ref('orders').on('value',s=>renderOrders(s.val()));db.ref('withdrawals').on('value',s=>renderWithdrawals(s.val()));db.ref('userProfiles').on('value',s=>renderUsers(s.val()));
-startCustomerRealtime();
-loadSite();
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('adminGate')&&document.getElementById('adminGate').style.display!=='none'){adminLogin();}});</script></body></html>
+applyAdminLock();if(adminUnlocked){bootAdmin();}
+</script>
+<!--
+SHOP KC ADMIN - HƯỚNG DẪN KHO DỮ LIỆU
+Kho Firebase hiện tại được giữ nguyên, không đổi project.
+customerRegistry lưu hồ sơ nhận diện khách.
+userProfiles lưu hồ sơ Firebase của khách.
+balances lưu số dư realtime theo username đã mã hóa URI.
+orders lưu mọi đơn nạp và đơn túi mù.
+withdrawals lưu yêu cầu rút tiền.
+siteConfig lưu cấu hình trang chủ.
+siteConfig/payment lưu cấu hình nhận tiền.
+siteConfig/products lưu catalog túi mù.
+siteConfig/siteEnabled điều khiển mở hoặc ẩn website.
+adminLogs lưu nhật ký thao tác Admin nếu các hàm cũ ghi log.
+Đơn túi mù ghi reward và result để xem lại lịch sử thật.
+Không xóa dữ liệu cũ khi lưu payment.
+Không xóa dữ liệu cũ khi lưu siteEnabled.
+Không xóa dữ liệu cũ khi lưu products nếu Admin bấm lưu catalog.
+Trước khi sửa JSON túi mù nên sao lưu dữ liệu Firebase.
+Mã ngân hàng phải đúng mã VietQR.
+Số tài khoản phải là tài khoản nhận tiền thật.
+Tên chủ tài khoản phải khớp ngân hàng.
+Trang khách đọc payment từ siteConfig.
+Trang khách đọc products từ siteConfig.
+Trang khách đọc siteEnabled từ siteConfig.
+Đơn nạp vẫn dùng trạng thái pending để Admin duyệt.
+Đơn túi mù dùng processing để giữ tương thích quy trình Admin cũ.
+Lịch sử thật hiển thị toàn bộ orders, kể cả completed.
+Tìm kiếm lịch sử quét trên JSON của từng đơn.
+Nút đăng xuất xóa phiên Admin của trình duyệt.
+Đăng nhập Admin là lớp khóa giao diện phía trình duyệt.
+Muốn bảo mật production cần dùng Firebase Authentication và Rules.
+Kiểm tra API key Firebase trước khi đưa trang lên hosting.
+Kiểm tra Authentication email/password nếu khách không đăng nhập được.
+Kiểm tra Realtime Database Rules trước khi mở nạp tiền.
+Không cho khách tự ghi balances trong Rules production.
+Không cho khách tự đổi status orders thành approved.
+Chỉ Admin được duyệt đơn nạp.
+Chỉ Admin được hoàn tất đơn game.
+Theo dõi timestamp của orders để đối soát.
+Theo dõi balanceAfter để đối soát số dư.
+Theo dõi approvingBy để biết Admin duyệt đơn.
+Theo dõi completedBy để biết Admin hoàn tất đơn game.
+Theo dõi approvedAmount để đối soát nạp tiền.
+Theo dõi reward để đối soát kết quả túi mù.
+Theo dõi historyType để phân biệt luồng xé ngay.
+Theo dõi realOrder để phân biệt đơn thật với dữ liệu khác.
+Dùng tab Lịch sử thật để kiểm tra các đơn đã hoàn tất.
+Dùng tab Khách hàng để xem số dư realtime.
+Dùng tab Đơn nạp để xử lý pending.
+Dùng tab Rút tiền để xử lý withdrawal.
+Dùng tab Trang chủ để sửa nội dung cũ.
+Dùng tab Game & giá để sửa bảng game cũ.
+Dùng tab Thanh toán & túi mù để sửa payment.
+Dùng nút mở website sau khi bảo trì xong.
+Dùng nút ẩn website khi cần khóa bán hàng.
+Không thay ảnh sản phẩm nếu muốn giữ ảnh gốc.
+Ảnh sản phẩm có thể là URL HTTPS.
+Rewards có thể là mảng chuỗi.
+Price phải là số nguyên dương.
+Sold chỉ là số hiển thị, không dùng làm số dư.
+Slug phải ổn định để lịch sử liên kết đúng sản phẩm.
+Không đổi slug của sản phẩm đã có orders nếu muốn giữ tra cứu lịch sử.
+Nếu đổi giá, đơn cũ vẫn giữ price tại thời điểm mua.
+Nếu đổi tên, đơn cũ vẫn giữ game/package đã ghi.
+Nếu đổi rewards, lượt xé mới đọc danh sách mới.
+Nếu siteEnabled false, khách thấy màn hình đóng.
+Nếu siteEnabled true, khách trở lại bình thường.
+Payment config không tự duyệt giao dịch.
+Admin vẫn phải kiểm tra chuyển khoản trước khi approve.
+QR VietQR lấy mã ngân hàng và số tài khoản từ payment.
+Memo nạp tiền lấy theo username khách.
+Khách xem lịch sử nạp từ orders.
+Khách xem lịch sử mua từ orders.
+Admin có thể đối chiếu username với customerRegistry.
+Admin có thể đối chiếu UID Firebase với userProfiles.
+Admin có thể xem proofImage nếu đơn có ảnh.
+Không lưu mật khẩu khách trong customerRegistry.
+Mật khẩu Firebase do Authentication quản lý.
+Lớp khóa Admin hiện tại chỉ là lớp giao diện.
+Đổi ADMIN_PASSWORD trước khi công khai trang Admin.
+Đổi ADMIN_USERNAME trước khi công khai trang Admin.
+Session Admin chỉ lưu cờ trong sessionStorage.
+Đóng tab trình duyệt sẽ mất sessionStorage tùy trình duyệt.
+Không coi username/password JS là cơ chế bảo mật máy chủ.
+Production nên chuyển Admin sang Firebase Auth.
+Firebase checklist 1: kiểm tra mục 1 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 2: kiểm tra mục 2 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 3: kiểm tra mục 3 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 4: kiểm tra mục 4 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 5: kiểm tra mục 5 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 6: kiểm tra mục 6 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 7: kiểm tra mục 7 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 8: kiểm tra mục 8 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 9: kiểm tra mục 9 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 10: kiểm tra mục 10 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 11: kiểm tra mục 11 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 12: kiểm tra mục 12 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 13: kiểm tra mục 13 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 14: kiểm tra mục 14 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 15: kiểm tra mục 15 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 16: kiểm tra mục 16 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 17: kiểm tra mục 17 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 18: kiểm tra mục 18 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 19: kiểm tra mục 19 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 20: kiểm tra mục 20 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 21: kiểm tra mục 21 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 22: kiểm tra mục 22 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 23: kiểm tra mục 23 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 24: kiểm tra mục 24 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 25: kiểm tra mục 25 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 26: kiểm tra mục 26 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 27: kiểm tra mục 27 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 28: kiểm tra mục 28 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 29: kiểm tra mục 29 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 30: kiểm tra mục 30 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 31: kiểm tra mục 31 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 32: kiểm tra mục 32 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 33: kiểm tra mục 33 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 34: kiểm tra mục 34 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 35: kiểm tra mục 35 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 36: kiểm tra mục 36 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 37: kiểm tra mục 37 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 38: kiểm tra mục 38 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 39: kiểm tra mục 39 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 40: kiểm tra mục 40 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 41: kiểm tra mục 41 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 42: kiểm tra mục 42 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 43: kiểm tra mục 43 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 44: kiểm tra mục 44 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 45: kiểm tra mục 45 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 46: kiểm tra mục 46 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 47: kiểm tra mục 47 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 48: kiểm tra mục 48 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 49: kiểm tra mục 49 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 50: kiểm tra mục 50 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 51: kiểm tra mục 51 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 52: kiểm tra mục 52 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 53: kiểm tra mục 53 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 54: kiểm tra mục 54 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 55: kiểm tra mục 55 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 56: kiểm tra mục 56 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 57: kiểm tra mục 57 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 58: kiểm tra mục 58 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 59: kiểm tra mục 59 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 60: kiểm tra mục 60 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 61: kiểm tra mục 61 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 62: kiểm tra mục 62 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 63: kiểm tra mục 63 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 64: kiểm tra mục 64 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 65: kiểm tra mục 65 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 66: kiểm tra mục 66 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 67: kiểm tra mục 67 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 68: kiểm tra mục 68 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 69: kiểm tra mục 69 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 70: kiểm tra mục 70 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 71: kiểm tra mục 71 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 72: kiểm tra mục 72 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 73: kiểm tra mục 73 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 74: kiểm tra mục 74 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 75: kiểm tra mục 75 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 76: kiểm tra mục 76 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 77: kiểm tra mục 77 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 78: kiểm tra mục 78 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 79: kiểm tra mục 79 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 80: kiểm tra mục 80 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 81: kiểm tra mục 81 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 82: kiểm tra mục 82 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 83: kiểm tra mục 83 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 84: kiểm tra mục 84 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 85: kiểm tra mục 85 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 86: kiểm tra mục 86 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 87: kiểm tra mục 87 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 88: kiểm tra mục 88 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 89: kiểm tra mục 89 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 90: kiểm tra mục 90 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 91: kiểm tra mục 91 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 92: kiểm tra mục 92 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 93: kiểm tra mục 93 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 94: kiểm tra mục 94 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 95: kiểm tra mục 95 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 96: kiểm tra mục 96 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 97: kiểm tra mục 97 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 98: kiểm tra mục 98 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 99: kiểm tra mục 99 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 100: kiểm tra mục 100 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 101: kiểm tra mục 101 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 102: kiểm tra mục 102 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 103: kiểm tra mục 103 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 104: kiểm tra mục 104 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 105: kiểm tra mục 105 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 106: kiểm tra mục 106 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 107: kiểm tra mục 107 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 108: kiểm tra mục 108 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 109: kiểm tra mục 109 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 110: kiểm tra mục 110 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 111: kiểm tra mục 111 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 112: kiểm tra mục 112 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 113: kiểm tra mục 113 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 114: kiểm tra mục 114 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 115: kiểm tra mục 115 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 116: kiểm tra mục 116 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 117: kiểm tra mục 117 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 118: kiểm tra mục 118 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 119: kiểm tra mục 119 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 120: kiểm tra mục 120 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 121: kiểm tra mục 121 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 122: kiểm tra mục 122 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 123: kiểm tra mục 123 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 124: kiểm tra mục 124 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 125: kiểm tra mục 125 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 126: kiểm tra mục 126 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 127: kiểm tra mục 127 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 128: kiểm tra mục 128 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 129: kiểm tra mục 129 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 130: kiểm tra mục 130 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 131: kiểm tra mục 131 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 132: kiểm tra mục 132 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 133: kiểm tra mục 133 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 134: kiểm tra mục 134 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 135: kiểm tra mục 135 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 136: kiểm tra mục 136 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 137: kiểm tra mục 137 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 138: kiểm tra mục 138 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 139: kiểm tra mục 139 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 140: kiểm tra mục 140 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 141: kiểm tra mục 141 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 142: kiểm tra mục 142 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 143: kiểm tra mục 143 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 144: kiểm tra mục 144 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 145: kiểm tra mục 145 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 146: kiểm tra mục 146 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 147: kiểm tra mục 147 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 148: kiểm tra mục 148 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 149: kiểm tra mục 149 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Firebase checklist 150: kiểm tra mục 150 của nhóm Firebase trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 1: kiểm tra mục 1 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 2: kiểm tra mục 2 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 3: kiểm tra mục 3 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 4: kiểm tra mục 4 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 5: kiểm tra mục 5 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 6: kiểm tra mục 6 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 7: kiểm tra mục 7 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 8: kiểm tra mục 8 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 9: kiểm tra mục 9 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 10: kiểm tra mục 10 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 11: kiểm tra mục 11 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 12: kiểm tra mục 12 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 13: kiểm tra mục 13 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 14: kiểm tra mục 14 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 15: kiểm tra mục 15 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 16: kiểm tra mục 16 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 17: kiểm tra mục 17 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 18: kiểm tra mục 18 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 19: kiểm tra mục 19 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 20: kiểm tra mục 20 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 21: kiểm tra mục 21 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 22: kiểm tra mục 22 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 23: kiểm tra mục 23 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 24: kiểm tra mục 24 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 25: kiểm tra mục 25 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 26: kiểm tra mục 26 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 27: kiểm tra mục 27 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 28: kiểm tra mục 28 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 29: kiểm tra mục 29 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 30: kiểm tra mục 30 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 31: kiểm tra mục 31 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 32: kiểm tra mục 32 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 33: kiểm tra mục 33 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 34: kiểm tra mục 34 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 35: kiểm tra mục 35 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 36: kiểm tra mục 36 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 37: kiểm tra mục 37 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 38: kiểm tra mục 38 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 39: kiểm tra mục 39 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 40: kiểm tra mục 40 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 41: kiểm tra mục 41 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 42: kiểm tra mục 42 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 43: kiểm tra mục 43 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 44: kiểm tra mục 44 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 45: kiểm tra mục 45 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 46: kiểm tra mục 46 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 47: kiểm tra mục 47 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 48: kiểm tra mục 48 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 49: kiểm tra mục 49 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 50: kiểm tra mục 50 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 51: kiểm tra mục 51 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 52: kiểm tra mục 52 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 53: kiểm tra mục 53 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 54: kiểm tra mục 54 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 55: kiểm tra mục 55 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 56: kiểm tra mục 56 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 57: kiểm tra mục 57 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 58: kiểm tra mục 58 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 59: kiểm tra mục 59 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 60: kiểm tra mục 60 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 61: kiểm tra mục 61 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 62: kiểm tra mục 62 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 63: kiểm tra mục 63 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 64: kiểm tra mục 64 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 65: kiểm tra mục 65 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 66: kiểm tra mục 66 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 67: kiểm tra mục 67 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 68: kiểm tra mục 68 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 69: kiểm tra mục 69 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 70: kiểm tra mục 70 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 71: kiểm tra mục 71 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 72: kiểm tra mục 72 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 73: kiểm tra mục 73 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 74: kiểm tra mục 74 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 75: kiểm tra mục 75 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 76: kiểm tra mục 76 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 77: kiểm tra mục 77 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 78: kiểm tra mục 78 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 79: kiểm tra mục 79 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 80: kiểm tra mục 80 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 81: kiểm tra mục 81 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 82: kiểm tra mục 82 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 83: kiểm tra mục 83 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 84: kiểm tra mục 84 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 85: kiểm tra mục 85 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 86: kiểm tra mục 86 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 87: kiểm tra mục 87 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 88: kiểm tra mục 88 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 89: kiểm tra mục 89 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 90: kiểm tra mục 90 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 91: kiểm tra mục 91 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 92: kiểm tra mục 92 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 93: kiểm tra mục 93 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 94: kiểm tra mục 94 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 95: kiểm tra mục 95 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 96: kiểm tra mục 96 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 97: kiểm tra mục 97 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 98: kiểm tra mục 98 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 99: kiểm tra mục 99 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 100: kiểm tra mục 100 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 101: kiểm tra mục 101 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 102: kiểm tra mục 102 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 103: kiểm tra mục 103 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 104: kiểm tra mục 104 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 105: kiểm tra mục 105 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 106: kiểm tra mục 106 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 107: kiểm tra mục 107 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 108: kiểm tra mục 108 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 109: kiểm tra mục 109 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 110: kiểm tra mục 110 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 111: kiểm tra mục 111 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 112: kiểm tra mục 112 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 113: kiểm tra mục 113 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 114: kiểm tra mục 114 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 115: kiểm tra mục 115 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 116: kiểm tra mục 116 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 117: kiểm tra mục 117 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 118: kiểm tra mục 118 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 119: kiểm tra mục 119 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 120: kiểm tra mục 120 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 121: kiểm tra mục 121 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 122: kiểm tra mục 122 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 123: kiểm tra mục 123 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 124: kiểm tra mục 124 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 125: kiểm tra mục 125 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 126: kiểm tra mục 126 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 127: kiểm tra mục 127 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 128: kiểm tra mục 128 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 129: kiểm tra mục 129 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 130: kiểm tra mục 130 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 131: kiểm tra mục 131 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 132: kiểm tra mục 132 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 133: kiểm tra mục 133 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 134: kiểm tra mục 134 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 135: kiểm tra mục 135 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 136: kiểm tra mục 136 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 137: kiểm tra mục 137 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 138: kiểm tra mục 138 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 139: kiểm tra mục 139 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 140: kiểm tra mục 140 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 141: kiểm tra mục 141 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 142: kiểm tra mục 142 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 143: kiểm tra mục 143 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 144: kiểm tra mục 144 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 145: kiểm tra mục 145 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 146: kiểm tra mục 146 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 147: kiểm tra mục 147 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 148: kiểm tra mục 148 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 149: kiểm tra mục 149 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Orders checklist 150: kiểm tra mục 150 của nhóm Orders trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 1: kiểm tra mục 1 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 2: kiểm tra mục 2 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 3: kiểm tra mục 3 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 4: kiểm tra mục 4 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 5: kiểm tra mục 5 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 6: kiểm tra mục 6 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 7: kiểm tra mục 7 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 8: kiểm tra mục 8 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 9: kiểm tra mục 9 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 10: kiểm tra mục 10 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 11: kiểm tra mục 11 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 12: kiểm tra mục 12 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 13: kiểm tra mục 13 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 14: kiểm tra mục 14 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 15: kiểm tra mục 15 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 16: kiểm tra mục 16 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 17: kiểm tra mục 17 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 18: kiểm tra mục 18 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 19: kiểm tra mục 19 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 20: kiểm tra mục 20 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 21: kiểm tra mục 21 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 22: kiểm tra mục 22 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 23: kiểm tra mục 23 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 24: kiểm tra mục 24 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 25: kiểm tra mục 25 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 26: kiểm tra mục 26 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 27: kiểm tra mục 27 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 28: kiểm tra mục 28 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 29: kiểm tra mục 29 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 30: kiểm tra mục 30 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 31: kiểm tra mục 31 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 32: kiểm tra mục 32 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 33: kiểm tra mục 33 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 34: kiểm tra mục 34 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 35: kiểm tra mục 35 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 36: kiểm tra mục 36 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 37: kiểm tra mục 37 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 38: kiểm tra mục 38 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 39: kiểm tra mục 39 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 40: kiểm tra mục 40 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 41: kiểm tra mục 41 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 42: kiểm tra mục 42 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 43: kiểm tra mục 43 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 44: kiểm tra mục 44 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 45: kiểm tra mục 45 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 46: kiểm tra mục 46 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 47: kiểm tra mục 47 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 48: kiểm tra mục 48 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 49: kiểm tra mục 49 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 50: kiểm tra mục 50 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 51: kiểm tra mục 51 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 52: kiểm tra mục 52 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 53: kiểm tra mục 53 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 54: kiểm tra mục 54 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 55: kiểm tra mục 55 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 56: kiểm tra mục 56 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 57: kiểm tra mục 57 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 58: kiểm tra mục 58 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 59: kiểm tra mục 59 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 60: kiểm tra mục 60 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 61: kiểm tra mục 61 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 62: kiểm tra mục 62 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 63: kiểm tra mục 63 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 64: kiểm tra mục 64 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 65: kiểm tra mục 65 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 66: kiểm tra mục 66 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 67: kiểm tra mục 67 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 68: kiểm tra mục 68 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 69: kiểm tra mục 69 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 70: kiểm tra mục 70 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 71: kiểm tra mục 71 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 72: kiểm tra mục 72 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 73: kiểm tra mục 73 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 74: kiểm tra mục 74 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 75: kiểm tra mục 75 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 76: kiểm tra mục 76 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 77: kiểm tra mục 77 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 78: kiểm tra mục 78 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 79: kiểm tra mục 79 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 80: kiểm tra mục 80 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 81: kiểm tra mục 81 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 82: kiểm tra mục 82 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 83: kiểm tra mục 83 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 84: kiểm tra mục 84 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 85: kiểm tra mục 85 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 86: kiểm tra mục 86 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 87: kiểm tra mục 87 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 88: kiểm tra mục 88 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 89: kiểm tra mục 89 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 90: kiểm tra mục 90 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 91: kiểm tra mục 91 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 92: kiểm tra mục 92 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 93: kiểm tra mục 93 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 94: kiểm tra mục 94 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 95: kiểm tra mục 95 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 96: kiểm tra mục 96 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 97: kiểm tra mục 97 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 98: kiểm tra mục 98 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 99: kiểm tra mục 99 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 100: kiểm tra mục 100 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 101: kiểm tra mục 101 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 102: kiểm tra mục 102 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 103: kiểm tra mục 103 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 104: kiểm tra mục 104 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 105: kiểm tra mục 105 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 106: kiểm tra mục 106 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 107: kiểm tra mục 107 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 108: kiểm tra mục 108 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 109: kiểm tra mục 109 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 110: kiểm tra mục 110 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 111: kiểm tra mục 111 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 112: kiểm tra mục 112 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 113: kiểm tra mục 113 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 114: kiểm tra mục 114 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 115: kiểm tra mục 115 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 116: kiểm tra mục 116 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 117: kiểm tra mục 117 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 118: kiểm tra mục 118 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 119: kiểm tra mục 119 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 120: kiểm tra mục 120 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 121: kiểm tra mục 121 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 122: kiểm tra mục 122 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 123: kiểm tra mục 123 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 124: kiểm tra mục 124 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 125: kiểm tra mục 125 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 126: kiểm tra mục 126 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 127: kiểm tra mục 127 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 128: kiểm tra mục 128 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 129: kiểm tra mục 129 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 130: kiểm tra mục 130 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 131: kiểm tra mục 131 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 132: kiểm tra mục 132 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 133: kiểm tra mục 133 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 134: kiểm tra mục 134 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 135: kiểm tra mục 135 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 136: kiểm tra mục 136 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 137: kiểm tra mục 137 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 138: kiểm tra mục 138 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 139: kiểm tra mục 139 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 140: kiểm tra mục 140 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 141: kiểm tra mục 141 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 142: kiểm tra mục 142 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 143: kiểm tra mục 143 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 144: kiểm tra mục 144 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 145: kiểm tra mục 145 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 146: kiểm tra mục 146 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 147: kiểm tra mục 147 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 148: kiểm tra mục 148 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 149: kiểm tra mục 149 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Balances checklist 150: kiểm tra mục 150 của nhóm Balances trước khi thay đổi dữ liệu đang chạy.
+Users checklist 1: kiểm tra mục 1 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 2: kiểm tra mục 2 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 3: kiểm tra mục 3 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 4: kiểm tra mục 4 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 5: kiểm tra mục 5 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 6: kiểm tra mục 6 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 7: kiểm tra mục 7 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 8: kiểm tra mục 8 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 9: kiểm tra mục 9 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 10: kiểm tra mục 10 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 11: kiểm tra mục 11 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 12: kiểm tra mục 12 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 13: kiểm tra mục 13 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 14: kiểm tra mục 14 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 15: kiểm tra mục 15 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 16: kiểm tra mục 16 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 17: kiểm tra mục 17 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 18: kiểm tra mục 18 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 19: kiểm tra mục 19 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 20: kiểm tra mục 20 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 21: kiểm tra mục 21 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 22: kiểm tra mục 22 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 23: kiểm tra mục 23 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 24: kiểm tra mục 24 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 25: kiểm tra mục 25 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 26: kiểm tra mục 26 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 27: kiểm tra mục 27 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 28: kiểm tra mục 28 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 29: kiểm tra mục 29 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 30: kiểm tra mục 30 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 31: kiểm tra mục 31 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 32: kiểm tra mục 32 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 33: kiểm tra mục 33 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 34: kiểm tra mục 34 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 35: kiểm tra mục 35 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 36: kiểm tra mục 36 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 37: kiểm tra mục 37 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 38: kiểm tra mục 38 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 39: kiểm tra mục 39 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 40: kiểm tra mục 40 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 41: kiểm tra mục 41 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 42: kiểm tra mục 42 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 43: kiểm tra mục 43 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 44: kiểm tra mục 44 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 45: kiểm tra mục 45 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 46: kiểm tra mục 46 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 47: kiểm tra mục 47 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 48: kiểm tra mục 48 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 49: kiểm tra mục 49 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 50: kiểm tra mục 50 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 51: kiểm tra mục 51 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 52: kiểm tra mục 52 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 53: kiểm tra mục 53 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 54: kiểm tra mục 54 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 55: kiểm tra mục 55 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 56: kiểm tra mục 56 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 57: kiểm tra mục 57 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 58: kiểm tra mục 58 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 59: kiểm tra mục 59 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 60: kiểm tra mục 60 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 61: kiểm tra mục 61 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 62: kiểm tra mục 62 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 63: kiểm tra mục 63 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 64: kiểm tra mục 64 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 65: kiểm tra mục 65 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 66: kiểm tra mục 66 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 67: kiểm tra mục 67 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 68: kiểm tra mục 68 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 69: kiểm tra mục 69 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 70: kiểm tra mục 70 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 71: kiểm tra mục 71 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 72: kiểm tra mục 72 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 73: kiểm tra mục 73 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 74: kiểm tra mục 74 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 75: kiểm tra mục 75 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 76: kiểm tra mục 76 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 77: kiểm tra mục 77 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 78: kiểm tra mục 78 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 79: kiểm tra mục 79 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 80: kiểm tra mục 80 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 81: kiểm tra mục 81 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 82: kiểm tra mục 82 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 83: kiểm tra mục 83 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 84: kiểm tra mục 84 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 85: kiểm tra mục 85 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 86: kiểm tra mục 86 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 87: kiểm tra mục 87 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 88: kiểm tra mục 88 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 89: kiểm tra mục 89 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 90: kiểm tra mục 90 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 91: kiểm tra mục 91 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 92: kiểm tra mục 92 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 93: kiểm tra mục 93 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 94: kiểm tra mục 94 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 95: kiểm tra mục 95 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 96: kiểm tra mục 96 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 97: kiểm tra mục 97 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 98: kiểm tra mục 98 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 99: kiểm tra mục 99 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 100: kiểm tra mục 100 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 101: kiểm tra mục 101 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 102: kiểm tra mục 102 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 103: kiểm tra mục 103 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 104: kiểm tra mục 104 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 105: kiểm tra mục 105 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 106: kiểm tra mục 106 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 107: kiểm tra mục 107 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 108: kiểm tra mục 108 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 109: kiểm tra mục 109 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 110: kiểm tra mục 110 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 111: kiểm tra mục 111 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 112: kiểm tra mục 112 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 113: kiểm tra mục 113 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 114: kiểm tra mục 114 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 115: kiểm tra mục 115 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 116: kiểm tra mục 116 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 117: kiểm tra mục 117 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 118: kiểm tra mục 118 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 119: kiểm tra mục 119 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 120: kiểm tra mục 120 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 121: kiểm tra mục 121 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 122: kiểm tra mục 122 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 123: kiểm tra mục 123 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 124: kiểm tra mục 124 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 125: kiểm tra mục 125 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 126: kiểm tra mục 126 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 127: kiểm tra mục 127 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 128: kiểm tra mục 128 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 129: kiểm tra mục 129 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 130: kiểm tra mục 130 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 131: kiểm tra mục 131 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 132: kiểm tra mục 132 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 133: kiểm tra mục 133 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 134: kiểm tra mục 134 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 135: kiểm tra mục 135 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 136: kiểm tra mục 136 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 137: kiểm tra mục 137 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 138: kiểm tra mục 138 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 139: kiểm tra mục 139 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 140: kiểm tra mục 140 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 141: kiểm tra mục 141 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 142: kiểm tra mục 142 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 143: kiểm tra mục 143 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 144: kiểm tra mục 144 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 145: kiểm tra mục 145 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 146: kiểm tra mục 146 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 147: kiểm tra mục 147 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 148: kiểm tra mục 148 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 149: kiểm tra mục 149 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Users checklist 150: kiểm tra mục 150 của nhóm Users trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 1: kiểm tra mục 1 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 2: kiểm tra mục 2 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 3: kiểm tra mục 3 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 4: kiểm tra mục 4 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 5: kiểm tra mục 5 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 6: kiểm tra mục 6 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 7: kiểm tra mục 7 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 8: kiểm tra mục 8 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 9: kiểm tra mục 9 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 10: kiểm tra mục 10 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 11: kiểm tra mục 11 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 12: kiểm tra mục 12 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 13: kiểm tra mục 13 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 14: kiểm tra mục 14 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 15: kiểm tra mục 15 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 16: kiểm tra mục 16 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 17: kiểm tra mục 17 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 18: kiểm tra mục 18 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 19: kiểm tra mục 19 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 20: kiểm tra mục 20 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 21: kiểm tra mục 21 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 22: kiểm tra mục 22 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 23: kiểm tra mục 23 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 24: kiểm tra mục 24 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 25: kiểm tra mục 25 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 26: kiểm tra mục 26 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 27: kiểm tra mục 27 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 28: kiểm tra mục 28 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 29: kiểm tra mục 29 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 30: kiểm tra mục 30 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 31: kiểm tra mục 31 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 32: kiểm tra mục 32 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 33: kiểm tra mục 33 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 34: kiểm tra mục 34 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 35: kiểm tra mục 35 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 36: kiểm tra mục 36 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 37: kiểm tra mục 37 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 38: kiểm tra mục 38 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 39: kiểm tra mục 39 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 40: kiểm tra mục 40 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 41: kiểm tra mục 41 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 42: kiểm tra mục 42 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 43: kiểm tra mục 43 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 44: kiểm tra mục 44 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 45: kiểm tra mục 45 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 46: kiểm tra mục 46 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 47: kiểm tra mục 47 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 48: kiểm tra mục 48 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 49: kiểm tra mục 49 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 50: kiểm tra mục 50 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 51: kiểm tra mục 51 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 52: kiểm tra mục 52 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 53: kiểm tra mục 53 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 54: kiểm tra mục 54 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 55: kiểm tra mục 55 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 56: kiểm tra mục 56 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 57: kiểm tra mục 57 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 58: kiểm tra mục 58 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 59: kiểm tra mục 59 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 60: kiểm tra mục 60 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 61: kiểm tra mục 61 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 62: kiểm tra mục 62 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 63: kiểm tra mục 63 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 64: kiểm tra mục 64 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 65: kiểm tra mục 65 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 66: kiểm tra mục 66 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 67: kiểm tra mục 67 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 68: kiểm tra mục 68 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 69: kiểm tra mục 69 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 70: kiểm tra mục 70 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 71: kiểm tra mục 71 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 72: kiểm tra mục 72 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 73: kiểm tra mục 73 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 74: kiểm tra mục 74 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 75: kiểm tra mục 75 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 76: kiểm tra mục 76 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 77: kiểm tra mục 77 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 78: kiểm tra mục 78 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 79: kiểm tra mục 79 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 80: kiểm tra mục 80 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 81: kiểm tra mục 81 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 82: kiểm tra mục 82 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 83: kiểm tra mục 83 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 84: kiểm tra mục 84 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 85: kiểm tra mục 85 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 86: kiểm tra mục 86 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 87: kiểm tra mục 87 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 88: kiểm tra mục 88 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 89: kiểm tra mục 89 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 90: kiểm tra mục 90 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 91: kiểm tra mục 91 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 92: kiểm tra mục 92 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 93: kiểm tra mục 93 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 94: kiểm tra mục 94 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 95: kiểm tra mục 95 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 96: kiểm tra mục 96 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 97: kiểm tra mục 97 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 98: kiểm tra mục 98 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 99: kiểm tra mục 99 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 100: kiểm tra mục 100 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 101: kiểm tra mục 101 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 102: kiểm tra mục 102 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 103: kiểm tra mục 103 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 104: kiểm tra mục 104 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 105: kiểm tra mục 105 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 106: kiểm tra mục 106 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 107: kiểm tra mục 107 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 108: kiểm tra mục 108 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 109: kiểm tra mục 109 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 110: kiểm tra mục 110 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 111: kiểm tra mục 111 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 112: kiểm tra mục 112 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 113: kiểm tra mục 113 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 114: kiểm tra mục 114 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 115: kiểm tra mục 115 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 116: kiểm tra mục 116 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 117: kiểm tra mục 117 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 118: kiểm tra mục 118 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 119: kiểm tra mục 119 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 120: kiểm tra mục 120 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 121: kiểm tra mục 121 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 122: kiểm tra mục 122 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 123: kiểm tra mục 123 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 124: kiểm tra mục 124 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 125: kiểm tra mục 125 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 126: kiểm tra mục 126 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 127: kiểm tra mục 127 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 128: kiểm tra mục 128 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 129: kiểm tra mục 129 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 130: kiểm tra mục 130 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 131: kiểm tra mục 131 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 132: kiểm tra mục 132 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 133: kiểm tra mục 133 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 134: kiểm tra mục 134 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 135: kiểm tra mục 135 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 136: kiểm tra mục 136 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 137: kiểm tra mục 137 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 138: kiểm tra mục 138 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 139: kiểm tra mục 139 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 140: kiểm tra mục 140 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 141: kiểm tra mục 141 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 142: kiểm tra mục 142 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 143: kiểm tra mục 143 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 144: kiểm tra mục 144 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 145: kiểm tra mục 145 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 146: kiểm tra mục 146 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 147: kiểm tra mục 147 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 148: kiểm tra mục 148 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 149: kiểm tra mục 149 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Payment checklist 150: kiểm tra mục 150 của nhóm Payment trước khi thay đổi dữ liệu đang chạy.
+Products checklist 1: kiểm tra mục 1 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 2: kiểm tra mục 2 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 3: kiểm tra mục 3 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 4: kiểm tra mục 4 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 5: kiểm tra mục 5 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 6: kiểm tra mục 6 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 7: kiểm tra mục 7 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 8: kiểm tra mục 8 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 9: kiểm tra mục 9 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 10: kiểm tra mục 10 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 11: kiểm tra mục 11 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 12: kiểm tra mục 12 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 13: kiểm tra mục 13 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 14: kiểm tra mục 14 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 15: kiểm tra mục 15 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 16: kiểm tra mục 16 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 17: kiểm tra mục 17 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 18: kiểm tra mục 18 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 19: kiểm tra mục 19 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 20: kiểm tra mục 20 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 21: kiểm tra mục 21 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 22: kiểm tra mục 22 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 23: kiểm tra mục 23 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 24: kiểm tra mục 24 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 25: kiểm tra mục 25 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 26: kiểm tra mục 26 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 27: kiểm tra mục 27 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 28: kiểm tra mục 28 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 29: kiểm tra mục 29 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 30: kiểm tra mục 30 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 31: kiểm tra mục 31 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 32: kiểm tra mục 32 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 33: kiểm tra mục 33 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 34: kiểm tra mục 34 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 35: kiểm tra mục 35 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 36: kiểm tra mục 36 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 37: kiểm tra mục 37 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 38: kiểm tra mục 38 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 39: kiểm tra mục 39 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 40: kiểm tra mục 40 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 41: kiểm tra mục 41 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 42: kiểm tra mục 42 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 43: kiểm tra mục 43 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 44: kiểm tra mục 44 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 45: kiểm tra mục 45 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 46: kiểm tra mục 46 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 47: kiểm tra mục 47 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 48: kiểm tra mục 48 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 49: kiểm tra mục 49 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 50: kiểm tra mục 50 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 51: kiểm tra mục 51 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 52: kiểm tra mục 52 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 53: kiểm tra mục 53 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 54: kiểm tra mục 54 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 55: kiểm tra mục 55 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 56: kiểm tra mục 56 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 57: kiểm tra mục 57 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 58: kiểm tra mục 58 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 59: kiểm tra mục 59 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 60: kiểm tra mục 60 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 61: kiểm tra mục 61 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 62: kiểm tra mục 62 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 63: kiểm tra mục 63 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 64: kiểm tra mục 64 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 65: kiểm tra mục 65 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 66: kiểm tra mục 66 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 67: kiểm tra mục 67 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 68: kiểm tra mục 68 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 69: kiểm tra mục 69 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 70: kiểm tra mục 70 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 71: kiểm tra mục 71 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 72: kiểm tra mục 72 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 73: kiểm tra mục 73 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 74: kiểm tra mục 74 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 75: kiểm tra mục 75 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 76: kiểm tra mục 76 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 77: kiểm tra mục 77 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 78: kiểm tra mục 78 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 79: kiểm tra mục 79 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 80: kiểm tra mục 80 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 81: kiểm tra mục 81 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 82: kiểm tra mục 82 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 83: kiểm tra mục 83 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 84: kiểm tra mục 84 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 85: kiểm tra mục 85 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 86: kiểm tra mục 86 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 87: kiểm tra mục 87 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 88: kiểm tra mục 88 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 89: kiểm tra mục 89 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 90: kiểm tra mục 90 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 91: kiểm tra mục 91 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 92: kiểm tra mục 92 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 93: kiểm tra mục 93 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 94: kiểm tra mục 94 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 95: kiểm tra mục 95 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 96: kiểm tra mục 96 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 97: kiểm tra mục 97 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 98: kiểm tra mục 98 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 99: kiểm tra mục 99 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 100: kiểm tra mục 100 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 101: kiểm tra mục 101 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 102: kiểm tra mục 102 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 103: kiểm tra mục 103 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 104: kiểm tra mục 104 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 105: kiểm tra mục 105 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 106: kiểm tra mục 106 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 107: kiểm tra mục 107 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 108: kiểm tra mục 108 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 109: kiểm tra mục 109 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 110: kiểm tra mục 110 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 111: kiểm tra mục 111 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 112: kiểm tra mục 112 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 113: kiểm tra mục 113 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 114: kiểm tra mục 114 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 115: kiểm tra mục 115 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 116: kiểm tra mục 116 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 117: kiểm tra mục 117 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 118: kiểm tra mục 118 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 119: kiểm tra mục 119 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 120: kiểm tra mục 120 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 121: kiểm tra mục 121 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 122: kiểm tra mục 122 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 123: kiểm tra mục 123 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 124: kiểm tra mục 124 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 125: kiểm tra mục 125 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 126: kiểm tra mục 126 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 127: kiểm tra mục 127 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 128: kiểm tra mục 128 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 129: kiểm tra mục 129 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 130: kiểm tra mục 130 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 131: kiểm tra mục 131 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 132: kiểm tra mục 132 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 133: kiểm tra mục 133 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 134: kiểm tra mục 134 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 135: kiểm tra mục 135 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 136: kiểm tra mục 136 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 137: kiểm tra mục 137 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 138: kiểm tra mục 138 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 139: kiểm tra mục 139 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 140: kiểm tra mục 140 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 141: kiểm tra mục 141 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 142: kiểm tra mục 142 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 143: kiểm tra mục 143 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 144: kiểm tra mục 144 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 145: kiểm tra mục 145 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 146: kiểm tra mục 146 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 147: kiểm tra mục 147 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 148: kiểm tra mục 148 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 149: kiểm tra mục 149 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Products checklist 150: kiểm tra mục 150 của nhóm Products trước khi thay đổi dữ liệu đang chạy.
+Website checklist 1: kiểm tra mục 1 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 2: kiểm tra mục 2 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 3: kiểm tra mục 3 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 4: kiểm tra mục 4 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 5: kiểm tra mục 5 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 6: kiểm tra mục 6 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 7: kiểm tra mục 7 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 8: kiểm tra mục 8 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 9: kiểm tra mục 9 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 10: kiểm tra mục 10 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 11: kiểm tra mục 11 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 12: kiểm tra mục 12 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 13: kiểm tra mục 13 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 14: kiểm tra mục 14 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 15: kiểm tra mục 15 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 16: kiểm tra mục 16 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 17: kiểm tra mục 17 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 18: kiểm tra mục 18 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 19: kiểm tra mục 19 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 20: kiểm tra mục 20 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 21: kiểm tra mục 21 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 22: kiểm tra mục 22 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 23: kiểm tra mục 23 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 24: kiểm tra mục 24 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 25: kiểm tra mục 25 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 26: kiểm tra mục 26 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 27: kiểm tra mục 27 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 28: kiểm tra mục 28 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 29: kiểm tra mục 29 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 30: kiểm tra mục 30 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 31: kiểm tra mục 31 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 32: kiểm tra mục 32 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 33: kiểm tra mục 33 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 34: kiểm tra mục 34 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 35: kiểm tra mục 35 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 36: kiểm tra mục 36 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 37: kiểm tra mục 37 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 38: kiểm tra mục 38 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 39: kiểm tra mục 39 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 40: kiểm tra mục 40 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 41: kiểm tra mục 41 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 42: kiểm tra mục 42 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 43: kiểm tra mục 43 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 44: kiểm tra mục 44 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 45: kiểm tra mục 45 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 46: kiểm tra mục 46 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 47: kiểm tra mục 47 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 48: kiểm tra mục 48 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 49: kiểm tra mục 49 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 50: kiểm tra mục 50 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 51: kiểm tra mục 51 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 52: kiểm tra mục 52 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 53: kiểm tra mục 53 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 54: kiểm tra mục 54 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 55: kiểm tra mục 55 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 56: kiểm tra mục 56 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 57: kiểm tra mục 57 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 58: kiểm tra mục 58 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 59: kiểm tra mục 59 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 60: kiểm tra mục 60 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 61: kiểm tra mục 61 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 62: kiểm tra mục 62 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 63: kiểm tra mục 63 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 64: kiểm tra mục 64 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 65: kiểm tra mục 65 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 66: kiểm tra mục 66 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 67: kiểm tra mục 67 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 68: kiểm tra mục 68 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 69: kiểm tra mục 69 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 70: kiểm tra mục 70 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 71: kiểm tra mục 71 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 72: kiểm tra mục 72 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 73: kiểm tra mục 73 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 74: kiểm tra mục 74 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 75: kiểm tra mục 75 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 76: kiểm tra mục 76 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 77: kiểm tra mục 77 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 78: kiểm tra mục 78 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 79: kiểm tra mục 79 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 80: kiểm tra mục 80 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 81: kiểm tra mục 81 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 82: kiểm tra mục 82 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 83: kiểm tra mục 83 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 84: kiểm tra mục 84 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 85: kiểm tra mục 85 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 86: kiểm tra mục 86 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 87: kiểm tra mục 87 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 88: kiểm tra mục 88 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 89: kiểm tra mục 89 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 90: kiểm tra mục 90 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 91: kiểm tra mục 91 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 92: kiểm tra mục 92 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 93: kiểm tra mục 93 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 94: kiểm tra mục 94 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 95: kiểm tra mục 95 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 96: kiểm tra mục 96 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 97: kiểm tra mục 97 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 98: kiểm tra mục 98 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 99: kiểm tra mục 99 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 100: kiểm tra mục 100 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 101: kiểm tra mục 101 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 102: kiểm tra mục 102 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 103: kiểm tra mục 103 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 104: kiểm tra mục 104 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 105: kiểm tra mục 105 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 106: kiểm tra mục 106 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 107: kiểm tra mục 107 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 108: kiểm tra mục 108 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 109: kiểm tra mục 109 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 110: kiểm tra mục 110 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 111: kiểm tra mục 111 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 112: kiểm tra mục 112 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 113: kiểm tra mục 113 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 114: kiểm tra mục 114 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 115: kiểm tra mục 115 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 116: kiểm tra mục 116 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 117: kiểm tra mục 117 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 118: kiểm tra mục 118 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 119: kiểm tra mục 119 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 120: kiểm tra mục 120 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 121: kiểm tra mục 121 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 122: kiểm tra mục 122 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 123: kiểm tra mục 123 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 124: kiểm tra mục 124 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 125: kiểm tra mục 125 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 126: kiểm tra mục 126 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 127: kiểm tra mục 127 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 128: kiểm tra mục 128 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 129: kiểm tra mục 129 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 130: kiểm tra mục 130 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 131: kiểm tra mục 131 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 132: kiểm tra mục 132 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 133: kiểm tra mục 133 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 134: kiểm tra mục 134 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 135: kiểm tra mục 135 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 136: kiểm tra mục 136 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 137: kiểm tra mục 137 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 138: kiểm tra mục 138 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 139: kiểm tra mục 139 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 140: kiểm tra mục 140 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 141: kiểm tra mục 141 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 142: kiểm tra mục 142 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 143: kiểm tra mục 143 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 144: kiểm tra mục 144 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 145: kiểm tra mục 145 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 146: kiểm tra mục 146 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 147: kiểm tra mục 147 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 148: kiểm tra mục 148 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 149: kiểm tra mục 149 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Website checklist 150: kiểm tra mục 150 của nhóm Website trước khi thay đổi dữ liệu đang chạy.
+Security checklist 1: kiểm tra mục 1 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 2: kiểm tra mục 2 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 3: kiểm tra mục 3 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 4: kiểm tra mục 4 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 5: kiểm tra mục 5 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 6: kiểm tra mục 6 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 7: kiểm tra mục 7 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 8: kiểm tra mục 8 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 9: kiểm tra mục 9 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 10: kiểm tra mục 10 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 11: kiểm tra mục 11 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 12: kiểm tra mục 12 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 13: kiểm tra mục 13 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 14: kiểm tra mục 14 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 15: kiểm tra mục 15 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 16: kiểm tra mục 16 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 17: kiểm tra mục 17 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 18: kiểm tra mục 18 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 19: kiểm tra mục 19 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 20: kiểm tra mục 20 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 21: kiểm tra mục 21 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 22: kiểm tra mục 22 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 23: kiểm tra mục 23 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 24: kiểm tra mục 24 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 25: kiểm tra mục 25 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 26: kiểm tra mục 26 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 27: kiểm tra mục 27 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 28: kiểm tra mục 28 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 29: kiểm tra mục 29 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 30: kiểm tra mục 30 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 31: kiểm tra mục 31 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 32: kiểm tra mục 32 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 33: kiểm tra mục 33 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 34: kiểm tra mục 34 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 35: kiểm tra mục 35 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 36: kiểm tra mục 36 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 37: kiểm tra mục 37 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 38: kiểm tra mục 38 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 39: kiểm tra mục 39 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 40: kiểm tra mục 40 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 41: kiểm tra mục 41 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 42: kiểm tra mục 42 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 43: kiểm tra mục 43 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 44: kiểm tra mục 44 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 45: kiểm tra mục 45 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 46: kiểm tra mục 46 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 47: kiểm tra mục 47 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 48: kiểm tra mục 48 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 49: kiểm tra mục 49 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 50: kiểm tra mục 50 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 51: kiểm tra mục 51 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 52: kiểm tra mục 52 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 53: kiểm tra mục 53 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 54: kiểm tra mục 54 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 55: kiểm tra mục 55 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 56: kiểm tra mục 56 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 57: kiểm tra mục 57 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 58: kiểm tra mục 58 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 59: kiểm tra mục 59 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 60: kiểm tra mục 60 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 61: kiểm tra mục 61 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 62: kiểm tra mục 62 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 63: kiểm tra mục 63 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 64: kiểm tra mục 64 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 65: kiểm tra mục 65 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 66: kiểm tra mục 66 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 67: kiểm tra mục 67 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 68: kiểm tra mục 68 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 69: kiểm tra mục 69 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 70: kiểm tra mục 70 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 71: kiểm tra mục 71 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 72: kiểm tra mục 72 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 73: kiểm tra mục 73 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 74: kiểm tra mục 74 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 75: kiểm tra mục 75 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 76: kiểm tra mục 76 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 77: kiểm tra mục 77 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 78: kiểm tra mục 78 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 79: kiểm tra mục 79 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 80: kiểm tra mục 80 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 81: kiểm tra mục 81 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 82: kiểm tra mục 82 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 83: kiểm tra mục 83 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 84: kiểm tra mục 84 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 85: kiểm tra mục 85 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 86: kiểm tra mục 86 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 87: kiểm tra mục 87 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 88: kiểm tra mục 88 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 89: kiểm tra mục 89 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 90: kiểm tra mục 90 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 91: kiểm tra mục 91 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 92: kiểm tra mục 92 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 93: kiểm tra mục 93 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 94: kiểm tra mục 94 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 95: kiểm tra mục 95 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 96: kiểm tra mục 96 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 97: kiểm tra mục 97 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 98: kiểm tra mục 98 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 99: kiểm tra mục 99 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 100: kiểm tra mục 100 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 101: kiểm tra mục 101 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 102: kiểm tra mục 102 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 103: kiểm tra mục 103 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 104: kiểm tra mục 104 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 105: kiểm tra mục 105 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 106: kiểm tra mục 106 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 107: kiểm tra mục 107 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 108: kiểm tra mục 108 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 109: kiểm tra mục 109 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 110: kiểm tra mục 110 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 111: kiểm tra mục 111 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 112: kiểm tra mục 112 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 113: kiểm tra mục 113 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 114: kiểm tra mục 114 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 115: kiểm tra mục 115 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 116: kiểm tra mục 116 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 117: kiểm tra mục 117 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 118: kiểm tra mục 118 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 119: kiểm tra mục 119 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 120: kiểm tra mục 120 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 121: kiểm tra mục 121 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 122: kiểm tra mục 122 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 123: kiểm tra mục 123 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 124: kiểm tra mục 124 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 125: kiểm tra mục 125 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 126: kiểm tra mục 126 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 127: kiểm tra mục 127 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 128: kiểm tra mục 128 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 129: kiểm tra mục 129 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 130: kiểm tra mục 130 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 131: kiểm tra mục 131 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 132: kiểm tra mục 132 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 133: kiểm tra mục 133 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 134: kiểm tra mục 134 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 135: kiểm tra mục 135 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 136: kiểm tra mục 136 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 137: kiểm tra mục 137 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 138: kiểm tra mục 138 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 139: kiểm tra mục 139 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 140: kiểm tra mục 140 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 141: kiểm tra mục 141 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 142: kiểm tra mục 142 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 143: kiểm tra mục 143 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 144: kiểm tra mục 144 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 145: kiểm tra mục 145 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 146: kiểm tra mục 146 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 147: kiểm tra mục 147 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 148: kiểm tra mục 148 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 149: kiểm tra mục 149 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+Security checklist 150: kiểm tra mục 150 của nhóm Security trước khi thay đổi dữ liệu đang chạy.
+UI checklist 1: kiểm tra mục 1 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 2: kiểm tra mục 2 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 3: kiểm tra mục 3 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 4: kiểm tra mục 4 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 5: kiểm tra mục 5 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 6: kiểm tra mục 6 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 7: kiểm tra mục 7 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 8: kiểm tra mục 8 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 9: kiểm tra mục 9 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 10: kiểm tra mục 10 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 11: kiểm tra mục 11 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 12: kiểm tra mục 12 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 13: kiểm tra mục 13 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 14: kiểm tra mục 14 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 15: kiểm tra mục 15 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 16: kiểm tra mục 16 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 17: kiểm tra mục 17 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 18: kiểm tra mục 18 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 19: kiểm tra mục 19 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 20: kiểm tra mục 20 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 21: kiểm tra mục 21 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 22: kiểm tra mục 22 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 23: kiểm tra mục 23 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 24: kiểm tra mục 24 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 25: kiểm tra mục 25 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 26: kiểm tra mục 26 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 27: kiểm tra mục 27 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 28: kiểm tra mục 28 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 29: kiểm tra mục 29 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 30: kiểm tra mục 30 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 31: kiểm tra mục 31 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 32: kiểm tra mục 32 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 33: kiểm tra mục 33 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 34: kiểm tra mục 34 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 35: kiểm tra mục 35 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 36: kiểm tra mục 36 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 37: kiểm tra mục 37 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 38: kiểm tra mục 38 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 39: kiểm tra mục 39 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 40: kiểm tra mục 40 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 41: kiểm tra mục 41 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 42: kiểm tra mục 42 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 43: kiểm tra mục 43 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 44: kiểm tra mục 44 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 45: kiểm tra mục 45 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 46: kiểm tra mục 46 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 47: kiểm tra mục 47 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 48: kiểm tra mục 48 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 49: kiểm tra mục 49 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 50: kiểm tra mục 50 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 51: kiểm tra mục 51 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 52: kiểm tra mục 52 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 53: kiểm tra mục 53 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 54: kiểm tra mục 54 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 55: kiểm tra mục 55 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 56: kiểm tra mục 56 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 57: kiểm tra mục 57 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 58: kiểm tra mục 58 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 59: kiểm tra mục 59 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 60: kiểm tra mục 60 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 61: kiểm tra mục 61 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 62: kiểm tra mục 62 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 63: kiểm tra mục 63 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 64: kiểm tra mục 64 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 65: kiểm tra mục 65 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 66: kiểm tra mục 66 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 67: kiểm tra mục 67 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 68: kiểm tra mục 68 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 69: kiểm tra mục 69 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 70: kiểm tra mục 70 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 71: kiểm tra mục 71 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 72: kiểm tra mục 72 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 73: kiểm tra mục 73 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 74: kiểm tra mục 74 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 75: kiểm tra mục 75 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 76: kiểm tra mục 76 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 77: kiểm tra mục 77 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 78: kiểm tra mục 78 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 79: kiểm tra mục 79 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 80: kiểm tra mục 80 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 81: kiểm tra mục 81 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 82: kiểm tra mục 82 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 83: kiểm tra mục 83 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 84: kiểm tra mục 84 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 85: kiểm tra mục 85 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 86: kiểm tra mục 86 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 87: kiểm tra mục 87 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 88: kiểm tra mục 88 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 89: kiểm tra mục 89 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 90: kiểm tra mục 90 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 91: kiểm tra mục 91 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 92: kiểm tra mục 92 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 93: kiểm tra mục 93 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 94: kiểm tra mục 94 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 95: kiểm tra mục 95 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 96: kiểm tra mục 96 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 97: kiểm tra mục 97 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 98: kiểm tra mục 98 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 99: kiểm tra mục 99 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 100: kiểm tra mục 100 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 101: kiểm tra mục 101 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 102: kiểm tra mục 102 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 103: kiểm tra mục 103 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 104: kiểm tra mục 104 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 105: kiểm tra mục 105 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 106: kiểm tra mục 106 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 107: kiểm tra mục 107 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 108: kiểm tra mục 108 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 109: kiểm tra mục 109 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 110: kiểm tra mục 110 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 111: kiểm tra mục 111 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 112: kiểm tra mục 112 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 113: kiểm tra mục 113 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 114: kiểm tra mục 114 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 115: kiểm tra mục 115 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 116: kiểm tra mục 116 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 117: kiểm tra mục 117 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 118: kiểm tra mục 118 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 119: kiểm tra mục 119 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 120: kiểm tra mục 120 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 121: kiểm tra mục 121 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 122: kiểm tra mục 122 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 123: kiểm tra mục 123 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 124: kiểm tra mục 124 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 125: kiểm tra mục 125 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 126: kiểm tra mục 126 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 127: kiểm tra mục 127 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 128: kiểm tra mục 128 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 129: kiểm tra mục 129 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 130: kiểm tra mục 130 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 131: kiểm tra mục 131 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 132: kiểm tra mục 132 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 133: kiểm tra mục 133 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 134: kiểm tra mục 134 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 135: kiểm tra mục 135 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 136: kiểm tra mục 136 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 137: kiểm tra mục 137 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 138: kiểm tra mục 138 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 139: kiểm tra mục 139 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 140: kiểm tra mục 140 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 141: kiểm tra mục 141 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 142: kiểm tra mục 142 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 143: kiểm tra mục 143 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 144: kiểm tra mục 144 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 145: kiểm tra mục 145 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 146: kiểm tra mục 146 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 147: kiểm tra mục 147 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 148: kiểm tra mục 148 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 149: kiểm tra mục 149 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+UI checklist 150: kiểm tra mục 150 của nhóm UI trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 1: kiểm tra mục 1 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 2: kiểm tra mục 2 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 3: kiểm tra mục 3 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 4: kiểm tra mục 4 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 5: kiểm tra mục 5 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 6: kiểm tra mục 6 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 7: kiểm tra mục 7 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 8: kiểm tra mục 8 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 9: kiểm tra mục 9 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 10: kiểm tra mục 10 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 11: kiểm tra mục 11 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 12: kiểm tra mục 12 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 13: kiểm tra mục 13 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 14: kiểm tra mục 14 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 15: kiểm tra mục 15 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 16: kiểm tra mục 16 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 17: kiểm tra mục 17 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 18: kiểm tra mục 18 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 19: kiểm tra mục 19 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 20: kiểm tra mục 20 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 21: kiểm tra mục 21 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 22: kiểm tra mục 22 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 23: kiểm tra mục 23 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 24: kiểm tra mục 24 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 25: kiểm tra mục 25 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 26: kiểm tra mục 26 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 27: kiểm tra mục 27 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 28: kiểm tra mục 28 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 29: kiểm tra mục 29 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 30: kiểm tra mục 30 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 31: kiểm tra mục 31 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 32: kiểm tra mục 32 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 33: kiểm tra mục 33 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 34: kiểm tra mục 34 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 35: kiểm tra mục 35 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 36: kiểm tra mục 36 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 37: kiểm tra mục 37 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 38: kiểm tra mục 38 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 39: kiểm tra mục 39 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 40: kiểm tra mục 40 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 41: kiểm tra mục 41 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 42: kiểm tra mục 42 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 43: kiểm tra mục 43 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 44: kiểm tra mục 44 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 45: kiểm tra mục 45 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 46: kiểm tra mục 46 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 47: kiểm tra mục 47 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 48: kiểm tra mục 48 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 49: kiểm tra mục 49 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 50: kiểm tra mục 50 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 51: kiểm tra mục 51 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 52: kiểm tra mục 52 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 53: kiểm tra mục 53 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 54: kiểm tra mục 54 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 55: kiểm tra mục 55 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 56: kiểm tra mục 56 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 57: kiểm tra mục 57 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 58: kiểm tra mục 58 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 59: kiểm tra mục 59 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 60: kiểm tra mục 60 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 61: kiểm tra mục 61 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 62: kiểm tra mục 62 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 63: kiểm tra mục 63 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 64: kiểm tra mục 64 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 65: kiểm tra mục 65 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 66: kiểm tra mục 66 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 67: kiểm tra mục 67 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 68: kiểm tra mục 68 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 69: kiểm tra mục 69 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 70: kiểm tra mục 70 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 71: kiểm tra mục 71 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 72: kiểm tra mục 72 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 73: kiểm tra mục 73 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 74: kiểm tra mục 74 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 75: kiểm tra mục 75 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 76: kiểm tra mục 76 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 77: kiểm tra mục 77 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 78: kiểm tra mục 78 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 79: kiểm tra mục 79 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 80: kiểm tra mục 80 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 81: kiểm tra mục 81 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 82: kiểm tra mục 82 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 83: kiểm tra mục 83 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 84: kiểm tra mục 84 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 85: kiểm tra mục 85 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 86: kiểm tra mục 86 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 87: kiểm tra mục 87 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 88: kiểm tra mục 88 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 89: kiểm tra mục 89 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 90: kiểm tra mục 90 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 91: kiểm tra mục 91 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 92: kiểm tra mục 92 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 93: kiểm tra mục 93 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 94: kiểm tra mục 94 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 95: kiểm tra mục 95 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 96: kiểm tra mục 96 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 97: kiểm tra mục 97 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 98: kiểm tra mục 98 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 99: kiểm tra mục 99 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 100: kiểm tra mục 100 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 101: kiểm tra mục 101 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 102: kiểm tra mục 102 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 103: kiểm tra mục 103 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 104: kiểm tra mục 104 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 105: kiểm tra mục 105 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 106: kiểm tra mục 106 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 107: kiểm tra mục 107 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 108: kiểm tra mục 108 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 109: kiểm tra mục 109 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 110: kiểm tra mục 110 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 111: kiểm tra mục 111 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 112: kiểm tra mục 112 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 113: kiểm tra mục 113 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 114: kiểm tra mục 114 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 115: kiểm tra mục 115 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 116: kiểm tra mục 116 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 117: kiểm tra mục 117 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 118: kiểm tra mục 118 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 119: kiểm tra mục 119 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 120: kiểm tra mục 120 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 121: kiểm tra mục 121 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 122: kiểm tra mục 122 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 123: kiểm tra mục 123 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 124: kiểm tra mục 124 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 125: kiểm tra mục 125 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 126: kiểm tra mục 126 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 127: kiểm tra mục 127 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 128: kiểm tra mục 128 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 129: kiểm tra mục 129 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 130: kiểm tra mục 130 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 131: kiểm tra mục 131 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 132: kiểm tra mục 132 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 133: kiểm tra mục 133 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 134: kiểm tra mục 134 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 135: kiểm tra mục 135 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 136: kiểm tra mục 136 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 137: kiểm tra mục 137 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 138: kiểm tra mục 138 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 139: kiểm tra mục 139 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 140: kiểm tra mục 140 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 141: kiểm tra mục 141 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 142: kiểm tra mục 142 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 143: kiểm tra mục 143 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 144: kiểm tra mục 144 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 145: kiểm tra mục 145 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 146: kiểm tra mục 146 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 147: kiểm tra mục 147 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 148: kiểm tra mục 148 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 149: kiểm tra mục 149 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+Backup checklist 150: kiểm tra mục 150 của nhóm Backup trước khi thay đổi dữ liệu đang chạy.
+-->
+</body></html>
