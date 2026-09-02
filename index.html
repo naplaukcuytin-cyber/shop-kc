@@ -3,8 +3,6 @@
 
 <head>
 
-    <base href="https://cenaff.com/" />
-
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <title>Shop Túi Mù Free Fire, Acc FF VIP & Vòng Quay Kim Cương</title>
@@ -21,7 +19,8 @@
     <meta name="google" content="notranslate">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <!-- css -->
+
+    <!-- CSS -->
     <link href="assets/core/css/swiper.css?v=1.0.0" rel="stylesheet">
     <link href="assets/core/css/croppie.css?v=1.0.0" rel="stylesheet">
     <link href="assets/core/css/plyr.css?v=1.0.0" rel="stylesheet">
@@ -30,13 +29,14 @@
     <link href="assets/core/css/app.css?v=1.0.0" rel="stylesheet">
     <link href="assets/core/css/core.css?v=1.0.0" rel="stylesheet">
     <link href="assets/template11/css/main.css?v=1.0.0" rel="stylesheet">
+
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-    <!-- interfont -->
+    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
@@ -49,10 +49,7 @@
         .swal2-title {
             font-size: 25px !important;
         }
-    </style>
 
-    
-    <style>
         @media (max-width: 600px) {
             .logo img {
                 width: 260px !important;
@@ -61,14 +58,25 @@
     </style>
 </head>
 
-
 <body class="scrollbar">
+
     <div id="container_nxn_groups" screen="true">
+
         <script>
             function updateScreenClass() {
                 const width = window.innerWidth;
-                const element = document.getElementById("container_nxn_groups");
-                element.classList.remove("_nxn_screen_mobile", "_nxn_screen_tablet", "_nxn_screen_laptop", "_nxn_screen_desktop");
+                const element =
+                    document.getElementById("container_nxn_groups");
+
+                if (!element) return;
+
+                element.classList.remove(
+                    "_nxn_screen_mobile",
+                    "_nxn_screen_tablet",
+                    "_nxn_screen_laptop",
+                    "_nxn_screen_desktop"
+                );
+
                 if (width <= 550) {
                     element.classList.add("_nxn_screen_mobile");
                 } else if (width <= 768) {
@@ -77,1222 +85,1769 @@
                     element.classList.add("_nxn_screen_laptop");
                 } else {
                     element.classList.add("_nxn_screen_desktop");
-                };
-            };
+                }
+            }
+
             updateScreenClass();
             window.addEventListener("resize", updateScreenClass);
         </script>
 
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
         <div class="header-nav-wrapper" id="headerNavWrapper">
-            <!-- HEADER -->
+
             <header class="header">
+
                 <div class="container">
+
                     <div class="header-content">
-                        <!-- Logo -->
-                        <a class="header-logo" href="/">
-                            <img src="/assets/uploads/1784823429_8c96415b9a61d7b8.png"
+
+                        <!-- LOGO -->
+                        <a class="header-logo" href="index.html">
+
+                            <img
+                                src="/assets/uploads/1784823429_8c96415b9a61d7b8.png"
                                 alt="Giao Dịch Tự Động - Săn Túi Mù FF - Nhận Acc Siêu Phẩm">
+
                         </a>
 
-                        <!-- Search Bar -->
+
+                        <!-- SEARCH -->
                         <div class="header-search">
-                            <form class="search-form" action="#" method="GET">
-                                <input type="text" class="search-input" name="search-flash"
+
+                            <form
+                                class="search-form"
+                                action="#"
+                                method="GET">
+
+                                <input
+                                    type="text"
+                                    class="search-input"
+                                    name="search-flash"
                                     placeholder="Tìm kiếm nhanh">
-                                <button type="submit" class="search-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="m21 21-4.35-4.35" />
+
+                                <button
+                                    type="submit"
+                                    class="search-btn">
+
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2">
+
+                                        <circle
+                                            cx="11"
+                                            cy="11"
+                                            r="8" />
+
+                                        <path
+                                            d="m21 21-4.35-4.35" />
+
                                     </svg>
+
                                 </button>
+
                             </form>
+
                         </div>
 
-                        <!-- Header Actions -->
-                        <div class="header-actions _nxn_status_login ">
-                            <!-- Đăng nhập (chưa login) -->
-                            <a class="_no_login btn-header btn-login _nxn_modal_show" data-id="0" href=""
-                                data-target="#_login" data-class="_login_modal" data-endpoint="/user/auth/get/login">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
+
+                        <!-- HEADER ACTIONS -->
+
+                        <div class="header-actions _nxn_status_login">
+
+                            <!-- LOGIN -->
+                            <a
+                                class="_no_login btn-header btn-login _nxn_modal_show"
+                                data-id="0"
+                                href=""
+                                data-target="#_login"
+                                data-class="_login_modal"
+                                data-endpoint="/user/auth/get/login">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2">
+
+                                    <path
+                                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+
+                                    <circle
+                                        cx="12"
+                                        cy="7"
+                                        r="4" />
+
                                 </svg>
+
                                 <span>Đăng nhập</span>
+
                             </a>
 
-                            <a class="_has_login btn-header btn-login" href="/user/account">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
+
+                            <!-- ACCOUNT -->
+
+                            <a
+                                class="_has_login btn-header btn-login"
+                                href="#">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2">
+
+                                    <path
+                                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+
+                                    <circle
+                                        cx="12"
+                                        cy="7"
+                                        r="4" />
+
                                 </svg>
-                                <span
-                                    class="_state_username">0₫</span>
+
+                                <span class="_state_username">
+                                    0₫
+                                </span>
+
                             </a>
 
-                            <button class="btn-header btn-cart _nxn_modal_show" data-id="" href=""
-                                data-target="#_deposit" data-class="_deposit" data-endpoint="/user/deposit">
+
+                            <!-- NẠP TIỀN -->
+
+                            <button
+                                class="btn-header btn-cart _nxn_modal_show"
+                                data-id=""
+                                href=""
+                                data-target="#_deposit"
+                                data-class="_deposit"
+                                data-endpoint="/user/deposit">
+
                                 <span>Nạp tiền</span>
+
                             </button>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </header>
 
-            <!-- MOBILE BOTTOM NAVIGATION -->
+
+            <!-- =========================
+                 MOBILE NAVIGATION
+            ========================== -->
+
             <nav class="mobile-bottom-nav">
-                <div class="mobile-nav-container _nxn_status_login ">
-                    <a href="/" class="mobile-nav-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+                <div class="mobile-nav-container _nxn_status_login">
+
+
+                    <!-- HOME -->
+
+                    <a
+                        href="index.html"
+                        class="mobile-nav-item">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
                             stroke-width="2">
-                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
+
+                            <path
+                                d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+
+                            <polyline
+                                points="9 22 9 12 15 12 15 22" />
+
                         </svg>
+
                         <span>Trang chủ</span>
+
                     </a>
 
-                    <a href="/danh-muc" class="mobile-nav-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+                    <!-- DANH MỤC -->
+
+                    <a
+                        href="nickgame.html"
+                        class="mobile-nav-item">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
                             stroke-width="2">
-                            <rect width="7" height="7" x="3" y="3" rx="1" />
-                            <rect width="7" height="7" x="14" y="3" rx="1" />
-                            <rect width="7" height="7" x="14" y="14" rx="1" />
-                            <rect width="7" height="7" x="3" y="14" rx="1" />
+
+                            <rect
+                                width="7"
+                                height="7"
+                                x="3"
+                                y="3"
+                                rx="1" />
+
+                            <rect
+                                width="7"
+                                height="7"
+                                x="14"
+                                y="3"
+                                rx="1" />
+
+                            <rect
+                                width="7"
+                                height="7"
+                                x="14"
+                                y="14"
+                                rx="1" />
+
+                            <rect
+                                width="7"
+                                height="7"
+                                x="3"
+                                y="14"
+                                rx="1" />
+
                         </svg>
-                        <span>Danh mục</span>
+
+                        <span>Nick Game</span>
+
                     </a>
 
-                    <a data-id="" href="" data-target="#_deposit" data-class="_deposit" data-endpoint="/user/deposit"
+
+                    <!-- NẠP TIỀN -->
+
+                    <a
+                        data-id=""
+                        href=""
+                        data-target="#_deposit"
+                        data-class="_deposit"
+                        data-endpoint="/user/deposit"
                         class="mobile-nav-item mobile-nav-primary _nxn_modal_show">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
                             stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+
+                            <path
+                                d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+
                         </svg>
+
                         <span>Nạp tiền</span>
+
                     </a>
 
-                    <a href="/user/minigame-history" class="mobile-nav-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+                    <!-- ĐÃ MUA -->
+
+                    <a
+                        href="#"
+                        class="mobile-nav-item">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
                             stroke-width="2">
-                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-                            <path d="M3 6h18" />
-                            <path d="M16 10a4 4 0 0 1-8 0" />
+
+                            <path
+                                d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+
+                            <path
+                                d="M3 6h18" />
+
+                            <path
+                                d="M16 10a4 4 0 0 1-8 0" />
+
                         </svg>
+
                         <span>Đã mua</span>
+
                     </a>
 
-                    <a href="/user/account" class="mobile-nav-item _has_login">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+
+                    <!-- USER -->
+
+                    <a
+                        href="#"
+                        class="mobile-nav-item">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
                             stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
+
+                            <path
+                                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+
+                            <circle
+                                cx="12"
+                                cy="7"
+                                r="4" />
+
                         </svg>
-                        <span
-                            class="_state_username">0₫</span>
+
+                        <span class="_state_username">
+                            0₫
+                        </span>
+
                     </a>
 
-                    <a class="_no_login mobile-nav-item _nxn_modal_show" data-id="0" href="" data-target="#_login"
-                        data-class="_login_modal" data-endpoint="/user/auth/get/login">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span>Đăng nhập</span>
-                    </a>
                 </div>
+
             </nav>
 
-            <!-- NAVIGATION -->
-            <nav class="nav" id="mainNav">
-                <div class="container">
-                    <div class="nav-content">
-                        <!-- Category Dropdown -->
-                        <div class="nav-category-wrapper">
-                            <button class="nav-category-btn" id="categoryDropdownBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="4" x2="20" y1="12" y2="12" />
-                                    <line x1="4" x2="20" y1="6" y2="6" />
-                                    <line x1="4" x2="20" y1="18" y2="18" />
-                                </svg>
-                                <span>Danh mục</span>
-                                <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m6 9 6 6 6-6" />
-                                </svg>
-                            </button>
+        </div>
 
-                            <!-- Dropdown Menu -->
-                            <div class="category-dropdown" id="categoryDropdown">
-                                <div class="dropdown-header">
-                                    <h4>Tất cả danh mục</h4>
-                                    <a href="/danh-muc" class="view-all">Xem tất cả →</a>
-                                </div>
 
-                                <div class="dropdown-body">
-                                    <!-- Nick Game -->
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                                <circle cx="9" cy="7" r="4" />
-                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                            </svg>
-                                            <span>Nick Game</span>
-                                            <span class="section-count">1</span>
-                                        </div>
-                                        <div class="dropdown-items">
-                                                                                                                                                <a href="/account/thue-acc-free-fire" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784821011_53f906a137cb0282.png"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Thuê Acc Free Fire">
-                                                        <span>Thuê Acc Free Fire</span>
-                                                    </a>
-                                                                                                                                    </div>
-                                    </div>
+        <!-- =========================
+             MAIN
+        ========================== -->
 
-                                    <!-- Minigame -->
-                                    <div class="dropdown-section">
-                                        <div class="dropdown-section-title">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <rect x="2" y="6" width="20" height="12" rx="2" />
-                                                <circle cx="12" cy="12" r="2" />
-                                                <path d="M6 12h.01" />
-                                                <path d="M18 12h.01" />
-                                            </svg>
-                                            <span>Minigame</span>
-                                            <span class="section-count">7</span>
-                                        </div>
-                                        <div class="dropdown-items">
-                                                                                                                                                <a href="/minigame/tui-cena-49k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820299_484e4d6903910a22.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 49K">
-                                                        <span>Túi Cena 49K</span>
-                                                    </a>
-                                                                                                    <a href="/minigame/tui-cena-79k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820342_72eb5ecca2c2b864.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 79K">
-                                                        <span>Túi Cena 79K</span>
-                                                    </a>
-                                                                                                    <a href="/minigame/tui-cena-99k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820369_76cb811a5486cc85.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 99K">
-                                                        <span>Túi Cena 99K</span>
-                                                    </a>
-                                                                                                    <a href="/minigame/tui-cena-149k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820395_21250a7f4bba4f34.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 149K">
-                                                        <span>Túi Cena 149K</span>
-                                                    </a>
-                                                                                                    <a href="/minigame/tui-cena-199k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820424_5e912c3ea8685c19.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 199K">
-                                                        <span>Túi Cena 199K</span>
-                                                    </a>
-                                                                                                    <a href="/minigame/tui-cena-249k" class="dropdown-item">
-                                                        <img loading="lazy" src="/assets/uploads/1784820459_00aac2e85712a959.gif"
-                                                            onerror="this.src='assets/images/images.avif';"
-                                                            alt="Túi Cena 249K">
-                                                        <span>Túi Cena 249K</span>
-                                                    </a>
-                                                                                                                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <main>
 
-                        <!-- Nav Menu -->
-                        <div class="nav-menu">
-                            <a href="/" class="nav-item">
-                                <span>Trang chủ</span>
-                            </a>
-                            <a href="/danh-muc/nickgame" class="nav-item">
-                                <span>Nick Game</span>
-                            </a>
-                            <a href="/danh-muc/service" class="nav-item">
-                                <span>Dịch vụ game</span>
-                            </a>
-                            <a href="/danh-muc/minigame" class="nav-item">
-                                <span>Minigame</span>
-                            </a>
-                            <a href="/blog" class="nav-item">
-                                <span>Tin tức</span>
-                            </a>
-                        </div>
+            <!-- HERO -->
+
+            <section class="container">
+
+                <div
+                    style="
+                    margin-top:20px;
+                    padding:45px 25px;
+                    border-radius:20px;
+                    background:
+                    linear-gradient(
+                        135deg,
+                        #111827,
+                        #1e3a8a,
+                        #7c3aed
+                    );
+                    color:white;
+                    text-align:center;
+                    overflow:hidden;
+                    position:relative;
+                    ">
+
+                    <div
+                        style="
+                        position:absolute;
+                        width:300px;
+                        height:300px;
+                        background:rgba(255,255,255,.08);
+                        border-radius:50%;
+                        top:-150px;
+                        right:-80px;
+                        "></div>
+
+                    <div
+                        style="
+                        position:absolute;
+                        width:250px;
+                        height:250px;
+                        background:rgba(255,255,255,.06);
+                        border-radius:50%;
+                        bottom:-140px;
+                        left:-70px;
+                        "></div>
+
+                    <h1
+                        style="
+                        position:relative;
+                        margin:0 0 12px;
+                        font-size:clamp(28px,5vw,52px);
+                        font-weight:900;
+                        ">
+
+                        SHOP KC
+
+                    </h1>
+
+                    <p
+                        style="
+                        position:relative;
+                        margin:0 auto 25px;
+                        max-width:700px;
+                        font-size:16px;
+                        opacity:.9;
+                        ">
+
+                        Hệ thống mua bán Nick Game,
+                        Túi Mù và sản phẩm game tự động
+
+                    </p>
+
+
+                    <a
+                        href="nickgame.html"
+                        style="
+                        position:relative;
+                        display:inline-flex;
+                        align-items:center;
+                        justify-content:center;
+                        padding:13px 28px;
+                        border-radius:12px;
+                        background:white;
+                        color:#111827;
+                        text-decoration:none;
+                        font-weight:800;
+                        ">
+
+                        XEM NICK GAME
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 DANH MỤC
+            ========================== -->
+
+            <section
+                class="container"
+                style="margin-top:30px;">
+
+                <div
+                    style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:15px;
+                    margin-bottom:18px;
+                    ">
+
+                    <div>
+
+                        <h2
+                            style="
+                            margin:0;
+                            font-size:26px;
+                            font-weight:800;
+                            ">
+
+                            Danh mục sản phẩm
+
+                        </h2>
+
+                        <p
+                            style="
+                            margin:5px 0 0;
+                            color:#6b7280;
+                            ">
+
+                            Chọn sản phẩm bạn muốn mua
+
+                        </p>
+
                     </div>
+
                 </div>
-            </nav>
-        </div><div class="seo-container">
-    <div class="container">
-        <h1>Túi Mù Free Fire & Acc VIP Tại cenaff.com</h1>
-        <p>Tại cenaff.com, bạn sẽ được trải nghiệm cảm giác hồi hộp khi mở túi mù Free Fire với tỉ lệ nhận acc
-            siêu phẩm cực cao. Shop cung cấp đa dạng tài khoản FF từ skin súng tiến hóa đến rank cao, đi kèm hệ thống
-            minigame nhận kim cương uy tín nhất hiện nay.</p>
-    </div>
-</div>
 
 
-<!-- HERO BANNER - KAMIKEY STYLE -->
-<section class="hero-section">
-    <div class="container">
-        <!-- Vertical Categories + Main Banner + Sidebar Banners -->
-        <div class="hero-wrapper">
-            <!-- Side Categories (Always Show on Desktop) -->
-            <div class="hero-side-nav">
-                <div class="side-nav-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <line x1="4" x2="20" y1="12" y2="12" />
-                        <line x1="4" x2="20" y1="6" y2="6" />
-                        <line x1="4" x2="20" y1="18" y2="18" />
-                    </svg>
-                    <span>Danh mục game</span>
-                </div>
-                <div class="side-nav-body">
-                    <div class="side-nav-divider"></div>
-                                                                        <a href="/minigame/tui-cena-49k" class="side-nav-item">
-                                <div class="side-nav-icon">
-                                    <img loading="lazy" src="/assets/uploads/1784820299_484e4d6903910a22.gif"
-                                        onerror="this.src='assets/images/images.avif';" alt="Túi Cena 49K">
-                                </div>
-                                <span class="side-nav-label">Túi Cena 49K</span>
-                                <svg class="side-nav-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                                                    <a href="/minigame/tui-cena-79k" class="side-nav-item">
-                                <div class="side-nav-icon">
-                                    <img loading="lazy" src="/assets/uploads/1784820342_72eb5ecca2c2b864.gif"
-                                        onerror="this.src='assets/images/images.avif';" alt="Túi Cena 79K">
-                                </div>
-                                <span class="side-nav-label">Túi Cena 79K</span>
-                                <svg class="side-nav-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                                                    <a href="/minigame/tui-cena-99k" class="side-nav-item">
-                                <div class="side-nav-icon">
-                                    <img loading="lazy" src="/assets/uploads/1784820369_76cb811a5486cc85.gif"
-                                        onerror="this.src='assets/images/images.avif';" alt="Túi Cena 99K">
-                                </div>
-                                <span class="side-nav-label">Túi Cena 99K</span>
-                                <svg class="side-nav-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                                                    <a href="/minigame/tui-cena-149k" class="side-nav-item">
-                                <div class="side-nav-icon">
-                                    <img loading="lazy" src="/assets/uploads/1784820395_21250a7f4bba4f34.gif"
-                                        onerror="this.src='assets/images/images.avif';" alt="Túi Cena 149K">
-                                </div>
-                                <span class="side-nav-label">Túi Cena 149K</span>
-                                <svg class="side-nav-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                                                    <a href="/minigame/tui-cena-199k" class="side-nav-item">
-                                <div class="side-nav-icon">
-                                    <img loading="lazy" src="/assets/uploads/1784820424_5e912c3ea8685c19.gif"
-                                        onerror="this.src='assets/images/images.avif';" alt="Túi Cena 199K">
-                                </div>
-                                <span class="side-nav-label">Túi Cena 199K</span>
-                                <svg class="side-nav-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                                                                <a href="/danh-muc" class="side-nav-footer">
-                        Xem tất cả danh mục →
+                <div
+                    style="
+                    display:grid;
+                    grid-template-columns:
+                    repeat(
+                    auto-fit,
+                    minmax(220px,1fr)
+                    );
+                    gap:18px;
+                    ">
+
+
+                    <!-- NICK GAME -->
+
+                    <a
+                        href="nickgame.html"
+                        style="
+                        text-decoration:none;
+                        color:inherit;
+                        ">
+
+                        <div
+                            style="
+                            background:#fff;
+                            border:1px solid #e5e7eb;
+                            border-radius:18px;
+                            padding:24px;
+                            transition:.2s;
+                            box-shadow:
+                            0 5px 20px
+                            rgba(0,0,0,.05);
+                            ">
+
+                            <div
+                                style="
+                                width:55px;
+                                height:55px;
+                                border-radius:15px;
+                                background:#eef2ff;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:27px;
+                                margin-bottom:15px;
+                                ">
+
+                                🎮
+
+                            </div>
+
+                            <h3
+                                style="
+                                margin:0 0 7px;
+                                font-size:20px;
+                                ">
+
+                                Nick Game
+
+                            </h3>
+
+                            <p
+                                style="
+                                margin:0;
+                                color:#6b7280;
+                                ">
+
+                                Nick Free Fire,
+                                Liên Quân và nhiều game khác
+
+                            </p>
+
+                        </div>
+
                     </a>
+
+
+                    <!-- FREE FIRE -->
+
+                    <a
+                        href="nickgame.html"
+                        style="
+                        text-decoration:none;
+                        color:inherit;
+                        ">
+
+                        <div
+                            style="
+                            background:#fff;
+                            border:1px solid #e5e7eb;
+                            border-radius:18px;
+                            padding:24px;
+                            box-shadow:
+                            0 5px 20px
+                            rgba(0,0,0,.05);
+                            ">
+
+                            <div
+                                style="
+                                width:55px;
+                                height:55px;
+                                border-radius:15px;
+                                background:#fff7ed;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:27px;
+                                margin-bottom:15px;
+                                ">
+
+                                🔥
+
+                            </div>
+
+                            <h3
+                                style="
+                                margin:0 0 7px;
+                                font-size:20px;
+                                ">
+
+                                Free Fire
+
+                            </h3>
+
+                            <p
+                                style="
+                                margin:0;
+                                color:#6b7280;
+                                ">
+
+                                Nick FF giá tốt,
+                                nhiều skin và vật phẩm
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- TÚI MÙ -->
+
+                    <a
+                        href="#"
+                        style="
+                        text-decoration:none;
+                        color:inherit;
+                        ">
+
+                        <div
+                            style="
+                            background:#fff;
+                            border:1px solid #e5e7eb;
+                            border-radius:18px;
+                            padding:24px;
+                            box-shadow:
+                            0 5px 20px
+                            rgba(0,0,0,.05);
+                            ">
+
+                            <div
+                                style="
+                                width:55px;
+                                height:55px;
+                                border-radius:15px;
+                                background:#fdf2f8;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:27px;
+                                margin-bottom:15px;
+                                ">
+
+                                🎁
+
+                            </div>
+
+                            <h3
+                                style="
+                                margin:0 0 7px;
+                                font-size:20px;
+                                ">
+
+                                Túi Mù
+
+                            </h3>
+
+                            <p
+                                style="
+                                margin:0;
+                                color:#6b7280;
+                                ">
+
+                                Mở túi mù,
+                                săn vật phẩm và phần thưởng
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- VÒNG QUAY -->
+
+                    <a
+                        href="#"
+                        style="
+                        text-decoration:none;
+                        color:inherit;
+                        ">
+
+                        <div
+                            style="
+                            background:#fff;
+                            border:1px solid #e5e7eb;
+                            border-radius:18px;
+                            padding:24px;
+                            box-shadow:
+                            0 5px 20px
+                            rgba(0,0,0,.05);
+                            ">
+
+                            <div
+                                style="
+                                width:55px;
+                                height:55px;
+                                border-radius:15px;
+                                background:#ecfdf5;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:27px;
+                                margin-bottom:15px;
+                                ">
+
+                                🎡
+
+                            </div>
+
+                            <h3
+                                style="
+                                margin:0 0 7px;
+                                font-size:20px;
+                                ">
+
+                                Vòng Quay
+
+                            </h3>
+
+                            <p
+                                style="
+                                margin:0;
+                                color:#6b7280;
+                                ">
+
+                                Vòng quay may mắn
+                                và nhiều phần thưởng
+
+                            </p>
+
+                        </div>
+
+                    </a>
+
                 </div>
-            </div>
-            <!-- Main Banner -->
-            <div class="hero-banner">
-                <div class="hero-banner-slide">
-                    <img class=""
-                        src="/assets/uploads/1784822029_242b791ac095d093.png"
-                        alt="Acc Free Fire chất lượng - Giao dịch tự động 24/7 - Hỗ trợ tận tâm." loading="lazy">
+
+            </section>
+
+
+            <!-- =========================
+                 GIỚI THIỆU
+            ========================== -->
+
+            <section
+                class="container"
+                style="margin-top:35px;">
+
+                <div
+                    style="
+                    padding:30px;
+                    border-radius:18px;
+                    background:#f8fafc;
+                    border:1px solid #e5e7eb;
+                    ">
+
+                    <h2
+                        style="
+                        margin-top:0;
+                        font-size:25px;
+                        ">
+
+                        SHOP KC – Giao dịch tự động
+
+                    </h2>
+
+                    <p
+                        style="
+                        line-height:1.8;
+                        color:#4b5563;
+                        ">
+
+                        Shop KC cung cấp các sản phẩm game
+                        với hệ thống xử lý đơn hàng nhanh chóng.
+                        Khách hàng có thể lựa chọn sản phẩm,
+                        kiểm tra thông tin và liên hệ hỗ trợ
+                        khi cần thiết.
+
+                    </p>
+
+                    <div
+                        style="
+                        display:grid;
+                        grid-template-columns:
+                        repeat(
+                        auto-fit,
+                        minmax(180px,1fr)
+                        );
+                        gap:15px;
+                        margin-top:20px;
+                        ">
+
+                        <div
+                            style="
+                            background:white;
+                            padding:18px;
+                            border-radius:14px;
+                            ">
+
+                            <strong
+                                style="
+                                display:block;
+                                font-size:18px;
+                                ">
+
+                                ⚡ Nhanh chóng
+
+                            </strong>
+
+                            <span
+                                style="
+                                color:#6b7280;
+                                font-size:14px;
+                                ">
+
+                                Xử lý đơn nhanh
+
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            style="
+                            background:white;
+                            padding:18px;
+                            border-radius:14px;
+                            ">
+
+                            <strong
+                                style="
+                                display:block;
+                                font-size:18px;
+                                ">
+
+                                🔒 An toàn
+
+                            </strong>
+
+                            <span
+                                style="
+                                color:#6b7280;
+                                font-size:14px;
+                                ">
+
+                                Hệ thống quản lý đơn hàng
+
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            style="
+                            background:white;
+                            padding:18px;
+                            border-radius:14px;
+                            ">
+
+                            <strong
+                                style="
+                                display:block;
+                                font-size:18px;
+                                ">
+
+                                💬 Hỗ trợ
+
+                            </strong>
+
+                            <span
+                                style="
+                                color:#6b7280;
+                                font-size:14px;
+                                ">
+
+                                Hỗ trợ khách hàng
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <footer
+            style="
+            margin-top:50px;
+            padding:35px 20px 90px;
+            background:#111827;
+            color:#d1d5db;
+            ">
+
+            <div
+                class="container"
+                style="
+                display:grid;
+                grid-template-columns:
+                repeat(
+                auto-fit,
+                minmax(220px,1fr)
+                );
+                gap:30px;
+                ">
+
+                <div>
+
+                    <h3
+                        style="
+                        color:white;
+                        margin-top:0;
+                        ">
+
+                        SHOP KC
+
+                    </h3>
+
+                    <p
+                        style="
+                        line-height:1.7;
+                        margin:0;
+                        ">
+
+                        Hệ thống mua bán sản phẩm game
+                        trực tuyến.
+
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3
+                        style="
+                        color:white;
+                        margin-top:0;
+                        ">
+
+                        Sản phẩm
+
+                    </h3>
+
+                    <p style="margin:8px 0;">
+                        <a
+                            href="nickgame.html"
+                            style="
+                            color:#d1d5db;
+                            text-decoration:none;
+                            ">
+
+                            Nick Game
+
+                        </a>
+                    </p>
+
+                    <p style="margin:8px 0;">
+                        <a
+                            href="nickgame.html"
+                            style="
+                            color:#d1d5db;
+                            text-decoration:none;
+                            ">
+
+                            Free Fire
+
+                        </a>
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3
+                        style="
+                        color:white;
+                        margin-top:0;
+                        ">
+
+                        Hỗ trợ
+
+                    </h3>
+
+                    <p
+                        style="
+                        line-height:1.7;
+                        margin:0;
+                        ">
+
+                        Nếu gặp vấn đề trong quá trình
+                        mua hàng, vui lòng liên hệ quản trị viên.
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <!-- Sidebar Banners -->
-            <div class="hero-sidebar">
-                <a href="/danh-muc/nickgame" class="hero-sidebar-banner">
-                    <img class=""
-                        src="/assets/uploads/1784821623_523e0f9b64b6a9ee.png"
-                        alt="Nick Game" loading="lazy">
-                </a>
-                <a href="/danh-muc/minigame" class="hero-sidebar-banner">
-                    <img class=""
-                        src="/assets/uploads/1784822137_f785e6603410e5de.png"
-                        alt="Minigame" loading="lazy">
-                </a>
-            </div>
-        </div>
 
-        <!-- Quick Category Cards -->
-        <div class="hero-categories">
-            <a href="/danh-muc/nickgame" class="hero-category-card">
-                <div class="hero-category-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                    </svg>
-                </div>
-                <div class="hero-category-info">
-                    <h4 class="hero-category-title">Nick Game</h4>
-                    <span class="hero-category-count">Tài khoản game chất lượng</span>
-                </div>
-            </a>
-            <a href="/danh-muc/minigame" class="hero-category-card">
-                <div class="hero-category-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <circle cx="15.5" cy="15.5" r="1.5" />
-                    </svg>
-                </div>
-                <div class="hero-category-info">
-                    <h4 class="hero-category-title">Thử Vận May</h4>
-                    <span class="hero-category-count">Random nick giá rẻ</span>
-                </div>
-            </a>
-            <a href="/danh-muc/minigame" class="hero-category-card">
-                <div class="hero-category-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="12" cy="12" r="2" />
-                    </svg>
-                </div>
-                <div class="hero-category-info">
-                    <h4 class="hero-category-title">Minigame</h4>
-                    <span class="hero-category-count">Minigame may mắn</span>
-                </div>
-            </a>
-            <a href="/blog" class="hero-category-card">
-                <div class="hero-category-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                    </svg>
-                </div>
-                <div class="hero-category-info">
-                    <h4 class="hero-category-title">Tin Tức</h4>
-                    <span class="hero-category-count">Cập nhật mới nhất</span>
-                </div>
-            </a>
-        </div>
+            <div
+                class="container"
+                style="
+                margin-top:30px;
+                padding-top:20px;
+                border-top:1px solid #374151;
+                text-align:center;
+                font-size:13px;
+                ">
+
+                © 2026 SHOP KC. All rights reserved.
+
+            </div>
+
+        </footer>
+
+
     </div>
-</section>
 
 
-<div class="container-service">
-    
-            <section class="categories-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">NICK GAME</h2>
-                </div>
-                <div class="categories-grid">
-                                            <a href="/account/thue-acc-free-fire" class="category-card account-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784821011_53f906a137cb0282.png"
-                                    onerror="this.src='assets/images/images.avif';" alt="Thuê Acc Free Fire">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Thuê Acc Free Fire</h3>
-                                <!-- <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">0đ</span>
-                                </div> -->
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã mua 400 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                    </div>
-            </div>
-        </section>
-        
-            <section class="categories-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">MINIGAME</h2>
-                </div>
-                <div class="categories-grid">
-                                            <a href="/minigame/tui-cena-49k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820299_484e4d6903910a22.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 49K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 49K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">49,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 9931 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-79k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820342_72eb5ecca2c2b864.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 79K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 79K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">79,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-99k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820369_76cb811a5486cc85.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 99K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 99K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">99,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-149k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820395_21250a7f4bba4f34.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 149K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 149K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">149,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-199k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820424_5e912c3ea8685c19.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 199K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 199K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">199,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-249k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820459_00aac2e85712a959.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 249K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 249K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">249,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                            <a href="/minigame/tui-cena-499k" class="category-card minigame-card">
-                            <div class="category-card-image">
-                                <img loading="lazy" src="/assets/uploads/1784820487_8ef7e16bdc5f2f55.gif"
-                                    onerror="this.src='assets/images/images.avif';" alt="Túi Cena 499K">
-                                <span class="category-badge">HOT</span>
-                            </div>
-                            <div class="category-card-body">
-                                <h3 class="category-card-title">Túi Cena 499K</h3>
-                                <div class="category-card-price">
-                                    <span class="price-label">Giá:</span>
-                                    <span class="price-value">499,000đ</span>
-                                </div>
-                                <div class="category-card-meta">
-                                    <span class="meta-item sold">
-                                        Đã chơi 5301 lượt
-                                    </span>
-                                </div>
-                                <div class="category-card-rating">
-                                    <span class="stars">★★★★★</span>
-                                    <span class="rating-value">5</span>
-                                </div>
-                            </div>
-                            <div class="category-card-action">
-                                <span class="btn-explore">MUA NGAY</span>
-                            </div>
-                        </a>
-                                    </div>
-            </div>
-        </section>
-    
+    <!-- =========================
+         SUMMER EFFECT
+    ========================== -->
 
-    
-</div><footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-col">
-                <h4 class="footer-title">
-                    <span></span>
-                    <span>SHOP CENAFF.COM</span>
-                </h4>
-                <div class="footer-desc">
-                    <p>Hệ thống mua bán minh bạch, thông tin rõ ràng, giao dịch tự động 24/7</p>
-                    <p>Cập nhật acc Free Fire đa dạng phân khúc: từ cơ bản đến nhiều skin & vật phẩm hiếm</p>
-                    <p>Random acc giá tốt & ưu đãi hấp dẫn mỗi ngày dành cho game thủ</p>
-                    <p class="_nxn_mb_10">⏰ Hỗ trợ khách hàng: <strong>08:00 - 22:00</strong> (Tất cả các ngày trong
-                        tuần)</p>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">
-                    <span></span>
-                    <span>DANH MỤC</span>
-                </h4>
-                <ul class="footer-links">
-                    <li><a href="">Xé Túi Mù 19k</a></li>
-                    <li><a href="">Xé Túi Mù 49K</a></li>
-                    <li><a href="">Xé Túi Mù 99K</a></li>
-                    <li><a href="">Túi Mù Bí Ẩn 199k</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">
-                    <span></span>
-                    <span>BÀI VIẾT</span>
-                </h4>
-                <ul class="footer-links">
-                    <li><a href="/blog/gioi-thieu-cenaff.com">Giới thiệu shop</a></li>
-                    <li><a href="/blog/huong-dan-mua-tui-mu-tai-cenaff.com">Hướng dẫn</a></li>
-                    <li><a href="/blog/tui-mu-cenaff.com-co-gi-dac-biet">Túi mù là gì</a></li>
-                    <li><a href="/blog/su-kien-ra-mat-cenaff.com">Khai trương shop</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4 class="footer-title">
-                    <span></span>
-                    <span>HỖ TRỢ</span>
-                </h4>
-                <ul class="footer-links">
-                    <li><a href="https://www.facebook.com/">Chăm sóc khách hàng</a></li>
-                    <li><a href="https://www.facebook.com/">Hỗ trợ thanh lý acc</a></li>
-                    <li><a href="https://www.facebook.com/">Hỗ trợ nạp thẻ</a></li>
-                    <li><a href="https://www.facebook.com/">Báo cáo lừa đảo</a></li>
-                </ul>
-            </div>
-        </div>
+    <div class="summer-sun">
 
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <p>© 2026 cenaff.com. Tất cả quyền được bảo lưu.</p>
-        </div>
+        <div class="summer-sun-rays"></div>
+
+        <div class="summer-sun-core"></div>
+
     </div>
-</footer>
 
-<!-- Scroll to Top Button -->
-<button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M18 15l-6-6-6 6" />
-    </svg>
-</button>
 
-<!-- Support Widget -->
-<div class="support-widget" id="support-widget">
-    <a class="btn-messenger btn-frame text-decoration-none" target="_blank"
-        href="https://www.facebook.com/">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="20" cy="20" r="20" fill="#006AFF" />
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M7.99199 25.0748L13.8672 15.7547C14.8008 14.2738 16.8049 13.9036 18.2053 14.9539L22.8773 18.459C23.3079 18.7809 23.8954 18.7769 24.322 18.455L30.6318 13.6662C31.4729 13.0263 32.5755 14.0364 32.0081 14.9298L26.1369 24.2458C25.2033 25.7267 23.1992 26.0969 21.7988 25.0466L17.1268 21.5415C16.6962 21.2196 16.1087 21.2236 15.6821 21.5455L9.36825 26.3384C8.5272 26.9782 7.42459 25.9681 7.99199 25.0748Z"
-                fill="white" />
-        </svg>
-    </a>
-</div>
+    <div class="summer-clouds">
 
-<div class="_nxn_popup_fixed"></div>
-<div id="_nxn_editor_menu" class="_nxn_editor_menu">
-    <button data-cmd="bold" title="Bold">B</button>
-    <button data-cmd="italic" title="Italic">I</button>
-    <button data-cmd="underline" title="Underline">U</button>
-    <button data-action="link" title="Tạo liên kết">🔗</button>
-    <button data-action="unlink" title="Bỏ liên kết">❌</button>
-    <button data-action="undo" title="Hoàn tác">↩️</button>
-    <button data-action="redo" title="Làm lại">↪️</button>
-</div>
+        <div class="summer-cloud summer-cloud-1">
+            ☁️
+        </div>
 
-</div>
+        <div class="summer-cloud summer-cloud-2">
+            ☁️
+        </div>
 
-<script>
-    var $config_base = "https://cenaff.com/";
-    var $encodeToken_endPoint = "/public/v1/api/encode-token";
-    var $getCode_endPoint = "/public/v1/api/get-code";
-    var $get2fa_endPoint = "/public/v1/api/get-2fa";
-    var $gen_qr = "/public/v1/api/gen-qr";
-</script>
+        <div class="summer-cloud summer-cloud-3">
+            ☁️
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    </div>
 
-<!-- js -->
-<script type='text/javascript' src='assets/core/js/md5.js' defer></script>
-<script type='text/javascript' src='assets/core/js/syncscroll.js' defer></script>
-<script type='text/javascript' src='assets/core/js/luckwheel.js' defer></script>
-<script type='text/javascript' src='assets/core/js/plyr.js' defer></script>
-<script type='text/javascript' src='assets/core/js/prism.js' defer></script>
-<script type='text/javascript' src='assets/core/js/croppie.js' defer></script>
-<script type='text/javascript' src='assets/core/js/sortable.js' defer></script>
-<script type='text/javascript' src='assets/core/js/loadding.js' defer></script>
-<script type='text/javascript' src='assets/core/js/core.js' defer></script>
-<script type='text/javascript' src='assets/core/js/base.js' defer></script>
-<script type='text/javascript' src='assets/core/js/tabs.js' defer></script>
-<script type='text/javascript' src='assets/core/js/toaster.js' defer></script>
-<script type='text/javascript' src='assets/core/js/modal.js' defer></script>
-<script type='text/javascript' src='assets/core/js/input.js' defer></script>
-<script type='text/javascript' src='assets/core/js/otp.js' defer></script>
-<script type='text/javascript' src='assets/core/js/select.js' defer></script>
-<script type='text/javascript' src='assets/core/js/textarea.js' defer></script>
-<script type='text/javascript' src='assets/core/js/code.js' defer></script>
-<script type='text/javascript' src='assets/core/js/image.js' defer></script>
-<script type='text/javascript' src='assets/core/js/video.js' defer></script>
-<script type='text/javascript' src='assets/core/js/file.js' defer></script>
-<script type='text/javascript' src='assets/core/js/datetime.js' defer></script>
-<script type='text/javascript' src='assets/core/js/checkbox.js' defer></script>
-<script type='text/javascript' src='assets/core/js/range.js' defer></script>
-<script type='text/javascript' src='assets/core/js/popup.js' defer></script>
-<script type='text/javascript' src='assets/core/js/menu.js' defer></script>
-<script type='text/javascript' src='assets/core/js/step.js' defer></script>
-<script type='text/javascript' src='assets/core/js/table.js' defer></script>
-<script type='text/javascript' src='assets/core/js/render.js' defer></script>
-<script type='text/javascript' src='assets/template1/js/main.js?v=1.0.0' defer></script>
-<script type='text/javascript' src='assets/template11/js/main.js?v=1.0.0' defer></script>
 
-<!-- js structdata -->
-<!-- Structured Data / Schema.org -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "cenaff.com",
-  "url": "https://cenaff.com/",
-  "description": "Giao Dịch Tự Động - Săn Túi Mù FF - Nhận Acc Siêu Phẩm"
-}
-</script>
+    <div id="phuong-container"></div>
 
-<div class="summer-branch" aria-hidden="true">
-    <img src="assets/template11/images/phuong-branch.svg" alt="">
-</div>
+    <div id="bubble-container"></div>
 
-<div class="summer-sun" aria-hidden="true">
-    <span class="summer-sun-rays"></span>
-    <span class="summer-sun-core"></span>
-</div>
 
-<div class="summer-clouds" aria-hidden="true">
-    <svg class="summer-cloud summer-cloud-1" viewBox="0 0 120 60">
-        <path
-            d="M20 45c-10 0-18-7-18-16 0-8 7-15 16-15 1-9 9-14 17-14 9 0 16 6 17 14 2-1 5-1 7-1 9 0 15 6 15 14 1 0 2 0 3 0 9 0 16 7 16 15 0 9-7 16-16 16H20z"
-            fill="#fff" />
-    </svg>
-    <svg class="summer-cloud summer-cloud-2" viewBox="0 0 120 60">
-        <path
-            d="M20 45c-10 0-18-7-18-16 0-8 7-15 16-15 1-9 9-14 17-14 9 0 16 6 17 14 2-1 5-1 7-1 9 0 15 6 15 14 1 0 2 0 3 0 9 0 16 7 16 15 0 9-7 16-16 16H20z"
-            fill="#fff" />
-    </svg>
-    <svg class="summer-cloud summer-cloud-3" viewBox="0 0 120 60">
-        <path
-            d="M20 45c-10 0-18-7-18-16 0-8 7-15 16-15 1-9 9-14 17-14 9 0 16 6 17 14 2-1 5-1 7-1 9 0 15 6 15 14 1 0 2 0 3 0 9 0 16 7 16 15 0 9-7 16-16 16H20z"
-            fill="#fff" />
-    </svg>
-</div>
+    <style>
 
-<div id="phuong-container" aria-hidden="true"></div>
+        .summer-sun {
+            pointer-events:none;
+            position:fixed;
+            top:40px;
+            left:40px;
+            width:120px;
+            height:120px;
+            z-index:9998;
+        }
 
-<div class="summer-waves" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-        <path class="summer-wave summer-wave-1" d="M0 40 Q 180 10 360 40 T 720 40 T 1080 40 T 1440 40 V80 H0 Z"
-            fill="#5ECFFF" />
-        <path class="summer-wave summer-wave-2" d="M0 50 Q 180 20 360 50 T 720 50 T 1080 50 T 1440 50 V80 H0 Z"
-            fill="#1E90C8" />
-    </svg>
-</div>
+        .summer-sun-core {
+            position:absolute;
+            inset:22px;
+            border-radius:50%;
+            background:
+            radial-gradient(
+                circle,
+                #FFF2B0 0%,
+                #FFD24C 55%,
+                #FFB347 100%
+            );
+            box-shadow:
+            0 0 50px 12px
+            rgba(255,210,76,.55);
+            animation:
+            sun-pulse 3s
+            ease-in-out infinite;
+        }
 
-<div id="bubble-container" aria-hidden="true"></div>
-
-<div class="summer-coconut" aria-hidden="true">
-    <img src="assets/template11/images/coconut.svg" alt="">
-</div>
-
-<style>
-    .summer-branch {
-        pointer-events: none;
-        position: fixed;
-        top: 0;
-        right: 0;
-        z-index: 9999;
-    }
-
-    .summer-branch img {
-        width: 240px;
-        display: block;
-    }
-
-    .summer-coconut {
-        pointer-events: none;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 9999;
-    }
-
-    .summer-coconut img {
-        width: 220px;
-        display: block;
-        transform-origin: bottom left;
-        animation: palm-sway 4s ease-in-out infinite alternate;
-    }
-
-    .summer-sun {
-        pointer-events: none;
-        position: fixed;
-        top: 40px;
-        left: 40px;
-        width: 120px;
-        height: 120px;
-        z-index: 9998;
-    }
-
-    .summer-sun-core {
-        position: absolute;
-        inset: 22px;
-        border-radius: 50%;
-        background: radial-gradient(circle, #FFF2B0 0%, #FFD24C 55%, #FFB347 100%);
-        box-shadow: 0 0 50px 12px rgba(255, 210, 76, 0.55);
-        animation: sun-pulse 3s ease-in-out infinite;
-    }
-
-    .summer-sun-rays {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: conic-gradient(from 0deg,
-                rgba(255, 210, 76, 0.55) 0deg 8deg,
+        .summer-sun-rays {
+            position:absolute;
+            inset:0;
+            border-radius:50%;
+            background:
+            conic-gradient(
+                from 0deg,
+                rgba(255,210,76,.55) 0deg 8deg,
                 transparent 8deg 45deg,
-                rgba(255, 210, 76, 0.55) 45deg 53deg,
+                rgba(255,210,76,.55) 45deg 53deg,
                 transparent 53deg 90deg,
-                rgba(255, 210, 76, 0.55) 90deg 98deg,
+                rgba(255,210,76,.55) 90deg 98deg,
                 transparent 98deg 135deg,
-                rgba(255, 210, 76, 0.55) 135deg 143deg,
+                rgba(255,210,76,.55) 135deg 143deg,
                 transparent 143deg 180deg,
-                rgba(255, 210, 76, 0.55) 180deg 188deg,
+                rgba(255,210,76,.55) 180deg 188deg,
                 transparent 188deg 225deg,
-                rgba(255, 210, 76, 0.55) 225deg 233deg,
+                rgba(255,210,76,.55) 225deg 233deg,
                 transparent 233deg 270deg,
-                rgba(255, 210, 76, 0.55) 270deg 278deg,
+                rgba(255,210,76,.55) 270deg 278deg,
                 transparent 278deg 315deg,
-                rgba(255, 210, 76, 0.55) 315deg 323deg,
-                transparent 323deg 360deg);
-        -webkit-mask: radial-gradient(circle, transparent 35%, #000 36%, #000 60%, transparent 62%);
-        mask: radial-gradient(circle, transparent 35%, #000 36%, #000 60%, transparent 62%);
-        animation: sun-rotate 30s linear infinite;
-    }
+                rgba(255,210,76,.55) 315deg 323deg,
+                transparent 323deg 360deg
+            );
 
-    .summer-clouds {
-        pointer-events: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 260px;
-        overflow: hidden;
-        z-index: 9997;
-    }
+            -webkit-mask:
+            radial-gradient(
+                circle,
+                transparent 35%,
+                #000 36%,
+                #000 60%,
+                transparent 62%
+            );
 
-    .summer-cloud {
-        position: absolute;
-        opacity: 0.75;
-        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.06));
-    }
+            mask:
+            radial-gradient(
+                circle,
+                transparent 35%,
+                #000 36%,
+                #000 60%,
+                transparent 62%
+            );
 
-    .summer-cloud-1 {
-        top: 30px;
-        width: 160px;
-        animation: cloud-drift 55s linear infinite;
-    }
-
-    .summer-cloud-2 {
-        top: 110px;
-        width: 120px;
-        opacity: 0.6;
-        animation: cloud-drift 70s linear infinite;
-        animation-delay: -20s;
-    }
-
-    .summer-cloud-3 {
-        top: 180px;
-        width: 200px;
-        opacity: 0.5;
-        animation: cloud-drift 42s linear infinite;
-        animation-delay: -10s;
-    }
-
-    #phuong-container {
-        pointer-events: none;
-        position: fixed;
-        inset: 0;
-        overflow: hidden;
-        z-index: 9999;
-    }
-
-    .phuong-petal {
-        position: absolute;
-        top: -30px;
-        will-change: transform, opacity;
-        animation: phuong-fall linear forwards;
-    }
-
-    .summer-waves {
-        pointer-events: none;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 80px;
-        z-index: 9996;
-        opacity: 0.45;
-    }
-
-    .summer-waves svg {
-        width: 200%;
-        height: 100%;
-        display: block;
-    }
-
-    .summer-wave-1 {
-        animation: wave-move 8s linear infinite;
-        opacity: 0.55;
-    }
-
-    .summer-wave-2 {
-        animation: wave-move 12s linear infinite reverse;
-        opacity: 0.85;
-    }
-
-    #bubble-container {
-        pointer-events: none;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 35vh;
-        overflow: hidden;
-        z-index: 9996;
-    }
-
-    .summer-bubble {
-        position: absolute;
-        bottom: -30px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 60%, rgba(255, 255, 255, 0.02));
-        border: 1.5px solid rgba(255, 255, 255, 0.55);
-        will-change: transform, opacity;
-        animation: bubble-rise linear forwards;
-    }
-
-    @keyframes sun-rotate {
-        from {
-            transform: rotate(0deg);
+            animation:
+            sun-rotate 30s
+            linear infinite;
         }
 
-        to {
-            transform: rotate(360deg);
-        }
-    }
 
-    @keyframes sun-pulse {
-
-        0%,
-        100% {
-            transform: scale(1);
-            box-shadow: 0 0 50px 12px rgba(255, 210, 76, 0.55);
-        }
-
-        50% {
-            transform: scale(1.08);
-            box-shadow: 0 0 70px 18px rgba(255, 210, 76, 0.7);
-        }
-    }
-
-    @keyframes cloud-drift {
-        from {
-            transform: translateX(-220px);
-        }
-
-        to {
-            transform: translateX(calc(100vw + 220px));
-        }
-    }
-
-    @keyframes palm-sway {
-        from {
-            transform: rotate(-2deg);
-        }
-
-        to {
-            transform: rotate(2deg);
-        }
-    }
-
-    @keyframes phuong-fall {
-        0% {
-            transform: translate3d(0, -10vh, 0) rotate(0deg);
-            opacity: 0;
-        }
-
-        10% {
-            opacity: 1;
-        }
-
-        50% {
-            transform: translate3d(30px, 50vh, 0) rotate(360deg);
-        }
-
-        100% {
-            transform: translate3d(-20px, 110vh, 0) rotate(720deg);
-            opacity: 0.4;
-        }
-    }
-
-    @keyframes wave-move {
-        from {
-            transform: translateX(0);
-        }
-
-        to {
-            transform: translateX(-50%);
-        }
-    }
-
-    @keyframes bubble-rise {
-        0% {
-            transform: translate3d(0, 0, 0) scale(0.6);
-            opacity: 0;
-        }
-
-        15% {
-            opacity: 0.8;
-        }
-
-        50% {
-            transform: translate3d(15px, -25vh, 0) scale(1);
-        }
-
-        100% {
-            transform: translate3d(-15px, -55vh, 0) scale(0.9);
-            opacity: 0;
-        }
-    }
-
-    @media (max-width: 1850px) {
-
-        .summer-coconut,
-        .summer-branch {
-            display: none;
-        }
-    }
-
-    @media (max-width: 992px) {
-
-        .summer-sun,
         .summer-clouds {
-            display: none;
+            pointer-events:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:260px;
+            overflow:hidden;
+            z-index:9997;
         }
-    }
 
-    @media (prefers-reduced-motion: reduce) {
+        .summer-cloud {
+            position:absolute;
+            opacity:.75;
+            font-size:80px;
+            filter:
+            drop-shadow(
+            0 4px 10px
+            rgba(0,0,0,.06)
+            );
+        }
 
-        .summer-sun-rays,
-        .summer-sun-core,
-        .summer-cloud,
-        .summer-coconut img,
-        .phuong-petal,
-        .summer-wave-1,
-        .summer-wave-2,
+        .summer-cloud-1 {
+            top:30px;
+            animation:
+            cloud-drift 55s
+            linear infinite;
+        }
+
+        .summer-cloud-2 {
+            top:110px;
+            font-size:60px;
+            opacity:.6;
+            animation:
+            cloud-drift 70s
+            linear infinite;
+            animation-delay:-20s;
+        }
+
+        .summer-cloud-3 {
+            top:180px;
+            font-size:100px;
+            opacity:.5;
+            animation:
+            cloud-drift 42s
+            linear infinite;
+            animation-delay:-10s;
+        }
+
+
+        #phuong-container {
+            pointer-events:none;
+            position:fixed;
+            inset:0;
+            overflow:hidden;
+            z-index:9999;
+        }
+
+        .phuong-petal {
+            position:absolute;
+            top:-30px;
+            will-change:
+            transform,
+            opacity;
+
+            animation:
+            phuong-fall
+            linear forwards;
+        }
+
+
+        #bubble-container {
+            pointer-events:none;
+            position:fixed;
+            bottom:0;
+            left:0;
+            width:100%;
+            height:35vh;
+            overflow:hidden;
+            z-index:9996;
+        }
+
         .summer-bubble {
-            animation: none !important;
-        }
-    }
-</style>
+            position:absolute;
+            bottom:-30px;
+            border-radius:50%;
 
-<script>
-    (function () {
-        const phuongContainer = document.getElementById('phuong-container');
-        const bubbleContainer = document.getElementById('bubble-container');
-        if (!phuongContainer || !bubbleContainer) return;
+            background:
+            radial-gradient(
+                circle at 30% 30%,
+                rgba(255,255,255,.55),
+                rgba(255,255,255,.12) 60%,
+                rgba(255,255,255,.02)
+            );
 
-        const PETAL_SVG =
-            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
-            '<defs>' +
-            '<radialGradient id="pg" cx="50%" cy="40%" r="60%">' +
-            '<stop offset="0%"  stop-color="#FFD27A"/>' +
-            '<stop offset="55%" stop-color="#FF7A2E"/>' +
-            '<stop offset="100%" stop-color="#D7261E"/>' +
-            '</radialGradient>' +
-            '</defs>' +
-            '<path d="M16 2 C 20 8, 28 8, 28 16 C 28 22, 22 28, 16 30 C 10 28, 4 22, 4 16 C 4 8, 12 8, 16 2 Z" fill="url(#pg)"/>' +
-            '<path d="M16 6 C 17 14, 17 20, 16 28" stroke="#8B1A0F" stroke-width="0.6" fill="none" opacity="0.5"/>' +
-            '</svg>';
+            border:
+            1.5px solid
+            rgba(255,255,255,.55);
 
-        function rand(min, max) { return Math.random() * (max - min) + min; }
+            will-change:
+            transform,
+            opacity;
 
-        function createPetal() {
-            const petal = document.createElement('div');
-            petal.className = 'phuong-petal';
-            petal.innerHTML = PETAL_SVG;
-
-            const size = rand(14, 22);
-            const duration = rand(5, 9);
-
-            petal.style.left = rand(-3, 100) + '%';
-            petal.style.width = size + 'px';
-            petal.style.height = size + 'px';
-            petal.style.opacity = rand(0.55, 0.95);
-            petal.style.animationDuration = duration + 's';
-            petal.style.animationDelay = '-' + rand(0, 2).toFixed(2) + 's';
-
-            phuongContainer.appendChild(petal);
-            setTimeout(() => petal.remove(), (duration + 1) * 1000);
+            animation:
+            bubble-rise
+            linear forwards;
         }
 
-        function createBubble() {
-            const bubble = document.createElement('div');
-            bubble.className = 'summer-bubble';
 
-            const size = rand(8, 22);
-            const duration = rand(6, 11);
+        @keyframes sun-rotate {
 
-            bubble.style.left = rand(0, 100) + '%';
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.animationDuration = duration + 's';
+            from {
+                transform:rotate(0deg);
+            }
 
-            bubbleContainer.appendChild(bubble);
-            setTimeout(() => bubble.remove(), (duration + 1) * 1000);
+            to {
+                transform:rotate(360deg);
+            }
+
         }
 
-        setInterval(createPetal, 450);
-        setInterval(createBubble, 700);
 
-        for (let i = 0; i < 14; i++) setTimeout(createPetal, i * 120);
-        for (let i = 0; i < 6; i++) setTimeout(createBubble, i * 250);
-    })();
-</script>
+        @keyframes sun-pulse {
+
+            0%,
+            100% {
+                transform:scale(1);
+
+                box-shadow:
+                0 0 50px 12px
+                rgba(255,210,76,.55);
+            }
+
+            50% {
+                transform:scale(1.08);
+
+                box-shadow:
+                0 0 70px 18px
+                rgba(255,210,76,.7);
+            }
+
+        }
+
+
+        @keyframes cloud-drift {
+
+            from {
+                transform:
+                translateX(-220px);
+            }
+
+            to {
+                transform:
+                translateX(
+                calc(100vw + 220px)
+                );
+            }
+
+        }
+
+
+        @keyframes phuong-fall {
+
+            0% {
+                transform:
+                translate3d(
+                0,
+                -10vh,
+                0
+                )
+                rotate(0deg);
+
+                opacity:0;
+            }
+
+            10% {
+                opacity:1;
+            }
+
+            50% {
+                transform:
+                translate3d(
+                30px,
+                50vh,
+                0
+                )
+                rotate(360deg);
+            }
+
+            100% {
+                transform:
+                translate3d(
+                -20px,
+                110vh,
+                0
+                )
+                rotate(720deg);
+
+                opacity:.4;
+            }
+
+        }
+
+
+        @keyframes bubble-rise {
+
+            0% {
+                transform:
+                translate3d(
+                0,
+                0,
+                0
+                )
+                scale(.6);
+
+                opacity:0;
+            }
+
+            15% {
+                opacity:.8;
+            }
+
+            50% {
+                transform:
+                translate3d(
+                15px,
+                -25vh,
+                0
+                )
+                scale(1);
+            }
+
+            100% {
+                transform:
+                translate3d(
+                -15px,
+                -55vh,
+                0
+                )
+                scale(.9);
+
+                opacity:0;
+            }
+
+        }
+
+
+        @media (max-width:1850px) {
+
+            .summer-clouds {
+                display:none;
+            }
+
+        }
+
+
+        @media (max-width:992px) {
+
+            .summer-sun {
+                display:none;
+            }
+
+        }
+
+
+        @media (prefers-reduced-motion:reduce) {
+
+            .summer-sun-rays,
+            .summer-sun-core,
+            .summer-cloud,
+            .phuong-petal,
+            .summer-bubble {
+                animation:none !important;
+            }
+
+        }
+
+    </style>
+
+
+    <!-- =========================
+         PETALS + BUBBLES
+    ========================== -->
+
+    <script>
+
+        (function () {
+
+            const phuongContainer =
+                document.getElementById(
+                    'phuong-container'
+                );
+
+            const bubbleContainer =
+                document.getElementById(
+                    'bubble-container'
+                );
+
+            if (
+                !phuongContainer ||
+                !bubbleContainer
+            ) return;
+
+
+            const PETAL_SVG =
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
+
+                '<defs>' +
+
+                '<radialGradient id="pg" cx="50%" cy="40%" r="60%">' +
+
+                '<stop offset="0%" stop-color="#FFD27A"/>' +
+
+                '<stop offset="55%" stop-color="#FF7A2E"/>' +
+
+                '<stop offset="100%" stop-color="#D7261E"/>' +
+
+                '</radialGradient>' +
+
+                '</defs>' +
+
+                '<path d="M16 2 C20 8 28 8 28 16 C28 22 22 28 16 30 C10 28 4 22 4 16 C4 8 12 8 16 2 Z" fill="url(#pg)"/>' +
+
+                '<path d="M16 6 C17 14 17 20 16 28" stroke="#8B1A0F" stroke-width=".6" fill="none" opacity=".5"/>' +
+
+                '</svg>';
+
+
+            function rand(min,max) {
+
+                return Math.random() *
+                (max-min) + min;
+
+            }
+
+
+            function createPetal() {
+
+                const petal =
+                    document.createElement(
+                        'div'
+                    );
+
+                petal.className =
+                    'phuong-petal';
+
+                petal.innerHTML =
+                    PETAL_SVG;
+
+
+                const size =
+                    rand(14,22);
+
+                const duration =
+                    rand(5,9);
+
+
+                petal.style.left =
+                    rand(-3,100) + '%';
+
+                petal.style.width =
+                    size + 'px';
+
+                petal.style.height =
+                    size + 'px';
+
+                petal.style.opacity =
+                    rand(.55,.95);
+
+                petal.style.animationDuration =
+                    duration + 's';
+
+                petal.style.animationDelay =
+                    '-' +
+                    rand(0,2).toFixed(2) +
+                    's';
+
+
+                phuongContainer.appendChild(
+                    petal
+                );
+
+
+                setTimeout(
+                    () => petal.remove(),
+                    (duration+1)*1000
+                );
+
+            }
+
+
+            function createBubble() {
+
+                const bubble =
+                    document.createElement(
+                        'div'
+                    );
+
+                bubble.className =
+                    'summer-bubble';
+
+
+                const size =
+                    rand(8,22);
+
+                const duration =
+                    rand(6,11);
+
+
+                bubble.style.left =
+                    rand(0,100) + '%';
+
+                bubble.style.width =
+                    size + 'px';
+
+                bubble.style.height =
+                    size + 'px';
+
+                bubble.style.animationDuration =
+                    duration + 's';
+
+
+                bubbleContainer.appendChild(
+                    bubble
+                );
+
+
+                setTimeout(
+                    () => bubble.remove(),
+                    (duration+1)*1000
+                );
+
+            }
+
+
+            setInterval(
+                createPetal,
+                450
+            );
+
+            setInterval(
+                createBubble,
+                700
+            );
+
+
+            for (
+                let i=0;
+                i<14;
+                i++
+            ) {
+
+                setTimeout(
+                    createPetal,
+                    i*120
+                );
+
+            }
+
+
+            for (
+                let i=0;
+                i<6;
+                i++
+            ) {
+
+                setTimeout(
+                    createBubble,
+                    i*250
+                );
+
+            }
+
+        })();
+
+    </script>
+
+
+    <!-- =========================
+         ADMIN TRIGGER
+    ========================== -->
+
+    <style>
+
+        #adminTrigger {
+
+            position:fixed;
+
+            right:5px;
+
+            bottom:5px;
+
+            width:8px;
+
+            height:8px;
+
+            opacity:.03;
+
+            z-index:99999;
+
+            cursor:pointer;
+
+        }
+
+        #adminTrigger:hover {
+
+            opacity:.25;
+
+        }
+
+    </style>
+
+
+    <button
+        id="adminTrigger"
+        aria-label="admin">
+    </button>
+
+
+    <script>
+
+        (function () {
+
+            let n = 0;
+
+            let t = 0;
+
+            const b =
+                document.getElementById(
+                    'adminTrigger'
+                );
+
+            if (!b) return;
+
+
+            function openAdmin() {
+
+                const u =
+                    prompt(
+                        'Tài khoản Admin'
+                    );
+
+                if (u === null)
+                    return;
+
+
+                const p =
+                    prompt(
+                        'Mật khẩu Admin'
+                    );
+
+                if (p === null)
+                    return;
+
+
+                localStorage.setItem(
+                    'shopkc_admin_user',
+                    u
+                );
+
+                localStorage.setItem(
+                    'shopkc_admin_pass',
+                    p
+                );
+
+
+                location.href =
+                    'admin.html';
+
+            }
+
+
+            b.addEventListener(
+                'click',
+                function () {
+
+                    n++;
+
+                    clearTimeout(t);
+
+                    t = setTimeout(
+                        () => {
+                            n = 0;
+                        },
+                        1800
+                    );
+
+
+                    if (n >= 7) {
+
+                        n = 0;
+
+                        openAdmin();
+
+                    }
+
+                }
+            );
+
+        })();
+
+    </script>
+
 </body>
 
 </html>
