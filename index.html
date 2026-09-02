@@ -973,6 +973,15 @@ button {
 .kc-password-toggle:active{background:#f2f2f2}
 .kc-admin-gate-box{max-width:520px!important}
 </style>
+<style id="shopkc-final-header-fix">
+/* FINAL FIX: header remains visible while scrolling */
+.header{position:sticky!important;top:0!important;z-index:50000!important;background:#fff!important;}
+.header-nav-wrapper{overflow:visible!important;}
+@media(max-width:600px){
+  .header{position:sticky!important;top:0!important;z-index:50000!important;}
+  .header-content{min-height:82px!important;}
+}
+</style>
 </head>
 
 
@@ -2352,8 +2361,8 @@ button {
       </div>
       <div id="kcLoginPanel" class="kc-login-panel active">
         <div class="kc-field">
-          <label>Email</label>
-          <input id="kcLoginEmail" type="email" autocomplete="email" placeholder="you@example.com">
+          <label>Email hoặc tên tài khoản</label>
+          <input id="kcLoginEmail" type="text" autocomplete="username" placeholder="Nhập email hoặc tên tài khoản">
         </div>
         <div class="kc-field">
           <label>Mật khẩu</label>
@@ -2668,6 +2677,11 @@ button {
 
       auth = firebase.auth();
 
+      /* Giữ phiên đăng nhập sau khi đóng/mở lại trang */
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(error){
+        console.warn("Không đặt được persistence Firebase:", error);
+      });
+
       db = firebase.database();
 
       return true;
@@ -2942,27 +2956,50 @@ button {
       return;
     }
 
-    var email = String(document.getElementById("kcLoginEmail").value || "").trim();
+    var identifier = String(document.getElementById("kcLoginEmail").value || "").trim();
 
     var password = String(document.getElementById("kcLoginPassword").value || "");
 
     var message = document.getElementById("kcLoginMessage");
 
-    if (!email || !password) {
-      message.textContent = "Vui lòng nhập email và mật khẩu.";
+    if (!identifier || !password) {
+      message.textContent = "Vui lòng nhập email/tên tài khoản và mật khẩu.";
       return;
     }
 
     message.textContent = "Đang đăng nhập...";
 
-    auth.signInWithEmailAndPassword(email, password)
+    /* Cho phép khách đăng nhập bằng email HOẶC tên tài khoản.
+       Nếu nhập username, tra customerRegistry/userProfiles để lấy email Firebase Auth. */
+    var emailPromise;
+    if (identifier.indexOf("@") !== -1) {
+      emailPromise = Promise.resolve(identifier);
+    } else if (db) {
+      emailPromise = db.ref("customerRegistry/" + encodeKey(identifier)).once("value").then(function(snap){
+        var data=snap.val()||{};
+        if(data.email) return String(data.email);
+        return db.ref("userProfiles").orderByChild("user").equalTo(identifier).once("value").then(function(ps){
+          var found=null;
+          ps.forEach(function(ch){ if(!found) found=ch.val()||{}; });
+          if(!found || !found.email) throw new Error("Không tìm thấy tài khoản. Hãy nhập đúng email hoặc tên tài khoản.");
+          return String(found.email);
+        });
+      });
+    } else {
+      emailPromise = Promise.reject(new Error("Firebase Database chưa sẵn sàng."));
+    }
+
+    emailPromise
+      .then(function(email){
+        return auth.signInWithEmailAndPassword(email, password);
+      })
       .then(function () {
         message.textContent = "";
         closeModal("kcLoginModal");
         showToast("Đăng nhập thành công.", "success");
       })
       .catch(function (error) {
-        console.error(error);
+        console.error("SHOP KC LOGIN ERROR", error);
         message.textContent = friendlyAuthError(error);
       });
   }
@@ -3066,6 +3103,10 @@ button {
 
     if (code === "auth/network-request-failed") {
       return "Lỗi mạng. Hãy thử lại.";
+    }
+
+    if (code === "auth/invalid-api-key" || (error && /API key not valid/i.test(error.message || ""))) {
+      return "Firebase đang từ chối API key. Hãy kiểm tra đúng cấu hình Firebase của Shop KC và tải lại trang.";
     }
 
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
