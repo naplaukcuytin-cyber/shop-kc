@@ -42,7 +42,44 @@
         .swal2-title {
             font-size: 25px !important;
         }
-    </style>
+    
+/* ===== SHOP KC UI PATCH: HEADER BALANCE + NO ZOOM + PRODUCT EXPERIENCE ===== */
+html,body{touch-action:pan-x pan-y;overscroll-behavior-x:none;-webkit-text-size-adjust:100%;}
+body{overflow-x:hidden;}
+.header-actions .kc-header-account{display:flex!important;align-items:center;gap:8px;}
+.kc-header-user{display:inline-flex;align-items:center;gap:9px;}
+.kc-header-user b{font-size:15px;font-weight:800;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
+.kc-header-user strong{font-size:17px;font-weight:950;color:#f20d46;}
+._no_login.btn-header{display:flex;}
+.kc-product-tap{cursor:pointer;position:relative;user-select:none;-webkit-user-select:none;}
+.kc-product-tap:active{transform:scale(.992);}
+.kc-tear-card{cursor:pointer;}
+.kc-tear-card .kc-tear-cover{transition:opacity .2s,transform .2s;}
+.kc-tear-card:hover .kc-tear-cover{transform:scale(1.01);}
+.kc-reward-image-card{overflow:hidden;padding:0!important;background:#fff!important;}
+.kc-reward-image-card img{display:block;width:100%;height:120px;object-fit:cover;}
+.kc-reward-image-card .kc-reward-title{display:block;padding:13px 8px 15px;text-align:center;font-weight:900;color:#555;}
+.kc-delivery-result{margin-top:12px;padding:12px;border-radius:12px;background:#fff;border:1px solid #ffd2dc;text-align:left;}
+.kc-delivery-title{font-weight:950;color:#f20d46;margin-bottom:8px;}
+.kc-delivery-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed #eee;}
+.kc-delivery-row:last-of-type{border-bottom:0;}
+.kc-delivery-row span{color:#777;}
+.kc-delivery-row b{color:#222;word-break:break-all;}
+.kc-history-delivery{margin-top:10px;padding:11px;border-radius:11px;background:#fff8fa;border:1px solid #ffd6df;}
+.kc-history-delivery-title{font-weight:950;color:#f20d46;margin-bottom:7px;}
+.kc-history-delivery-row{display:flex;gap:8px;justify-content:space-between;padding:4px 0;font-size:13px;}
+.kc-history-delivery-row b{word-break:break-all;text-align:right;}
+.kc-history-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;}
+.kc-history-copy{border:0;border-radius:8px;padding:7px 10px;background:#f20d46;color:#fff;font-weight:800;cursor:pointer;}
+@media(max-width:600px){
+  .header-actions .kc-header-account{max-width:145px;}
+  .kc-header-user{gap:5px;}
+  .kc-header-user b{display:none;}
+  .kc-header-user strong{font-size:16px;}
+  .kc-reward-image-card img{height:105px;}
+  .kc-history-item{grid-template-columns:1fr;}
+}
+</style>
 
     
     <style>
@@ -1010,14 +1047,16 @@ body{max-width:100vw!important;overflow-x:hidden!important}
                                 <span>Đăng nhập</span>
                             </a>
 
-                            <a class="_has_login btn-header btn-login" href="#account" onclick="event.preventDefault();openAccount()">
+                            <a class="_has_login btn-header btn-login kc-header-account" href="#account" onclick="event.preventDefault();openAccount()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                     <circle cx="12" cy="7" r="4" />
                                 </svg>
-                                <span
-                                    class="_state_username">0₫</span>
+                                <span class="kc-header-user">
+                                    <b id="kcHeaderUsername">Tài khoản</b>
+                                    <strong class="_state_username">0₫</strong>
+                                </span>
                             </a>
 
                             <button class="btn-header btn-cart" href="#deposit" onclick="event.preventDefault();openDeposit()">
@@ -1076,8 +1115,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <span
-                            class="_state_username">0₫</span>
+                        <span>Tài khoản</span>
                     </a>
 
                     <a class="_no_login mobile-nav-item" href="#login" onclick="event.preventDefault();openLogin()">
@@ -2307,7 +2345,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       </div>
       <div id="kcLoginPanel" class="kc-login-panel active">
         <div class="kc-field">
-          <label>Email</label>
+          <label>Tài khoản hoặc Email</label>
           <input id="kcLoginEmail" type="text" autocomplete="username" placeholder="Nhập tài khoản hoặc email">
         </div>
         <div class="kc-field">
@@ -2894,8 +2932,10 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     });
     var accountName = document.getElementById("kcAccountName");
     var accountAvatar = document.getElementById("kcAccountAvatar");
+    var headerUsername = document.getElementById("kcHeaderUsername");
     if (accountName) accountName.textContent = loggedIn ? getUsername() : "Khách";
     if (accountAvatar) accountAvatar.textContent = loggedIn ? getUsername().charAt(0).toUpperCase() : "K";
+    if (headerUsername) headerUsername.textContent = loggedIn ? getUsername() : "Tài khoản";
     updateBalanceUI();
   }
 
@@ -2992,38 +3032,44 @@ body{max-width:100vw!important;overflow-x:hidden!important}
   }
 
   function renderHistoryList(container, items, emptyText) {
-    if (!container) {
-      return;
-    }
-
+    if (!container) return;
     if (!items.length) {
-      container.innerHTML = '<div class="kc-empty">' + safeText(emptyText || "Chưa có giao dịch.") + "</div>";
+      container.innerHTML = '<div class="kc-empty">' + safeText(emptyText || "Chưa có giao dịch.") + '</div>';
       return;
     }
-
-    container.innerHTML = items.map(function (item) {
-      var type = item.game ? "Đơn game" : (item.type === "bank_transfer" ? "Nạp ngân hàng" : "Giao dịch");
-
-      var title = item.game ? String(item.game) : String(item.package || item.type || "Nạp tiền");
-
+    container.innerHTML = items.map(function(item) {
+      var isGame = !!item.game || item.type === "minigame";
+      var isDeposit = item.type === "bank_transfer" || item.type === "phone_card" || item.type === "garena_card";
+      var type = isGame ? "Đơn túi mù" : (isDeposit ? "Đơn nạp tiền" : "Giao dịch");
+      var title = isGame ? String(item.game || item.package || "Túi mù") : String(item.package || item.type || "Nạp tiền");
       var amount = Number(item.price || item.amount || 0);
-
       var status = String(item.status || "pending");
-
-      var detail = item.gameUID ? "UID: " + item.gameUID : (item.memo ? "ND: " + item.memo : type);
-
-      return '' +
-        '<div class="kc-history-item">' +
+      var detail = item.memo ? "Nội dung: " + item.memo : type;
+      var delivery = item.delivery || null;
+      var account = delivery && (delivery.account || delivery.username || delivery.uid || item.deliveredAccount || "");
+      var password = delivery && (delivery.password || delivery.pass || item.deliveredPassword || "");
+      var reward = item.reward || item.result || "";
+      var deliveryHtml = "";
+      if (isGame && (account || password || reward)) {
+        deliveryHtml = '<div class="kc-history-delivery">' +
+          '<div class="kc-history-delivery-title">🎁 Kết quả trúng thưởng</div>' +
+          (reward ? '<div class="kc-history-meta">Phần thưởng: ' + safeText(reward) + '</div>' : '') +
+          ((account || password) ? '<div class="kc-history-delivery-row"><span>Tài khoản game</span><b>' + safeText(account || "-") + '</b></div>' +
+          '<div class="kc-history-delivery-row"><span>Mật khẩu game</span><b>' + safeText(password || "-") + '</b></div>' : '') +
+          '</div>';
+      }
+      return '<div class="kc-history-item">' +
         '<div>' +
-        '<p class="kc-history-title">' + safeText(title) + '</p>' +
-        '<div class="kc-history-meta">' + safeText(detail) + '</div>' +
-        '<div class="kc-history-meta">' + safeText(formatDate(item.timestamp)) + '</div>' +
+          '<p class="kc-history-title">' + safeText(title) + '</p>' +
+          '<div class="kc-history-meta">' + safeText(detail) + '</div>' +
+          '<div class="kc-history-meta">' + safeText(formatDate(item.timestamp)) + '</div>' +
+          deliveryHtml +
         '</div>' +
         '<div style="text-align:right">' +
-        '<div style="font-weight:900;color:var(--kc-red)">' + safeText(formatMoney(amount)) + '</div>' +
-        '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText(statusLabel(status)) + '</span>' +
+          '<div style="font-weight:900;color:var(--kc-red)">' + safeText(formatMoney(amount)) + '</div>' +
+          '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText(statusLabel(status)) + '</span>' +
         '</div>' +
-        '</div>';
+      '</div>';
     }).join("");
   }
 
@@ -3552,6 +3598,10 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       return;
     }
 
+    if (!requireLogin()) {
+      return;
+    }
+
     activeProduct = product;
 
     productQuantity = 1;
@@ -3852,6 +3902,10 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         refreshHistory();
         refreshAccountHistory();
         refreshProductHistory(activeProduct.slug);
+        setTimeout(function(){
+          closeModal("kcProductModal");
+          openHistory();
+        }, 450);
       })
       .catch(function(error) {
         if (card) card.classList.remove("tearing");
