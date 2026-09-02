@@ -139,7 +139,7 @@ a{text-decoration:none;color:inherit}
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
+    apiKey: 'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -2498,15 +2498,16 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     }
   };
 
+  var rewardInventory = {};
+
+
+  // Các ô trong danh sách chỉ hiển thị cùng một nhãn, giống kiểu túi mù.
+  // Kết quả thật được lấy từ kho phần thưởng do Admin quản lý.
   var rewardTemplates = [
-    "Phần thưởng ngẫu nhiên",
-    "Acc Free Fire",
-    "Skin / vật phẩm",
-    "Quà trong game",
-    "Phần thưởng đặc biệt",
-    "Ưu đãi ngẫu nhiên",
-    "Quà may mắn",
-    "Phần thưởng hiếm"
+    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
+    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
+    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
+    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên"
   ];
 
   var productRules = [
@@ -3209,6 +3210,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     content.classList.remove("kc-hidden");
 
+    currentDepositMemo = "";
     fillPaymentInfo();
 
     switchDepositTab("bank", document.querySelector('[data-deposit-tab="bank"]'));
@@ -3268,16 +3270,16 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
   window.setDepositAmount = setDepositAmount;
 
-  function getDepositMemo() {
+  var currentDepositMemo = "";
+
+  function getDepositMemo(forceNew) {
+    if (!forceNew && currentDepositMemo) return currentDepositMemo;
     var username = getUsername();
-
-    if (!username) {
-      return "NAPTIEN";
-    }
-
-    var compact = username.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-
-    return ("NAP" + compact).slice(0, 20);
+    var compact = String(username || "KHACH").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 12);
+    var prefix = String(paymentConfig.memoPrefix || "NAP").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 6) || "NAP";
+    var random = String(Math.floor(100000 + Math.random() * 900000));
+    currentDepositMemo = (prefix + compact + random).slice(0, 24);
+    return currentDepositMemo;
   }
 
   function updateDepositQr() {
@@ -3532,19 +3534,70 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     });
   }
 
-  function createGameOrder(product, quantity, total, reward) {
-    if (!requireLogin()) {
-      return Promise.reject(new Error("LOGIN_REQUIRED"));
-    }
+  function reserveRewardAccount(slug) {
+    if (!db) return Promise.reject(new Error("DATABASE_REQUIRED"));
+    var ref = db.ref("siteConfig/rewardInventory/" + slug);
+    var reserved = null;
+    return ref.transaction(function(raw) {
+      var data = raw && typeof raw === "object" ? raw : {};
+      var copy = {};
+      Object.keys(data).forEach(function(key) { copy[key] = data[key]; });
+      var keys = Object.keys(copy);
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var item = copy[key];
+        if (item && item.status !== "sold" && item.status !== "reserved" && (item.account || item.username || item.uid)) {
+          reserved = {key:key, item:item};
+          copy[key] = Object.assign({}, item, {status:"reserved", reservedAt:Date.now(), reservedBy:getUsername() || ""});
+          return copy;
+        }
+      }
+      return;
+    }).then(function(result) {
+      if (!result || !result.committed || !reserved) throw new Error("NO_REWARD_INVENTORY");
+      return reserved;
+    });
+  }
 
-    if (!requireDatabase()) {
-      return Promise.reject(new Error("DATABASE_REQUIRED"));
-    }
+  function releaseRewardAccount(slug, key) {
+    if (!db || !slug || !key) return Promise.resolve();
+    return db.ref("siteConfig/rewardInventory/" + slug + "/" + key).update({status:"available", reservedAt:null, reservedBy:null});
+  }
+
+  function markRewardSold(slug, key) {
+    if (!db || !slug || !key) return Promise.resolve();
+    return db.ref("siteConfig/rewardInventory/" + slug + "/" + key).update({status:"sold", soldAt:firebase.database.ServerValue.TIMESTAMP, soldTo:getUsername() || ""});
+  }
+
+  function createGameOrder(product, quantity, total, reward) {
+    if (!requireLogin()) return Promise.reject(new Error("LOGIN_REQUIRED"));
+    if (!requireDatabase()) return Promise.reject(new Error("DATABASE_REQUIRED"));
 
     var username = getUsername();
+    var reservedAccount = null;
 
-    return transactionBalance(username, -total)
-      .then(function (newBalance) {
+    return reserveRewardAccount(product.slug)
+      .catch(function(error) {
+        if (error && error.message === "NO_REWARD_INVENTORY") {
+          throw new Error("HẾT KHO: Admin chưa thêm tài khoản/phần thưởng cho túi này.");
+        }
+        throw error;
+      })
+      .then(function(reserved) {
+        reservedAccount = reserved;
+        return transactionBalance(username, -total);
+      })
+      .then(function(newBalance) {
+        var item = reservedAccount.item || {};
+        var account = item.account || item.username || item.uid || "";
+        var password = item.password || item.pass || "";
+        var delivery = {
+          type: "game_account",
+          account: account,
+          password: password,
+          note: item.note || item.info || "",
+          inventoryKey: reservedAccount.key
+        };
         var order = {
           user: username,
           displayName: currentProfile.displayName || username,
@@ -3556,36 +3609,35 @@ body{max-width:100vw!important;overflow-x:hidden!important}
           price: total,
           quantity: quantity,
           unitPrice: product.price,
-          status: "processing",
-          reward: reward || "",
-          result: reward || "",
+          status: "completed",
+          reward: reward || "Phần thưởng ngẫu nhiên",
+          result: reward || "Phần thưởng ngẫu nhiên",
+          delivery: delivery,
+          deliveredAccount: account,
+          deliveredPassword: password,
           timestamp: firebase.database.ServerValue.TIMESTAMP,
           time: new Date().toLocaleString("vi-VN"),
           balanceAfter: newBalance,
           source: "shopkc-customer-web",
           historyType: "tui-mu-xe-ngay",
-          realOrder: true
+          realOrder: true,
+          deliveryType: "auto-account"
         };
-
-        return db.ref("orders").push(order)
-          .then(function (reference) {
-            return {
-              id: reference.key,
-              balance: newBalance,
-              order: order
-            };
-          })
-          .catch(function(pushError) {
-            return transactionBalance(username, total).then(function() {
-              throw pushError;
-            });
+        return db.ref("orders").push(order).then(function(reference) {
+          return markRewardSold(product.slug, reservedAccount.key).then(function() {
+            return {id:reference.key,balance:newBalance,order:order,delivery:delivery};
           });
+        }).catch(function(pushError) {
+          return transactionBalance(username, total)
+            .then(function(){ return releaseRewardAccount(product.slug, reservedAccount.key); })
+            .then(function(){ throw pushError; });
+        });
       })
-      .catch(function (error) {
-        if (error && error.message === "INSUFFICIENT_BALANCE") {
-          throw new Error("Số dư không đủ để mua sản phẩm này.");
+      .catch(function(error) {
+        if (reservedAccount && error && error.message === "INSUFFICIENT_BALANCE") {
+          return releaseRewardAccount(product.slug, reservedAccount.key).then(function(){ throw new Error("Số dư không đủ để mua sản phẩm này."); });
         }
-
+        if (error && error.message === "INSUFFICIENT_BALANCE") throw new Error("Số dư không đủ để mua sản phẩm này.");
         throw error;
       });
   }
@@ -3620,14 +3672,12 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     title.textContent = product.title;
 
-    var rewardList = Array.isArray(product.rewards) && product.rewards.length ? product.rewards : rewardTemplates;
-    var rewards = rewardList.map(function (reward) {
-      var name = typeof reward === "string" ? reward : (reward && (reward.name || reward.title || reward.reward) || "Phần thưởng");
-      var image = typeof reward === "object" && reward && reward.image ? reward.image : product.image;
+    var rewardList = new Array(8).fill("Phần thưởng ngẫu nhiên");
+    var rewards = rewardList.map(function (name) {
       return '' +
         '<div class="kc-reward kc-reward-image-card">' +
-        '<img src="' + safeText(image) + '" alt="' + safeText(name) + '">' +
-        '<span class="kc-reward-title">' + safeText(name) + '</span>' +
+        '<img src="' + safeText(product.image) + '" alt="Phần thưởng ngẫu nhiên">' +
+        '<span class="kc-reward-title">Phần thưởng ngẫu nhiên</span>' +
         '</div>';
     }).join("");
 
@@ -3647,9 +3697,9 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       '<div class="kc-tear-card" id="kcTearCard">' +
       '<img src="' + safeText(product.image) + '" alt="' + safeText(product.title) + '">' +
       '<div class="kc-tear-cover"><b>✂️</b><span>CHẠM VÀO ẢNH ĐỂ XÉ</span></div>' +
-      '<div class="kc-tear-result" id="kcTearResult"><div>🎁 Bạn nhận được</div><b id="kcTearReward">Đang mở...</b></div>' +
+      '<div class="kc-tear-result" id="kcTearResult"><div>🎁 Bạn nhận được</div><b id="kcTearReward">Đang mở...</b><div id="kcTearDelivery" class="kc-delivery-result"></div></div>' +
       '</div></div>' +
-      '<div class="kc-tear-hint">CHẠM ẢNH → XÉ NGAY</div>' +
+      '<div class="kc-tear-hint">👆 Chạm trực tiếp vào túi để xé</div>' +
       '</div>' +
       '<div class="kc-section-box">' +
       '<h3>Danh sách phần thưởng</h3>' +
@@ -3680,7 +3730,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       '</div>' +
       '</div>' +
       '<div class="kc-detail-buybar">' +
-      '<div class="kc-tear-note">👆 Chạm trực tiếp vào ảnh túi để xé ngay</div>' +
+      '<div class="kc-tear-note">Đăng nhập + đủ số dư → chạm ảnh túi để xé và nhận phần thưởng</div>' +
       '</div>';
 
     refreshProductHistory(product.slug);
@@ -3848,6 +3898,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       var remote = snapshot.val() || {};
       paymentConfig = Object.assign({}, paymentConfig, remote.payment || {});
       mergeRemoteProductConfig(remote.products);
+      rewardInventory = remote.rewardInventory || {};
       syncProductCards();
       applySiteEnabled(remote.siteEnabled !== false);
       fillPaymentInfo();
@@ -3887,7 +3938,15 @@ body{max-width:100vw!important;overflow-x:hidden!important}
           card.classList.add("revealed");
         }
         if (rewardEl) rewardEl.textContent = reward;
-        showToast("Xé thành công: " + reward, "success");
+        var deliveryEl = document.getElementById("kcTearDelivery");
+        var d = result && result.delivery ? result.delivery : {};
+        if (deliveryEl) {
+          deliveryEl.innerHTML = '<div class="kc-delivery-title">Tài khoản được giao</div>' +
+            '<div class="kc-delivery-row"><span>Tài khoản</span><b>' + safeText(d.account || "-") + '</b></div>' +
+            '<div class="kc-delivery-row"><span>Mật khẩu</span><b>' + safeText(d.password || "-") + '</b></div>' +
+            (d.note ? '<div class="kc-delivery-note">' + safeText(d.note) + '</div>' : '');
+        }
+        showToast("Xé thành công, tài khoản đã được giao.", "success");
         refreshHistory();
         refreshAccountHistory();
         refreshProductHistory(activeProduct.slug);
