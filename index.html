@@ -20,7 +20,7 @@
 
     <meta name="google" content="notranslate">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <!-- css -->
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -139,7 +139,7 @@ a{text-decoration:none;color:inherit}
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
+    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -154,7 +154,9 @@ window.SHOP_KC_CONFIG = {
     accountNumber: '0000000000',
     accountName: 'SHOP KC',
     support: 'Liên hệ hỗ trợ nếu bạn cần đổi phương thức nạp tiền.'
-  }
+  },
+  siteEnabled: true,
+  products: {}
 };
 </script>
 
@@ -927,6 +929,23 @@ button {
     width: 100%;
   }
 }
+</style>
+
+<style id="shopkc-final-overrides">
+html,body{touch-action:pan-x pan-y!important;overscroll-behavior-x:none!important}
+body{max-width:100vw!important;overflow-x:hidden!important}
+.kc-site-closed{position:fixed;inset:0;background:rgba(10,12,18,.98);z-index:2147483647;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:#fff}
+.kc-site-closed.active{display:flex}.kc-site-closed-box{width:min(520px,100%);background:#171a21;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:34px 24px;box-shadow:0 20px 80px rgba(0,0,0,.5)}.kc-site-closed-logo{width:90px;height:90px;border-radius:24px;object-fit:cover;margin:auto auto 16px;display:block}.kc-site-closed h2{font-size:30px;margin:0 0 10px}.kc-site-closed p{color:#cbd0d8;line-height:1.6;margin:0}
+
+.kc-reward-image-card{padding:0!important;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-height:160px}.kc-reward-image-card img{width:100%;height:105px;object-fit:cover;display:block}.kc-reward-image-card .kc-reward-title{padding:12px 10px;text-align:center;font-weight:900;line-height:1.35}.kc-reward-image-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
+.kc-product-tap{cursor:pointer;position:relative}.kc-product-tap:active{transform:scale(.985)}
+.kc-tear-hint{position:absolute;left:12px;right:12px;bottom:12px;border-radius:999px;background:#f20d46;color:#fff;text-align:center;font-weight:900;padding:10px 12px;box-shadow:0 7px 20px rgba(242,13,70,.3);pointer-events:none}
+.kc-tear-stage{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;padding:18px}
+.kc-tear-card{position:relative;width:min(420px,92vw);aspect-ratio:1/1;border-radius:30px;overflow:hidden;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.16);cursor:pointer;user-select:none}
+.kc-tear-card img{width:100%;height:100%;object-fit:cover;display:block}.kc-tear-cover{position:absolute;inset:0;background:linear-gradient(135deg,#ff1750,#ff4f76 35%,#f20d46 70%,#b90038);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;transition:.28s;z-index:2}.kc-tear-cover:after{content:"";position:absolute;inset:15px;border:2px dashed rgba(255,255,255,.55);border-radius:24px}.kc-tear-cover b{font-size:44px;z-index:1}.kc-tear-cover span{font-size:18px;font-weight:800;margin-top:8px;z-index:1}.kc-tear-card.revealed .kc-tear-cover{opacity:0;transform:scale(1.15);pointer-events:none}.kc-tear-result{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(255,255,255,.96);border-radius:20px;padding:14px 16px;text-align:center;z-index:3;opacity:0;transform:translateY(12px);transition:.3s;box-shadow:0 8px 30px rgba(0,0,0,.12);pointer-events:none}.kc-tear-card.revealed .kc-tear-result{opacity:1;transform:none}.kc-tear-result b{font-size:20px;color:#f20d46}.kc-tear-note{text-align:center;color:#777;font-weight:700;margin:8px 0 0}.kc-history-real{max-height:260px;overflow:auto}
+@keyframes kcTearShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-2deg)}40%{transform:rotate(2deg)}60%{transform:rotate(-1deg)}80%{transform:rotate(1deg)}}.kc-tear-card.tearing{animation:kcTearShake .45s ease}
+@media(max-width:700px){.kc-tear-stage{min-height:350px}.kc-tear-card{width:min(350px,86vw)}}
+.kc-modal{align-items:center!important;justify-content:center!important;padding:18px!important}.kc-modal-panel{max-height:88vh!important;border-radius:22px!important}
 </style>
 </head>
 
@@ -3513,7 +3532,7 @@ button {
     });
   }
 
-  function createGameOrder(product, quantity, total) {
+  function createGameOrder(product, quantity, total, reward) {
     if (!requireLogin()) {
       return Promise.reject(new Error("LOGIN_REQUIRED"));
     }
@@ -3538,10 +3557,14 @@ button {
           quantity: quantity,
           unitPrice: product.price,
           status: "processing",
+          reward: reward || "",
+          result: reward || "",
           timestamp: firebase.database.ServerValue.TIMESTAMP,
           time: new Date().toLocaleString("vi-VN"),
           balanceAfter: newBalance,
-          source: "shopkc-customer-web"
+          source: "shopkc-customer-web",
+          historyType: "tui-mu-xe-ngay",
+          realOrder: true
         };
 
         return db.ref("orders").push(order)
@@ -3551,6 +3574,11 @@ button {
               balance: newBalance,
               order: order
             };
+          })
+          .catch(function(pushError) {
+            return transactionBalance(username, total).then(function() {
+              throw pushError;
+            });
           });
       })
       .catch(function (error) {
@@ -3592,11 +3620,14 @@ button {
 
     title.textContent = product.title;
 
-    var rewards = rewardTemplates.map(function (reward, index) {
+    var rewardList = Array.isArray(product.rewards) && product.rewards.length ? product.rewards : rewardTemplates;
+    var rewards = rewardList.map(function (reward) {
+      var name = typeof reward === "string" ? reward : (reward && (reward.name || reward.title || reward.reward) || "Phần thưởng");
+      var image = typeof reward === "object" && reward && reward.image ? reward.image : product.image;
       return '' +
-        '<div class="kc-reward">' +
-        '<span class="kc-reward-icon">' + safeText(index + 1) + '</span>' +
-        '<span class="kc-reward-title">' + safeText(reward) + '</span>' +
+        '<div class="kc-reward kc-reward-image-card">' +
+        '<img src="' + safeText(image) + '" alt="' + safeText(name) + '">' +
+        '<span class="kc-reward-title">' + safeText(name) + '</span>' +
         '</div>';
     }).join("");
 
@@ -3611,8 +3642,14 @@ button {
     body.innerHTML = '' +
       '<div class="kc-product-layout">' +
       '<div>' +
-      '<div class="kc-product-media">' +
+      '<div class="kc-product-media kc-product-tap" onclick="tearActiveProduct()">' +
+      '<div class="kc-tear-stage" style="min-height:0;padding:0">' +
+      '<div class="kc-tear-card" id="kcTearCard">' +
       '<img src="' + safeText(product.image) + '" alt="' + safeText(product.title) + '">' +
+      '<div class="kc-tear-cover"><b>✂️</b><span>CHẠM VÀO ẢNH ĐỂ XÉ</span></div>' +
+      '<div class="kc-tear-result" id="kcTearResult"><div>🎁 Bạn nhận được</div><b id="kcTearReward">Đang mở...</b></div>' +
+      '</div></div>' +
+      '<div class="kc-tear-hint">CHẠM ẢNH → XÉ NGAY</div>' +
       '</div>' +
       '<div class="kc-section-box">' +
       '<h3>Danh sách phần thưởng</h3>' +
@@ -3643,18 +3680,7 @@ button {
       '</div>' +
       '</div>' +
       '<div class="kc-detail-buybar">' +
-      '<div>' +
-      '<div class="kc-total-label">Số lượng và tổng tiền</div>' +
-      '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">' +
-      '<div class="kc-qty">' +
-      '<button type="button" onclick="changeProductQuantity(-1)">−</button>' +
-      '<input id="kcProductQuantity" value="1" inputmode="numeric" readonly>' +
-      '<button type="button" onclick="changeProductQuantity(1)">+</button>' +
-      '</div>' +
-      '<div class="kc-total-value" id="kcProductTotal">' + safeText(formatMoney(product.price)) + '</div>' +
-      '</div>' +
-      '</div>' +
-      '<button class="kc-btn kc-btn-primary" onclick="confirmProductPurchase()">XÉ NGAY</button>' +
+      '<div class="kc-tear-note">👆 Chạm trực tiếp vào ảnh túi để xé ngay</div>' +
       '</div>';
 
     refreshProductHistory(product.slug);
@@ -3779,6 +3805,101 @@ button {
       });
   }
 
+
+  function mergeRemoteProductConfig(remoteProducts) {
+    if (!remoteProducts || typeof remoteProducts !== "object") return;
+    Object.keys(remoteProducts).forEach(function (slug) {
+      var remote = remoteProducts[slug];
+      if (!remote || typeof remote !== "object") return;
+      productCatalog[slug] = Object.assign({}, productCatalog[slug] || {}, remote, {slug: slug});
+    });
+  }
+
+  function applySiteEnabled(enabled) {
+    var overlay = document.getElementById("kcSiteClosed");
+    if (!overlay) return;
+    var isOpen = enabled !== false;
+    overlay.classList.toggle("active", !isOpen);
+    overlay.setAttribute("aria-hidden", isOpen ? "true" : "false");
+  }
+
+
+  function syncProductCards() {
+    Object.keys(productCatalog).forEach(function(slug) {
+      var product = productCatalog[slug];
+      document.querySelectorAll('a[href="#product-' + slug + '"]').forEach(function(card) {
+        var img = card.querySelector(".category-card-image img, img");
+        var title = card.querySelector(".category-card-title");
+        var price = card.querySelector(".price-value");
+        var sold = card.querySelector(".meta-item.sold");
+        var badge = card.querySelector(".category-badge");
+        if (img && product.image) { img.src = product.image; img.alt = product.title || slug; }
+        if (title && product.title) title.textContent = product.title;
+        if (price && product.price) price.textContent = formatMoney(product.price).replace(/\s*$/, "");
+        if (sold && product.sold != null) sold.textContent = "Đã chơi " + Number(product.sold || 0).toLocaleString("vi-VN") + " lượt";
+        if (badge && product.badge) badge.textContent = product.badge;
+      });
+    });
+  }
+
+  function loadRemoteShopConfig() {
+    if (!db) return Promise.resolve();
+    return db.ref("siteConfig").once("value").then(function(snapshot) {
+      var remote = snapshot.val() || {};
+      paymentConfig = Object.assign({}, paymentConfig, remote.payment || {});
+      mergeRemoteProductConfig(remote.products);
+      syncProductCards();
+      applySiteEnabled(remote.siteEnabled !== false);
+      fillPaymentInfo();
+      return remote;
+    }).catch(function(error) {
+      console.warn("Không tải được cấu hình siteConfig:", error);
+      applySiteEnabled(true);
+    });
+  }
+
+  function chooseReward(product) {
+    var list = Array.isArray(product.rewards) && product.rewards.length
+      ? product.rewards
+      : rewardTemplates;
+    var item = list[Math.floor(Math.random() * list.length)];
+    if (typeof item === "string") return item;
+    return item && (item.name || item.title || item.reward) || "Phần thưởng ngẫu nhiên";
+  }
+
+  function tearActiveProduct() {
+    if (!activeProduct) return;
+    if (!requireLogin()) return;
+    if (currentBalance < Number(activeProduct.price || 0)) {
+      showToast("Số dư không đủ. Hãy nạp tiền trước.", "error");
+      openDeposit();
+      return;
+    }
+    var card = document.getElementById("kcTearCard");
+    var rewardEl = document.getElementById("kcTearReward");
+    if (card && card.classList.contains("revealed")) return;
+    if (card) card.classList.add("tearing");
+    var reward = chooseReward(activeProduct);
+    createGameOrder(activeProduct, 1, Number(activeProduct.price || 0), reward)
+      .then(function(result) {
+        if (card) {
+          card.classList.remove("tearing");
+          card.classList.add("revealed");
+        }
+        if (rewardEl) rewardEl.textContent = reward;
+        showToast("Xé thành công: " + reward, "success");
+        refreshHistory();
+        refreshAccountHistory();
+        refreshProductHistory(activeProduct.slug);
+      })
+      .catch(function(error) {
+        if (card) card.classList.remove("tearing");
+        console.error(error);
+        showToast(error.message || "Không thể xé túi.", "error");
+      });
+  }
+  window.tearActiveProduct = tearActiveProduct;
+
   function attachSearch() {
     var form = document.querySelector(".search-form");
 
@@ -3886,6 +4007,7 @@ button {
     }
 
     fillPaymentInfo();
+    loadRemoteShopConfig();
 
     updateAuthUI();
 
