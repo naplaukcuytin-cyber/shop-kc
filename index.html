@@ -1016,6 +1016,14 @@ button {
  .hero-section{scroll-margin-top:60px!important;}
 }
 </style>
+<style id="shopkc-final-scroll-header">
+/* FINAL HEADER: bám theo màn hình khi cuộn, chừa khoảng trống để không che banner. */
+html{scroll-padding-top:76px!important}
+.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:99999!important}
+.header-nav-wrapper{padding-top:76px!important}
+@media(max-width:600px){html{scroll-padding-top:64px!important}.header{height:64px!important}.header-content{height:64px!important;min-height:64px!important}.header-nav-wrapper{padding-top:64px!important}}
+@media(max-width:430px){html{scroll-padding-top:60px!important}.header{height:60px!important}.header-content{height:60px!important;min-height:60px!important}.header-nav-wrapper{padding-top:60px!important}}
+</style>
 </head>
 
 
@@ -2481,7 +2489,9 @@ button {
 
   var cfg = window.SHOP_KC_CONFIG || {};
 
-  var firebaseConfig = cfg.firebase || {
+  // LEGACY FIREBASE v8 CONFIG — dùng đúng cấu hình Web App gốc của Shop KC.
+  // Firebase Auth + Realtime Database đều dùng namespaced API v8.
+  var firebaseConfig = {
     apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
