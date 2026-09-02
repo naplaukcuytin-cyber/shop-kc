@@ -2620,8 +2620,9 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         app = firebase.app();
       }
 
-      auth = firebase.auth();
-
+      // Không dùng Firebase Authentication ở trang khách. Website cũ xác thực qua dữ liệu Shop KC/Realtime Database.
+      // Việc gọi firebase.auth() ở bản trước đã kích hoạt Identity Toolkit và gây lỗi "API key not valid".
+      auth = null;
       db = firebase.database();
 
       return true;
@@ -2659,382 +2660,202 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     return String(currentProfile.user || "").trim();
   }
 
-  function saveProfile(username) {
-    if (!currentUser || !db) {
-      return Promise.reject(new Error("Chưa đăng nhập."));
+  function makeLocalUid(username) {
+    return "shopkc_" + encodeKey(username).replace(/[^A-Za-z0-9_-]/g, "_");
+  }
+
+  function hashPassword(password) {
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(password)).then(function (buffer) {
+        return Array.from(new Uint8Array(buffer)).map(function (b) {
+          return b.toString(16).padStart(2, "0");
+        }).join("");
+      });
     }
+    // Fallback chỉ để tương thích trình duyệt cũ; SHA-256 được ưu tiên trên HTTPS.
+    var hash = 2166136261;
+    for (var i = 0; i < password.length; i++) {
+      hash ^= password.charCodeAt(i);
+      hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+    }
+    return Promise.resolve((hash >>> 0).toString(16));
+  }
 
-    var key = currentUser.uid;
+  function makeLocalUser(username, email) {
+    var uid = makeLocalUid(username);
+    return { uid: uid, email: email || "", emailVerified: false };
+  }
 
+  function saveProfile(username, email, passwordHash) {
+    if (!db) {
+      return Promise.reject(new Error("Chưa kết nối dữ liệu."));
+    }
+    var uid = currentUser && currentUser.uid ? currentUser.uid : makeLocalUid(username);
     var profile = {
       user: username,
       displayName: username,
-      email: currentUser.email || "",
-      uid: currentUser.uid,
+      email: email || "",
+      uid: uid,
       updatedAt: firebase.database.ServerValue.TIMESTAMP
     };
+    if (passwordHash) profile.passwordHash = passwordHash;
+    currentUser = makeLocalUser(username, email);
+    currentUser.uid = uid;
+    return db.ref("userProfiles/" + uid).update(profile).then(function () {
+      var data = {
+        user: username,
+        displayName: username,
+        email: email || "",
+        uid: uid,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        active: true
+      };
+      if (passwordHash) data.passwordHash = passwordHash;
+      return db.ref("customerRegistry/" + encodeKey(username)).update(data);
+    });
+  }
 
-    return db.ref("userProfiles/" + key).update(profile)
-      .then(function () {
-        return db.ref("customerRegistry/" + encodeKey(username)).update({
-          user: username,
-          displayName: username,
-          email: currentUser.email || "",
-          uid: currentUser.uid,
-          updatedAt: firebase.database.ServerValue.TIMESTAMP
-        });
-      });
+  function loadProfileByUsername(username, email) {
+    if (!db || !username) return Promise.resolve(null);
+    return db.ref("customerRegistry/" + encodeKey(username)).once("value").then(function (snap) {
+      var c = snap.val() || {};
+      if (!c.user) c.user = username;
+      c.email = c.email || email || "";
+      c.uid = c.uid || makeLocalUid(username);
+      currentProfile = c;
+      currentUser = makeLocalUser(c.user, c.email);
+      currentUser.uid = c.uid;
+      return c;
+    });
   }
 
   function loadProfile(user) {
-    if (!db || !user) {
-      return Promise.resolve(null);
-    }
-
-    return db.ref("userProfiles/" + user.uid).once("value")
-      .then(function (snapshot) {
-        var profile = snapshot.val() || {};
-
-        if (!profile.user) {
-          profile.user = (user.email || "user").split("@")[0];
-        }
-
-        profile.email = profile.email || user.email || "";
-
-        profile.uid = user.uid;
-
-        currentProfile = profile;
-
-        return profile;
-      });
+    if (!db || !user) return Promise.resolve(null);
+    var uid = user.uid || "";
+    return db.ref("userProfiles/" + uid).once("value").then(function (snapshot) {
+      var profile = snapshot.val() || {};
+      if (!profile.user) profile.user = (user.email || "user").split("@")[0];
+      profile.email = profile.email || user.email || "";
+      profile.uid = uid || makeLocalUid(profile.user);
+      currentProfile = profile;
+      currentUser = user;
+      return profile;
+    });
   }
 
-  function bindBalance(username) {
-    if (balanceListener) {
-      balanceListener();
-      balanceListener = null;
-    }
-
-    if (!db || !username) {
-      currentBalance = 0;
-      updateBalanceUI();
-      return;
-    }
-
-    balanceRef = db.ref("balances/" + encodeKey(username));
-
-    var handler = balanceRef.on("value", function (snapshot) {
-      var raw = snapshot.val();
-
-      var value = raw;
-
-      if (raw && typeof raw === "object") {
-        value = raw.balance;
-
-        if (value == null) {
-          value = raw.amount;
-        }
-
-        if (value == null) {
-          value = raw.money;
-        }
-
-        if (value == null) {
-          value = raw.wallet;
-        }
-
-        if (value == null) {
-          value = raw.value;
-        }
-      }
-
-      currentBalance = Number(value) || 0;
-
-      updateBalanceUI();
-    });
-
-    balanceListener = function () {
-      balanceRef.off("value", handler);
-    };
-  }
-
-  function updateBalanceUI() {
-    var elements = document.querySelectorAll("._state_username");
-
-    elements.forEach(function (element) {
-      if (currentUser && currentProfile) {
-        element.textContent = formatMoney(currentBalance);
-      } else {
-        element.textContent = "Đăng nhập";
-      }
-    });
-
-    var accountBalance = document.getElementById("kcAccountBalance");
-
-    if (accountBalance) {
-      accountBalance.textContent = formatMoney(currentBalance);
-    }
-  }
-
-  function updateAuthUI() {
-    var loggedIn = !!currentUser && !!currentProfile;
-
-    document.querySelectorAll("._no_login").forEach(function (element) {
-      element.style.display = loggedIn ? "none" : "";
-    });
-
-    document.querySelectorAll("._has_login").forEach(function (element) {
-      element.style.display = loggedIn ? "" : "none";
-    });
-
-    var accountName = document.getElementById("kcAccountName");
-
-    var accountAvatar = document.getElementById("kcAccountAvatar");
-
-    if (accountName) {
-      accountName.textContent = loggedIn ? getUsername() : "Khách";
-    }
-
-    if (accountAvatar) {
-      accountAvatar.textContent = loggedIn ? getUsername().charAt(0).toUpperCase() : "K";
-    }
-
-    updateBalanceUI();
-  }
-
-  function authStateChanged(user) {
-    currentUser = user || null;
-
-    if (!user) {
-      currentProfile = null;
-      currentBalance = 0;
-
-      if (balanceListener) {
-        balanceListener();
-        balanceListener = null;
-      }
-
-      updateAuthUI();
-
-      return;
-    }
-
-    loadProfile(user)
-      .then(function (profile) {
+  function restoreLocalSession() {
+    try {
+      var raw = localStorage.getItem("shopkc_session");
+      if (!raw || !db) return Promise.resolve(false);
+      var session = JSON.parse(raw);
+      if (!session || !session.user) return Promise.resolve(false);
+      return loadProfileByUsername(session.user, session.email).then(function (profile) {
+        if (!profile) return false;
         bindBalance(profile.user);
         updateAuthUI();
         refreshAccountHistory();
         refreshHistory();
-      })
-      .catch(function (error) {
-        console.error(error);
-        showToast("Không tải được hồ sơ tài khoản.", "error");
-      });
-  }
-
-  function openLogin() {
-    clearAuthMessages();
-    switchAuthTab("login", document.getElementById("kcLoginTab"));
-    openModal("kcLoginModal");
-  }
-
-  window.openLogin = openLogin;
-
-  function switchAuthTab(mode, button) {
-    var loginPanel = document.getElementById("kcLoginPanel");
-
-    var registerPanel = document.getElementById("kcRegisterPanel");
-
-    var loginTab = document.getElementById("kcLoginTab");
-
-    var registerTab = document.getElementById("kcRegisterTab");
-
-    var loginMode = mode === "login";
-
-    if (loginPanel) {
-      loginPanel.classList.toggle("active", loginMode);
-    }
-
-    if (registerPanel) {
-      registerPanel.classList.toggle("active", !loginMode);
-    }
-
-    if (loginTab) {
-      loginTab.classList.toggle("active", loginMode);
-    }
-
-    if (registerTab) {
-      registerTab.classList.toggle("active", !loginMode);
-    }
-  }
-
-  window.switchAuthTab = switchAuthTab;
-
-  function clearAuthMessages() {
-    var loginMessage = document.getElementById("kcLoginMessage");
-
-    var registerMessage = document.getElementById("kcRegisterMessage");
-
-    if (loginMessage) {
-      loginMessage.textContent = "";
-    }
-
-    if (registerMessage) {
-      registerMessage.textContent = "";
+        return true;
+      }).catch(function () { localStorage.removeItem("shopkc_session"); return false; });
+    } catch (e) {
+      localStorage.removeItem("shopkc_session");
+      return Promise.resolve(false);
     }
   }
 
   function loginUser() {
-    if (!auth) {
-      showToast("Firebase Auth chưa sẵn sàng.", "error");
+    if (!db) {
+      showToast("Hệ thống dữ liệu chưa sẵn sàng.", "error");
       return;
     }
-
-    var email = String(document.getElementById("kcLoginEmail").value || "").trim();
-
+    var identity = String(document.getElementById("kcLoginEmail").value || "").trim();
     var password = String(document.getElementById("kcLoginPassword").value || "");
-
     var message = document.getElementById("kcLoginMessage");
-
-    if (!email || !password) {
-      message.textContent = "Vui lòng nhập email và mật khẩu.";
-      return;
-    }
-
+    if (!identity || !password) { message.textContent = "Vui lòng nhập email/tài khoản và mật khẩu."; return; }
     message.textContent = "Đang đăng nhập...";
-
-    auth.signInWithEmailAndPassword(email, password)
-      .then(function () {
-        message.textContent = "";
-        closeModal("kcLoginModal");
-        showToast("Đăng nhập thành công.", "success");
-      })
-      .catch(function (error) {
-        console.error(error);
-        message.textContent = friendlyAuthError(error);
+    hashPassword(password).then(function (hash) {
+      return db.ref("customerRegistry").once("value").then(function (snapshot) {
+        var found = null;
+        snapshot.forEach(function (child) {
+          if (found) return;
+          var c = child.val() || {};
+          var user = String(c.user || decodeURIComponent(child.key || "")).trim();
+          var email = String(c.email || "").trim().toLowerCase();
+          if ((user.toLowerCase() === identity.toLowerCase() || email === identity.toLowerCase()) &&
+              (c.passwordHash === hash || c.password === password || c.pass === password || c.matKhau === password)) {
+            found = Object.assign({}, c, { user: user });
+          }
+        });
+        if (!found) throw new Error("LOGIN_FAILED");
+        return found;
       });
+    }).then(function (profile) {
+      currentProfile = profile;
+      currentUser = makeLocalUser(profile.user, profile.email || "");
+      currentUser.uid = profile.uid || makeLocalUid(profile.user);
+      localStorage.setItem("shopkc_session", JSON.stringify({user: profile.user, email: profile.email || ""}));
+      bindBalance(profile.user);
+      updateAuthUI();
+      refreshAccountHistory();
+      refreshHistory();
+      message.textContent = "";
+      closeModal("kcLoginModal");
+      showToast("Đăng nhập thành công.", "success");
+    }).catch(function (error) {
+      console.error(error);
+      message.textContent = error && error.message === "LOGIN_FAILED" ? "Sai tài khoản/email hoặc mật khẩu." : "Không thể đăng nhập. Kiểm tra kết nối Firebase.";
+    });
   }
 
   window.loginUser = loginUser;
 
   function registerUser() {
-    if (!auth || !db) {
-      showToast("Hệ thống đăng ký chưa sẵn sàng.", "error");
-      return;
-    }
-
+    if (!db) { showToast("Hệ thống đăng ký chưa sẵn sàng.", "error"); return; }
     var username = String(document.getElementById("kcRegisterUsername").value || "").trim();
-
     var email = String(document.getElementById("kcRegisterEmail").value || "").trim();
-
     var password = String(document.getElementById("kcRegisterPassword").value || "");
-
     var password2 = String(document.getElementById("kcRegisterPassword2").value || "");
-
     var message = document.getElementById("kcRegisterMessage");
-
-    if (!/^[A-Za-z0-9_.-]{3,32}$/.test(username)) {
-      message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, .";
-      return;
-    }
-
-    if (!email || email.indexOf("@") === -1) {
-      message.textContent = "Email không hợp lệ.";
-      return;
-    }
-
-    if (password.length < 6) {
-      message.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
-      return;
-    }
-
-    if (password !== password2) {
-      message.textContent = "Hai mật khẩu không giống nhau.";
-      return;
-    }
-
+    if (!/^[A-Za-z0-9_.-]{3,32}$/.test(username)) { message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, ."; return; }
+    if (!email || email.indexOf("@") === -1) { message.textContent = "Email không hợp lệ."; return; }
+    if (password.length < 6) { message.textContent = "Mật khẩu phải có ít nhất 6 ký tự."; return; }
+    if (password !== password2) { message.textContent = "Hai mật khẩu không giống nhau."; return; }
     message.textContent = "Đang tạo tài khoản...";
-
-    var usernameRef = db.ref("customerRegistry/" + encodeKey(username));
-
-    usernameRef.once("value")
-      .then(function (snapshot) {
-        if (snapshot.exists()) {
-          throw new Error("USERNAME_EXISTS");
-        }
-
-        return auth.createUserWithEmailAndPassword(email, password);
-      })
-      .then(function (credential) {
-        currentUser = credential.user;
-
-        return saveProfile(username);
-      })
-      .then(function () {
-        message.textContent = "";
-        closeModal("kcLoginModal");
-        showToast("Tạo tài khoản thành công.", "success");
-      })
-      .catch(function (error) {
-        console.error(error);
-
-        if (error && error.message === "USERNAME_EXISTS") {
-          message.textContent = "Tên tài khoản đã tồn tại.";
-          return;
-        }
-
-        message.textContent = friendlyAuthError(error);
+    db.ref("customerRegistry/" + encodeKey(username)).once("value").then(function (snapshot) {
+      if (snapshot.exists()) throw new Error("USERNAME_EXISTS");
+      return db.ref("customerRegistry").once("value").then(function (all) {
+        var emailExists = false;
+        all.forEach(function (child) { var c = child.val() || {}; if (String(c.email || "").toLowerCase() === email.toLowerCase()) emailExists = true; });
+        if (emailExists) throw new Error("EMAIL_EXISTS");
+        return hashPassword(password);
       });
+    }).then(function (hash) {
+      currentUser = makeLocalUser(username, email);
+      currentProfile = {user: username, displayName: username, email: email, uid: currentUser.uid};
+      return saveProfile(username, email, hash);
+    }).then(function () {
+      localStorage.setItem("shopkc_session", JSON.stringify({user: username, email: email}));
+      bindBalance(username); updateAuthUI(); refreshAccountHistory(); refreshHistory();
+      message.textContent = ""; closeModal("kcLoginModal"); showToast("Tạo tài khoản thành công.", "success");
+    }).catch(function (error) {
+      console.error(error);
+      message.textContent = error.message === "USERNAME_EXISTS" ? "Tên tài khoản đã tồn tại." : error.message === "EMAIL_EXISTS" ? "Email này đã được sử dụng." : "Không thể tạo tài khoản. Kiểm tra Firebase Rules.";
+    });
   }
 
   window.registerUser = registerUser;
 
   function friendlyAuthError(error) {
-    var code = error && error.code ? error.code : "";
-
-    if (code === "auth/email-already-in-use") {
-      return "Email này đã được sử dụng.";
-    }
-
-    if (code === "auth/invalid-email") {
-      return "Email không hợp lệ.";
-    }
-
-    if (code === "auth/wrong-password") {
-      return "Sai mật khẩu.";
-    }
-
-    if (code === "auth/user-not-found") {
-      return "Không tìm thấy tài khoản.";
-    }
-
-    if (code === "auth/weak-password") {
-      return "Mật khẩu quá yếu.";
-    }
-
-    if (code === "auth/network-request-failed") {
-      return "Lỗi mạng. Hãy thử lại.";
-    }
-
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
   }
 
   function logoutUser() {
-    if (!auth) {
-      return;
-    }
-
-    auth.signOut()
-      .then(function () {
-        closeModal("kcAccountModal");
-        closeModal("kcHistoryModal");
-        closeModal("kcDepositModal");
-        showToast("Đã đăng xuất.", "success");
-      })
-      .catch(function (error) {
-        console.error(error);
-        showToast("Không thể đăng xuất.", "error");
-      });
+    try { localStorage.removeItem("shopkc_session"); } catch (e) {}
+    currentUser = null; currentProfile = null; currentBalance = 0;
+    if (balanceListener) { balanceListener(); balanceListener = null; }
+    updateAuthUI();
+    closeModal("kcAccountModal"); closeModal("kcHistoryModal"); closeModal("kcDepositModal");
+    showToast("Đã đăng xuất.", "success");
   }
 
   window.logoutUser = logoutUser;
@@ -4061,9 +3882,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     initFirebase();
 
-    if (auth) {
-      auth.onAuthStateChanged(authStateChanged);
-    }
+    restoreLocalSession();
 
     fillPaymentInfo();
     loadRemoteShopConfig();
