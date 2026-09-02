@@ -57,7 +57,7 @@ header{position:sticky!important;top:0!important;z-index:50000!important;backgro
   .header-content{height:88px!important;}
   .header-logo img{width:245px!important;max-width:58vw!important;}
   .header-actions ._no_login .btn-header{}
-  .header-actions ._has_login{display:none;}
+  .header-actions ._has_login{display:flex;}
   .header-actions ._has_login svg{display:none;}
   .header-balance-wrap{display:block;text-align:right;}
   .header-balance-user{display:block;font-size:12px;max-width:110px;}
@@ -1001,6 +1001,7 @@ button {
   .header-actions{gap:5px!important;}
   .header-actions ._no_login{font-size:14px!important;}
   .header-actions ._no_login svg{width:20px!important;height:20px!important;}
+  .header-actions ._has_login{display:flex!important;}
   .header-balance-user{font-size:11px!important;max-width:86px!important;}
   .header-balance-money{font-size:14px!important;}
   .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
@@ -1010,39 +1011,49 @@ button {
   .header-logo img{width:155px!important;max-width:45vw!important;}
   .header-actions ._no_login{font-size:13px!important;}
 }
-
-@media(max-width:600px){
-  .hero-section{margin-top:68px!important;}
-}
-@media(max-width:430px){
-  .hero-section{margin-top:68px!important;}
-}
-</style>
 </style>
 
-/* FINAL SHOP KC HEADER / HERO FIX */
-.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:50000!important;background:#fff!important;}
-.header-actions ._no_login{display:flex;}
-.header-actions ._has_login{display:none;}
+<style id="shopkc-final-clean-layout">
+/* FINAL CLEAN HEADER — no CSS is allowed to render as page text */
+.header{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;
+  z-index:50000!important;background:#fff!important;border-bottom:1px solid #e5e5e5!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.06)!important;
+}
+.header-content{min-height:68px!important;height:68px!important;display:flex!important;align-items:center!important;}
+.header-actions{margin-left:auto!important;display:flex!important;align-items:center!important;gap:8px!important;white-space:nowrap!important;}
+/* Header: exactly one login control before authentication. */
+.header-actions ._no_login{display:flex!important;align-items:center!important;}
+.header-actions ._has_login{display:none!important;}
+.header-actions ._no_login + ._has_login{display:none!important;}
+/* Do not show a second login link inside the top header. */
+.header-actions a.btn-login:not(._no_login):not(._has_login){display:none!important;}
+.header-logo{display:flex!important;align-items:center!important;flex:0 0 auto!important;max-width:185px!important;min-width:0!important;}
+.header-logo img{display:block!important;width:155px!important;max-width:43vw!important;max-height:52px!important;object-fit:contain!important;}
+/* The fixed header must reserve space without covering the event/hero image. */
+.header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
+.header-nav-wrapper > .header + .nav{margin-top:68px!important;}
+.hero-section{scroll-margin-top:68px!important;}
 @media(max-width:600px){
-  .header-content{height:68px!important;min-height:68px!important;}
-  .header-logo{max-width:185px!important;min-width:0!important;}
-  .header-logo img{width:155px!important;max-width:45vw!important;max-height:52px!important;}
-  .header-actions{margin-left:auto!important;gap:5px!important;}
+  .header-content{height:64px!important;min-height:64px!important;}
+  .header-logo{max-width:185px!important;}
+  .header-logo img{width:145px!important;max-width:43vw!important;max-height:50px!important;}
+  .header-actions{gap:4px!important;}
   .header-actions ._no_login{font-size:13px!important;}
   .header-actions ._no_login svg{width:19px!important;height:19px!important;}
-  .header-actions ._has_login{display:none;}
-  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
-  .header-nav-wrapper > .header + .nav{margin-top:68px!important;}
-  .hero-section{margin-top:0!important;padding-top:22px!important;}
-}
-@media(max-width:430px){
-  .header-content{height:64px!important;min-height:64px!important;}
-  .header-logo img{width:145px!important;max-width:43vw!important;}
-  .header-actions ._no_login{font-size:12px!important;}
   .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:64px!important;}
   .header-nav-wrapper > .header + .nav{margin-top:64px!important;}
+  .hero-section{margin-top:0!important;padding-top:14px!important;scroll-margin-top:64px!important;}
 }
+@media(max-width:430px){
+  .header-content{height:60px!important;min-height:60px!important;}
+  .header-logo img{width:138px!important;max-width:42vw!important;}
+  .header-actions ._no_login{font-size:12px!important;}
+  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:60px!important;}
+  .header-nav-wrapper > .header + .nav{margin-top:60px!important;}
+  .hero-section{padding-top:10px!important;scroll-margin-top:60px!important;}
+}
+</style>
 </head>
 
 
