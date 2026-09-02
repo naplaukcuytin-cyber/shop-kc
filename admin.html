@@ -22,7 +22,7 @@
 
 <header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button><button class="btn admin-logout" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
+<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('nickOrders',this)">Nick Game</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 <section id="withdrawals" style="display:none"><div class="card"><b>YÊU CẦU RÚT TIỀN</b><p class="muted">Khi khách gửi yêu cầu, số dư đã được tạm trừ. Hủy yêu cầu sẽ hoàn lại số dư.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Thông tin nhận</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="withdrawalsBody"></tbody></table></div></div></section>
@@ -92,6 +92,7 @@
   <div class="actions"><button class="btn btn-primary" onclick="saveBlindBagProducts()">💾 Lưu túi mù</button><button class="btn btn-gray" onclick="loadPaymentAndProducts()">↻ Tải lại kho</button></div>
 </div>
 </section>
+<section id="nickOrders" style="display:none"><div class="card"><b>🎮 ĐƠN NICK GAME • REALTIME</b><p class="muted">Đơn từ <b>nickgame.html</b> ghi vào <b>nickOrders</b>. Admin có thể xác nhận đã xử lý hoặc hủy đơn.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Nick / Game</th><th>UID</th><th>Giá</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="nickOrdersBody"></tbody></table></div></div></section>
 <section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
@@ -270,14 +271,24 @@ function adminLogin(e){
   const err=document.getElementById('adminLoginError');
   if(!u||!p){if(err)err.textContent='Nhập đầy đủ tài khoản và mật khẩu.';return false;}
   if(err)err.textContent='Đang xác thực Firebase...';
-  db.ref('userProfiles').orderByChild('user').equalTo(u).once('value').then(function(s){
-    let profile=null;
-    s.forEach(function(ch){if(!profile)profile=ch.val()||{};});
-    if(!profile||!profile.email) throw new Error('Không tìm thấy tài khoản Admin trong userProfiles.');
-    const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
-    if(!allowed) throw new Error('Tài khoản này không có quyền Admin.');
-    return adminAuth.signInWithEmailAndPassword(String(profile.email),p).then(function(cred){
+  const synthetic=u.toLowerCase()+'@accounts.shop-kc.local';
+  function verifyAndOpen(cred){
+    return db.ref('userProfiles/'+cred.user.uid).once('value').then(function(s){
+      const profile=s.val()||{};
+      const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
+      if(!allowed){ return adminAuth.signOut().then(function(){throw new Error('Tài khoản này không có quyền Admin.');}); }
       adminProfile=profile;adminUnlocked=true;applyAdminLock();bootAdmin();
+    });
+  }
+  adminAuth.signInWithEmailAndPassword(synthetic,p).then(verifyAndOpen).catch(function(first){
+    /* Tương thích Admin cũ dùng email thật. Chỉ dùng fallback khi Auth không tìm thấy synthetic account. */
+    if(first&&first.code!=='auth/user-not-found'&&first.code!=='auth/invalid-email'){throw first;}
+    return db.ref('userProfiles').orderByChild('user').equalTo(u).once('value').then(function(s){
+      let profile=null;s.forEach(function(ch){if(!profile)profile=ch.val()||{};});
+      if(!profile||!profile.email) throw new Error('Không tìm thấy tài khoản Admin trong userProfiles.');
+      const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
+      if(!allowed) throw new Error('Tài khoản này không có quyền Admin.');
+      return adminAuth.signInWithEmailAndPassword(String(profile.email),p).then(function(cred){adminProfile=profile;adminUnlocked=true;applyAdminLock();bootAdmin();});
     });
   }).catch(function(e){
     console.error('ADMIN LOGIN',e);
@@ -286,6 +297,7 @@ function adminLogin(e){
   });
   return false;
 }
+
 function adminLogout(){adminUnlocked=false;adminProfile=null;adminAuth.signOut().finally(function(){location.reload();});}
 adminAuth.onAuthStateChanged(function(user){
   if(!user){adminUnlocked=false;applyAdminLock();return;}
@@ -347,11 +359,28 @@ function saveBlindBagProducts(){
   Object.keys(data).forEach(slug=>{const x=data[slug]||{};clean[slug]=Object.assign({},x,{slug:slug,price:Number(x.price)||0,sold:Number(x.sold)||0,rewards:Array.isArray(x.rewards)?x.rewards:[]});});
   db.ref('siteConfig/products').set(clean).then(()=>alert('Đã lưu toàn bộ túi mù vào kho cũ. Trang khách sẽ đọc cấu hình này.')).catch(e=>alert('Lỗi: '+e.message));
 }
+function renderNickOrders(data){
+  const body=document.getElementById('nickOrdersBody'); if(!body)return;
+  const arr=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
+  body.innerHTML=arr.map(o=>{
+    let act='';
+    if(o.status==='pending') act='<button class="btn btn-green btn-xs" onclick="completeNickOrder(\''+o.id+'\')">Đã giao</button> <button class="btn btn-red btn-xs" onclick="rejectNickOrder(\''+o.id+'\')">Hủy</button>';
+    return '<tr><td><b>'+esc(o.user||'Khách')+'</b></td><td>'+esc(o.product||'-')+'<br><span class="muted">'+esc(o.game||'')+'</span></td><td>'+esc(o.uid||'-')+'</td><td>'+fmt(o.price)+'</td><td>'+esc(o.note||'-')+'</td><td>'+esc(o.time||when(o.timestamp))+'</td><td>'+badge(o.status)+'</td><td>'+act+'</td></tr>';
+  }).join('')||'<tr><td colspan="8" style="text-align:center;padding:18px">Chưa có đơn Nick Game.</td></tr>';
+}
+function completeNickOrder(id){
+  db.ref('nickOrders/'+id).transaction(function(o){if(!o||o.status!=='pending')return;return Object.assign({},o,{status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'});}).then(r=>{if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');alert('Đã đánh dấu đã giao Nick Game.');}).catch(e=>alert('Lỗi: '+e.message));
+}
+function rejectNickOrder(id){
+  db.ref('nickOrders/'+id).transaction(function(o){if(!o||o.status!=='pending')return;return Object.assign({},o,{status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN'});}).then(r=>{if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');alert('Đã hủy đơn Nick Game.');}).catch(e=>alert('Lỗi: '+e.message));
+}
+
 function bootAdmin(){
   if(!adminUnlocked)return;
   applyAdminLock();
   db.ref('orders').on('value',s=>{renderOrders(s.val());renderOrderHistory(s.val());});
   db.ref('withdrawals').on('value',s=>renderWithdrawals(s.val()));
+  db.ref('nickOrders').on('value',s=>renderNickOrders(s.val()));
   db.ref('userProfiles').on('value',s=>renderUsers(s.val()));
   startCustomerRealtime();
   loadSite();
