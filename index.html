@@ -973,119 +973,46 @@ button {
 .kc-password-toggle:active{background:#f2f2f2}
 .kc-admin-gate-box{max-width:520px!important}
 </style>
-<style id="shopkc-final-header-fix">
-/* FINAL FIX 2: compact fixed header that always follows the page */
-.header{
-  position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;
-  z-index:50000!important;background:#fff!important;border-bottom:1px solid #ddd!important;
-  box-shadow:0 2px 12px rgba(0,0,0,.06)!important;
-}
-.header-nav-wrapper{overflow:visible!important;}
-/* The header is fixed, so reserve exactly its height before the navigation/content. */
-.header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:82px!important;}
-.header-nav-wrapper > .header + .nav{margin-top:82px!important;}
-.header-content{height:82px!important;gap:14px!important;}
-.header-logo{min-width:0!important;max-width:210px!important;}
-.header-logo img{width:205px!important;max-width:44vw!important;max-height:62px!important;object-fit:contain!important;}
-.header-search{display:none!important;}
-.header-actions{gap:8px!important;}
-.btn-header{font-size:15px!important;gap:6px!important;}
-.btn-header svg{width:19px!important;height:19px!important;}
-.header-actions .btn-cart{padding:8px 11px!important;font-size:14px!important;}
-.header-balance-user{font-size:12px!important;max-width:100px!important;}
-.header-balance-money{font-size:15px!important;}
-@media(max-width:600px){
-  .header-content{height:68px!important;min-height:68px!important;gap:8px!important;}
-  .header-logo{max-width:185px!important;}
-  .header-logo img{width:175px!important;max-width:48vw!important;max-height:52px!important;}
-  .header-actions{gap:5px!important;}
-  .header-actions ._no_login{font-size:14px!important;}
-  .header-actions ._no_login svg{width:20px!important;height:20px!important;}
-  .header-actions ._has_login{display:flex!important;}
-  .header-balance-user{font-size:11px!important;max-width:86px!important;}
-  .header-balance-money{font-size:14px!important;}
-  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
-  .header-nav-wrapper > .header + .nav{margin-top:68px!important;}
-}
-@media(max-width:430px){
-  .header-logo img{width:155px!important;max-width:45vw!important;}
-  .header-actions ._no_login{font-size:13px!important;}
-}
-</style>
 
-<style id="shopkc-final-clean-layout">
-/* FINAL CLEAN HEADER — no CSS is allowed to render as page text */
-.header{
-  position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;
-  z-index:50000!important;background:#fff!important;border-bottom:1px solid #e5e5e5!important;
-  box-shadow:0 2px 10px rgba(0,0,0,.06)!important;
-}
-.header-content{min-height:68px!important;height:68px!important;display:flex!important;align-items:center!important;}
+
+
+
+
+<style id="shopkc-authoritative-header">
+/* ONE authoritative header rule: fixed on screen, with reserved space below it. */
+.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:76px!important;z-index:90000!important;background:#fff!important;border-bottom:1px solid #e5e5e5!important;box-shadow:0 2px 10px rgba(0,0,0,.06)!important;}
+.header-content{height:76px!important;min-height:76px!important;display:flex!important;align-items:center!important;gap:12px!important;}
+.header-logo{display:flex!important;align-items:center!important;flex:0 0 auto!important;min-width:0!important;max-width:220px!important;}
+.header-logo img{display:block!important;width:180px!important;max-width:44vw!important;max-height:58px!important;object-fit:contain!important;}
+.header-search{display:none!important;}
 .header-actions{margin-left:auto!important;display:flex!important;align-items:center!important;gap:8px!important;white-space:nowrap!important;}
-/* Header: exactly one login control before authentication. */
-.header-actions ._no_login{display:flex!important;align-items:center!important;}
-.header-actions ._has_login{display:none!important;}
-.header-actions ._no_login + ._has_login{display:none!important;}
-/* Do not show a second login link inside the top header. */
-.header-actions a.btn-login:not(._no_login):not(._has_login){display:none!important;}
-.header-logo{display:flex!important;align-items:center!important;flex:0 0 auto!important;max-width:185px!important;min-width:0!important;}
-.header-logo img{display:block!important;width:155px!important;max-width:43vw!important;max-height:52px!important;object-fit:contain!important;}
-/* The fixed header must reserve space without covering the event/hero image. */
-.header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
-.header-nav-wrapper > .header + .nav{margin-top:68px!important;}
-.hero-section{scroll-margin-top:68px!important;}
-@media(max-width:600px){
-  .header-content{height:64px!important;min-height:64px!important;}
-  .header-logo{max-width:185px!important;}
-  .header-logo img{width:145px!important;max-width:43vw!important;max-height:50px!important;}
-  .header-actions{gap:4px!important;}
-  .header-actions ._no_login{font-size:13px!important;}
-  .header-actions ._no_login svg{width:19px!important;height:19px!important;}
-  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:64px!important;}
-  .header-nav-wrapper > .header + .nav{margin-top:64px!important;}
-  .hero-section{margin-top:0!important;padding-top:14px!important;scroll-margin-top:64px!important;}
-}
-@media(max-width:430px){
-  .header-content{height:60px!important;min-height:60px!important;}
-  .header-logo img{width:138px!important;max-width:42vw!important;}
-  .header-actions ._no_login{font-size:12px!important;}
-  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:60px!important;}
-  .header-nav-wrapper > .header + .nav{margin-top:60px!important;}
-  .hero-section{padding-top:10px!important;scroll-margin-top:60px!important;}
-}
-</style>
-<style id="shopkc-final-sticky-clean">
-/* FINAL CLEAN MOBILE/DESKTOP HEADER: sticky stays in document flow, so it cannot cover the event banner. */
-.header{position:sticky!important;top:0!important;left:auto!important;right:auto!important;width:100%!important;z-index:50000!important;background:#fff!important;border-bottom:1px solid #e5e5e5!important;box-shadow:0 2px 10px rgba(0,0,0,.06)!important;}
-.header-content{height:76px!important;min-height:76px!important;gap:18px!important;}
-.header-logo{min-width:0!important;max-width:240px!important;flex:0 0 auto!important;}
-.header-logo img{width:190px!important;max-width:44vw!important;max-height:58px!important;object-fit:contain!important;}
-.header-actions{margin-left:auto!important;display:flex!important;align-items:center!important;gap:8px!important;}
 .header-actions ._no_login{display:flex!important;align-items:center!important;white-space:nowrap!important;}
-.header-actions ._has_login{display:none!important;}
+.header-actions ._has_login{display:none!important;align-items:center!important;}
 .header-actions a.btn-login:not(._no_login):not(._has_login){display:none!important;}
 .header-actions .btn-cart{display:none!important;}
-/* Remove old fixed-header compensation rules. */
-.header-nav-wrapper > .header + .mobile-bottom-nav + .nav,
-.header-nav-wrapper > .header + .nav{margin-top:0!important;}
+/* reserve header space so the event banner never sits underneath it */
+.header-nav-wrapper{padding-top:76px!important;overflow:visible!important;}
+.header-nav-wrapper>.header+ .mobile-bottom-nav + .nav,
+.header-nav-wrapper>.header+ .nav{margin-top:0!important;}
 .hero-section{margin-top:0!important;scroll-margin-top:76px!important;}
-@media(max-width:992px){
- body{padding-bottom:76px!important;}
- .header-content{height:64px!important;min-height:64px!important;gap:10px!important;}
- .header-logo{max-width:190px!important;}
- .header-logo img{width:145px!important;max-width:43vw!important;max-height:52px!important;}
- .header-actions ._no_login{font-size:14px!important;}
- .header-actions ._no_login svg{width:20px!important;height:20px!important;}
- .header-nav-wrapper > .header + .mobile-bottom-nav + .nav,
- .header-nav-wrapper > .header + .nav{margin-top:0!important;}
- .hero-section{margin-top:0!important;padding-top:0!important;scroll-margin-top:64px!important;}
-}
-@media(max-width:430px){
- .header-content{height:60px!important;min-height:60px!important;}
- .header-logo{max-width:175px!important;}
- .header-logo img{width:138px!important;max-width:42vw!important;max-height:48px!important;}
+@media(max-width:600px){
+ .header{height:64px!important;}
+ .header-content{height:64px!important;min-height:64px!important;gap:8px!important;}
+ .header-logo{max-width:180px!important;}
+ .header-logo img{width:145px!important;max-width:43vw!important;max-height:50px!important;}
+ .header-actions{gap:4px!important;}
  .header-actions ._no_login{font-size:13px!important;}
  .header-actions ._no_login svg{width:19px!important;height:19px!important;}
+ .header-nav-wrapper{padding-top:64px!important;}
+ .hero-section{scroll-margin-top:64px!important;}
+}
+@media(max-width:430px){
+ .header{height:60px!important;}
+ .header-content{height:60px!important;min-height:60px!important;}
+ .header-logo{max-width:170px!important;}
+ .header-logo img{width:138px!important;max-width:42vw!important;max-height:48px!important;}
+ .header-actions ._no_login{font-size:12px!important;}
+ .header-nav-wrapper{padding-top:60px!important;}
  .hero-section{scroll-margin-top:60px!important;}
 }
 </style>
@@ -2555,7 +2482,7 @@ button {
   var cfg = window.SHOP_KC_CONFIG || {};
 
   var firebaseConfig = cfg.firebase || {
-    apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
+    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
     storageBucket: "shop-kc.firebasestorage.app",
@@ -3220,7 +3147,12 @@ button {
     }
 
     if (code === "auth/invalid-api-key" || (error && /API key not valid/i.test(error.message || ""))) {
-      return "Firebase từ chối API key (" + (error && error.code ? error.code : "unknown") + ").";
+      return "Firebase từ chối API key. Kiểm tra API key của Web App Shop KC trong Firebase/Google Cloud.";
+    }
+
+    if (code === "auth/internal-error") {
+      var raw = String(error && error.message || "");
+      return "Firebase Auth trả về auth/internal-error. " + (raw && raw !== "internal error" ? raw : "Hãy kiểm tra Email/Password trong Authentication và API Authentication của key.");
     }
 
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
