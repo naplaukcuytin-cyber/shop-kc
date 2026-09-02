@@ -3069,14 +3069,12 @@ button {
 
     message.textContent = "Đang tạo tài khoản...";
 
-    var usernameRef = db.ref("customerRegistry/" + encodeKey(username));
     var internalEmail = username.toLowerCase() + "@accounts.shop-kc.local";
 
-    usernameRef.once("value")
-      .then(function (snapshot) {
-        if (snapshot.exists()) throw new Error("USERNAME_EXISTS");
-        return auth.createUserWithEmailAndPassword(internalEmail, password);
-      })
+    /* Không đọc customerRegistry trước khi đăng nhập. Firebase Auth tự kiểm tra
+       tài khoản đã tồn tại; việc đọc RTDB khi khách chưa đăng nhập có thể bị
+       Security Rules từ chối và làm đăng ký thất bại. */
+    auth.createUserWithEmailAndPassword(internalEmail, password)
       .then(function (credential) {
         currentUser = credential.user;
         return saveProfile(username);
@@ -3102,7 +3100,15 @@ button {
     var code = error && error.code ? error.code : "";
 
     if (code === "auth/email-already-in-use") {
-      return "Email này đã được sử dụng.";
+      return "Tên tài khoản đã tồn tại.";
+    }
+
+    if (code === "auth/invalid-api-key") {
+      return "Firebase đang từ chối API key. Kiểm tra API key trong Google Cloud/Firebase.";
+    }
+
+    if (code === "auth/operation-not-allowed") {
+      return "Firebase chưa bật đăng nhập bằng Email/Password. Hãy bật Email/Password trong Firebase Authentication.";
     }
 
     if (code === "auth/invalid-email") {
@@ -4100,6 +4106,17 @@ button {
   window.adminHiddenLogin = adminHiddenLogin;
   window.ShopKCOpenAdmin = openAdminPanelHidden;
 
+  function handleEntryHash() {
+    var hash = String(location.hash || "").toLowerCase();
+    if (hash === "#login") {
+      setTimeout(function () { openLogin(); }, 80);
+    } else if (hash === "#deposit") {
+      setTimeout(function () { openDeposit(); }, 80);
+    }
+  }
+
+  window.addEventListener("hashchange", handleEntryHash);
+
   function init() {
     preventModalScrollThrough();
     installFirebaseDiagnostics();
@@ -4118,6 +4135,8 @@ button {
     if (auth) {
       auth.onAuthStateChanged(authStateChanged);
     }
+
+    handleEntryHash();
 
     fillPaymentInfo();
 
