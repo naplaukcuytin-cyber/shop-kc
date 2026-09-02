@@ -25,6 +25,15 @@
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- SHOP KC FIREBASE SDK 8.10.1 — LEGACY LINKS FROM WORKING SITE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- interfont -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +44,7 @@
 
     <style>
         body {
-            font-family: "Inter", sans-serif;
+            font-family: "Lexend", "Inter", sans-serif;
         }
 
         .swal2-title {
@@ -94,7 +103,7 @@ header{position:sticky!important;top:0!important;z-index:50000!important;backgro
 :root{--red:#f20d46;--text:#303030;--muted:#6b6b6b;--border:#e7e7e7;--bg:#f7f7f7}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#fff;color:var(--text);font-family:Inter,Arial,sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden}
+body{margin:0;background:#fff;color:var(--text);font-family:Lexend,Inter,Arial,sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden}
 img{max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 .container{width:min(1180px,calc(100% - 48px));margin:0 auto}
@@ -167,16 +176,13 @@ a{text-decoration:none;color:inherit}
 </style>
 
 
-<!-- SHOP KC REALTIME BACKEND -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 
 
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
+    apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -2524,7 +2530,7 @@ button {
   var cfg = window.SHOP_KC_CONFIG || {};
 
   var firebaseConfig = cfg.firebase || {
-    apiKey: "AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs",
+    apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
     storageBucket: "shop-kc.firebasestorage.app",
@@ -2541,6 +2547,7 @@ button {
   var auth = null;
 
   var db = null;
+  var storage = null;
 
   var currentUser = null;
 
@@ -2741,7 +2748,7 @@ button {
   function diagnoseFirebaseConfig() {
     try {
       console.info("SHOP KC Firebase project:", firebaseConfig.projectId, "authDomain:", firebaseConfig.authDomain);
-      console.info("Nếu lỗi 'API key not valid' chỉ xảy ra trên naplau.pages.dev nhưng Admin cũ vẫn dùng được, khả năng cao API key đang giới hạn HTTP referrer. Hãy cho phép https://naplau.pages.dev/* trong Google Cloud Console > APIs & Services > Credentials.");
+      console.info('SHOP KC dùng đúng Firebase SDK 8.10.1 và cấu hình Firebase của bản cũ đang hoạt động.');
     } catch (e) {}
   }
 
@@ -2766,6 +2773,8 @@ button {
       });
 
       db = firebase.database();
+      storage = firebase.storage();
+      window.__SHOP_KC_STORAGE = storage;
 
       return true;
     } catch (error) {
@@ -4216,10 +4225,7 @@ button {
 
 <script id="shopkc-firebase-auth-failover">
 (function(){
-  var candidates=[
-    {apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'},
-    {apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'}
-  ];
+  var candidates=[{apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'}];
   window.ShopKCAuthFailover=function(){
     try{
       var i=Number(sessionStorage.getItem('shopkc_fb_candidate')||0)+1;
@@ -4244,10 +4250,7 @@ button {
   'use strict';
   var SITE_PATH='siteConfig';
   var dynamicState={};
-  var fbCandidates=[
-    {apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'},
-    {apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'}
-  ];
+  var fbCandidates=[{apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'}];
   function db(){ try{return firebase.database();}catch(e){return null;} }
   function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[c]}); }
   function money(v){return (Number(v)||0).toLocaleString('vi-VN')+'đ';}
