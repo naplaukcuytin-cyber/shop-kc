@@ -7,6 +7,7 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
+    <meta name="shopkc-build" content="login-rtdb-fixed-20260902">
     <title>Shop Túi Mù Free Fire, Acc FF VIP & Vòng Quay Kim Cương</title>
     <meta name="keywords"
         content="cenaff.com, mua túi mù free fire, shop acc ff uy tín, túi mù ff giá rẻ, tài khoản free fire có skin súng, vòng quay kim cương" />
@@ -132,7 +133,6 @@ a{text-decoration:none;color:inherit}
 
 <!-- SHOP KC REALTIME BACKEND -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 
@@ -2308,7 +2308,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       <div id="kcLoginPanel" class="kc-login-panel active">
         <div class="kc-field">
           <label>Email</label>
-          <input id="kcLoginEmail" type="email" autocomplete="email" placeholder="you@example.com">
+          <input id="kcLoginEmail" type="text" autocomplete="username" placeholder="Nhập tài khoản hoặc email">
         </div>
         <div class="kc-field">
           <label>Mật khẩu</label>
@@ -2620,8 +2620,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         app = firebase.app();
       }
 
-      // Không dùng Firebase Authentication ở trang khách. Website cũ xác thực qua dữ liệu Shop KC/Realtime Database.
-      // Việc gọi firebase.auth() ở bản trước đã kích hoạt Identity Toolkit và gây lỗi "API key not valid".
+      // Trang khách chỉ dùng Realtime Database cho tài khoản Shop KC.
       auth = null;
       db = firebase.database();
 
