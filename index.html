@@ -176,7 +176,7 @@ a{text-decoration:none;color:inherit}
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
+    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -1052,6 +1052,41 @@ button {
   .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:60px!important;}
   .header-nav-wrapper > .header + .nav{margin-top:60px!important;}
   .hero-section{padding-top:10px!important;scroll-margin-top:60px!important;}
+}
+</style>
+<style id="shopkc-final-sticky-clean">
+/* FINAL CLEAN MOBILE/DESKTOP HEADER: sticky stays in document flow, so it cannot cover the event banner. */
+.header{position:sticky!important;top:0!important;left:auto!important;right:auto!important;width:100%!important;z-index:50000!important;background:#fff!important;border-bottom:1px solid #e5e5e5!important;box-shadow:0 2px 10px rgba(0,0,0,.06)!important;}
+.header-content{height:76px!important;min-height:76px!important;gap:18px!important;}
+.header-logo{min-width:0!important;max-width:240px!important;flex:0 0 auto!important;}
+.header-logo img{width:190px!important;max-width:44vw!important;max-height:58px!important;object-fit:contain!important;}
+.header-actions{margin-left:auto!important;display:flex!important;align-items:center!important;gap:8px!important;}
+.header-actions ._no_login{display:flex!important;align-items:center!important;white-space:nowrap!important;}
+.header-actions ._has_login{display:none!important;}
+.header-actions a.btn-login:not(._no_login):not(._has_login){display:none!important;}
+.header-actions .btn-cart{display:none!important;}
+/* Remove old fixed-header compensation rules. */
+.header-nav-wrapper > .header + .mobile-bottom-nav + .nav,
+.header-nav-wrapper > .header + .nav{margin-top:0!important;}
+.hero-section{margin-top:0!important;scroll-margin-top:76px!important;}
+@media(max-width:992px){
+ body{padding-bottom:76px!important;}
+ .header-content{height:64px!important;min-height:64px!important;gap:10px!important;}
+ .header-logo{max-width:190px!important;}
+ .header-logo img{width:145px!important;max-width:43vw!important;max-height:52px!important;}
+ .header-actions ._no_login{font-size:14px!important;}
+ .header-actions ._no_login svg{width:20px!important;height:20px!important;}
+ .header-nav-wrapper > .header + .mobile-bottom-nav + .nav,
+ .header-nav-wrapper > .header + .nav{margin-top:0!important;}
+ .hero-section{margin-top:0!important;padding-top:0!important;scroll-margin-top:64px!important;}
+}
+@media(max-width:430px){
+ .header-content{height:60px!important;min-height:60px!important;}
+ .header-logo{max-width:175px!important;}
+ .header-logo img{width:138px!important;max-width:42vw!important;max-height:48px!important;}
+ .header-actions ._no_login{font-size:13px!important;}
+ .header-actions ._no_login svg{width:19px!important;height:19px!important;}
+ .hero-section{scroll-margin-top:60px!important;}
 }
 </style>
 </head>
@@ -2520,7 +2555,7 @@ button {
   var cfg = window.SHOP_KC_CONFIG || {};
 
   var firebaseConfig = cfg.firebase || {
-    apiKey: "AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs",
+    apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
     storageBucket: "shop-kc.firebasestorage.app",
@@ -3185,7 +3220,7 @@ button {
     }
 
     if (code === "auth/invalid-api-key" || (error && /API key not valid/i.test(error.message || ""))) {
-      return "Firebase đang từ chối API key. Nếu Admin cũ vẫn đăng nhập được, hãy thêm https://naplau.pages.dev/* vào HTTP referrers của API key Shop KC trong Google Cloud Console, rồi tải lại trang.";
+      return "Firebase từ chối API key (" + (error && error.code ? error.code : "unknown") + ").";
     }
 
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
