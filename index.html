@@ -57,7 +57,7 @@ header{position:sticky!important;top:0!important;z-index:50000!important;backgro
   .header-content{height:88px!important;}
   .header-logo img{width:245px!important;max-width:58vw!important;}
   .header-actions ._no_login .btn-header{}
-  .header-actions ._has_login{display:flex;}
+  .header-actions ._has_login{display:none;}
   .header-actions ._has_login svg{display:none;}
   .header-balance-wrap{display:block;text-align:right;}
   .header-balance-user{display:block;font-size:12px;max-width:110px;}
@@ -1001,7 +1001,6 @@ button {
   .header-actions{gap:5px!important;}
   .header-actions ._no_login{font-size:14px!important;}
   .header-actions ._no_login svg{width:20px!important;height:20px!important;}
-  .header-actions ._has_login{display:flex!important;}
   .header-balance-user{font-size:11px!important;max-width:86px!important;}
   .header-balance-money{font-size:14px!important;}
   .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
@@ -1011,7 +1010,39 @@ button {
   .header-logo img{width:155px!important;max-width:45vw!important;}
   .header-actions ._no_login{font-size:13px!important;}
 }
+
+@media(max-width:600px){
+  .hero-section{margin-top:68px!important;}
+}
+@media(max-width:430px){
+  .hero-section{margin-top:68px!important;}
+}
 </style>
+</style>
+
+/* FINAL SHOP KC HEADER / HERO FIX */
+.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:50000!important;background:#fff!important;}
+.header-actions ._no_login{display:flex;}
+.header-actions ._has_login{display:none;}
+@media(max-width:600px){
+  .header-content{height:68px!important;min-height:68px!important;}
+  .header-logo{max-width:185px!important;min-width:0!important;}
+  .header-logo img{width:155px!important;max-width:45vw!important;max-height:52px!important;}
+  .header-actions{margin-left:auto!important;gap:5px!important;}
+  .header-actions ._no_login{font-size:13px!important;}
+  .header-actions ._no_login svg{width:19px!important;height:19px!important;}
+  .header-actions ._has_login{display:none;}
+  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
+  .header-nav-wrapper > .header + .nav{margin-top:68px!important;}
+  .hero-section{margin-top:0!important;padding-top:22px!important;}
+}
+@media(max-width:430px){
+  .header-content{height:64px!important;min-height:64px!important;}
+  .header-logo img{width:145px!important;max-width:43vw!important;}
+  .header-actions ._no_login{font-size:12px!important;}
+  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:64px!important;}
+  .header-nav-wrapper > .header + .nav{margin-top:64px!important;}
+}
 </head>
 
 
