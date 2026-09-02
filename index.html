@@ -2848,6 +2848,88 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
   }
 
+
+  function bindBalance(username) {
+    if (balanceListener) {
+      balanceListener();
+      balanceListener = null;
+    }
+    if (!db || !username) {
+      currentBalance = 0;
+      updateBalanceUI();
+      return;
+    }
+    balanceRef = db.ref("balances/" + encodeKey(username));
+    var handler = balanceRef.on("value", function(snapshot) {
+      var raw = snapshot.val();
+      var value = raw;
+      if (raw && typeof raw === "object") {
+        value = raw.balance;
+        if (value == null) value = raw.amount;
+        if (value == null) value = raw.money;
+        if (value == null) value = raw.wallet;
+        if (value == null) value = raw.value;
+      }
+      currentBalance = Number(value) || 0;
+      updateBalanceUI();
+    });
+    balanceListener = function() { balanceRef.off("value", handler); };
+  }
+
+  function updateBalanceUI() {
+    document.querySelectorAll("._state_username").forEach(function(element) {
+      element.textContent = (currentUser && currentProfile) ? formatMoney(currentBalance) : "Đăng nhập";
+    });
+    var accountBalance = document.getElementById("kcAccountBalance");
+    if (accountBalance) accountBalance.textContent = formatMoney(currentBalance);
+  }
+
+  function updateAuthUI() {
+    var loggedIn = !!currentUser && !!currentProfile && !!currentProfile.user;
+    document.querySelectorAll("._no_login").forEach(function(element) {
+      element.style.display = loggedIn ? "none" : "";
+    });
+    document.querySelectorAll("._has_login").forEach(function(element) {
+      element.style.display = loggedIn ? "" : "none";
+    });
+    var accountName = document.getElementById("kcAccountName");
+    var accountAvatar = document.getElementById("kcAccountAvatar");
+    if (accountName) accountName.textContent = loggedIn ? getUsername() : "Khách";
+    if (accountAvatar) accountAvatar.textContent = loggedIn ? getUsername().charAt(0).toUpperCase() : "K";
+    updateBalanceUI();
+  }
+
+  function clearAuthMessages() {
+    var loginMessage = document.getElementById("kcLoginMessage");
+    var registerMessage = document.getElementById("kcRegisterMessage");
+    if (loginMessage) loginMessage.textContent = "";
+    if (registerMessage) registerMessage.textContent = "";
+  }
+
+  function switchAuthTab(mode, button) {
+    var isLogin = mode === "login";
+    var loginPanel = document.getElementById("kcLoginPanel");
+    var registerPanel = document.getElementById("kcRegisterPanel");
+    var loginTab = document.getElementById("kcLoginTab");
+    var registerTab = document.getElementById("kcRegisterTab");
+    if (loginPanel) loginPanel.classList.toggle("active", isLogin);
+    if (registerPanel) registerPanel.classList.toggle("active", !isLogin);
+    if (loginTab) loginTab.classList.toggle("active", isLogin);
+    if (registerTab) registerTab.classList.toggle("active", !isLogin);
+  }
+  window.switchAuthTab = switchAuthTab;
+
+  function openLogin() {
+    clearAuthMessages();
+    switchAuthTab("login", document.getElementById("kcLoginTab"));
+    openModal("kcLoginModal");
+    window.setTimeout(function() {
+      var input = document.getElementById("kcLoginEmail");
+      if (input) input.focus();
+    }, 80);
+  }
+  window.openLogin = openLogin;
+
   function logoutUser() {
     try { localStorage.removeItem("shopkc_session"); } catch (e) {}
     currentUser = null; currentProfile = null; currentBalance = 0;
