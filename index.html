@@ -974,12 +974,42 @@ button {
 .kc-admin-gate-box{max-width:520px!important}
 </style>
 <style id="shopkc-final-header-fix">
-/* FINAL FIX: header remains visible while scrolling */
-.header{position:sticky!important;top:0!important;z-index:50000!important;background:#fff!important;}
+/* FINAL FIX 2: compact fixed header that always follows the page */
+.header{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;
+  z-index:50000!important;background:#fff!important;border-bottom:1px solid #ddd!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.06)!important;
+}
 .header-nav-wrapper{overflow:visible!important;}
+/* The header is fixed, so reserve exactly its height before the navigation/content. */
+.header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:82px!important;}
+.header-nav-wrapper > .header + .nav{margin-top:82px!important;}
+.header-content{height:82px!important;gap:14px!important;}
+.header-logo{min-width:0!important;max-width:210px!important;}
+.header-logo img{width:205px!important;max-width:44vw!important;max-height:62px!important;object-fit:contain!important;}
+.header-search{display:none!important;}
+.header-actions{gap:8px!important;}
+.btn-header{font-size:15px!important;gap:6px!important;}
+.btn-header svg{width:19px!important;height:19px!important;}
+.header-actions .btn-cart{padding:8px 11px!important;font-size:14px!important;}
+.header-balance-user{font-size:12px!important;max-width:100px!important;}
+.header-balance-money{font-size:15px!important;}
 @media(max-width:600px){
-  .header{position:sticky!important;top:0!important;z-index:50000!important;}
-  .header-content{min-height:82px!important;}
+  .header-content{height:68px!important;min-height:68px!important;gap:8px!important;}
+  .header-logo{max-width:185px!important;}
+  .header-logo img{width:175px!important;max-width:48vw!important;max-height:52px!important;}
+  .header-actions{gap:5px!important;}
+  .header-actions ._no_login{font-size:14px!important;}
+  .header-actions ._no_login svg{width:20px!important;height:20px!important;}
+  .header-actions ._has_login{display:flex!important;}
+  .header-balance-user{font-size:11px!important;max-width:86px!important;}
+  .header-balance-money{font-size:14px!important;}
+  .header-nav-wrapper > .header + .mobile-bottom-nav + .nav{margin-top:68px!important;}
+  .header-nav-wrapper > .header + .nav{margin-top:68px!important;}
+}
+@media(max-width:430px){
+  .header-logo img{width:155px!important;max-width:45vw!important;}
+  .header-actions ._no_login{font-size:13px!important;}
 }
 </style>
 </head>
@@ -2662,6 +2692,13 @@ button {
 
   window.closeModal = closeModal;
 
+  function diagnoseFirebaseConfig() {
+    try {
+      console.info("SHOP KC Firebase project:", firebaseConfig.projectId, "authDomain:", firebaseConfig.authDomain);
+      console.info("Nếu lỗi 'API key not valid' chỉ xảy ra trên naplau.pages.dev nhưng Admin cũ vẫn dùng được, khả năng cao API key đang giới hạn HTTP referrer. Hãy cho phép https://naplau.pages.dev/* trong Google Cloud Console > APIs & Services > Credentials.");
+    } catch (e) {}
+  }
+
   function initFirebase() {
     if (typeof firebase === "undefined") {
       showToast("Firebase chưa tải được. Kiểm tra kết nối mạng.", "error");
@@ -3106,7 +3143,7 @@ button {
     }
 
     if (code === "auth/invalid-api-key" || (error && /API key not valid/i.test(error.message || ""))) {
-      return "Firebase đang từ chối API key. Hãy kiểm tra đúng cấu hình Firebase của Shop KC và tải lại trang.";
+      return "Firebase đang từ chối API key. Nếu Admin cũ vẫn đăng nhập được, hãy thêm https://naplau.pages.dev/* vào HTTP referrers của API key Shop KC trong Google Cloud Console, rồi tải lại trang.";
     }
 
     return error && error.message ? error.message : "Không thể thực hiện thao tác.";
@@ -4094,6 +4131,7 @@ button {
 
     repairLegacyEmptyLinks();
 
+    diagnoseFirebaseConfig();
     initFirebase();
 
     if (auth) {
