@@ -7,7 +7,6 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <meta name="shopkc-build" content="login-rtdb-fixed-20260902">
     <title>Shop Túi Mù Free Fire, Acc FF VIP & Vòng Quay Kim Cương</title>
     <meta name="keywords"
         content="cenaff.com, mua túi mù free fire, shop acc ff uy tín, túi mù ff giá rẻ, tài khoản free fire có skin súng, vòng quay kim cương" />
@@ -21,7 +20,7 @@
 
     <meta name="google" content="notranslate">
 
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <!-- css -->
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -43,42 +42,42 @@
             font-size: 25px !important;
         }
     
-/* ===== SHOP KC UI PATCH: HEADER BALANCE + NO ZOOM + PRODUCT EXPERIENCE ===== */
-html,body{touch-action:pan-x pan-y;overscroll-behavior-x:none;-webkit-text-size-adjust:100%;}
-body{overflow-x:hidden;}
-.header-actions .kc-header-account{display:flex!important;align-items:center;gap:8px;}
-.kc-header-user{display:inline-flex;align-items:center;gap:9px;}
-.kc-header-user b{font-size:15px;font-weight:800;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
-.kc-header-user strong{font-size:17px;font-weight:950;color:#f20d46;}
-._no_login.btn-header{display:flex;}
-.kc-product-tap{cursor:pointer;position:relative;user-select:none;-webkit-user-select:none;}
-.kc-product-tap:active{transform:scale(.992);}
-.kc-tear-card{cursor:pointer;}
-.kc-tear-card .kc-tear-cover{transition:opacity .2s,transform .2s;}
-.kc-tear-card:hover .kc-tear-cover{transform:scale(1.01);}
-.kc-reward-image-card{overflow:hidden;padding:0!important;background:#fff!important;}
-.kc-reward-image-card img{display:block;width:100%;height:120px;object-fit:cover;}
-.kc-reward-image-card .kc-reward-title{display:block;padding:13px 8px 15px;text-align:center;font-weight:900;color:#555;}
-.kc-delivery-result{margin-top:12px;padding:12px;border-radius:12px;background:#fff;border:1px solid #ffd2dc;text-align:left;}
-.kc-delivery-title{font-weight:950;color:#f20d46;margin-bottom:8px;}
-.kc-delivery-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed #eee;}
-.kc-delivery-row:last-of-type{border-bottom:0;}
-.kc-delivery-row span{color:#777;}
-.kc-delivery-row b{color:#222;word-break:break-all;}
-.kc-history-delivery{margin-top:10px;padding:11px;border-radius:11px;background:#fff8fa;border:1px solid #ffd6df;}
-.kc-history-delivery-title{font-weight:950;color:#f20d46;margin-bottom:7px;}
-.kc-history-delivery-row{display:flex;gap:8px;justify-content:space-between;padding:4px 0;font-size:13px;}
-.kc-history-delivery-row b{word-break:break-all;text-align:right;}
-.kc-history-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;}
-.kc-history-copy{border:0;border-radius:8px;padding:7px 10px;background:#f20d46;color:#fff;font-weight:800;cursor:pointer;}
+/* SHOP KC PATCH 2026-09-03 */
+header{position:sticky!important;top:0!important;z-index:50000!important;background:#fff!important;}
+.header-content{position:relative;}
+.header-actions{display:flex;align-items:center;gap:10px;white-space:nowrap;}
+.header-actions ._has_login{align-items:center!important;}
+.header-balance-wrap{display:flex;align-items:center;gap:8px;}
+.header-balance-user{font-size:14px;color:#555;font-weight:800;max-width:130px;overflow:hidden;text-overflow:ellipsis;}
+.header-balance-money{font-size:18px;color:var(--red);font-weight:950;}
+.minigame-card{cursor:pointer!important;touch-action:manipulation;}
+.kc-modal-panel{overscroll-behavior:contain;}
 @media(max-width:600px){
-  .header-actions .kc-header-account{max-width:145px;}
-  .kc-header-user{gap:5px;}
-  .kc-header-user b{display:none;}
-  .kc-header-user strong{font-size:16px;}
-  .kc-reward-image-card img{height:105px;}
-  .kc-history-item{grid-template-columns:1fr;}
+  header{position:sticky!important;top:0!important;}
+  .header-content{height:88px!important;}
+  .header-logo img{width:245px!important;max-width:58vw!important;}
+  .header-actions ._no_login .btn-header{}
+  .header-actions ._has_login{display:flex;}
+  .header-actions ._has_login svg{display:none;}
+  .header-balance-wrap{display:block;text-align:right;}
+  .header-balance-user{display:block;font-size:12px;max-width:110px;}
+  .header-balance-money{display:block;font-size:16px;}
+  .header-actions .btn-cart{display:none!important;}
+  .kc-modal{padding:0!important;align-items:stretch!important;justify-content:stretch!important;}
+  .kc-modal-panel,.kc-modal-panel[style]{width:100%!important;max-width:none!important;height:100dvh!important;max-height:none!important;border-radius:0!important;margin:0!important;}
+  .kc-modal-head{padding:20px 18px!important;}
+  .kc-modal-body{padding:18px!important;padding-bottom:110px!important;}
+  .kc-product-layout{grid-template-columns:1fr!important;}
+  .kc-detail-buybar{position:sticky!important;bottom:0!important;z-index:20!important;background:#fff!important;padding:12px!important;border-top:1px solid #eee!important;}
 }
+@media(max-width:430px){
+  .header-content{height:82px!important;}
+  .header-logo img{width:215px!important;max-width:56vw!important;}
+  .header-balance-money{font-size:15px;}
+}
+
+.kc-box-select-title{font-size:20px;font-weight:950;margin:0 0 12px}.kc-box-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.kc-lucky-box{position:relative;border:3px solid transparent;border-radius:17px;overflow:hidden;background:#21090d;padding:0;cursor:pointer;transition:.18s;touch-action:manipulation}.kc-lucky-box img{display:block;width:100%;aspect-ratio:1.47/1;object-fit:cover}.kc-lucky-box.selected{border-color:var(--kc-red);box-shadow:0 0 0 3px rgba(242,13,70,.12)}.kc-lucky-box .box-num{position:absolute;left:8px;top:8px;min-width:30px;height:30px;padding:0 8px;border-radius:99px;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center;font-weight:900}.kc-lucky-box.selected .box-num{background:var(--kc-red)}
+@media(max-width:600px){.kc-box-grid{grid-template-columns:repeat(2,1fr);gap:12px}.kc-lucky-box{border-radius:13px}}
 </style>
 
     
@@ -100,7 +99,7 @@ img{max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 .container{width:min(1180px,calc(100% - 48px));margin:0 auto}
 /* Header */
-.header{background:#fff;border-bottom:1px solid #ddd;position:relative;z-index:100}
+.header{position:sticky;top:0;z-index:50000;background:#fff;border-bottom:1px solid #ddd;position:relative;z-index:100}
 .header-content{height:108px;display:flex;align-items:center;gap:32px}
 .header-logo{display:flex;align-items:center;min-width:280px;max-width:330px}
 .header-logo img{display:block;width:310px;max-height:86px;object-fit:contain;object-position:left center}
@@ -170,13 +169,14 @@ a{text-decoration:none;color:inherit}
 
 <!-- SHOP KC REALTIME BACKEND -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
+    apiKey: 'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -191,9 +191,7 @@ window.SHOP_KC_CONFIG = {
     accountNumber: '0000000000',
     accountName: 'SHOP KC',
     support: 'Liên hệ hỗ trợ nếu bạn cần đổi phương thức nạp tiền.'
-  },
-  siteEnabled: true,
-  products: {}
+  }
 };
 </script>
 
@@ -968,21 +966,12 @@ button {
 }
 </style>
 
-<style id="shopkc-final-overrides">
-html,body{touch-action:pan-x pan-y!important;overscroll-behavior-x:none!important}
-body{max-width:100vw!important;overflow-x:hidden!important}
-.kc-site-closed{position:fixed;inset:0;background:rgba(10,12,18,.98);z-index:2147483647;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:#fff}
-.kc-site-closed.active{display:flex}.kc-site-closed-box{width:min(520px,100%);background:#171a21;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:34px 24px;box-shadow:0 20px 80px rgba(0,0,0,.5)}.kc-site-closed-logo{width:90px;height:90px;border-radius:24px;object-fit:cover;margin:auto auto 16px;display:block}.kc-site-closed h2{font-size:30px;margin:0 0 10px}.kc-site-closed p{color:#cbd0d8;line-height:1.6;margin:0}
-
-.kc-reward-image-card{padding:0!important;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;min-height:160px}.kc-reward-image-card img{width:100%;height:105px;object-fit:cover;display:block}.kc-reward-image-card .kc-reward-title{padding:12px 10px;text-align:center;font-weight:900;line-height:1.35}.kc-reward-image-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
-.kc-product-tap{cursor:pointer;position:relative}.kc-product-tap:active{transform:scale(.985)}
-.kc-tear-hint{position:absolute;left:12px;right:12px;bottom:12px;border-radius:999px;background:#f20d46;color:#fff;text-align:center;font-weight:900;padding:10px 12px;box-shadow:0 7px 20px rgba(242,13,70,.3);pointer-events:none}
-.kc-tear-stage{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;padding:18px}
-.kc-tear-card{position:relative;width:min(420px,92vw);aspect-ratio:1/1;border-radius:30px;overflow:hidden;background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.16);cursor:pointer;user-select:none}
-.kc-tear-card img{width:100%;height:100%;object-fit:cover;display:block}.kc-tear-cover{position:absolute;inset:0;background:linear-gradient(135deg,#ff1750,#ff4f76 35%,#f20d46 70%,#b90038);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;transition:.28s;z-index:2}.kc-tear-cover:after{content:"";position:absolute;inset:15px;border:2px dashed rgba(255,255,255,.55);border-radius:24px}.kc-tear-cover b{font-size:44px;z-index:1}.kc-tear-cover span{font-size:18px;font-weight:800;margin-top:8px;z-index:1}.kc-tear-card.revealed .kc-tear-cover{opacity:0;transform:scale(1.15);pointer-events:none}.kc-tear-result{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(255,255,255,.96);border-radius:20px;padding:14px 16px;text-align:center;z-index:3;opacity:0;transform:translateY(12px);transition:.3s;box-shadow:0 8px 30px rgba(0,0,0,.12);pointer-events:none}.kc-tear-card.revealed .kc-tear-result{opacity:1;transform:none}.kc-tear-result b{font-size:20px;color:#f20d46}.kc-tear-note{text-align:center;color:#777;font-weight:700;margin:8px 0 0}.kc-history-real{max-height:260px;overflow:auto}
-@keyframes kcTearShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-2deg)}40%{transform:rotate(2deg)}60%{transform:rotate(-1deg)}80%{transform:rotate(1deg)}}.kc-tear-card.tearing{animation:kcTearShake .45s ease}
-@media(max-width:700px){.kc-tear-stage{min-height:350px}.kc-tear-card{width:min(350px,86vw)}}
-.kc-modal{align-items:center!important;justify-content:center!important;padding:18px!important}.kc-modal-panel{max-height:88vh!important;border-radius:22px!important}
+<style>
+.kc-password-wrap{position:relative;display:flex;align-items:center}
+.kc-password-wrap input{width:100%;padding-right:52px!important}
+.kc-password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;border-radius:10px;cursor:pointer;color:#555;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:2}
+.kc-password-toggle:active{background:#f2f2f2}
+.kc-admin-gate-box{max-width:520px!important}
 </style>
 </head>
 
@@ -1047,15 +1036,10 @@ body{max-width:100vw!important;overflow-x:hidden!important}
                                 <span>Đăng nhập</span>
                             </a>
 
-                            <a class="_has_login btn-header btn-login kc-header-account" href="#account" onclick="event.preventDefault();openAccount()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
-                                </svg>
-                                <span class="kc-header-user">
-                                    <b id="kcHeaderUsername">Tài khoản</b>
-                                    <strong class="_state_username">0₫</strong>
+                            <a class="_has_login btn-header btn-login" href="#account" onclick="event.preventDefault();openAccount()" style="display:none">
+                                <span class="header-balance-wrap">
+                                    <span class="header-balance-user" id="headerBalanceUser">Khách</span>
+                                    <span class="header-balance-money _state_username">0 đ</span>
                                 </span>
                             </a>
 
@@ -1115,7 +1099,8 @@ body{max-width:100vw!important;overflow-x:hidden!important}
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <span>Tài khoản</span>
+                        <span
+                            class="_state_username">0₫</span>
                     </a>
 
                     <a class="_no_login mobile-nav-item" href="#login" onclick="event.preventDefault();openLogin()">
@@ -2195,12 +2180,34 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 })();
 </script>
 
-<script>let _adm=0;document.addEventListener("click",function(e){if(e.target.closest(".header-logo")){_adm++;if(_adm>=7){location.href="admin.html";_adm=0}}else{setTimeout(()=>_adm=0,1200)}});</script>
+<script>
+/* Cơ chế Admin ẩn: đăng nhập tài khoản Firebase có role=admin, sau đó chạm logo 7 lần. */
+(function(){var _adm=0,_timer=null;document.addEventListener("click",function(e){if(!e.target.closest(".header-logo")){return;} _adm++;clearTimeout(_timer);_timer=setTimeout(function(){_adm=0;},1800);if(_adm>=7){_adm=0;if(window.ShopKCOpenAdmin){window.ShopKCOpenAdmin();}else{alert("Hệ thống Admin chưa sẵn sàng.");}}});})();
+</script>
 
 <!-- ====================================================================
      SHOP KC APPLICATION MODALS
      ==================================================================== -->
 <div class="kc-toast-wrap" id="kcToastWrap" aria-live="polite"></div>
+
+<div class="kc-modal" id="kcAdminHiddenModal" aria-hidden="true">
+  <div class="kc-modal-backdrop" onclick="closeModal('kcAdminHiddenModal')"></div>
+  <div class="kc-modal-panel kc-admin-gate-box" role="dialog" aria-modal="true" aria-labelledby="kcAdminHiddenTitle">
+    <div class="kc-modal-head">
+      <h2 class="kc-modal-title" id="kcAdminHiddenTitle">🔐 Đăng nhập Admin</h2>
+      <button class="kc-close" type="button" onclick="closeModal('kcAdminHiddenModal')" aria-label="Đóng">×</button>
+    </div>
+    <div class="kc-modal-body">
+      <p style="color:#666;margin:0 0 14px">Khu vực quản trị được ẩn. Chỉ tài khoản có quyền <b>admin</b> trong Firebase mới được vào.</p>
+      <div class="kc-field"><label>Tài khoản Admin</label><input id="kcAdminUsername" autocomplete="username" placeholder="Nhập tài khoản Admin"></div>
+      <div class="kc-field"><label>Mật khẩu Admin</label><div class="kc-password-wrap"><input id="kcAdminPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu Admin"><button class="kc-password-toggle" type="button" onclick="togglePassword('kcAdminPassword',this)" aria-label="Hiện mật khẩu">👁</button></div></div>
+      <div id="kcAdminMessage" class="kc-auth-message"></div>
+      <button class="kc-btn kc-btn-primary kc-btn-block" onclick="adminHiddenLogin()">Vào Admin</button>
+    </div>
+  </div>
+</div>
+
+
 
 <div class="kc-modal" id="kcProductModal" aria-hidden="true">
   <div class="kc-modal-backdrop" onclick="closeModal('kcProductModal')"></div>
@@ -2345,12 +2352,12 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       </div>
       <div id="kcLoginPanel" class="kc-login-panel active">
         <div class="kc-field">
-          <label>Tài khoản hoặc Email</label>
-          <input id="kcLoginEmail" type="text" autocomplete="username" placeholder="Nhập tài khoản hoặc email">
+          <label>Email</label>
+          <input id="kcLoginEmail" type="email" autocomplete="email" placeholder="you@example.com">
         </div>
         <div class="kc-field">
           <label>Mật khẩu</label>
-          <input id="kcLoginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu">
+          <div class="kc-password-wrap"><input id="kcLoginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"><button class="kc-password-toggle" type="button" onclick="togglePassword('kcLoginPassword',this)" aria-label="Hiện mật khẩu">👁</button></div>
         </div>
         <div id="kcLoginMessage" class="kc-auth-message"></div>
         <button class="kc-btn kc-btn-primary kc-btn-block" onclick="loginUser()">Đăng nhập</button>
@@ -2366,11 +2373,11 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         </div>
         <div class="kc-field">
           <label>Mật khẩu</label>
-          <input id="kcRegisterPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự">
+          <div class="kc-password-wrap"><input id="kcRegisterPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"><button class="kc-password-toggle" type="button" onclick="togglePassword('kcRegisterPassword',this)" aria-label="Hiện mật khẩu">👁</button></div>
         </div>
         <div class="kc-field">
           <label>Nhập lại mật khẩu</label>
-          <input id="kcRegisterPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu">
+          <div class="kc-password-wrap"><input id="kcRegisterPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu"><button class="kc-password-toggle" type="button" onclick="togglePassword('kcRegisterPassword2',this)" aria-label="Hiện mật khẩu">👁</button></div>
         </div>
         <div id="kcRegisterMessage" class="kc-auth-message"></div>
         <button class="kc-btn kc-btn-primary kc-btn-block" onclick="registerUser()">Tạo tài khoản</button>
@@ -2432,7 +2439,7 @@ body{max-width:100vw!important;overflow-x:hidden!important}
   var cfg = window.SHOP_KC_CONFIG || {};
 
   var firebaseConfig = cfg.firebase || {
-    apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
+    apiKey: "AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs",
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
     storageBucket: "shop-kc.firebasestorage.app",
@@ -2469,6 +2476,8 @@ body{max-width:100vw!important;overflow-x:hidden!important}
   var activeProduct = null;
 
   var productQuantity = 1;
+
+  var selectedBoxIndex = 1;
 
   var productCatalog = {
     "tui-cena-49k": {
@@ -2536,16 +2545,15 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     }
   };
 
-  var rewardInventory = {};
-
-
-  // Các ô trong danh sách chỉ hiển thị cùng một nhãn, giống kiểu túi mù.
-  // Kết quả thật được lấy từ kho phần thưởng do Admin quản lý.
   var rewardTemplates = [
-    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
-    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
-    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên",
-    "Phần thưởng ngẫu nhiên", "Phần thưởng ngẫu nhiên"
+    "Phần thưởng ngẫu nhiên",
+    "Acc Free Fire",
+    "Skin / vật phẩm",
+    "Quà trong game",
+    "Phần thưởng đặc biệt",
+    "Ưu đãi ngẫu nhiên",
+    "Quà may mắn",
+    "Phần thưởng hiếm"
   ];
 
   var productRules = [
@@ -2658,8 +2666,8 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         app = firebase.app();
       }
 
-      // Trang khách chỉ dùng Realtime Database cho tài khoản Shop KC.
-      auth = null;
+      auth = firebase.auth();
+
       db = firebase.database();
 
       return true;
@@ -2697,286 +2705,388 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     return String(currentProfile.user || "").trim();
   }
 
-  function makeLocalUid(username) {
-    return "shopkc_" + encodeKey(username).replace(/[^A-Za-z0-9_-]/g, "_");
-  }
-
-  function hashPassword(password) {
-    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
-      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(password)).then(function (buffer) {
-        return Array.from(new Uint8Array(buffer)).map(function (b) {
-          return b.toString(16).padStart(2, "0");
-        }).join("");
-      });
+  function saveProfile(username) {
+    if (!currentUser || !db) {
+      return Promise.reject(new Error("Chưa đăng nhập."));
     }
-    // Fallback chỉ để tương thích trình duyệt cũ; SHA-256 được ưu tiên trên HTTPS.
-    var hash = 2166136261;
-    for (var i = 0; i < password.length; i++) {
-      hash ^= password.charCodeAt(i);
-      hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-    }
-    return Promise.resolve((hash >>> 0).toString(16));
-  }
 
-  function makeLocalUser(username, email) {
-    var uid = makeLocalUid(username);
-    return { uid: uid, email: email || "", emailVerified: false };
-  }
+    var key = currentUser.uid;
 
-  function saveProfile(username, email, passwordHash) {
-    if (!db) {
-      return Promise.reject(new Error("Chưa kết nối dữ liệu."));
-    }
-    var uid = currentUser && currentUser.uid ? currentUser.uid : makeLocalUid(username);
     var profile = {
       user: username,
       displayName: username,
-      email: email || "",
-      uid: uid,
+      email: currentUser.email || "",
+      uid: currentUser.uid,
       updatedAt: firebase.database.ServerValue.TIMESTAMP
     };
-    if (passwordHash) profile.passwordHash = passwordHash;
-    currentUser = makeLocalUser(username, email);
-    currentUser.uid = uid;
-    return db.ref("userProfiles/" + uid).update(profile).then(function () {
-      var data = {
-        user: username,
-        displayName: username,
-        email: email || "",
-        uid: uid,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-        active: true
-      };
-      if (passwordHash) data.passwordHash = passwordHash;
-      return db.ref("customerRegistry/" + encodeKey(username)).update(data);
-    });
-  }
 
-  function loadProfileByUsername(username, email) {
-    if (!db || !username) return Promise.resolve(null);
-    return db.ref("customerRegistry/" + encodeKey(username)).once("value").then(function (snap) {
-      var c = snap.val() || {};
-      if (!c.user) c.user = username;
-      c.email = c.email || email || "";
-      c.uid = c.uid || makeLocalUid(username);
-      currentProfile = c;
-      currentUser = makeLocalUser(c.user, c.email);
-      currentUser.uid = c.uid;
-      return c;
-    });
+    return db.ref("userProfiles/" + key).update(profile)
+      .then(function () {
+        return db.ref("customerRegistry/" + encodeKey(username)).update({
+          user: username,
+          displayName: username,
+          email: currentUser.email || "",
+          uid: currentUser.uid,
+          updatedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+      });
   }
 
   function loadProfile(user) {
-    if (!db || !user) return Promise.resolve(null);
-    var uid = user.uid || "";
-    return db.ref("userProfiles/" + uid).once("value").then(function (snapshot) {
-      var profile = snapshot.val() || {};
-      if (!profile.user) profile.user = (user.email || "user").split("@")[0];
-      profile.email = profile.email || user.email || "";
-      profile.uid = uid || makeLocalUid(profile.user);
-      currentProfile = profile;
-      currentUser = user;
-      return profile;
-    });
-  }
-
-  function restoreLocalSession() {
-    try {
-      var raw = localStorage.getItem("shopkc_session");
-      if (!raw || !db) return Promise.resolve(false);
-      var session = JSON.parse(raw);
-      if (!session || !session.user) return Promise.resolve(false);
-      return loadProfileByUsername(session.user, session.email).then(function (profile) {
-        if (!profile) return false;
-        bindBalance(profile.user);
-        updateAuthUI();
-        refreshAccountHistory();
-        refreshHistory();
-        return true;
-      }).catch(function () { localStorage.removeItem("shopkc_session"); return false; });
-    } catch (e) {
-      localStorage.removeItem("shopkc_session");
-      return Promise.resolve(false);
+    if (!db || !user) {
+      return Promise.resolve(null);
     }
-  }
 
-  function loginUser() {
-    if (!db) {
-      showToast("Hệ thống dữ liệu chưa sẵn sàng.", "error");
-      return;
-    }
-    var identity = String(document.getElementById("kcLoginEmail").value || "").trim();
-    var password = String(document.getElementById("kcLoginPassword").value || "");
-    var message = document.getElementById("kcLoginMessage");
-    if (!identity || !password) { message.textContent = "Vui lòng nhập email/tài khoản và mật khẩu."; return; }
-    message.textContent = "Đang đăng nhập...";
-    hashPassword(password).then(function (hash) {
-      return db.ref("customerRegistry").once("value").then(function (snapshot) {
-        var found = null;
-        snapshot.forEach(function (child) {
-          if (found) return;
-          var c = child.val() || {};
-          var user = String(c.user || decodeURIComponent(child.key || "")).trim();
-          var email = String(c.email || "").trim().toLowerCase();
-          if ((user.toLowerCase() === identity.toLowerCase() || email === identity.toLowerCase()) &&
-              (c.passwordHash === hash || c.password === password || c.pass === password || c.matKhau === password)) {
-            found = Object.assign({}, c, { user: user });
-          }
-        });
-        if (!found) throw new Error("LOGIN_FAILED");
-        return found;
+    return db.ref("userProfiles/" + user.uid).once("value")
+      .then(function (snapshot) {
+        var profile = snapshot.val() || {};
+
+        if (!profile.user) {
+          profile.user = (user.email || "user").split("@")[0];
+        }
+
+        profile.email = profile.email || user.email || "";
+
+        profile.uid = user.uid;
+
+        currentProfile = profile;
+
+        return profile;
       });
-    }).then(function (profile) {
-      currentProfile = profile;
-      currentUser = makeLocalUser(profile.user, profile.email || "");
-      currentUser.uid = profile.uid || makeLocalUid(profile.user);
-      localStorage.setItem("shopkc_session", JSON.stringify({user: profile.user, email: profile.email || ""}));
-      bindBalance(profile.user);
-      updateAuthUI();
-      refreshAccountHistory();
-      refreshHistory();
-      message.textContent = "";
-      closeModal("kcLoginModal");
-      showToast("Đăng nhập thành công.", "success");
-    }).catch(function (error) {
-      console.error(error);
-      message.textContent = error && error.message === "LOGIN_FAILED" ? "Sai tài khoản/email hoặc mật khẩu." : "Không thể đăng nhập. Kiểm tra kết nối Firebase.";
-    });
   }
-
-  window.loginUser = loginUser;
-
-  function registerUser() {
-    if (!db) { showToast("Hệ thống đăng ký chưa sẵn sàng.", "error"); return; }
-    var username = String(document.getElementById("kcRegisterUsername").value || "").trim();
-    var email = String(document.getElementById("kcRegisterEmail").value || "").trim();
-    var password = String(document.getElementById("kcRegisterPassword").value || "");
-    var password2 = String(document.getElementById("kcRegisterPassword2").value || "");
-    var message = document.getElementById("kcRegisterMessage");
-    if (!/^[A-Za-z0-9_.-]{3,32}$/.test(username)) { message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, ."; return; }
-    if (!email || email.indexOf("@") === -1) { message.textContent = "Email không hợp lệ."; return; }
-    if (password.length < 6) { message.textContent = "Mật khẩu phải có ít nhất 6 ký tự."; return; }
-    if (password !== password2) { message.textContent = "Hai mật khẩu không giống nhau."; return; }
-    message.textContent = "Đang tạo tài khoản...";
-    db.ref("customerRegistry/" + encodeKey(username)).once("value").then(function (snapshot) {
-      if (snapshot.exists()) throw new Error("USERNAME_EXISTS");
-      return db.ref("customerRegistry").once("value").then(function (all) {
-        var emailExists = false;
-        all.forEach(function (child) { var c = child.val() || {}; if (String(c.email || "").toLowerCase() === email.toLowerCase()) emailExists = true; });
-        if (emailExists) throw new Error("EMAIL_EXISTS");
-        return hashPassword(password);
-      });
-    }).then(function (hash) {
-      currentUser = makeLocalUser(username, email);
-      currentProfile = {user: username, displayName: username, email: email, uid: currentUser.uid};
-      return saveProfile(username, email, hash);
-    }).then(function () {
-      localStorage.setItem("shopkc_session", JSON.stringify({user: username, email: email}));
-      bindBalance(username); updateAuthUI(); refreshAccountHistory(); refreshHistory();
-      message.textContent = ""; closeModal("kcLoginModal"); showToast("Tạo tài khoản thành công.", "success");
-    }).catch(function (error) {
-      console.error(error);
-      message.textContent = error.message === "USERNAME_EXISTS" ? "Tên tài khoản đã tồn tại." : error.message === "EMAIL_EXISTS" ? "Email này đã được sử dụng." : "Không thể tạo tài khoản. Kiểm tra Firebase Rules.";
-    });
-  }
-
-  window.registerUser = registerUser;
-
-  function friendlyAuthError(error) {
-    return error && error.message ? error.message : "Không thể thực hiện thao tác.";
-  }
-
 
   function bindBalance(username) {
     if (balanceListener) {
       balanceListener();
       balanceListener = null;
     }
+
     if (!db || !username) {
       currentBalance = 0;
       updateBalanceUI();
       return;
     }
+
     balanceRef = db.ref("balances/" + encodeKey(username));
-    var handler = balanceRef.on("value", function(snapshot) {
+
+    var handler = balanceRef.on("value", function (snapshot) {
       var raw = snapshot.val();
+
       var value = raw;
+
       if (raw && typeof raw === "object") {
         value = raw.balance;
-        if (value == null) value = raw.amount;
-        if (value == null) value = raw.money;
-        if (value == null) value = raw.wallet;
-        if (value == null) value = raw.value;
+
+        if (value == null) {
+          value = raw.amount;
+        }
+
+        if (value == null) {
+          value = raw.money;
+        }
+
+        if (value == null) {
+          value = raw.wallet;
+        }
+
+        if (value == null) {
+          value = raw.value;
+        }
       }
+
       currentBalance = Number(value) || 0;
+
       updateBalanceUI();
     });
-    balanceListener = function() { balanceRef.off("value", handler); };
+
+    balanceListener = function () {
+      balanceRef.off("value", handler);
+    };
   }
 
   function updateBalanceUI() {
-    document.querySelectorAll("._state_username").forEach(function(element) {
-      element.textContent = (currentUser && currentProfile) ? formatMoney(currentBalance) : "Đăng nhập";
+    var elements = document.querySelectorAll("._state_username");
+
+    elements.forEach(function (element) {
+      if (currentUser && currentProfile) {
+        element.textContent = formatMoney(currentBalance);
+      } else {
+        element.textContent = "Đăng nhập";
+      }
     });
+
     var accountBalance = document.getElementById("kcAccountBalance");
-    if (accountBalance) accountBalance.textContent = formatMoney(currentBalance);
+
+    if (accountBalance) {
+      accountBalance.textContent = formatMoney(currentBalance);
+    }
   }
 
   function updateAuthUI() {
-    var loggedIn = !!currentUser && !!currentProfile && !!currentProfile.user;
-    document.querySelectorAll("._no_login").forEach(function(element) {
+    var loggedIn = !!currentUser && !!currentProfile;
+
+    document.querySelectorAll("._no_login").forEach(function (element) {
       element.style.display = loggedIn ? "none" : "";
     });
-    document.querySelectorAll("._has_login").forEach(function(element) {
+
+    document.querySelectorAll("._has_login").forEach(function (element) {
       element.style.display = loggedIn ? "" : "none";
     });
+
     var accountName = document.getElementById("kcAccountName");
+
     var accountAvatar = document.getElementById("kcAccountAvatar");
-    var headerUsername = document.getElementById("kcHeaderUsername");
-    if (accountName) accountName.textContent = loggedIn ? getUsername() : "Khách";
-    if (accountAvatar) accountAvatar.textContent = loggedIn ? getUsername().charAt(0).toUpperCase() : "K";
-    if (headerUsername) headerUsername.textContent = loggedIn ? getUsername() : "Tài khoản";
+
+    var headerUser = document.getElementById("headerBalanceUser");
+
+    if (headerUser) {
+      headerUser.textContent = loggedIn ? getUsername() : "Khách";
+    }
+
+    if (accountName) {
+      accountName.textContent = loggedIn ? getUsername() : "Khách";
+    }
+
+    if (accountAvatar) {
+      accountAvatar.textContent = loggedIn ? getUsername().charAt(0).toUpperCase() : "K";
+    }
+
     updateBalanceUI();
   }
 
-  function clearAuthMessages() {
-    var loginMessage = document.getElementById("kcLoginMessage");
-    var registerMessage = document.getElementById("kcRegisterMessage");
-    if (loginMessage) loginMessage.textContent = "";
-    if (registerMessage) registerMessage.textContent = "";
-  }
+  function authStateChanged(user) {
+    currentUser = user || null;
 
-  function switchAuthTab(mode, button) {
-    var isLogin = mode === "login";
-    var loginPanel = document.getElementById("kcLoginPanel");
-    var registerPanel = document.getElementById("kcRegisterPanel");
-    var loginTab = document.getElementById("kcLoginTab");
-    var registerTab = document.getElementById("kcRegisterTab");
-    if (loginPanel) loginPanel.classList.toggle("active", isLogin);
-    if (registerPanel) registerPanel.classList.toggle("active", !isLogin);
-    if (loginTab) loginTab.classList.toggle("active", isLogin);
-    if (registerTab) registerTab.classList.toggle("active", !isLogin);
+    if (!user) {
+      currentProfile = null;
+      currentBalance = 0;
+
+      if (balanceListener) {
+        balanceListener();
+        balanceListener = null;
+      }
+
+      updateAuthUI();
+
+      return;
+    }
+
+    loadProfile(user)
+      .then(function (profile) {
+        bindBalance(profile.user);
+        updateAuthUI();
+        refreshAccountHistory();
+        refreshHistory();
+      })
+      .catch(function (error) {
+        console.error(error);
+        showToast("Không tải được hồ sơ tài khoản.", "error");
+      });
   }
-  window.switchAuthTab = switchAuthTab;
 
   function openLogin() {
     clearAuthMessages();
     switchAuthTab("login", document.getElementById("kcLoginTab"));
     openModal("kcLoginModal");
-    window.setTimeout(function() {
-      var input = document.getElementById("kcLoginEmail");
-      if (input) input.focus();
-    }, 80);
   }
+
   window.openLogin = openLogin;
 
+  function switchAuthTab(mode, button) {
+    var loginPanel = document.getElementById("kcLoginPanel");
+
+    var registerPanel = document.getElementById("kcRegisterPanel");
+
+    var loginTab = document.getElementById("kcLoginTab");
+
+    var registerTab = document.getElementById("kcRegisterTab");
+
+    var loginMode = mode === "login";
+
+    if (loginPanel) {
+      loginPanel.classList.toggle("active", loginMode);
+    }
+
+    if (registerPanel) {
+      registerPanel.classList.toggle("active", !loginMode);
+    }
+
+    if (loginTab) {
+      loginTab.classList.toggle("active", loginMode);
+    }
+
+    if (registerTab) {
+      registerTab.classList.toggle("active", !loginMode);
+    }
+  }
+
+  window.switchAuthTab = switchAuthTab;
+
+  function clearAuthMessages() {
+    var loginMessage = document.getElementById("kcLoginMessage");
+
+    var registerMessage = document.getElementById("kcRegisterMessage");
+
+    if (loginMessage) {
+      loginMessage.textContent = "";
+    }
+
+    if (registerMessage) {
+      registerMessage.textContent = "";
+    }
+  }
+
+  function loginUser() {
+    if (!auth) {
+      showToast("Firebase Auth chưa sẵn sàng.", "error");
+      return;
+    }
+
+    var email = String(document.getElementById("kcLoginEmail").value || "").trim();
+
+    var password = String(document.getElementById("kcLoginPassword").value || "");
+
+    var message = document.getElementById("kcLoginMessage");
+
+    if (!email || !password) {
+      message.textContent = "Vui lòng nhập email và mật khẩu.";
+      return;
+    }
+
+    message.textContent = "Đang đăng nhập...";
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(function () {
+        message.textContent = "";
+        closeModal("kcLoginModal");
+        showToast("Đăng nhập thành công.", "success");
+      })
+      .catch(function (error) {
+        console.error(error);
+        message.textContent = friendlyAuthError(error);
+      });
+  }
+
+  window.loginUser = loginUser;
+
+  function registerUser() {
+    if (!auth || !db) {
+      showToast("Hệ thống đăng ký chưa sẵn sàng.", "error");
+      return;
+    }
+
+    var username = String(document.getElementById("kcRegisterUsername").value || "").trim();
+
+    var email = String(document.getElementById("kcRegisterEmail").value || "").trim();
+
+    var password = String(document.getElementById("kcRegisterPassword").value || "");
+
+    var password2 = String(document.getElementById("kcRegisterPassword2").value || "");
+
+    var message = document.getElementById("kcRegisterMessage");
+
+    if (!/^[A-Za-z0-9_.-]{3,32}$/.test(username)) {
+      message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, .";
+      return;
+    }
+
+    if (!email || email.indexOf("@") === -1) {
+      message.textContent = "Email không hợp lệ.";
+      return;
+    }
+
+    if (password.length < 6) {
+      message.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
+      return;
+    }
+
+    if (password !== password2) {
+      message.textContent = "Hai mật khẩu không giống nhau.";
+      return;
+    }
+
+    message.textContent = "Đang tạo tài khoản...";
+
+    var usernameRef = db.ref("customerRegistry/" + encodeKey(username));
+
+    usernameRef.once("value")
+      .then(function (snapshot) {
+        if (snapshot.exists()) {
+          throw new Error("USERNAME_EXISTS");
+        }
+
+        return auth.createUserWithEmailAndPassword(email, password);
+      })
+      .then(function (credential) {
+        currentUser = credential.user;
+
+        return saveProfile(username);
+      })
+      .then(function () {
+        message.textContent = "";
+        closeModal("kcLoginModal");
+        showToast("Tạo tài khoản thành công.", "success");
+      })
+      .catch(function (error) {
+        console.error(error);
+
+        if (error && error.message === "USERNAME_EXISTS") {
+          message.textContent = "Tên tài khoản đã tồn tại.";
+          return;
+        }
+
+        message.textContent = friendlyAuthError(error);
+      });
+  }
+
+  window.registerUser = registerUser;
+
+  function friendlyAuthError(error) {
+    var code = error && error.code ? error.code : "";
+
+    if (code === "auth/email-already-in-use") {
+      return "Email này đã được sử dụng.";
+    }
+
+    if (code === "auth/invalid-email") {
+      return "Email không hợp lệ.";
+    }
+
+    if (code === "auth/wrong-password") {
+      return "Sai mật khẩu.";
+    }
+
+    if (code === "auth/user-not-found") {
+      return "Không tìm thấy tài khoản.";
+    }
+
+    if (code === "auth/weak-password") {
+      return "Mật khẩu quá yếu.";
+    }
+
+    if (code === "auth/network-request-failed") {
+      return "Lỗi mạng. Hãy thử lại.";
+    }
+
+    return error && error.message ? error.message : "Không thể thực hiện thao tác.";
+  }
+
   function logoutUser() {
-    try { localStorage.removeItem("shopkc_session"); } catch (e) {}
-    currentUser = null; currentProfile = null; currentBalance = 0;
-    if (balanceListener) { balanceListener(); balanceListener = null; }
-    updateAuthUI();
-    closeModal("kcAccountModal"); closeModal("kcHistoryModal"); closeModal("kcDepositModal");
-    showToast("Đã đăng xuất.", "success");
+    if (!auth) {
+      return;
+    }
+
+    auth.signOut()
+      .then(function () {
+        closeModal("kcAccountModal");
+        closeModal("kcHistoryModal");
+        closeModal("kcDepositModal");
+        showToast("Đã đăng xuất.", "success");
+      })
+      .catch(function (error) {
+        console.error(error);
+        showToast("Không thể đăng xuất.", "error");
+      });
   }
 
   window.logoutUser = logoutUser;
@@ -3032,44 +3142,55 @@ body{max-width:100vw!important;overflow-x:hidden!important}
   }
 
   function renderHistoryList(container, items, emptyText) {
-    if (!container) return;
-    if (!items.length) {
-      container.innerHTML = '<div class="kc-empty">' + safeText(emptyText || "Chưa có giao dịch.") + '</div>';
+    if (!container) {
       return;
     }
-    container.innerHTML = items.map(function(item) {
-      var isGame = !!item.game || item.type === "minigame";
-      var isDeposit = item.type === "bank_transfer" || item.type === "phone_card" || item.type === "garena_card";
-      var type = isGame ? "Đơn túi mù" : (isDeposit ? "Đơn nạp tiền" : "Giao dịch");
-      var title = isGame ? String(item.game || item.package || "Túi mù") : String(item.package || item.type || "Nạp tiền");
+
+    if (!items.length) {
+      container.innerHTML = '<div class="kc-empty">' + safeText(emptyText || "Chưa có giao dịch.") + "</div>";
+      return;
+    }
+
+    container.innerHTML = items.map(function (item) {
+      var type = item.game ? "Đơn game" : (item.type === "bank_transfer" ? "Nạp ngân hàng" : "Giao dịch");
+
+      var title = item.game ? String(item.game) : String(item.package || item.type || "Nạp tiền");
+
       var amount = Number(item.price || item.amount || 0);
+
       var status = String(item.status || "pending");
-      var detail = item.memo ? "Nội dung: " + item.memo : type;
-      var delivery = item.delivery || null;
-      var account = delivery && (delivery.account || delivery.username || delivery.uid || item.deliveredAccount || "");
-      var password = delivery && (delivery.password || delivery.pass || item.deliveredPassword || "");
-      var reward = item.reward || item.result || "";
-      var deliveryHtml = "";
-      if (isGame && (account || password || reward)) {
-        deliveryHtml = '<div class="kc-history-delivery">' +
-          '<div class="kc-history-delivery-title">🎁 Kết quả trúng thưởng</div>' +
-          (reward ? '<div class="kc-history-meta">Phần thưởng: ' + safeText(reward) + '</div>' : '') +
-          ((account || password) ? '<div class="kc-history-delivery-row"><span>Tài khoản game</span><b>' + safeText(account || "-") + '</b></div>' +
-          '<div class="kc-history-delivery-row"><span>Mật khẩu game</span><b>' + safeText(password || "-") + '</b></div>' : '') +
-          '</div>';
+
+      var detail = item.gameUID ? "UID: " + item.gameUID : (item.memo ? "ND: " + item.memo : type);
+      if (item.boxNumber) detail += " • Túi số: " + item.boxNumber;
+      var rewardHtml = "";
+      if (item.game && item.status === "completed") {
+        if (item.rewardUsername || item.rewardPassword) {
+          rewardHtml = '<div style="margin-top:8px;padding:10px;border-radius:10px;background:#eafff5;border:1px solid #bfeedd">' +
+            '<div style="font-weight:900;color:#00885e;margin-bottom:4px">🎁 Tài khoản game trúng thưởng</div>' +
+            '<div class="kc-history-meta"><b>Tài khoản:</b> ' + safeText(item.rewardUsername || "-") + '</div>' +
+            '<div class="kc-history-meta"><b>Mật khẩu:</b> ' + safeText(item.rewardPassword || "-") + '</div>' +
+            (item.rewardNote ? '<div class="kc-history-meta"><b>Ghi chú:</b> ' + safeText(item.rewardNote) + '</div>' : '') +
+            '</div>';
+        } else {
+          rewardHtml = '<div style="margin-top:8px;color:#00885e;font-weight:800">Đơn đã hoàn tất. Admin chưa nhập thông tin tài khoản trúng.</div>';
+        }
+      } else if (item.game && item.status === "processing") {
+        rewardHtml = '<div style="margin-top:8px;color:#9a6700;font-weight:800">Đang chờ Admin hoàn tất và cấp tài khoản/mật khẩu trúng thưởng.</div>';
       }
-      return '<div class="kc-history-item">' +
+
+      return '' +
+        '<div class="kc-history-item">' +
         '<div>' +
-          '<p class="kc-history-title">' + safeText(title) + '</p>' +
-          '<div class="kc-history-meta">' + safeText(detail) + '</div>' +
-          '<div class="kc-history-meta">' + safeText(formatDate(item.timestamp)) + '</div>' +
-          deliveryHtml +
+        '<p class="kc-history-title">' + safeText(title) + '</p>' +
+        '<div class="kc-history-meta">' + safeText(detail) + '</div>' +
+        '<div class="kc-history-meta">' + safeText(formatDate(item.timestamp)) + '</div>' +
+        rewardHtml +
         '</div>' +
         '<div style="text-align:right">' +
-          '<div style="font-weight:900;color:var(--kc-red)">' + safeText(formatMoney(amount)) + '</div>' +
-          '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText(statusLabel(status)) + '</span>' +
+        '<div style="font-weight:900;color:var(--kc-red)">' + safeText(formatMoney(amount)) + '</div>' +
+        '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText(statusLabel(status)) + '</span>' +
         '</div>' +
-      '</div>';
+        '</div>';
     }).join("");
   }
 
@@ -3158,7 +3279,6 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     content.classList.remove("kc-hidden");
 
-    currentDepositMemo = "";
     fillPaymentInfo();
 
     switchDepositTab("bank", document.querySelector('[data-deposit-tab="bank"]'));
@@ -3218,16 +3338,16 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
   window.setDepositAmount = setDepositAmount;
 
-  var currentDepositMemo = "";
-
-  function getDepositMemo(forceNew) {
-    if (!forceNew && currentDepositMemo) return currentDepositMemo;
+  function getDepositMemo() {
     var username = getUsername();
-    var compact = String(username || "KHACH").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 12);
-    var prefix = String(paymentConfig.memoPrefix || "NAP").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 6) || "NAP";
-    var random = String(Math.floor(100000 + Math.random() * 900000));
-    currentDepositMemo = (prefix + compact + random).slice(0, 24);
-    return currentDepositMemo;
+
+    if (!username) {
+      return "NAPTIEN";
+    }
+
+    var compact = username.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+
+    return ("NAP" + compact).slice(0, 20);
   }
 
   function updateDepositQr() {
@@ -3482,70 +3602,19 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     });
   }
 
-  function reserveRewardAccount(slug) {
-    if (!db) return Promise.reject(new Error("DATABASE_REQUIRED"));
-    var ref = db.ref("siteConfig/rewardInventory/" + slug);
-    var reserved = null;
-    return ref.transaction(function(raw) {
-      var data = raw && typeof raw === "object" ? raw : {};
-      var copy = {};
-      Object.keys(data).forEach(function(key) { copy[key] = data[key]; });
-      var keys = Object.keys(copy);
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        var item = copy[key];
-        if (item && item.status !== "sold" && item.status !== "reserved" && (item.account || item.username || item.uid)) {
-          reserved = {key:key, item:item};
-          copy[key] = Object.assign({}, item, {status:"reserved", reservedAt:Date.now(), reservedBy:getUsername() || ""});
-          return copy;
-        }
-      }
-      return;
-    }).then(function(result) {
-      if (!result || !result.committed || !reserved) throw new Error("NO_REWARD_INVENTORY");
-      return reserved;
-    });
-  }
+  function createGameOrder(product, quantity, total) {
+    if (!requireLogin()) {
+      return Promise.reject(new Error("LOGIN_REQUIRED"));
+    }
 
-  function releaseRewardAccount(slug, key) {
-    if (!db || !slug || !key) return Promise.resolve();
-    return db.ref("siteConfig/rewardInventory/" + slug + "/" + key).update({status:"available", reservedAt:null, reservedBy:null});
-  }
-
-  function markRewardSold(slug, key) {
-    if (!db || !slug || !key) return Promise.resolve();
-    return db.ref("siteConfig/rewardInventory/" + slug + "/" + key).update({status:"sold", soldAt:firebase.database.ServerValue.TIMESTAMP, soldTo:getUsername() || ""});
-  }
-
-  function createGameOrder(product, quantity, total, reward) {
-    if (!requireLogin()) return Promise.reject(new Error("LOGIN_REQUIRED"));
-    if (!requireDatabase()) return Promise.reject(new Error("DATABASE_REQUIRED"));
+    if (!requireDatabase()) {
+      return Promise.reject(new Error("DATABASE_REQUIRED"));
+    }
 
     var username = getUsername();
-    var reservedAccount = null;
 
-    return reserveRewardAccount(product.slug)
-      .catch(function(error) {
-        if (error && error.message === "NO_REWARD_INVENTORY") {
-          throw new Error("HẾT KHO: Admin chưa thêm tài khoản/phần thưởng cho túi này.");
-        }
-        throw error;
-      })
-      .then(function(reserved) {
-        reservedAccount = reserved;
-        return transactionBalance(username, -total);
-      })
-      .then(function(newBalance) {
-        var item = reservedAccount.item || {};
-        var account = item.account || item.username || item.uid || "";
-        var password = item.password || item.pass || "";
-        var delivery = {
-          type: "game_account",
-          account: account,
-          password: password,
-          note: item.note || item.info || "",
-          inventoryKey: reservedAccount.key
-        };
+    return transactionBalance(username, -total)
+      .then(function (newBalance) {
         var order = {
           user: username,
           displayName: currentProfile.displayName || username,
@@ -3556,41 +3625,43 @@ body{max-width:100vw!important;overflow-x:hidden!important}
           package: product.title,
           price: total,
           quantity: quantity,
+          boxNumber: selectedBoxIndex,
           unitPrice: product.price,
-          status: "completed",
-          reward: reward || "Phần thưởng ngẫu nhiên",
-          result: reward || "Phần thưởng ngẫu nhiên",
-          delivery: delivery,
-          deliveredAccount: account,
-          deliveredPassword: password,
+          status: "processing",
           timestamp: firebase.database.ServerValue.TIMESTAMP,
           time: new Date().toLocaleString("vi-VN"),
           balanceAfter: newBalance,
-          source: "shopkc-customer-web",
-          historyType: "tui-mu-xe-ngay",
-          realOrder: true,
-          deliveryType: "auto-account"
+          source: "shopkc-customer-web"
         };
-        return db.ref("orders").push(order).then(function(reference) {
-          return markRewardSold(product.slug, reservedAccount.key).then(function() {
-            return {id:reference.key,balance:newBalance,order:order,delivery:delivery};
+
+        return db.ref("orders").push(order)
+          .then(function (reference) {
+            return {
+              id: reference.key,
+              balance: newBalance,
+              order: order
+            };
+          })
+          .catch(function (error) {
+            return transactionBalance(username, total).then(function () {
+              throw error;
+            });
           });
-        }).catch(function(pushError) {
-          return transactionBalance(username, total)
-            .then(function(){ return releaseRewardAccount(product.slug, reservedAccount.key); })
-            .then(function(){ throw pushError; });
-        });
       })
-      .catch(function(error) {
-        if (reservedAccount && error && error.message === "INSUFFICIENT_BALANCE") {
-          return releaseRewardAccount(product.slug, reservedAccount.key).then(function(){ throw new Error("Số dư không đủ để mua sản phẩm này."); });
+      .catch(function (error) {
+        if (error && error.message === "INSUFFICIENT_BALANCE") {
+          throw new Error("Số dư không đủ để mua sản phẩm này.");
         }
-        if (error && error.message === "INSUFFICIENT_BALANCE") throw new Error("Số dư không đủ để mua sản phẩm này.");
+
         throw error;
       });
   }
 
   function openProduct(slug) {
+    if (!requireLogin()) {
+      return;
+    }
+
     var product = productCatalog[slug];
 
     if (!product) {
@@ -3598,13 +3669,11 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       return;
     }
 
-    if (!requireLogin()) {
-      return;
-    }
-
     activeProduct = product;
 
     productQuantity = 1;
+
+    selectedBoxIndex = 1;
 
     renderProductDetail(product);
 
@@ -3624,12 +3693,11 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     title.textContent = product.title;
 
-    var rewardList = new Array(8).fill("Phần thưởng ngẫu nhiên");
-    var rewards = rewardList.map(function (name) {
+    var rewards = rewardTemplates.map(function (reward, index) {
       return '' +
-        '<div class="kc-reward kc-reward-image-card">' +
-        '<img src="' + safeText(product.image) + '" alt="Phần thưởng ngẫu nhiên">' +
-        '<span class="kc-reward-title">Phần thưởng ngẫu nhiên</span>' +
+        '<div class="kc-reward">' +
+        '<span class="kc-reward-icon">' + safeText(index + 1) + '</span>' +
+        '<span class="kc-reward-title">' + safeText(reward) + '</span>' +
         '</div>';
     }).join("");
 
@@ -3641,17 +3709,24 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       ? '<div class="kc-pill green">Ví hiện tại: ' + safeText(formatMoney(currentBalance)) + '</div>'
       : '<div class="kc-pill">Chưa đăng nhập</div>';
 
+    var boxes = '';
+    for (var boxIndex = 1; boxIndex <= 10; boxIndex++) {
+      boxes += '<button type="button" class="kc-lucky-box' + (boxIndex === selectedBoxIndex ? ' selected' : '') + '" data-box="' + boxIndex + '" onclick="selectLuckyBox(' + boxIndex + ')">' +
+        '<span class="box-num">' + boxIndex + '</span>' +
+        '<img src="' + safeText(product.image) + '" alt="Túi ' + boxIndex + '">' +
+        '</button>';
+    }
+
     body.innerHTML = '' +
+      '<div class="kc-section-box" style="margin-top:0;margin-bottom:20px">' +
+      '<h3 class="kc-box-select-title">Chọn túi ' + safeText(product.title) + '</h3>' +
+      '<div class="kc-box-grid">' + boxes + '</div>' +
+      '<div style="margin-top:10px;color:#777;font-size:13px">Túi số <b id="kcSelectedBoxNumber">' + selectedBoxIndex + '</b> đang được chọn. Chọn đúng mức giá ở trang chủ rồi chọn túi để mua.</div>' +
+      '</div>' +
       '<div class="kc-product-layout">' +
       '<div>' +
-      '<div class="kc-product-media kc-product-tap" onclick="tearActiveProduct()">' +
-      '<div class="kc-tear-stage" style="min-height:0;padding:0">' +
-      '<div class="kc-tear-card" id="kcTearCard">' +
+      '<div class="kc-product-media">' +
       '<img src="' + safeText(product.image) + '" alt="' + safeText(product.title) + '">' +
-      '<div class="kc-tear-cover"><b>✂️</b><span>CHẠM VÀO ẢNH ĐỂ XÉ</span></div>' +
-      '<div class="kc-tear-result" id="kcTearResult"><div>🎁 Bạn nhận được</div><b id="kcTearReward">Đang mở...</b><div id="kcTearDelivery" class="kc-delivery-result"></div></div>' +
-      '</div></div>' +
-      '<div class="kc-tear-hint">👆 Chạm trực tiếp vào túi để xé</div>' +
       '</div>' +
       '<div class="kc-section-box">' +
       '<h3>Danh sách phần thưởng</h3>' +
@@ -3682,11 +3757,33 @@ body{max-width:100vw!important;overflow-x:hidden!important}
       '</div>' +
       '</div>' +
       '<div class="kc-detail-buybar">' +
-      '<div class="kc-tear-note">Đăng nhập + đủ số dư → chạm ảnh túi để xé và nhận phần thưởng</div>' +
+      '<div>' +
+      '<div class="kc-total-label">Số lượng và tổng tiền</div>' +
+      '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">' +
+      '<div class="kc-qty">' +
+      '<button type="button" onclick="changeProductQuantity(-1)">−</button>' +
+      '<input id="kcProductQuantity" value="1" inputmode="numeric" readonly>' +
+      '<button type="button" onclick="changeProductQuantity(1)">+</button>' +
+      '</div>' +
+      '<div class="kc-total-value" id="kcProductTotal">' + safeText(formatMoney(product.price)) + '</div>' +
+      '</div>' +
+      '</div>' +
+      '<button class="kc-btn kc-btn-primary" onclick="confirmProductPurchase()">XÉ NGAY</button>' +
       '</div>';
 
     refreshProductHistory(product.slug);
   }
+
+  function selectLuckyBox(index) {
+    selectedBoxIndex = Number(index) || 1;
+    document.querySelectorAll('.kc-lucky-box').forEach(function(box){
+      box.classList.toggle('selected', Number(box.getAttribute('data-box')) === selectedBoxIndex);
+    });
+    var selected = document.getElementById('kcSelectedBoxNumber');
+    if (selected) selected.textContent = selectedBoxIndex;
+  }
+
+  window.selectLuckyBox = selectLuckyBox;
 
   function changeProductQuantity(delta) {
     productQuantity += Number(delta) || 0;
@@ -3742,6 +3839,8 @@ body{max-width:100vw!important;overflow-x:hidden!important}
           refreshHistory();
           refreshAccountHistory();
           refreshProductHistory(activeProduct.slug);
+          closeModal("kcProductModal");
+          window.setTimeout(function(){ openHistory(); }, 250);
         })
         .catch(function (error) {
           console.error(error);
@@ -3806,114 +3905,6 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         container.innerHTML = '<div class="kc-empty">Lịch sử sẽ hiển thị khi Firebase cho phép đọc đơn.</div>';
       });
   }
-
-
-  function mergeRemoteProductConfig(remoteProducts) {
-    if (!remoteProducts || typeof remoteProducts !== "object") return;
-    Object.keys(remoteProducts).forEach(function (slug) {
-      var remote = remoteProducts[slug];
-      if (!remote || typeof remote !== "object") return;
-      productCatalog[slug] = Object.assign({}, productCatalog[slug] || {}, remote, {slug: slug});
-    });
-  }
-
-  function applySiteEnabled(enabled) {
-    var overlay = document.getElementById("kcSiteClosed");
-    if (!overlay) return;
-    var isOpen = enabled !== false;
-    overlay.classList.toggle("active", !isOpen);
-    overlay.setAttribute("aria-hidden", isOpen ? "true" : "false");
-  }
-
-
-  function syncProductCards() {
-    Object.keys(productCatalog).forEach(function(slug) {
-      var product = productCatalog[slug];
-      document.querySelectorAll('a[href="#product-' + slug + '"]').forEach(function(card) {
-        var img = card.querySelector(".category-card-image img, img");
-        var title = card.querySelector(".category-card-title");
-        var price = card.querySelector(".price-value");
-        var sold = card.querySelector(".meta-item.sold");
-        var badge = card.querySelector(".category-badge");
-        if (img && product.image) { img.src = product.image; img.alt = product.title || slug; }
-        if (title && product.title) title.textContent = product.title;
-        if (price && product.price) price.textContent = formatMoney(product.price).replace(/\s*$/, "");
-        if (sold && product.sold != null) sold.textContent = "Đã chơi " + Number(product.sold || 0).toLocaleString("vi-VN") + " lượt";
-        if (badge && product.badge) badge.textContent = product.badge;
-      });
-    });
-  }
-
-  function loadRemoteShopConfig() {
-    if (!db) return Promise.resolve();
-    return db.ref("siteConfig").once("value").then(function(snapshot) {
-      var remote = snapshot.val() || {};
-      paymentConfig = Object.assign({}, paymentConfig, remote.payment || {});
-      mergeRemoteProductConfig(remote.products);
-      rewardInventory = remote.rewardInventory || {};
-      syncProductCards();
-      applySiteEnabled(remote.siteEnabled !== false);
-      fillPaymentInfo();
-      return remote;
-    }).catch(function(error) {
-      console.warn("Không tải được cấu hình siteConfig:", error);
-      applySiteEnabled(true);
-    });
-  }
-
-  function chooseReward(product) {
-    var list = Array.isArray(product.rewards) && product.rewards.length
-      ? product.rewards
-      : rewardTemplates;
-    var item = list[Math.floor(Math.random() * list.length)];
-    if (typeof item === "string") return item;
-    return item && (item.name || item.title || item.reward) || "Phần thưởng ngẫu nhiên";
-  }
-
-  function tearActiveProduct() {
-    if (!activeProduct) return;
-    if (!requireLogin()) return;
-    if (currentBalance < Number(activeProduct.price || 0)) {
-      showToast("Số dư không đủ. Hãy nạp tiền trước.", "error");
-      openDeposit();
-      return;
-    }
-    var card = document.getElementById("kcTearCard");
-    var rewardEl = document.getElementById("kcTearReward");
-    if (card && card.classList.contains("revealed")) return;
-    if (card) card.classList.add("tearing");
-    var reward = chooseReward(activeProduct);
-    createGameOrder(activeProduct, 1, Number(activeProduct.price || 0), reward)
-      .then(function(result) {
-        if (card) {
-          card.classList.remove("tearing");
-          card.classList.add("revealed");
-        }
-        if (rewardEl) rewardEl.textContent = reward;
-        var deliveryEl = document.getElementById("kcTearDelivery");
-        var d = result && result.delivery ? result.delivery : {};
-        if (deliveryEl) {
-          deliveryEl.innerHTML = '<div class="kc-delivery-title">Tài khoản được giao</div>' +
-            '<div class="kc-delivery-row"><span>Tài khoản</span><b>' + safeText(d.account || "-") + '</b></div>' +
-            '<div class="kc-delivery-row"><span>Mật khẩu</span><b>' + safeText(d.password || "-") + '</b></div>' +
-            (d.note ? '<div class="kc-delivery-note">' + safeText(d.note) + '</div>' : '');
-        }
-        showToast("Xé thành công, tài khoản đã được giao.", "success");
-        refreshHistory();
-        refreshAccountHistory();
-        refreshProductHistory(activeProduct.slug);
-        setTimeout(function(){
-          closeModal("kcProductModal");
-          openHistory();
-        }, 450);
-      })
-      .catch(function(error) {
-        if (card) card.classList.remove("tearing");
-        console.error(error);
-        showToast(error.message || "Không thể xé túi.", "error");
-      });
-  }
-  window.tearActiveProduct = tearActiveProduct;
 
   function attachSearch() {
     var form = document.querySelector(".search-form");
@@ -3986,6 +3977,9 @@ body{max-width:100vw!important;overflow-x:hidden!important}
         }
       });
     }
+
+    var adminPassword = document.getElementById("kcAdminPassword");
+    if (adminPassword) { adminPassword.addEventListener("keydown", function(event){ if(event.key === "Enter") adminHiddenLogin(); }); }
   }
 
   function repairLegacyEmptyLinks() {
@@ -4004,6 +3998,50 @@ body{max-width:100vw!important;overflow-x:hidden!important}
     document.head.appendChild(style);
   }
 
+  function togglePassword(id, btn) {
+    var input = document.getElementById(id);
+    if (!input) return;
+    var show = input.type === "password";
+    input.type = show ? "text" : "password";
+    if (btn) { btn.textContent = show ? "🙈" : "👁"; btn.setAttribute("aria-label", show ? "Ẩn mật khẩu" : "Hiện mật khẩu"); }
+  }
+  window.togglePassword = togglePassword;
+
+  function openAdminPanelHidden() {
+    var modal = document.getElementById("kcAdminHiddenModal");
+    var msg = document.getElementById("kcAdminMessage");
+    if (msg) msg.textContent = "";
+    if (modal) {
+      openModal("kcAdminHiddenModal");
+      setTimeout(function(){ var u=document.getElementById("kcAdminUsername"); if(u)u.focus(); },120);
+    }
+  }
+
+  function adminHiddenLogin() {
+    var username = String(document.getElementById("kcAdminUsername").value || "").trim();
+    var password = String(document.getElementById("kcAdminPassword").value || "");
+    var msg = document.getElementById("kcAdminMessage");
+    if (!username || !password) { if(msg)msg.textContent="Nhập đủ tài khoản và mật khẩu Admin."; return; }
+    if (!db || !auth) { if(msg)msg.textContent="Firebase chưa sẵn sàng."; return; }
+    if(msg)msg.textContent="Đang xác thực Admin...";
+    db.ref("userProfiles").orderByChild("user").equalTo(username).once("value").then(function(snap){
+      var found=null;
+      snap.forEach(function(ch){ if(!found) found=ch.val()||{}; });
+      if(!found || !found.email) throw new Error("Không tìm thấy tài khoản Admin trong Firebase.");
+      return auth.signInWithEmailAndPassword(String(found.email), password).then(function(cred){
+        return db.ref("userProfiles/"+cred.user.uid).once("value").then(function(ps){
+          var profile=ps.val()||{};
+          var ok=profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
+          if(!ok){ return auth.signOut().then(function(){throw new Error("Tài khoản này không có quyền Admin.");}); }
+          sessionStorage.setItem("shopkc_admin_verified","1");
+          location.href="admin.html";
+        });
+      });
+    }).catch(function(e){ console.error(e); if(msg)msg.textContent=e.message||"Đăng nhập Admin thất bại."; });
+  }
+  window.adminHiddenLogin = adminHiddenLogin;
+  window.ShopKCOpenAdmin = openAdminPanelHidden;
+
   function init() {
     preventModalScrollThrough();
 
@@ -4017,10 +4055,11 @@ body{max-width:100vw!important;overflow-x:hidden!important}
 
     initFirebase();
 
-    restoreLocalSession();
+    if (auth) {
+      auth.onAuthStateChanged(authStateChanged);
+    }
 
     fillPaymentInfo();
-    loadRemoteShopConfig();
 
     updateAuthUI();
 
