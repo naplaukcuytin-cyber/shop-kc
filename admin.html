@@ -1,186 +1,5021 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Admin • Shop KC</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Admin • Shop KC</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
 <style>
-:root{--bg:#f3f6fb;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e6eaf0;--green:#159957;--red:#df3f4a;--orange:#f59e0b;--purple:#7c3aed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:14px}.top{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1200px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;white-space:nowrap}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-orange{background:#fff1d6;color:#9a6100}.btn-purple{background:#eee5ff;color:#6230b0}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}.stat{background:#f8fafc;border-radius:12px;padding:14px}.stat b{font-size:23px}.muted{color:var(--muted);font-size:12px}.table{overflow:auto}table{width:100%;min-width:980px;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{font-size:11px;color:var(--muted)}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:11px;font-weight:800}.pending{background:#fff2cc;color:#946200}.processing{background:#e7f1ff;color:#075db5}.approved{background:#dcf8e8;color:#08733e}.rejected{background:#ffe4e5;color:#a91e24}.completed{background:#dcf8e8;color:#08733e}.notice{padding:11px;border-radius:10px;background:#fff8df;color:#806300;font-size:12px}.danger-note{padding:11px;border-radius:10px;background:#ffecee;color:#9e2731;font-size:12px}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.mini-grid{grid-template-columns:1fr}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.active{display:flex}.modal-box{background:#fff;border-radius:16px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:18px}.proof{max-width:180px;max-height:180px;border-radius:10px;border:1px solid var(--line);display:block;margin-top:8px}.search{max-width:360px}.top-actions{display:flex;gap:8px;align-items:center}
-.customer-row-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.live-balance{font-size:16px;font-weight:900;color:#159957}.balance-tools{display:inline-flex;gap:5px;margin-left:8px}.btn-xs{padding:6px 8px!important;font-size:11px}.fraud-panel{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}.notice-ok{background:#e9fff2;color:#08733e;padding:10px;border-radius:10px;font-size:12px}.notice-warn{background:#fff0f1;color:#a91e24;padding:10px;border-radius:10px;font-size:12px}@keyframes adminLedPreview{from{background-position:100% 0}to{background-position:-100% 0}} </style></head><body>
-<header><div class="top"><div class="brand"><b>⚙️ Quản lý Shop KC</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button></div></div></header>
+:root{
+    --bg:#f3f6fb;
+    --card:#fff;
+    --blue:#1683ff;
+    --text:#172033;
+    --muted:#697386;
+    --line:#e6eaf0;
+    --green:#159957;
+    --red:#df3f4a;
+    --orange:#f59e0b;
+    --purple:#7c3aed;
+}
+*{box-sizing:border-box}
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    padding:14px;
+}
+.top{
+    max-width:1250px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+.brand b{font-size:20px}
+.brand small{
+    display:block;
+    color:var(--muted);
+    margin-top:4px;
+}
+.wrap{
+    max-width:1250px;
+    margin:18px auto;
+    padding:0 14px;
+}
+.tabs{
+    display:flex;
+    gap:8px;
+    overflow:auto;
+    margin-bottom:15px;
+}
+.tabs button,.btn{
+    border:0;
+    border-radius:10px;
+    padding:10px 13px;
+    font-weight:800;
+    cursor:pointer;
+    white-space:nowrap;
+}
+.tabs button{
+    background:#e9edf3;
+    color:#566070;
+}
+.tabs .active{
+    background:var(--blue);
+    color:#fff;
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-green{background:#dcf8e8;color:#08733e}
+.btn-red{background:#ffe4e5;color:#a91e24}
+.btn-orange{background:#fff1d6;color:#9a6100}
+.btn-purple{background:#eee5ff;color:#6230b0}
+.btn-gray{background:#eef1f5;color:#4d5868}
+.card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:0 5px 20px rgba(20,30,50,.04);
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+@media(max-width:700px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+}
+.stat{
+    background:#f8fafc;
+    border-radius:12px;
+    padding:14px;
+}
+.stat b{font-size:23px}
+.muted{color:var(--muted);font-size:12px}
+.table{overflow:auto}
+table{
+    width:100%;
+    min-width:950px;
+    border-collapse:collapse;
+}
+th,td{
+    padding:10px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    font-size:13px;
+    vertical-align:top;
+}
+th{
+    font-size:11px;
+    color:var(--muted);
+}
+input,textarea,select{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px;
+    background:#fff;
+    outline:none;
+}
+input:focus,textarea:focus,select:focus{
+    border-color:var(--blue);
+}
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+label{
+    display:block;
+    font-size:12px;
+    font-weight:800;
+    margin:10px 0 6px;
+}
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+.badge{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:99px;
+    font-size:11px;
+    font-weight:800;
+}
+.pending{background:#fff2cc;color:#946200}
+.processing{background:#e7f1ff;color:#075db5}
+.approved{background:#dcf8e8;color:#08733e}
+.rejected{background:#ffe4e5;color:#a91e24}
+.completed{background:#dcf8e8;color:#08733e}
+.approving{background:#eee5ff;color:#6230b0}
+.notice{
+    padding:11px;
+    border-radius:10px;
+    background:#fff8df;
+    color:#806300;
+    font-size:12px;
+}
+.danger-note{
+    padding:11px;
+    border-radius:10px;
+    background:#ffecee;
+    color:#9e2731;
+    font-size:12px;
+}
+.mini-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+@media(max-width:650px){
+    .mini-grid{grid-template-columns:1fr}
+}
+.product-img{
+    width:80px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+    background:#eef2ff;
+}
+.login-screen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #312e81,
+            #7c3aed
+        );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+.login-box{
+    width:min(430px,100%);
+    background:#fff;
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 25px 80px rgba(0,0,0,.3);
+}
+.login-box h1{
+    margin:0 0 8px;
+    font-size:27px;
+}
+.login-box p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+.login-box .btn{
+    width:100%;
+    margin-top:10px;
+}
+.auth-error{
+    background:#ffecee;
+    color:#a91e24;
+    padding:10px;
+    border-radius:10px;
+    font-size:12px;
+    display:none;
+    margin-top:10px;
+}
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    z-index:5000;
+}
+.modal.active{display:flex}
+.modal-box{
+    background:#fff;
+    border-radius:16px;
+    width:min(650px,100%);
+    max-height:90vh;
+    overflow:auto;
+    padding:18px;
+}
+.proof{
+    max-width:100%;
+    max-height:70vh;
+    border-radius:10px;
+}
+.nick-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:12px;
+}
+.nick-card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+}
+.nick-card img{
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:10px;
+    background:#f1f5f9;
+}
+.nick-card h3{
+    margin:10px 0 5px;
+    font-size:16px;
+}
+.nick-price{
+    color:#df3f4a;
+    font-weight:900;
+}
+.small{
+    font-size:11px;
+}
+.top-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<div id="loginScreen" class="login-screen">
+
+    <div class="login-box">
+
+        <h1>⚙️ SHOP KC ADMIN</h1>
+
+        <p>
+            Đăng nhập tài khoản quản trị để truy cập
+            hệ thống quản lý Shop KC.
+        </p>
+
+        <label>Email Admin</label>
+
+        <input
+            id="loginEmail"
+            type="email"
+            placeholder="admin@gmail.com"
+        >
+
+        <label>Mật khẩu</label>
+
+        <input
+            id="loginPassword"
+            type="password"
+            placeholder="Mật khẩu"
+        >
+
+        <div
+            id="authError"
+            class="auth-error"
+        ></div>
+
+        <button
+            class="btn btn-primary"
+            onclick="adminLogin()"
+        >
+            🔐 ĐĂNG NHẬP
+        </button>
+
+        <button
+            class="btn btn-purple"
+            onclick="activateAdmin()"
+        >
+            ⚡ KÍCH HOẠT ADMIN
+        </button>
+
+        <button
+            class="btn btn-gray"
+            onclick="location.href='index.html'"
+        >
+            ← Về trang chủ
+        </button>
+
+        <div class="notice" style="margin-top:12px">
+            Tài khoản Admin được xác thực bằng Firebase
+            Authentication.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="top">
+
+        <div class="brand">
+
+            <b>⚙️ Quản lý Shop KC</b>
+
+            <small>
+                Realtime • Nạp ví • Rút tiền • Khách hàng • Nick Game
+            </small>
+
+        </div>
+
+        <div class="top-actions">
+
+            <span
+                id="adminEmailLabel"
+                class="muted"
+            ></span>
+
+            <button
+                class="btn btn-gray"
+                onclick="location.reload()"
+            >
+                ↻ Làm mới
+            </button>
+
+            <button
+                class="btn btn-red"
+                onclick="logoutAdmin()"
+            >
+                Đăng xuất
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button></div>
-<section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
-<section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
-<section id="withdrawals" style="display:none"><div class="card"><b>YÊU CẦU RÚT TIỀN</b><p class="muted">Khi khách gửi yêu cầu, số dư đã được tạm trừ. Hủy yêu cầu sẽ hoàn lại số dư.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Thông tin nhận</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="withdrawalsBody"></tbody></table></div></div></section>
-<section id="users" style="display:none"><div class="card"><b>👥 KHÁCH HÀNG • SỐ DƯ REALTIME</b><p class="muted">Danh sách lấy từ Firebase và được giữ trong <b>customerRegistry</b>. Khi khách đăng ký, nạp tiền hoặc phát sinh đơn, hồ sơ sẽ được ghi nhận để Admin tiếp tục kiểm tra về sau. Số dư cập nhật theo thời gian thực.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+ để cộng / - để trừ)</label><input id="admAmount" type="number" placeholder="Ví dụ 500000 hoặc -500000"></div></div><label>Ghi chú gửi cho khách</label><textarea id="admNote" placeholder="Ví dụ: Tài khoản đã được cộng 500.000đ. / Cảnh báo: Vui lòng kiểm tra lại thông tin giao dịch..."></textarea><div class="mini-grid"><div><label>Loại ghi chú</label><select id="admNoteType"><option value="success">🔔 Thông báo</option><option value="warning">⚠️ Cảnh báo / Lưu ý</option></select></div><div><label>&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="adminAdjustMoney()">💰 Cộng / Trừ tiền + Gửi ghi chú</button></div></div><div class="actions"><button class="btn btn-gray" onclick="clearMoneyForm()">Xóa form</button></div><div id="fraudPanel" class="fraud-panel" style="display:none"></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Khách hàng</th><th>Tài khoản</th><th>Thời gian ghi nhận</th><th>Số dư realtime + thao tác</th><th>Kiểm tra</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
-<section id="site" style="display:none"><div class="card"><b>CHỈNH TRANG CHỦ</b><p class="muted">Các nội dung này lưu Firebase để trang khách đọc lại.</p><label>Tiêu đề trang</label><input id="siteTitle"><label>Tiêu đề sự kiện</label><input id="eventTitle"><label>Thông báo hệ thống</label><textarea id="announcement"></textarea><label>Banner 1</label><input id="banner1"><label>Banner 2</label><input id="banner2"><label>Chân trang</label><textarea id="footerText"></textarea>
-<label>LED sự kiện</label>
-<div class="mini-grid">
-  <div>
-    <label style="font-weight:600">Trạng thái</label>
-    <select id="ledEnabled"><option value="on">Bật</option><option value="off">Tắt</option></select>
-  </div>
-  <div>
-    <label style="font-weight:600">Hiệu ứng</label>
-    <select id="ledEffect"><option value="chase7">7 màu nối đuôi</option><option value="soft">7 màu mềm</option><option value="fast">7 màu nhanh</option><option value="slow">7 màu chậm</option></select>
-  </div>
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button
+            class="active"
+            onclick="showTab('dashboard',this)"
+        >
+            Tổng quan
+        </button>
+
+        <button
+            onclick="showTab('orders',this)"
+        >
+            Đơn nạp
+        </button>
+
+        <button
+            onclick="showTab('withdrawals',this)"
+        >
+            Rút tiền
+        </button>
+
+        <button
+            onclick="showTab('users',this)"
+        >
+            Khách hàng
+        </button>
+
+        <button
+            onclick="showTab('site',this)"
+        >
+            Trang chủ
+        </button>
+
+        <button
+            onclick="showTab('games',this)"
+        >
+            Game & giá
+        </button>
+
+        <button
+            onclick="showTab('nick',this)"
+        >
+            🎮 Nick Game
+        </button>
+
+        <button
+            onclick="showTab('nickOrders',this)"
+        >
+            🛒 Đơn Nick
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <section id="dashboard">
+
+        <div class="grid">
+
+            <div class="card stat">
+                <span class="muted">
+                    Đơn nạp chờ duyệt
+                </span>
+                <br>
+                <b id="pendingCount">0</b>
+            </div>
+
+            <div class="card stat">
+                <span class="muted">
+                    Đơn game đang xử lý
+                </span>
+                <br>
+                <b id="processingCount">0</b>
+            </div>
+
+            <div class="card stat">
+                <span class="muted">
+                    Rút đang chờ
+                </span>
+                <br>
+                <b id="withdrawPendingCount">0</b>
+            </div>
+
+            <div class="card stat">
+                <span class="muted">
+                    Đã duyệt / hoàn tất
+                </span>
+                <br>
+                <b id="approvedCount">0</b>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <b>Đơn gần đây</b>
+
+            <div
+                id="recent"
+                style="margin-top:10px"
+            ></div>
+
+        </div>
+
+
+        <div class="danger-note">
+
+            <b>Quyền Admin:</b>
+            duyệt/hủy đơn, hoàn tất đơn game,
+            cộng/trừ số dư, xử lý rút tiền,
+            quản lý Nick Game và đơn mua Nick.
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ORDERS
+    ========================== -->
+
+    <section
+        id="orders"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <div
+                style="
+                display:flex;
+                justify-content:space-between;
+                gap:10px;
+                align-items:center;
+                flex-wrap:wrap
+                "
+            >
+
+                <div>
+
+                    <b>ĐƠN NẠP REALTIME</b>
+
+                    <p class="muted">
+                        QR/Banking, thẻ điện thoại,
+                        Garena và đơn game.
+                    </p>
+
+                </div>
+
+                <input
+                    class="search"
+                    id="orderSearch"
+                    placeholder="Tìm tài khoản / game / UID / seri..."
+                    oninput="renderOrders(lastOrders)"
+                >
+
+            </div>
+
+
+            <div
+                class="table"
+                style="margin-top:10px"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Tài khoản</th>
+                            <th>Loại / Game / UID</th>
+                            <th>Thẻ / Nội dung</th>
+                            <th>Số tiền</th>
+                            <th>Ảnh</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="ordersBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         WITHDRAWALS
+    ========================== -->
+
+    <section
+        id="withdrawals"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>YÊU CẦU RÚT TIỀN</b>
+
+            <p class="muted">
+                Khi khách gửi yêu cầu,
+                số dư đã được tạm trừ.
+                Từ chối sẽ hoàn tiền.
+            </p>
+
+            <div class="table">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Tài khoản</th>
+                            <th>Số tiền</th>
+                            <th>Thông tin nhận</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="withdrawalsBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         USERS
+    ========================== -->
+
+    <section
+        id="users"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>👥 KHÁCH HÀNG • SỐ DƯ REALTIME</b>
+
+            <p class="muted">
+                Danh sách khách hàng được đồng bộ từ Firebase.
+            </p>
+
+
+            <div class="mini-grid">
+
+                <div>
+
+                    <label>Tài khoản</label>
+
+                    <input
+                        id="admUser"
+                        placeholder="username"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label>
+                        Số tiền (+ cộng / - trừ)
+                    </label>
+
+                    <input
+                        id="admAmount"
+                        type="number"
+                        placeholder="500000 hoặc -500000"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <label>Ghi chú gửi cho khách</label>
+
+            <textarea
+                id="admNote"
+                placeholder="Nội dung thông báo..."
+            ></textarea>
+
+
+            <div class="mini-grid">
+
+                <div>
+
+                    <label>Loại ghi chú</label>
+
+                    <select id="admNoteType">
+
+                        <option value="success">
+                            🔔 Thông báo
+                        </option>
+
+                        <option value="warning">
+                            ⚠️ Cảnh báo
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label>&nbsp;</label>
+
+                    <button
+                        class="btn btn-primary"
+                        style="width:100%"
+                        onclick="adminAdjustMoney()"
+                    >
+                        💰 Cộng / Trừ tiền
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="fraudPanel"
+                class="notice"
+                style="display:none;margin-top:12px"
+            ></div>
+
+
+            <div
+                class="table"
+                style="margin-top:14px"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Khách hàng</th>
+                            <th>Tài khoản</th>
+                            <th>Thời gian</th>
+                            <th>Số dư</th>
+                            <th>Kiểm tra</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="usersBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SITE
+    ========================== -->
+
+    <section
+        id="site"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>CHỈNH TRANG CHỦ</b>
+
+            <label>Tiêu đề trang</label>
+
+            <input id="siteTitle">
+
+
+            <label>Tiêu đề sự kiện</label>
+
+            <input id="eventTitle">
+
+
+            <label>Thông báo hệ thống</label>
+
+            <textarea id="announcement"></textarea>
+
+
+            <label>Banner 1</label>
+
+            <input id="banner1">
+
+
+            <label>Banner 2</label>
+
+            <input id="banner2">
+
+
+            <label>Chân trang</label>
+
+            <textarea id="footerText"></textarea>
+
+
+            <label>LED sự kiện</label>
+
+            <div class="mini-grid">
+
+                <div>
+
+                    <select id="ledEnabled">
+
+                        <option value="on">
+                            Bật
+                        </option>
+
+                        <option value="off">
+                            Tắt
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <select id="ledEffect">
+
+                        <option value="chase7">
+                            7 màu nối đuôi
+                        </option>
+
+                        <option value="soft">
+                            7 màu mềm
+                        </option>
+
+                        <option value="fast">
+                            7 màu nhanh
+                        </option>
+
+                        <option value="slow">
+                            7 màu chậm
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <label>Tốc độ LED</label>
+
+            <select id="ledSpeed">
+
+                <option value="1200">Rất nhanh</option>
+                <option value="1800">Nhanh</option>
+                <option value="2400">Bình thường</option>
+                <option value="3200">Chậm</option>
+                <option value="4200">Rất chậm</option>
+
+            </select>
+
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveSite()"
+                >
+                    💾 Lưu trang chủ
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         GAME
+    ========================== -->
+
+    <section
+        id="games"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>GAME & GIÁ</b>
+
+            <p class="muted">
+                Chỉnh JSON cấu hình game.
+            </p>
+
+            <textarea
+                id="gameConfig"
+                style="
+                min-height:400px;
+                font-family:monospace
+                "
+            ></textarea>
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="saveGames()"
+                >
+                    💾 Lưu game & giá
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         NICK PRODUCTS
+    ========================== -->
+
+    <section
+        id="nick"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>🎮 QUẢN LÝ NICK GAME</b>
+
+            <p class="muted">
+                Sản phẩm được lưu realtime tại Firebase:
+                <b>products</b>.
+            </p>
+
+
+            <div class="mini-grid">
+
+                <div>
+
+                    <label>Tên Nick</label>
+
+                    <input
+                        id="nickName"
+                        placeholder="Ví dụ: Nick FF VIP #001"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label>Game</label>
+
+                    <select id="nickGame">
+
+                        <option>Free Fire</option>
+                        <option>Liên Quân</option>
+                        <option>PUBG</option>
+                        <option>Khác</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="mini-grid">
+
+                <div>
+
+                    <label>Giá bán</label>
+
+                    <input
+                        id="nickPrice"
+                        type="number"
+                        placeholder="50000"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label>Ảnh sản phẩm</label>
+
+                    <input
+                        id="nickImage"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <label>Mô tả</label>
+
+            <textarea
+                id="nickDescription"
+                placeholder="Thông tin Nick..."
+            ></textarea>
+
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="addNickProduct()"
+                >
+                    ➕ Thêm Nick
+                </button>
+
+                <button
+                    class="btn btn-gray"
+                    onclick="clearNickForm()"
+                >
+                    Xóa form
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <b>Danh sách Nick đang bán</b>
+
+            <div
+                id="nickProducts"
+                class="nick-grid"
+                style="margin-top:15px"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         NICK ORDERS
+    ========================== -->
+
+    <section
+        id="nickOrders"
+        style="display:none"
+    >
+
+        <div class="card">
+
+            <b>🛒 ĐƠN MUA NICK REALTIME</b>
+
+            <p class="muted">
+                Đơn được tạo tại Firebase:
+                <b>nickOrders</b>.
+            </p>
+
+
+            <div
+                class="table"
+                style="margin-top:12px"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Khách</th>
+                            <th>Sản phẩm</th>
+                            <th>Game</th>
+                            <th>Giá</th>
+                            <th>Liên hệ</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="nickOrdersBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
-<label>Tốc độ LED</label>
-<select id="ledSpeed"><option value="1200">Rất nhanh</option><option value="1800">Nhanh</option><option value="2400" selected>Bình thường</option><option value="3200">Chậm</option><option value="4200">Rất chậm</option></select>
-<div id="ledPreview" style="height:14px;border-radius:99px;margin-top:10px;background:linear-gradient(90deg,#ff1744,#ff9100,#ffee00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744);background-size:250% 100%;animation:adminLedPreview 2s linear infinite"></div>
-<div class="notice" style="margin-top:10px">LED chạy quanh mép ảnh. Admin có thể bật/tắt, đổi hiệu ứng và tốc độ; trang khách sẽ nhận cấu hình từ Firebase.</div>
-<div class="actions"><button class="btn btn-primary" onclick="saveSite()">💾 Lưu trang chủ</button></div></div></section>
-<section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
+
+
+<!-- =========================
+     PROOF MODAL
+========================= -->
+
+<div
+    class="modal"
+    id="proofModal"
+>
+
+    <div class="modal-box">
+
+        <button
+            class="btn btn-gray"
+            style="float:right"
+            onclick="closeProof()"
+        >
+            Đóng
+        </button>
+
+        <h3>Ảnh xác nhận</h3>
+
+        <img
+            id="proofImage"
+            class="proof"
+            src=""
+            alt="Proof"
+        >
+
+    </div>
+
 </div>
-<div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
+
+
 <script>
-const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
-firebase.initializeApp(firebaseConfig);const db=firebase.database();
-const defaultGames={'Free Fire':{unit:'Kim Cương',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]}};
-let lastOrders={},lastWithdrawals={};
-function showTab(id,b){document.querySelectorAll('section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(id==='site'||id==='games')loadSite();}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function fmt(n){return (Number(n)||0).toLocaleString('vi-VN')+' đ'}
-function when(ts){if(!ts)return '-';try{return new Date(ts).toLocaleString('vi-VN')}catch(e){return '-'}}
-function badge(st){let t=st==='pending'?'Chờ duyệt':st==='processing'?'Đang xử lý':st==='approved'?'Đã duyệt':st==='completed'?'Hoàn tất':st==='rejected'?'Đã hủy':st;return `<span class="badge ${esc(st)}">${esc(t)}</span>`}
-function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';if(document.getElementById('ledEnabled')) ledEnabled.value=c.ledEnabled===false?'off':'on';if(document.getElementById('ledEffect')) ledEffect.value=c.ledEffect||'chase7';if(document.getElementById('ledSpeed')) ledSpeed.value=String(c.ledSpeed||2400);gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2)}).catch(e=>alert(e.message))}
-function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim(),ledEnabled:ledEnabled.value==='on',ledEffect:ledEffect.value,ledSpeed:Number(ledSpeed.value)||2400}).then(()=>alert('Đã lưu trang chủ và cấu hình LED.')).catch(e=>alert('Lỗi: '+e.message))}
-function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
-function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`;let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
-function normalizeBalanceValue(raw){
-  if(raw && typeof raw==='object'){ raw=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0; }
-  const n=Number(raw); return Number.isFinite(n)?n:0;
+
+/* =====================================================
+   FIREBASE
+===================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
+
+    authDomain:
+        "shop-kc.firebaseapp.com",
+
+    projectId:
+        "shop-kc",
+
+    storageBucket:
+        "shop-kc.firebasestorage.app",
+
+    messagingSenderId:
+        "1073242689799",
+
+    appId:
+        "1:1073242689799:web:41d0dc7795eb74a93df5a2",
+
+    measurementId:
+        "G-Q9VN7NZHR0",
+
+    databaseURL:
+        "https://shop-kc-default-rtdb.firebaseio.com"
+
+};
+
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
-function adjustBalanceVerified(user,delta){
-  user=String(user||'').trim(); delta=Number(delta);
-  if(!user) return Promise.reject(new Error('Thiếu tài khoản khách hàng.'));
-  if(!Number.isFinite(delta)||delta===0) return Promise.reject(new Error('Số tiền phải khác 0.'));
-  const ref=db.ref('balances/'+encodeURIComponent(user));
-  return ref.transaction(function(raw){
-    const current=normalizeBalanceValue(raw);
-    const next=current+delta;
-    if(next<0) return;
-    return next;
-  }).then(function(result){
-    const after=normalizeBalanceValue(result&&result.snapshot?result.snapshot.val():null);
-    if(!result||!result.committed){
-      const err=new Error('INSUFFICIENT_BALANCE');
-      err.currentBalance=after;
-      throw err;
+
+
+const db =
+    firebase.database();
+
+const auth =
+    firebase.auth();
+
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+auth.onAuthStateChanged(function(user){
+
+    if(!user){
+
+        document
+            .getElementById("loginScreen")
+            .style.display="flex";
+
+        return;
+
     }
-    return ref.once('value').then(function(s){
-      const verified=normalizeBalanceValue(s.val());
-      if(verified!==after) throw new Error('Không xác minh được số dư sau khi cập nhật.');
-      return verified;
+
+
+    db.ref(
+        "admins/" +
+        user.uid
+    ).once("value")
+
+    .then(function(snapshot){
+
+        const admin =
+            snapshot.val();
+
+
+        if(
+            !admin ||
+            admin.enabled !== true
+        ){
+
+            auth.signOut();
+
+            showAuthError(
+                "Tài khoản chưa được kích hoạt quyền Admin."
+            );
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("loginScreen")
+            .style.display="none";
+
+
+        document
+            .getElementById("adminEmailLabel")
+            .textContent =
+            user.email || "";
+
+        startAdmin();
+
+    })
+
+    .catch(function(error){
+
+        console.error(error);
+
+        showAuthError(
+            "Không kiểm tra được quyền Admin: " +
+            error.message
+        );
+
     });
-  });
+
+});
+
+
+function showAuthError(message){
+
+    const box =
+        document.getElementById(
+            "authError"
+        );
+
+    box.textContent =
+        message;
+
+    box.style.display =
+        "block";
+
 }
+
+
+function adminLogin(){
+
+    const email =
+        document
+            .getElementById(
+                "loginEmail"
+            )
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById(
+                "loginPassword"
+            )
+            .value;
+
+
+    if(!email || !password){
+
+        showAuthError(
+            "Nhập email và mật khẩu."
+        );
+
+        return;
+
+    }
+
+
+    auth.signInWithEmailAndPassword(
+        email,
+        password
+    )
+
+    .catch(function(error){
+
+        showAuthError(
+            "Đăng nhập thất bại: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function activateAdmin(){
+
+    const email =
+        document
+            .getElementById(
+                "loginEmail"
+            )
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById(
+                "loginPassword"
+            )
+            .value;
+
+
+    if(!email || !password){
+
+        showAuthError(
+            "Nhập email và mật khẩu để tạo Admin."
+        );
+
+        return;
+
+    }
+
+
+    if(password.length < 6){
+
+        showAuthError(
+            "Mật khẩu phải có ít nhất 6 ký tự."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "Tạo tài khoản Admin bằng email này?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    auth.createUserWithEmailAndPassword(
+        email,
+        password
+    )
+
+    .then(function(result){
+
+        const user =
+            result.user;
+
+
+        return db.ref(
+            "admins/" +
+            user.uid
+        ).set({
+
+            email:
+                email,
+
+            enabled:
+                true,
+
+            createdAt:
+                firebase
+                .database
+                .ServerValue
+                .TIMESTAMP
+
+        });
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã kích hoạt tài khoản Admin."
+        );
+
+    })
+
+    .catch(function(error){
+
+        showAuthError(
+            "Không thể kích hoạt: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function logoutAdmin(){
+
+    auth.signOut();
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function esc(v){
+
+    return String(
+        v ?? ""
+    ).replace(
+        /[&<>"']/g,
+        function(c){
+
+            return {
+
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+
+            }[c];
+
+        }
+    );
+
+}
+
+
+function fmt(n){
+
+    return (
+        Number(n) || 0
+    ).toLocaleString(
+        "vi-VN"
+    ) + " đ";
+
+}
+
+
+function when(ts){
+
+    if(!ts)
+        return "-";
+
+
+    try{
+
+        return new Date(
+            ts
+        ).toLocaleString(
+            "vi-VN"
+        );
+
+    }catch(e){
+
+        return "-";
+
+    }
+
+}
+
+
+function badge(status){
+
+    const names = {
+
+        pending:
+            "Chờ duyệt",
+
+        processing:
+            "Đang xử lý",
+
+        approving:
+            "Đang duyệt",
+
+        approved:
+            "Đã duyệt",
+
+        rejected:
+            "Đã hủy",
+
+        completed:
+            "Hoàn tất"
+
+    };
+
+
+    return `
+
+        <span
+            class="badge ${esc(status)}"
+        >
+            ${esc(
+                names[status] ||
+                status ||
+                "-"
+            )}
+        </span>
+
+    `;
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+function showTab(id,button){
+
+    document
+        .querySelectorAll(
+            ".wrap section"
+        )
+        .forEach(
+            section =>
+                section.style.display =
+                "none"
+        );
+
+
+    document
+        .getElementById(id)
+        .style.display =
+        "block";
+
+
+    document
+        .querySelectorAll(
+            ".tabs button"
+        )
+        .forEach(
+            b =>
+                b.classList.remove(
+                    "active"
+                )
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    if(
+        id === "site" ||
+        id === "games"
+    ){
+
+        loadSite();
+
+    }
+
+}
+
+
+/* =====================================================
+   SITE
+===================================================== */
+
+const defaultGames = {
+
+    "Free Fire":{
+
+        unit:"Kim Cương",
+
+        rates:[
+
+            {
+                p:25000,
+                v:"2.125"
+            },
+
+            {
+                p:50000,
+                v:"4.250"
+            },
+
+            {
+                p:100000,
+                v:"8.500"
+            },
+
+            {
+                p:200000,
+                v:"17.250"
+            },
+
+            {
+                p:500000,
+                v:"45.000"
+            }
+
+        ]
+
+    },
+
+    "Liên Quân Mobile":{
+
+        unit:"Quân Huy",
+
+        rates:[
+
+            {
+                p:25000,
+                v:"2.100"
+            },
+
+            {
+                p:50000,
+                v:"4.200"
+            },
+
+            {
+                p:100000,
+                v:"8.550"
+            },
+
+            {
+                p:200000,
+                v:"17.700"
+            },
+
+            {
+                p:500000,
+                v:"45.000"
+            }
+
+        ]
+
+    }
+
+};
+
+
+function loadSite(){
+
+    db.ref(
+        "siteConfig"
+    )
+
+    .once("value")
+
+    .then(function(snapshot){
+
+        const c =
+            snapshot.val() || {};
+
+
+        document.getElementById(
+            "siteTitle"
+        ).value =
+            c.siteTitle ||
+            "Trung tâm nạp thẻ Garena";
+
+
+        document.getElementById(
+            "eventTitle"
+        ).value =
+            c.eventTitle ||
+            "SỰ KIỆN NẠP BẢO MẬT 24/7";
+
+
+        document.getElementById(
+            "announcement"
+        ).value =
+            c.announcement ||
+            "";
+
+
+        document.getElementById(
+            "banner1"
+        ).value =
+            c.banner1 ||
+            "sukien1.PNG";
+
+
+        document.getElementById(
+            "banner2"
+        ).value =
+            c.banner2 ||
+            "sukien2.PNG";
+
+
+        document.getElementById(
+            "footerText"
+        ).value =
+            c.footerText ||
+            "";
+
+
+        document.getElementById(
+            "ledEnabled"
+        ).value =
+            c.ledEnabled === false
+            ? "off"
+            : "on";
+
+
+        document.getElementById(
+            "ledEffect"
+        ).value =
+            c.ledEffect ||
+            "chase7";
+
+
+        document.getElementById(
+            "ledSpeed"
+        ).value =
+            String(
+                c.ledSpeed ||
+                2400
+            );
+
+
+        document.getElementById(
+            "gameConfig"
+        ).value =
+            JSON.stringify(
+                c.gameConfig ||
+                defaultGames,
+                null,
+                2
+            );
+
+    });
+
+}
+
+
+function saveSite(){
+
+    db.ref(
+        "siteConfig"
+    )
+
+    .update({
+
+        siteTitle:
+            document
+            .getElementById(
+                "siteTitle"
+            )
+            .value
+            .trim(),
+
+        eventTitle:
+            document
+            .getElementById(
+                "eventTitle"
+            )
+            .value
+            .trim(),
+
+        announcement:
+            document
+            .getElementById(
+                "announcement"
+            )
+            .value
+            .trim(),
+
+        banner1:
+            document
+            .getElementById(
+                "banner1"
+            )
+            .value
+            .trim(),
+
+        banner2:
+            document
+            .getElementById(
+                "banner2"
+            )
+            .value
+            .trim(),
+
+        footerText:
+            document
+            .getElementById(
+                "footerText"
+            )
+            .value
+            .trim(),
+
+        ledEnabled:
+            document
+            .getElementById(
+                "ledEnabled"
+            )
+            .value === "on",
+
+        ledEffect:
+            document
+            .getElementById(
+                "ledEffect"
+            )
+            .value,
+
+        ledSpeed:
+            Number(
+                document
+                .getElementById(
+                    "ledSpeed"
+                )
+                .value
+            ) || 2400
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã lưu trang chủ."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function saveGames(){
+
+    let data;
+
+
+    try{
+
+        data =
+            JSON.parse(
+                document
+                .getElementById(
+                    "gameConfig"
+                )
+                .value
+            );
+
+    }catch(e){
+
+        alert(
+            "JSON không hợp lệ."
+        );
+
+        return;
+
+    }
+
+
+    db.ref(
+        "siteConfig/gameConfig"
+    )
+
+    .set(data)
+
+    .then(function(){
+
+        alert(
+            "Đã lưu Game & giá."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   BALANCE
+===================================================== */
+
+function normalizeBalance(raw){
+
+    if(
+        raw &&
+        typeof raw === "object"
+    ){
+
+        raw =
+            raw.balance ??
+            raw.amount ??
+            raw.money ??
+            raw.wallet ??
+            raw.value ??
+            0;
+
+    }
+
+
+    const n =
+        Number(raw);
+
+
+    return Number.isFinite(n)
+        ? n
+        : 0;
+
+}
+
+
+function adjustBalanceVerified(
+    user,
+    delta
+){
+
+    user =
+        String(
+            user || ""
+        ).trim();
+
+
+    delta =
+        Number(delta);
+
+
+    if(!user){
+
+        return Promise.reject(
+            new Error(
+                "Thiếu tài khoản khách hàng."
+            )
+        );
+
+    }
+
+
+    if(
+        !Number.isFinite(delta) ||
+        delta === 0
+    ){
+
+        return Promise.reject(
+            new Error(
+                "Số tiền phải khác 0."
+            )
+        );
+
+    }
+
+
+    const ref =
+        db.ref(
+            "balances/" +
+            encodeURIComponent(user)
+        );
+
+
+    return ref.transaction(
+        function(raw){
+
+            const current =
+                normalizeBalance(raw);
+
+            const next =
+                current + delta;
+
+
+            if(next < 0)
+                return;
+
+
+            return next;
+
+        }
+    )
+
+    .then(function(result){
+
+        const after =
+            normalizeBalance(
+                result &&
+                result.snapshot
+                ? result.snapshot.val()
+                : null
+            );
+
+
+        if(
+            !result ||
+            !result.committed
+        ){
+
+            const err =
+                new Error(
+                    "INSUFFICIENT_BALANCE"
+                );
+
+            err.currentBalance =
+                after;
+
+            throw err;
+
+        }
+
+
+        return ref
+            .once("value")
+            .then(function(snapshot){
+
+                const verified =
+                    normalizeBalance(
+                        snapshot.val()
+                    );
+
+
+                if(
+                    verified !== after
+                ){
+
+                    throw new Error(
+                        "Không xác minh được số dư."
+                    );
+
+                }
+
+
+                return verified;
+
+            });
+
+    });
+
+}
+
+
+/* =====================================================
+   CUSTOMER NOTICE
+===================================================== */
+
+function notifyCustomer(
+    user,
+    type,
+    text,
+    amount
+){
+
+    if(
+        !user ||
+        !text
+    ){
+
+        return Promise.resolve();
+
+    }
+
+
+    return db.ref(
+        "customerNotices/" +
+        encodeURIComponent(user)
+    )
+
+    .push({
+
+        user:
+            user,
+
+        type:
+            type,
+
+        text:
+            text,
+
+        amount:
+            Number(amount) || 0,
+
+        time:
+            new Date()
+            .toLocaleString(
+                "vi-VN"
+            ),
+
+        timestamp:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP,
+
+        from:
+            "ADMIN"
+
+    });
+
+}
+
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+let lastOrders = {};
+let lastWithdrawals = {};
+
+
+function renderOrders(data){
+
+    lastOrders =
+        data || {};
+
+
+    const search =
+        (
+            document
+            .getElementById(
+                "orderSearch"
+            )
+            ?.value ||
+            ""
+        )
+        .toLowerCase();
+
+
+    let arr =
+        Object.entries(
+            data || {}
+        )
+
+        .map(
+            ([id,o]) =>
+                ({
+                    id,
+                    ...o
+                })
+        )
+
+        .sort(
+            (a,b) =>
+                (
+                    Number(
+                        b.timestamp
+                    ) || 0
+                ) -
+                (
+                    Number(
+                        a.timestamp
+                    ) || 0
+                )
+        );
+
+
+    document.getElementById(
+        "pendingCount"
+    ).textContent =
+        arr.filter(
+            o =>
+                o.status ===
+                "pending"
+        ).length;
+
+
+    document.getElementById(
+        "processingCount"
+    ).textContent =
+        arr.filter(
+            o =>
+                o.status ===
+                "processing"
+        ).length;
+
+
+    document.getElementById(
+        "approvedCount"
+    ).textContent =
+        arr.filter(
+            o =>
+                [
+                    "approved",
+                    "completed"
+                ].includes(
+                    o.status
+                )
+        ).length;
+
+
+    if(search){
+
+        arr =
+            arr.filter(
+                o =>
+                    JSON.stringify(
+                        o
+                    )
+                    .toLowerCase()
+                    .includes(
+                        search
+                    )
+            );
+
+    }
+
+
+    const pending =
+        arr.filter(
+            o =>
+                [
+                    "pending",
+                    "processing"
+                ].includes(
+                    o.status
+                )
+        );
+
+
+    const tbody =
+        document.getElementById(
+            "ordersBody"
+        );
+
+
+    tbody.innerHTML =
+        pending
+        .map(function(o){
+
+            const isGame =
+                !!o.game;
+
+
+            const isCard =
+                [
+                    "phone_card",
+                    "garena_card"
+                ].includes(
+                    o.type
+                );
+
+
+            const detail =
+                isGame
+
+                ? `
+                    ${esc(o.game)}
+                    <br>
+                    <span class="muted">
+                        UID:
+                        ${esc(
+                            o.gameUID ||
+                            "-"
+                        )}
+                    </span>
+                `
+
+                : esc(
+                    o.package ||
+                    o.type ||
+                    "Nạp ví"
+                );
+
+
+            const secret =
+                isCard
+
+                ? `
+                    Seri:
+                    ${esc(
+                        o.seri ||
+                        "-"
+                    )}
+                    <br>
+                    Pin:
+                    <b>
+                        ${esc(
+                            o.pin ||
+                            "-"
+                        )}
+                    </b>
+                `
+
+                : `
+                    Nội dung:
+                    ${esc(
+                        o.memo ||
+                        o.uid ||
+                        "-"
+                    )}
+                `;
+
+
+            const proof =
+                o.proofImage
+
+                ? `
+                    <button
+                        class="btn btn-gray"
+                        onclick="openProof('${esc(o.proofImage)}')"
+                    >
+                        Xem ảnh
+                    </button>
+                `
+
+                : "-";
+
+
+            const actions =
+                isGame
+
+                ? `
+                    <button
+                        class="btn btn-primary"
+                        onclick="completeGame('${o.id}')"
+                    >
+                        Hoàn tất
+                    </button>
+                `
+
+                : `
+                    <button
+                        class="btn btn-green"
+                        onclick="approve('${o.id}')"
+                    >
+                        Duyệt
+                    </button>
+
+                    <button
+                        class="btn btn-red"
+                        onclick="reject('${o.id}')"
+                    >
+                        Hủy
+                    </button>
+                `;
+
+
+            return `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${esc(
+                                o.user ||
+                                "Khách"
+                            )}
+                        </b>
+
+                        <br>
+
+                        <span class="muted">
+                            ${esc(
+                                o.displayName ||
+                                ""
+                            )}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${detail}
+                    </td>
+
+                    <td>
+                        ${secret}
+                    </td>
+
+                    <td>
+                        <b>
+                            ${fmt(
+                                o.price
+                            )}
+                        </b>
+                    </td>
+
+                    <td>
+                        ${proof}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.time ||
+                            when(
+                                o.timestamp
+                            )
+                        )}
+                    </td>
+
+                    <td>
+                        ${badge(
+                            o.status
+                        )}
+                    </td>
+
+                    <td>
+                        ${actions}
+                    </td>
+
+                </tr>
+
+            `;
+
+        })
+        .join("")
+
+
+        ||
+        `
+            <tr>
+                <td
+                    colspan="8"
+                    style="text-align:center"
+                >
+                    Không có đơn đang chờ.
+                </td>
+            </tr>
+        `;
+
+
+    document.getElementById(
+        "recent"
+    ).innerHTML =
+
+        Object.entries(
+            lastOrders
+        )
+
+        .map(
+            ([id,o]) =>
+                ({
+                    id,
+                    ...o
+                })
+        )
+
+        .sort(
+            (a,b) =>
+                (
+                    Number(
+                        b.timestamp
+                    ) || 0
+                ) -
+                (
+                    Number(
+                        a.timestamp
+                    ) || 0
+                )
+        )
+
+        .slice(0,6)
+
+        .map(
+            o => `
+
+                <div
+                    style="
+                    padding:8px 0;
+                    border-bottom:1px solid #eee
+                    "
+                >
+
+                    <b>
+                        ${esc(
+                            o.user ||
+                            "Khách"
+                        )}
+                    </b>
+
+                    •
+                    ${esc(
+                        o.game ||
+                        o.package ||
+                        o.type ||
+                        "Đơn"
+                    )}
+
+                    •
+                    ${fmt(
+                        o.price
+                    )}
+
+                    ${badge(
+                        o.status
+                    )}
+
+                </div>
+
+            `
+        )
+
+        .join("")
+
+        ||
+
+        `<span class="muted">
+            Chưa có đơn.
+        </span>`;
+
+}
+
+
+/* =====================================================
+   APPROVE
+===================================================== */
+
 function approve(id){
-  const orderRef=db.ref('orders/'+id);
-  orderRef.transaction(function(o){
-    if(!o||o.status!=='pending') return;
-    return Object.assign({},o,{status:'approving',approvingBy:'ADMIN',approvingAt:Date.now()});
-  }).then(function(lock){
-    if(!lock||!lock.committed) throw new Error('Đơn không còn chờ duyệt hoặc đang được Admin khác xử lý.');
-    const o=lock.snapshot.val()||{},u=String(o.user||'').trim(),amt=Number(o.price||0);
-    if(!u||amt<=0) throw new Error('Đơn không hợp lệ.');
-    return adjustBalanceVerified(u,amt).then(function(newBal){
-      return orderRef.update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN',approvedAmount:amt,balanceAfter:newBal}).then(function(){
-        return notifyCustomer(u,'success','Nạp tiền thành công! Đơn '+fmt(amt)+' đã được Admin duyệt và cộng vào số dư. Số dư hiện tại: '+fmt(newBal)+'. Xin cảm ơn bạn đã tin tưởng Shop KC!',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
-      });
-    }).catch(function(err){
-      // Chỉ trả đơn về pending nếu bước cộng tiền thất bại. Sau khi đã cộng tiền
-      // tuyệt đối không rollback trạng thái vì có thể gây cộng tiền lần hai.
-      if(err&&err.message==='INSUFFICIENT_BALANCE'){
-        return orderRef.transaction(function(cur){
-          if(cur&&cur.status==='approving') return Object.assign({},cur,{status:'pending',approvingBy:null,approvingAt:null});
-          return;
-        }).then(function(){throw err;});
-      }
-      throw err;
+
+    const orderRef =
+        db.ref(
+            "orders/" +
+            id
+        );
+
+
+    orderRef.transaction(
+        function(order){
+
+            if(
+                !order ||
+                order.status !==
+                "pending"
+            ){
+
+                return;
+
+            }
+
+
+            return Object.assign(
+                {},
+                order,
+                {
+
+                    status:
+                        "approving",
+
+                    approvingBy:
+                        "ADMIN",
+
+                    approvingAt:
+                        Date.now()
+
+                }
+            );
+
+        }
+    )
+
+    .then(function(lock){
+
+        if(
+            !lock ||
+            !lock.committed
+        ){
+
+            throw new Error(
+                "Đơn không còn chờ duyệt."
+            );
+
+        }
+
+
+        const order =
+            lock.snapshot.val() ||
+            {};
+
+
+        const user =
+            String(
+                order.user ||
+                ""
+            ).trim();
+
+
+        const amount =
+            Number(
+                order.price ||
+                0
+            );
+
+
+        if(
+            !user ||
+            amount <= 0
+        ){
+
+            throw new Error(
+                "Đơn không hợp lệ."
+            );
+
+        }
+
+
+        return adjustBalanceVerified(
+            user,
+            amount
+        )
+
+        .then(function(newBalance){
+
+            return orderRef
+                .update({
+
+                    status:
+                        "approved",
+
+                    approvedAt:
+                        firebase
+                        .database
+                        .ServerValue
+                        .TIMESTAMP,
+
+                    approvedBy:
+                        "ADMIN",
+
+                    approvedAmount:
+                        amount,
+
+                    balanceAfter:
+                        newBalance
+
+                })
+
+                .then(function(){
+
+                    return notifyCustomer(
+
+                        user,
+
+                        "success",
+
+                        "Nạp tiền thành công! Đơn " +
+                        fmt(amount) +
+                        " đã được Admin duyệt. Số dư hiện tại: " +
+                        fmt(newBalance) +
+                        ".",
+
+                        amount
+
+                    );
+
+                });
+
+        })
+
+        .catch(function(error){
+
+            if(
+                error &&
+                error.message ===
+                "INSUFFICIENT_BALANCE"
+            ){
+
+                return orderRef
+                    .transaction(
+                        function(current){
+
+                            if(
+                                current &&
+                                current.status ===
+                                "approving"
+                            ){
+
+                                return Object.assign(
+                                    {},
+                                    current,
+                                    {
+
+                                        status:
+                                            "pending",
+
+                                        approvingBy:
+                                            null,
+
+                                        approvingAt:
+                                            null
+
+                                    }
+                                );
+
+                            }
+
+                        }
+                    )
+
+                    .then(function(){
+
+                        throw error;
+
+                    });
+
+            }
+
+
+            throw error;
+
+        });
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã duyệt đơn và cộng tiền thành công."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
     });
-  }).then(function(){alert('Đã duyệt đơn và cộng tiền thành công.');}).catch(function(e){alert('Lỗi: '+e.message);});
+
 }
+
+
+/* =====================================================
+   REJECT
+===================================================== */
+
 function reject(id){
-  const ref=db.ref('orders/'+id);
-  ref.transaction(function(o){
-    if(!o||o.status!=='pending') return;
-    return Object.assign({},o,{status:'rejected',updatedAt:firebase.database.ServerValue.TIMESTAMP,updatedBy:'ADMIN'});
-  }).then(function(result){
-    if(!result||!result.committed) throw new Error('Đơn không còn chờ duyệt.');
-    const o=result.snapshot.val()||{},u=String(o.user||'').trim();
-    return u?notifyCustomer(u,'warning','Cảnh báo: Đơn nạp '+fmt(o.price)+' của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.',Number(o.price)||0):null;
-  }).then(function(){alert('Đã hủy đơn và gửi cảnh báo cho khách.');}).catch(function(e){alert('Lỗi: '+e.message);});
-}
-function completeGame(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val();if(!o||o.status!=='processing')throw Error('Đơn game không còn đang xử lý.');return db.ref('orders/'+id).update({status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'})}).then(()=>alert('Đã hoàn tất đơn game.')).catch(e=>alert('Lỗi: '+e.message))}
-function renderWithdrawals(data){lastWithdrawals=data||{};let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>o.status==='pending').sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));withdrawPendingCount.textContent=a.length;withdrawalsBody.innerHTML=a.map(o=>`<tr><td><b>${esc(o.user||'')}</b><br>${esc(o.displayName||'')}</td><td>${fmt(o.amount)}</td><td>${esc(o.receiveInfo||'')}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td><button class="btn btn-green" onclick="approveWithdraw('${o.id}')">Đã chuyển</button> <button class="btn btn-red" onclick="rejectWithdraw('${o.id}')">Từ chối + hoàn tiền</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Không có yêu cầu rút.</td></tr>'}
-function approveWithdraw(id){db.ref('withdrawals/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN'}).then(()=>alert('Đã đánh dấu đã chuyển tiền.')).catch(e=>alert('Lỗi: '+e.message))}
-function rejectWithdraw(id){
-  db.ref('withdrawals/'+id).once('value').then(function(s){
-    var o=s.val();
-    if(!o||o.status!=='pending') throw Error('Yêu cầu không còn chờ.');
-    var amt=Number(o.amount)||0, u=String(o.user||'').trim();
-    if(!u||amt<=0) throw Error('Dữ liệu hoàn tiền không hợp lệ.');
-    return adjustBalanceVerified(u,amt).then(function(newBal){
-      return db.ref('withdrawals/'+id).update({status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN',balanceAfter:newBal}).then(function(){
-        return notifyCustomer(u,'warning','⚠️ Cảnh báo: Yêu cầu rút '+fmt(amt)+' đã bị từ chối. Số tiền đã được hoàn lại vào ví. Số dư hiện tại: '+fmt(newBal)+'.',amt).catch(function(e){console.warn('Không gửi được thông báo khách:',e);});
-      });
+
+    const ref =
+        db.ref(
+            "orders/" +
+            id
+        );
+
+
+    ref.transaction(
+        function(order){
+
+            if(
+                !order ||
+                order.status !==
+                "pending"
+            ){
+
+                return;
+
+            }
+
+
+            return Object.assign(
+                {},
+                order,
+                {
+
+                    status:
+                        "rejected",
+
+                    updatedAt:
+                        firebase
+                        .database
+                        .ServerValue
+                        .TIMESTAMP,
+
+                    updatedBy:
+                        "ADMIN"
+
+                }
+            );
+
+        }
+    )
+
+    .then(function(result){
+
+        if(
+            !result ||
+            !result.committed
+        ){
+
+            throw new Error(
+                "Đơn không còn chờ duyệt."
+            );
+
+        }
+
+
+        const order =
+            result.snapshot.val() ||
+            {};
+
+
+        const user =
+            String(
+                order.user ||
+                ""
+            ).trim();
+
+
+        if(!user)
+            return null;
+
+
+        return notifyCustomer(
+
+            user,
+
+            "warning",
+
+            "⚠️ Đơn nạp " +
+            fmt(
+                order.price
+            ) +
+            " của bạn đã bị từ chối/hủy sau khi Admin kiểm tra.",
+
+            Number(
+                order.price
+            ) || 0
+
+        );
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã hủy đơn."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
     });
-  }).then(function(){alert('Đã từ chối yêu cầu và hoàn tiền thành công.');}).catch(function(e){alert('Lỗi: '+e.message);});
+
 }
-function ensureCustomerRegistry(u,name,createdAt){
-  u=String(u||'').trim(); if(!u||u==='ADMIN') return;
-  const ref=db.ref('customerRegistry/'+encodeURIComponent(u));
-  return ref.update({user:u,displayName:name||u,createdAt:createdAt||firebase.database.ServerValue.TIMESTAMP,active:true,lastSeenAt:firebase.database.ServerValue.TIMESTAMP});
+
+
+/* =====================================================
+   COMPLETE GAME
+===================================================== */
+
+function completeGame(id){
+
+    db.ref(
+        "orders/" +
+        id
+    )
+
+    .once("value")
+
+    .then(function(snapshot){
+
+        const order =
+            snapshot.val();
+
+
+        if(
+            !order ||
+            order.status !==
+            "processing"
+        ){
+
+            throw new Error(
+                "Đơn game không còn đang xử lý."
+            );
+
+        }
+
+
+        return db.ref(
+            "orders/" +
+            id
+        )
+
+        .update({
+
+            status:
+                "completed",
+
+            completedAt:
+                firebase
+                .database
+                .ServerValue
+                .TIMESTAMP,
+
+            completedBy:
+                "ADMIN"
+
+        });
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã hoàn tất đơn game."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
 }
-function clearMoneyForm(){admUser.value='';admAmount.value='';admNote.value='';fraudPanel.style.display='none';}
-function notifyCustomer(u,type,text,amount){
-  if(!u||!text)return Promise.resolve();
-  return db.ref('customerNotices/'+encodeURIComponent(u)).push({user:u,type:type,text:text,amount:Number(amount)||0,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP,from:'ADMIN'});
+
+
+/* =====================================================
+   WITHDRAW
+===================================================== */
+
+function renderWithdrawals(data){
+
+    lastWithdrawals =
+        data || {};
+
+
+    const arr =
+        Object.entries(
+            data || {}
+        )
+
+        .map(
+            ([id,o]) =>
+                ({
+                    id,
+                    ...o
+                })
+        )
+
+        .filter(
+            o =>
+                o.status ===
+                "pending"
+        )
+
+        .sort(
+            (a,b) =>
+                (
+                    Number(
+                        b.timestamp
+                    ) || 0
+                ) -
+                (
+                    Number(
+                        a.timestamp
+                    ) || 0
+                )
+        );
+
+
+    document.getElementById(
+        "withdrawPendingCount"
+    ).textContent =
+        arr.length;
+
+
+    document.getElementById(
+        "withdrawalsBody"
+    ).innerHTML =
+
+        arr.map(
+            o => `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${esc(
+                                o.user ||
+                                ""
+                            )}
+                        </b>
+
+                        <br>
+
+                        ${esc(
+                            o.displayName ||
+                            ""
+                        )}
+                    </td>
+
+                    <td>
+                        <b>
+                            ${fmt(
+                                o.amount
+                            )}
+                        </b>
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.receiveInfo ||
+                            ""
+                        )}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.time ||
+                            when(
+                                o.timestamp
+                            )
+                        )}
+                    </td>
+
+                    <td>
+                        ${badge(
+                            o.status
+                        )}
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-green"
+                            onclick="approveWithdraw('${o.id}')"
+                        >
+                            Đã chuyển
+                        </button>
+
+                        <button
+                            class="btn btn-red"
+                            onclick="rejectWithdraw('${o.id}')"
+                        >
+                            Từ chối + hoàn tiền
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `
+        )
+
+        .join("")
+
+        ||
+
+        `
+            <tr>
+                <td
+                    colspan="6"
+                    style="text-align:center"
+                >
+                    Không có yêu cầu rút.
+                </td>
+            </tr>
+        `;
+
 }
-function adminAdjustMoney(){
-  const u=admUser.value.trim(), amt=Number(admAmount.value), note=(admNote.value||'').trim();
-  if(!u||!Number.isFinite(amt)||amt===0){alert('Nhập tài khoản và số tiền khác 0.');return;}
-  if(u==='ADMIN'){alert('Không được cộng/trừ số dư tài khoản ADMIN.');return;}
-  const finalType=amt>0?'success':'warning';
-  const finalNote=note
-    ? `${note} — Số tiền: ${amt>0?'+':'-'}${fmt(Math.abs(amt))}`
-    : (amt>0
-      ? `Admin vừa cộng ${fmt(Math.abs(amt))} vào ví của bạn.`
-      : `Admin vừa trừ ${fmt(Math.abs(amt))} khỏi ví của bạn.`);
-  const btn=document.querySelector('[onclick="adminAdjustMoney()"]'); if(btn)btn.disabled=true;
-  adjustBalanceVerified(u,amt).then(function(newBal){
-    const side=[];
-    side.push(ensureCustomerRegistry(u,u).catch(function(e){console.warn('Registry:',e);}));
-    side.push(db.ref('adminLogs').push({action:amt>0?'balance_add':'balance_deduct',user:u,amount:amt,note:finalNote,type:finalType,balanceAfter:newBal,time:new Date().toLocaleString('vi-VN'),timestamp:firebase.database.ServerValue.TIMESTAMP}).catch(function(e){console.warn('Log:',e);}));
-    side.push(notifyCustomer(u,finalType,finalNote+' Số dư hiện tại: '+fmt(newBal)+'.',amt));
-    return Promise.all(side).then(function(){return newBal;});
-  }).then(function(newBal){
-    alert(`Đã ${amt>0?'cộng':'trừ'} ${fmt(Math.abs(amt))} cho ${u}. Số dư mới: ${fmt(newBal)}. Đã gửi thông báo 1 lần cho khách.`);
-    admAmount.value='';admNote.value='';renderUsersFromState();
-  }).catch(function(e){
-    if(e&&e.message==='INSUFFICIENT_BALANCE') alert(`Số dư của ${u} không đủ để trừ ${fmt(Math.abs(amt))}.`);
-    else alert('Không thể thay đổi số dư: '+e.message);
-  }).finally(function(){if(btn)btn.disabled=false;});
+
+
+function approveWithdraw(id){
+
+    db.ref(
+        "withdrawals/" +
+        id
+    )
+
+    .update({
+
+        status:
+            "approved",
+
+        approvedAt:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP,
+
+        approvedBy:
+            "ADMIN"
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã đánh dấu đã chuyển tiền."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
 }
-let adminCustomers={},adminBalances={};
+
+
+function rejectWithdraw(id){
+
+    db.ref(
+        "withdrawals/" +
+        id
+    )
+
+    .once("value")
+
+    .then(function(snapshot){
+
+        const order =
+            snapshot.val();
+
+
+        if(
+            !order ||
+            order.status !==
+            "pending"
+        ){
+
+            throw new Error(
+                "Yêu cầu không còn chờ."
+            );
+
+        }
+
+
+        const amount =
+            Number(
+                order.amount
+            ) || 0;
+
+
+        const user =
+            String(
+                order.user ||
+                ""
+            ).trim();
+
+
+        if(
+            !user ||
+            amount <= 0
+        ){
+
+            throw new Error(
+                "Dữ liệu hoàn tiền không hợp lệ."
+            );
+
+        }
+
+
+        return adjustBalanceVerified(
+            user,
+            amount
+        )
+
+        .then(function(newBalance){
+
+            return db.ref(
+                "withdrawals/" +
+                id
+            )
+
+            .update({
+
+                status:
+                    "rejected",
+
+                rejectedAt:
+                    firebase
+                    .database
+                    .ServerValue
+                    .TIMESTAMP,
+
+                rejectedBy:
+                    "ADMIN",
+
+                balanceAfter:
+                    newBalance
+
+            })
+
+            .then(function(){
+
+                return notifyCustomer(
+
+                    user,
+
+                    "warning",
+
+                    "⚠️ Yêu cầu rút " +
+                    fmt(amount) +
+                    " đã bị từ chối. Tiền đã được hoàn lại. Số dư hiện tại: " +
+                    fmt(newBalance) +
+                    ".",
+
+                    amount
+
+                );
+
+            });
+
+        });
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã từ chối yêu cầu và hoàn tiền."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   USERS
+===================================================== */
+
+let adminCustomers = {};
+let adminBalances = {};
+
+
+function ensureCustomerRegistry(
+    user,
+    name
+){
+
+    user =
+        String(
+            user ||
+            ""
+        ).trim();
+
+
+    if(
+        !user ||
+        user === "ADMIN"
+    ){
+
+        return Promise.resolve();
+
+    }
+
+
+    return db.ref(
+        "customerRegistry/" +
+        encodeURIComponent(user)
+    )
+
+    .update({
+
+        user:
+            user,
+
+        displayName:
+            name ||
+            user,
+
+        active:
+            true,
+
+        lastSeenAt:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP
+
+    });
+
+}
+
+
 function renderUsersFromState(){
-  const tbody=document.getElementById('usersBody'); if(!tbody)return;
-  const merged={...adminCustomers}; Object.keys(adminBalances).forEach(u=>{merged[u]=merged[u]||{user:u,displayName:u};});
-  const arr=Object.keys(merged).filter(u=>u&&u!=='ADMIN').sort((a,b)=>String(merged[a].displayName||a).localeCompare(String(merged[b].displayName||b),'vi'));
-  tbody.innerHTML=arr.map(u=>{const c=merged[u]||{};const safe=encodeURIComponent(u);const bal=Number(adminBalances[u])||0;return `<tr><td><b>${esc(c.displayName||u)}</b></td><td>${esc(u)}</td><td>${when(c.createdAt||c.lastSeenAt)}</td><td><span class="live-balance" id="live_${safe}">${fmt(bal)}</span><span class="balance-tools"><button class="btn btn-green btn-xs" onclick="quickMoney('${safe}',1)">+ Cộng</button><button class="btn btn-red btn-xs" onclick="quickMoney('${safe}',-1)">− Trừ</button></span></td><td><button class="btn btn-orange btn-xs" onclick="focusMoneyForCustomer('${safe}')">🔎 Kiểm tra gian lận</button></td></tr>`}).join('')||'<tr><td colspan="5" style="text-align:center;padding:18px">Chưa có khách hàng.</td></tr>';
+
+    const tbody =
+        document.getElementById(
+            "usersBody"
+        );
+
+
+    const merged =
+        {
+            ...adminCustomers
+        };
+
+
+    Object.keys(
+        adminBalances
+    )
+    .forEach(
+        function(user){
+
+            merged[user] =
+                merged[user] ||
+                {
+                    user:
+                        user,
+
+                    displayName:
+                        user
+                };
+
+        }
+    );
+
+
+    const users =
+        Object.keys(
+            merged
+        )
+
+        .filter(
+            user =>
+                user &&
+                user !==
+                "ADMIN"
+        )
+
+        .sort(
+            (a,b) =>
+                String(
+                    merged[a]
+                    .displayName ||
+                    a
+                )
+                .localeCompare(
+                    String(
+                        merged[b]
+                        .displayName ||
+                        b
+                    ),
+                    "vi"
+                )
+        );
+
+
+    tbody.innerHTML =
+        users
+
+        .map(function(user){
+
+            const customer =
+                merged[user] ||
+                {};
+
+
+            const encoded =
+                encodeURIComponent(
+                    user
+                );
+
+
+            const balance =
+                Number(
+                    adminBalances[user]
+                ) || 0;
+
+
+            return `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${esc(
+                                customer.displayName ||
+                                user
+                            )}
+                        </b>
+                    </td>
+
+                    <td>
+                        ${esc(user)}
+                    </td>
+
+                    <td>
+                        ${when(
+                            customer.createdAt ||
+                            customer.lastSeenAt
+                        )}
+                    </td>
+
+                    <td>
+
+                        <b
+                            style="
+                            color:#159957;
+                            font-size:16px
+                            "
+                        >
+                            ${fmt(
+                                balance
+                            )}
+                        </b>
+
+                        <br>
+
+                        <button
+                            class="btn btn-green"
+                            style="padding:6px 8px;font-size:11px"
+                            onclick="quickMoney('${encoded}',1)"
+                        >
+                            + Cộng
+                        </button>
+
+                        <button
+                            class="btn btn-red"
+                            style="padding:6px 8px;font-size:11px"
+                            onclick="quickMoney('${encoded}',-1)"
+                        >
+                            − Trừ
+                        </button>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-orange"
+                            style="padding:6px 8px;font-size:11px"
+                            onclick="showFraud('${encoded}')"
+                        >
+                            🔎 Kiểm tra
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        })
+
+        .join("")
+
+        ||
+
+        `
+            <tr>
+                <td
+                    colspan="5"
+                    style="text-align:center"
+                >
+                    Chưa có khách hàng.
+                </td>
+            </tr>
+        `;
+
 }
-function focusMoneyForCustomer(encoded){const u=decodeURIComponent(encoded);admUser.value=u;document.getElementById('users').scrollIntoView({behavior:'smooth',block:'start'});showFraud(u);}
-function quickMoney(encoded,sign){const u=decodeURIComponent(encoded);admUser.value=u;admAmount.value=sign>0?'500000':'-500000';admNote.value='';admNoteType.value=sign>0?'success':'warning';document.getElementById('admAmount').focus();}
-function showFraud(u){
-  const panel=document.getElementById('fraudPanel'); if(!panel)return; panel.style.display='block';panel.innerHTML='<b>🔎 Kiểm tra tài khoản: '+esc(u)+'</b><div class="muted" style="margin-top:5px">Đang tải lịch sử giao dịch...</div>';
-  db.ref('orders').orderByChild('user').equalTo(u).once('value').then(s=>{let n=0,total=0,last='-';s.forEach(ch=>{const o=ch.val()||{};n++;total+=Number(o.price)||0;last=o.time||when(o.timestamp)||last}); const bal=Number(adminBalances[u])||0; panel.innerHTML=`<b>🔎 Kiểm tra gian lận: ${esc(u)}</b><div style="margin-top:8px">Số dư hiện tại: <b class="live-balance">${fmt(bal)}</b><br>Đơn đã ghi nhận: <b>${n}</b> • Tổng giá trị đơn: <b>${fmt(total)}</b><br>Giao dịch gần nhất: <b>${esc(last)}</b></div><div class="actions"><button class="btn btn-primary btn-xs" onclick="quickMoney('${encodeURIComponent(u)}',1)">💰 Sang phần cộng tiền</button><button class="btn btn-red btn-xs" onclick="quickMoney('${encodeURIComponent(u)}',-1)">↩ Sang phần trừ tiền</button></div>`;}).catch(e=>panel.innerHTML='<div class="notice-warn">Không đọc được lịch sử giao dịch: '+esc(e.message)+'</div>');
+
+
+function quickMoney(
+    encoded,
+    sign
+){
+
+    const user =
+        decodeURIComponent(
+            encoded
+        );
+
+
+    document.getElementById(
+        "admUser"
+    ).value =
+        user;
+
+
+    document.getElementById(
+        "admAmount"
+    ).value =
+        sign > 0
+        ? "500000"
+        : "-500000";
+
+
+    document.getElementById(
+        "admNote"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "admNoteType"
+    ).value =
+        sign > 0
+        ? "success"
+        : "warning";
+
+
+    document.getElementById(
+        "admAmount"
+    ).focus();
+
 }
-function startCustomerRealtime(){
-  db.ref('customerRegistry').on('value',s=>{adminCustomers={};s.forEach(ch=>{const c=ch.val()||{};const u=c.user||decodeURIComponent(ch.key);if(u&&u!=='ADMIN')adminCustomers[u]=c;});renderUsersFromState();});
-  db.ref('userProfiles').on('value',s=>{s.forEach(ch=>{const c=ch.val()||{};const u=c.user||decodeURIComponent(ch.key);if(u&&u!=='ADMIN')adminCustomers[u]={...(adminCustomers[u]||{}),...c};});renderUsersFromState();});
-  db.ref('balances').on('value',s=>{adminBalances={};s.forEach(ch=>{const u=decodeURIComponent(ch.key);const raw=ch.val();let v=raw;if(raw&&typeof raw==='object'){v=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0;}if(u&&u!=='ADMIN')adminBalances[u]=Number(v)||0;});renderUsersFromState();});
-  db.ref('orders').on('value',s=>{s.forEach(ch=>{const o=ch.val()||{};const u=String(o.user||'').trim();if(u&&u!=='ADMIN'){adminCustomers[u]={...(adminCustomers[u]||{}),user:u,displayName:o.displayName||adminCustomers[u]?.displayName||u,lastSeenAt:o.timestamp||Date.now()};ensureCustomerRegistry(u,adminCustomers[u].displayName);}});renderUsersFromState();});
+
+
+function adminAdjustMoney(){
+
+    const user =
+        document.getElementById(
+            "admUser"
+        ).value
+        .trim();
+
+
+    const amount =
+        Number(
+            document.getElementById(
+                "admAmount"
+            ).value
+        );
+
+
+    const note =
+        document.getElementById(
+            "admNote"
+        ).value
+        .trim();
+
+
+    if(
+        !user ||
+        !Number.isFinite(amount) ||
+        amount === 0
+    ){
+
+        alert(
+            "Nhập tài khoản và số tiền khác 0."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        user ===
+        "ADMIN"
+    ){
+
+        alert(
+            "Không được cộng/trừ tài khoản ADMIN."
+        );
+
+        return;
+
+    }
+
+
+    const type =
+        amount > 0
+        ? "success"
+        : "warning";
+
+
+    const finalNote =
+        note ||
+
+        (
+            amount > 0
+
+            ? "Admin vừa cộng " +
+              fmt(
+                  amount
+              ) +
+              " vào ví."
+
+            : "Admin vừa trừ " +
+              fmt(
+                  Math.abs(amount)
+              ) +
+              " khỏi ví."
+        );
+
+
+    adjustBalanceVerified(
+        user,
+        amount
+    )
+
+    .then(function(newBalance){
+
+        return Promise.all([
+
+            ensureCustomerRegistry(
+                user,
+                user
+            ),
+
+            db.ref(
+                "adminLogs"
+            ).push({
+
+                action:
+                    amount > 0
+                    ? "balance_add"
+                    : "balance_deduct",
+
+                user:
+                    user,
+
+                amount:
+                    amount,
+
+                note:
+                    finalNote,
+
+                balanceAfter:
+                    newBalance,
+
+                time:
+                    new Date()
+                    .toLocaleString(
+                        "vi-VN"
+                    ),
+
+                timestamp:
+                    firebase
+                    .database
+                    .ServerValue
+                    .TIMESTAMP
+
+            }),
+
+            notifyCustomer(
+
+                user,
+
+                type,
+
+                finalNote +
+                " Số dư hiện tại: " +
+                fmt(
+                    newBalance
+                ) +
+                ".",
+
+                amount
+
+            )
+
+        ])
+
+        .then(function(){
+
+            return newBalance;
+
+        });
+
+    })
+
+    .then(function(newBalance){
+
+        alert(
+
+            "Đã " +
+            (
+                amount > 0
+                ? "cộng "
+                : "trừ "
+            ) +
+            fmt(
+                Math.abs(amount)
+            ) +
+            " cho " +
+            user +
+            ". Số dư mới: " +
+            fmt(
+                newBalance
+            )
+
+        );
+
+        document.getElementById(
+            "admAmount"
+        ).value = "";
+
+        document.getElementById(
+            "admNote"
+        ).value = "";
+
+    })
+
+    .catch(function(error){
+
+        if(
+            error &&
+            error.message ===
+            "INSUFFICIENT_BALANCE"
+        ){
+
+            alert(
+                "Số dư không đủ để trừ."
+            );
+
+        }else{
+
+            alert(
+                "Không thể thay đổi số dư: " +
+                error.message
+            );
+
+        }
+
+    });
+
 }
-function openProof(url){proofImage.src=url;proofModal.classList.add('active')}function closeProof(){proofModal.classList.remove('active');proofImage.src=''}
-db.ref('orders').on('value',s=>renderOrders(s.val()));db.ref('withdrawals').on('value',s=>renderWithdrawals(s.val()));db.ref('userProfiles').on('value',s=>renderUsers(s.val()));
-startCustomerRealtime();
-loadSite();
-</script></body></html>
+
+
+function showFraud(encoded){
+
+    const user =
+        decodeURIComponent(
+            encoded
+        );
+
+
+    const panel =
+        document.getElementById(
+            "fraudPanel"
+        );
+
+
+    panel.style.display =
+        "block";
+
+
+    panel.innerHTML =
+        `
+            <b>
+                🔎 Kiểm tra:
+                ${esc(user)}
+            </b>
+
+            <div
+                style="margin-top:8px"
+            >
+                Đang tải lịch sử...
+            </div>
+        `;
+
+
+    db.ref(
+        "orders"
+    )
+
+    .orderByChild(
+        "user"
+    )
+
+    .equalTo(user)
+
+    .once("value")
+
+    .then(function(snapshot){
+
+        let count = 0;
+        let total = 0;
+        let last = "-";
+
+
+        snapshot.forEach(
+            function(child){
+
+                const order =
+                    child.val() ||
+                    {};
+
+
+                count++;
+
+                total +=
+                    Number(
+                        order.price
+                    ) || 0;
+
+                last =
+                    order.time ||
+                    when(
+                        order.timestamp
+                    ) ||
+                    last;
+
+            }
+        );
+
+
+        const balance =
+            Number(
+                adminBalances[user]
+            ) || 0;
+
+
+        panel.innerHTML = `
+
+            <b>
+                🔎 Kiểm tra:
+                ${esc(user)}
+            </b>
+
+            <div
+                style="margin-top:8px"
+            >
+
+                Số dư:
+                <b
+                    style="color:#159957"
+                >
+                    ${fmt(balance)}
+                </b>
+
+                <br>
+
+                Đơn đã ghi nhận:
+                <b>${count}</b>
+
+                <br>
+
+                Tổng giá trị đơn:
+                <b>${fmt(total)}</b>
+
+                <br>
+
+                Giao dịch gần nhất:
+                <b>${esc(last)}</b>
+
+            </div>
+
+        `;
+
+    })
+
+    .catch(function(error){
+
+        panel.innerHTML =
+            `
+                Không đọc được lịch sử:
+                ${esc(
+                    error.message
+                )}
+            `;
+
+    });
+
+}
+
+
+/* =====================================================
+   NICK GAME
+===================================================== */
+
+let nickProducts = {};
+
+
+function addNickProduct(){
+
+    const name =
+        document.getElementById(
+            "nickName"
+        ).value.trim();
+
+
+    const game =
+        document.getElementById(
+            "nickGame"
+        ).value;
+
+
+    const price =
+        Number(
+            document.getElementById(
+                "nickPrice"
+            ).value
+        );
+
+
+    const image =
+        document.getElementById(
+            "nickImage"
+        ).value.trim();
+
+
+    const description =
+        document.getElementById(
+            "nickDescription"
+        ).value.trim();
+
+
+    if(
+        !name ||
+        !Number.isFinite(price) ||
+        price <= 0
+    ){
+
+        alert(
+            "Nhập tên Nick và giá hợp lệ."
+        );
+
+        return;
+
+    }
+
+
+    const ref =
+        db.ref(
+            "products"
+        ).push();
+
+
+    ref.set({
+
+        name:
+            name,
+
+        game:
+            game,
+
+        price:
+            price,
+
+        image:
+            image,
+
+        description:
+            description,
+
+        active:
+            true,
+
+        hidden:
+            false,
+
+        status:
+            "available",
+
+        createdAt:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã thêm Nick Game."
+        );
+
+        clearNickForm();
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function clearNickForm(){
+
+    document.getElementById(
+        "nickName"
+    ).value = "";
+
+    document.getElementById(
+        "nickPrice"
+    ).value = "";
+
+    document.getElementById(
+        "nickImage"
+    ).value = "";
+
+    document.getElementById(
+        "nickDescription"
+    ).value = "";
+
+}
+
+
+function renderNickProducts(data){
+
+    nickProducts =
+        data || {};
+
+
+    const list =
+        Object.entries(
+            nickProducts
+        )
+
+        .map(
+            ([id,p]) =>
+                ({
+                    id,
+                    ...p
+                })
+        )
+
+        .filter(
+            p =>
+                p &&
+                p.hidden !== true
+        );
+
+
+    const box =
+        document.getElementById(
+            "nickProducts"
+        );
+
+
+    box.innerHTML =
+        list.map(function(p){
+
+            const image =
+                p.image ||
+                "";
+
+
+            return `
+
+                <div class="nick-card">
+
+                    ${
+                        image
+
+                        ? `
+                            <img
+                                src="${esc(image)}"
+                                onerror="
+                                this.style.display='none'
+                                "
+                            >
+                        `
+
+                        : `
+                            <div
+                                style="
+                                height:140px;
+                                border-radius:10px;
+                                background:#eef2ff;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:50px
+                                "
+                            >
+                                🎮
+                            </div>
+                        `
+                    }
+
+                    <h3>
+                        ${esc(
+                            p.name ||
+                            "Nick Game"
+                        )}
+                    </h3>
+
+                    <div class="muted">
+                        ${esc(
+                            p.game ||
+                            "Khác"
+                        )}
+                    </div>
+
+                    <div class="nick-price">
+                        ${fmt(
+                            p.price
+                        )}
+                    </div>
+
+                    <p class="small">
+                        ${esc(
+                            p.description ||
+                            ""
+                        )}
+                    </p>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn btn-orange"
+                            onclick="toggleNick('${p.id}')"
+                        >
+                            Ẩn
+                        </button>
+
+                        <button
+                            class="btn btn-red"
+                            onclick="deleteNick('${p.id}')"
+                        >
+                            Xóa
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+
+        .join("")
+
+        ||
+
+        `
+            <div
+                style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:35px;
+                color:#697386
+                "
+            >
+                Chưa có Nick Game.
+            </div>
+        `;
+
+}
+
+
+function toggleNick(id){
+
+    const product =
+        nickProducts[id];
+
+
+    if(!product)
+        return;
+
+
+    db.ref(
+        "products/" +
+        id
+    )
+
+    .update({
+
+        hidden:
+            true,
+
+        active:
+            false
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã ẩn sản phẩm."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function deleteNick(id){
+
+    if(
+        !confirm(
+            "Xóa vĩnh viễn Nick này?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    db.ref(
+        "products/" +
+        id
+    )
+
+    .remove()
+
+    .then(function(){
+
+        alert(
+            "Đã xóa Nick."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   NICK ORDERS
+===================================================== */
+
+let nickOrders = {};
+
+
+function renderNickOrders(data){
+
+    nickOrders =
+        data || {};
+
+
+    const arr =
+        Object.entries(
+            nickOrders
+        )
+
+        .map(
+            ([id,o]) =>
+                ({
+                    id,
+                    ...o
+                })
+        )
+
+        .sort(
+            (a,b) =>
+                (
+                    Number(
+                        b.createdAt
+                    ) || 0
+                ) -
+                (
+                    Number(
+                        a.createdAt
+                    ) || 0
+                )
+        );
+
+
+    document.getElementById(
+        "nickOrdersBody"
+    ).innerHTML =
+
+        arr.map(function(o){
+
+            let actions = "";
+
+
+            if(
+                o.status ===
+                "pending"
+            ){
+
+                actions = `
+
+                    <button
+                        class="btn btn-green"
+                        onclick="approveNickOrder('${o.id}')"
+                    >
+                        Duyệt
+                    </button>
+
+                    <button
+                        class="btn btn-red"
+                        onclick="rejectNickOrder('${o.id}')"
+                    >
+                        Hủy
+                    </button>
+
+                `;
+
+            }
+
+
+            if(
+                o.status ===
+                "approved"
+            ){
+
+                actions = `
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="completeNickOrder('${o.id}')"
+                    >
+                        Hoàn tất
+                    </button>
+
+                `;
+
+            }
+
+
+            return `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${esc(
+                                o.buyerContact ||
+                                "Khách"
+                            )}
+                        </b>
+
+                        <br>
+
+                        <span class="muted">
+                            ${esc(
+                                o.buyerPhone ||
+                                ""
+                            )}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.productName ||
+                            "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.game ||
+                            "-"
+                        )}
+                    </td>
+
+                    <td>
+                        <b>
+                            ${fmt(
+                                o.price
+                            )}
+                        </b>
+                    </td>
+
+                    <td>
+                        ${esc(
+                            o.buyerContact ||
+                            "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${when(
+                            o.createdAt
+                        )}
+                    </td>
+
+                    <td>
+                        ${badge(
+                            o.status
+                        )}
+                    </td>
+
+                    <td>
+                        ${actions}
+                    </td>
+
+                </tr>
+
+            `;
+
+        })
+
+        .join("")
+
+        ||
+
+        `
+            <tr>
+                <td
+                    colspan="8"
+                    style="text-align:center"
+                >
+                    Chưa có đơn Nick.
+                </td>
+            </tr>
+        `;
+
+}
+
+
+function approveNickOrder(id){
+
+    const ref =
+        db.ref(
+            "nickOrders/" +
+            id
+        );
+
+
+    ref.transaction(
+        function(order){
+
+            if(
+                !order ||
+                order.status !==
+                "pending"
+            ){
+
+                return;
+
+            }
+
+
+            return Object.assign(
+                {},
+                order,
+                {
+
+                    status:
+                        "approved",
+
+                    approvedAt:
+                        firebase
+                        .database
+                        .ServerValue
+                        .TIMESTAMP,
+
+                    approvedBy:
+                        "ADMIN"
+
+                }
+            );
+
+        }
+    )
+
+    .then(function(result){
+
+        if(
+            !result ||
+            !result.committed
+        ){
+
+            throw new Error(
+                "Đơn không còn chờ."
+            );
+
+        }
+
+
+        const order =
+            result.snapshot.val() ||
+            {};
+
+
+        if(
+            order.productId
+        ){
+
+            return db.ref(
+                "products/" +
+                order.productId
+            )
+
+            .update({
+
+                active:
+                    false,
+
+                sold:
+                    true,
+
+                soldAt:
+                    firebase
+                    .database
+                    .ServerValue
+                    .TIMESTAMP
+
+            });
+
+        }
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã duyệt đơn Nick."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function rejectNickOrder(id){
+
+    db.ref(
+        "nickOrders/" +
+        id
+    )
+
+    .update({
+
+        status:
+            "rejected",
+
+        rejectedAt:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP,
+
+        rejectedBy:
+            "ADMIN"
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã hủy đơn Nick."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+function completeNickOrder(id){
+
+    db.ref(
+        "nickOrders/" +
+        id
+    )
+
+    .update({
+
+        status:
+            "completed",
+
+        completedAt:
+            firebase
+            .database
+            .ServerValue
+            .TIMESTAMP,
+
+        completedBy:
+            "ADMIN"
+
+    })
+
+    .then(function(){
+
+        alert(
+            "Đã hoàn tất đơn Nick."
+        );
+
+    })
+
+    .catch(function(error){
+
+        alert(
+            "Lỗi: " +
+            error.message
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   PROOF
+===================================================== */
+
+function openProof(url){
+
+    document.getElementById(
+        "proofImage"
+    ).src =
+        url;
+
+
+    document.getElementById(
+        "proofModal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+function closeProof(){
+
+    document.getElementById(
+        "proofModal"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.getElementById(
+        "proofImage"
+    ).src = "";
+
+}
+
+
+/* =====================================================
+   REALTIME
+===================================================== */
+
+function startAdmin(){
+
+    /* ORDERS */
+
+    db.ref(
+        "orders"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            renderOrders(
+                snapshot.val()
+            );
+
+        }
+    );
+
+
+    /* WITHDRAWALS */
+
+    db.ref(
+        "withdrawals"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            renderWithdrawals(
+                snapshot.val()
+            );
+
+        }
+    );
+
+
+    /* CUSTOMER REGISTRY */
+
+    db.ref(
+        "customerRegistry"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            adminCustomers =
+                {};
+
+
+            snapshot.forEach(
+                function(child){
+
+                    const c =
+                        child.val() ||
+                        {};
+
+
+                    const user =
+                        c.user ||
+                        decodeURIComponent(
+                            child.key
+                        );
+
+
+                    if(
+                        user &&
+                        user !==
+                        "ADMIN"
+                    ){
+
+                        adminCustomers[user] =
+                            c;
+
+                    }
+
+                }
+            );
+
+
+            renderUsersFromState();
+
+        }
+    );
+
+
+    /* PROFILES */
+
+    db.ref(
+        "userProfiles"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            snapshot.forEach(
+                function(child){
+
+                    const c =
+                        child.val() ||
+                        {};
+
+
+                    const user =
+                        c.user ||
+                        decodeURIComponent(
+                            child.key
+                        );
+
+
+                    if(
+                        user &&
+                        user !==
+                        "ADMIN"
+                    ){
+
+                        adminCustomers[user] =
+                            Object.assign(
+                                {},
+                                adminCustomers[user] ||
+                                {},
+                                c
+                            );
+
+                    }
+
+                }
+            );
+
+
+            renderUsersFromState();
+
+        }
+    );
+
+
+    /* BALANCES */
+
+    db.ref(
+        "balances"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            adminBalances =
+                {};
+
+
+            snapshot.forEach(
+                function(child){
+
+                    const user =
+                        decodeURIComponent(
+                            child.key
+                        );
+
+
+                    const balance =
+                        normalizeBalance(
+                            child.val()
+                        );
+
+
+                    if(
+                        user &&
+                        user !==
+                        "ADMIN"
+                    ){
+
+                        adminBalances[user] =
+                            balance;
+
+                    }
+
+                }
+            );
+
+
+            renderUsersFromState();
+
+        }
+    );
+
+
+    /* ORDERS -> REGISTRY */
+
+    db.ref(
+        "orders"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            snapshot.forEach(
+                function(child){
+
+                    const order =
+                        child.val() ||
+                        {};
+
+
+                    const user =
+                        String(
+                            order.user ||
+                            ""
+                        ).trim();
+
+
+                    if(
+                        user &&
+                        user !==
+                        "ADMIN"
+                    ){
+
+                        adminCustomers[user] =
+                            Object.assign(
+                                {},
+                                adminCustomers[user] ||
+                                {},
+                                {
+
+                                    user:
+                                        user,
+
+                                    displayName:
+                                        order.displayName ||
+                                        adminCustomers[user]
+                                        ?.displayName ||
+                                        user,
+
+                                    lastSeenAt:
+                                        order.timestamp ||
+                                        Date.now()
+
+                                }
+                            );
+
+                    }
+
+                }
+            );
+
+
+            renderUsersFromState();
+
+        }
+    );
+
+
+    /* NICK PRODUCTS */
+
+    db.ref(
+        "products"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            renderNickProducts(
+                snapshot.val()
+            );
+
+        }
+    );
+
+
+    /* NICK ORDERS */
+
+    db.ref(
+        "nickOrders"
+    )
+
+    .on(
+        "value",
+        function(snapshot){
+
+            renderNickOrders(
+                snapshot.val()
+            );
+
+        }
+    );
+
+
+    /* SITE */
+
+    loadSite();
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+</script>
+
+</body>
+</html>
