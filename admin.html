@@ -66,8 +66,16 @@
     <div><label>Số tài khoản</label><input id="payAccountNumber" placeholder="Nhập STK thật"></div>
     <div><label>Tên chủ tài khoản</label><input id="payAccountName" placeholder="SHOP KC"></div>
   </div>
-  <label>Nội dung hỗ trợ</label><textarea id="paySupport" placeholder="Thông tin hỗ trợ nạp tiền"></textarea>
+  <div class="mini-grid"><div><label>Tiền tố nội dung nạp</label><input id="payMemoPrefix" placeholder="NAP"></div><div><label>Hướng dẫn nạp</label><input id="payDepositGuide" placeholder="Quét QR, chuyển đúng nội dung..."></div></div><label>Nội dung hỗ trợ</label><textarea id="paySupport" placeholder="Thông tin hỗ trợ nạp tiền"></textarea>
   <div class="actions"><button class="btn btn-primary" onclick="savePaymentConfig()">💾 Lưu thanh toán</button></div>
+</div>
+
+<div class="card">
+  <b>🎮 KHO TÀI KHOẢN GIAO TỰ ĐỘNG</b>
+  <p class="muted">Mỗi tài khoản trong kho sẽ được giao cho khách sau khi họ đăng nhập, đủ số dư và chạm ảnh túi để xé. Trạng thái <b>available</b> là còn hàng, <b>sold</b> là đã giao.</p>
+  <textarea id="rewardInventory" style="min-height:420px;font-family:monospace" placeholder='{"tui-cena-49k":{"acc001":{"account":"acc1","password":"pass1","note":"Đăng nhập bằng tài khoản game"}}}'></textarea>
+  <div class="actions"><button class="btn btn-primary" onclick="saveRewardInventory()">💾 Lưu kho tài khoản</button><button class="btn btn-gray" onclick="loadPaymentAndProducts()">↻ Tải lại</button></div>
+  <div class="notice">Lưu ý: đây là kho giao hàng của Shop. Không cho khách quyền ghi <b>siteConfig/rewardInventory</b> trong Firebase Rules nếu muốn bảo mật; tốt nhất dùng Cloud Function/Admin SDK khi chạy thật.</div>
 </div>
 
 <div class="card">
@@ -88,7 +96,7 @@
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
-const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
+const firebaseConfig={apiKey:'AIzaSyCtExRdinQixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
 const defaultGames={'Free Fire':{unit:'Kim Cương',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]}};
 let lastOrders={},lastWithdrawals={};
@@ -280,19 +288,27 @@ function defaultBlindBagProducts(){
 function loadPaymentAndProducts(){
   db.ref('siteConfig').once('value').then(s=>{
     const c=s.val()||{},p=c.payment||{};
-    payBankCode.value=p.bankCode||'MB';payBankName.value=p.bankName||'MB Bank';payAccountNumber.value=p.accountNumber||'';payAccountName.value=p.accountName||'SHOP KC';paySupport.value=p.support||'';
+    payBankCode.value=p.bankCode||'MB';payBankName.value=p.bankName||'MB Bank';payAccountNumber.value=p.accountNumber||'';payAccountName.value=p.accountName||'SHOP KC';payMemoPrefix.value=p.memoPrefix||'NAP';payDepositGuide.value=p.depositGuide||'Quét QR và chuyển khoản đúng nội dung.';paySupport.value=p.support||'';
     siteEnabledAdmin.value=c.siteEnabled===false?'off':'on';
-    blindBagProducts.value=JSON.stringify(c.products&&Object.keys(c.products).length?c.products:defaultBlindBagProducts(),null,2);
+    blindBagProducts.value=JSON.stringify(c.products&&Object.keys(c.products).length?c.products:defaultBlindBagProducts(),null,2);rewardInventory.value=JSON.stringify(c.rewardInventory||{},null,2);
   }).catch(e=>alert('Không đọc được kho cũ: '+e.message));
 }
 function savePaymentConfig(){
-  const value={bankCode:payBankCode.value.trim(),bankName:payBankName.value.trim(),accountNumber:payAccountNumber.value.trim(),accountName:payAccountName.value.trim(),support:paySupport.value.trim()};
+  const value={bankCode:payBankCode.value.trim(),bankName:payBankName.value.trim(),accountNumber:payAccountNumber.value.trim(),accountName:payAccountName.value.trim(),memoPrefix:payMemoPrefix.value.trim()||'NAP',depositGuide:payDepositGuide.value.trim(),support:paySupport.value.trim()};
   if(!value.bankCode||!value.accountNumber||!value.accountName){alert('Vui lòng nhập mã ngân hàng, số tài khoản và tên chủ tài khoản.');return;}
   db.ref('siteConfig/payment').set(value).then(()=>alert('Đã lưu cấu hình thanh toán vào kho cũ siteConfig/payment.')).catch(e=>alert('Lỗi: '+e.message));
 }
 function saveSiteVisibility(){
   const enabled=siteEnabledAdmin.value==='on';
   db.ref('siteConfig/siteEnabled').set(enabled).then(()=>alert(enabled?'Đã MỞ website cho khách.':'Đã ẨN website với khách.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function saveRewardInventory(){
+  let data;
+  try{data=JSON.parse(rewardInventory.value);}catch(e){alert('JSON kho tài khoản không hợp lệ.');return;}
+  if(!data||typeof data!=='object'||Array.isArray(data)){alert('Kho tài khoản phải là object theo từng slug.');return;}
+  const clean={};
+  Object.keys(data).forEach(slug=>{const src=data[slug]&&typeof data[slug]==='object'?data[slug]:{};clean[slug]={};Object.keys(src).forEach(k=>{const x=src[k]||{};clean[slug][k]={account:String(x.account||x.username||x.uid||'').trim(),password:String(x.password||x.pass||'').trim(),note:String(x.note||x.info||'').trim(),status:x.status==='sold'?'sold':'available'};});});
+  db.ref('siteConfig/rewardInventory').set(clean).then(()=>alert('Đã lưu kho tài khoản giao tự động vào Firebase cũ.')).catch(e=>alert('Lỗi: '+e.message));
 }
 function saveBlindBagProducts(){
   let data;
