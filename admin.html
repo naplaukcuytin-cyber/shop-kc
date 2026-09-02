@@ -96,7 +96,16 @@
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
-const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',measurementId:'G-Q9VN7NZHR0',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
+const firebaseConfig={
+ apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
+ authDomain:'shop-kc.firebaseapp.com',
+ projectId:'shop-kc',
+ storageBucket:'shop-kc.firebasestorage.app',
+ messagingSenderId:'1073242689799',
+ appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',
+ measurementId:'G-Q9VN7NZHR0',
+ databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'
+};
 firebase.initializeApp(firebaseConfig);const db=firebase.database();
 const defaultGames={'Free Fire':{unit:'Kim Cương',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]}};
 let lastOrders={},lastWithdrawals={};
