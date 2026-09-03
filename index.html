@@ -4378,10 +4378,6 @@ function openProduct(slug) {
       '<strong>Thông tin sản phẩm</strong>' +
       '<div style="margin-top:7px;color:#666">' + safeText(product.description) + '</div>' +
       '</div>' +
-      '<div class="kc-section-box">' +
-      '<h3>Lịch sử</h3>' +
-      '<div id="kcProductHistoryBody" class="kc-history-list"><div class="kc-empty">Đang tải...</div></div>' +
-      '</div>' +
       '</div>' +
       '</div>' +
       '<div class="kc-detail-buybar" id="kcDetailBuyBar">' +
@@ -4399,7 +4395,6 @@ function openProduct(slug) {
       '<button class="kc-btn kc-btn-primary" onclick="confirmProductPurchase()">XÉ NGAY</button>' +
       '</div>';
 
-    refreshProductHistory(product.slug);
   }
 
   function selectLuckyBox(index) {
@@ -4593,7 +4588,6 @@ function openProduct(slug) {
         .then(function (result) {
           refreshHistory();
           refreshAccountHistory();
-          refreshProductHistory(activeProduct.slug);
           showProductPurchaseResult(result);
         })
         .catch(function (error) {
@@ -4605,41 +4599,6 @@ function openProduct(slug) {
   }
 
   window.confirmProductPurchase = confirmProductPurchase;
-
-  function refreshProductHistory(slug) {
-    var container = document.getElementById("kcProductHistoryBody");
-
-    if (!container || !db) {
-      return;
-    }
-
-    db.ref("orders")
-      .orderByChild("gameSlug")
-      .equalTo(slug)
-      .once("value")
-      .then(function (snapshot) {
-        var items = [];
-
-        snapshot.forEach(function (child) {
-          var item = child.val() || {};
-
-          if (item.gameSlug === slug) {
-            item.id = child.key;
-            items.push(item);
-          }
-        });
-
-        items.sort(function (a, b) {
-          return (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0);
-        });
-
-        renderHistoryList(container, items.slice(0, 8), "Chưa có lịch sử cho sản phẩm này.");
-      })
-      .catch(function (error) {
-        console.warn(error);
-        container.innerHTML = '<div class="kc-empty">Lịch sử sẽ hiển thị khi Firebase cho phép đọc đơn.</div>';
-      });
-  }
 
   function attachSearch() {
     var form = document.querySelector(".search-form");
