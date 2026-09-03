@@ -1017,6 +1017,18 @@ button {
 </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style id="shopkc-inline-purchase-confirm-style">
+.kc-inline-purchase-confirm{margin:18px 0 24px;padding:24px 20px;border:2px solid #ffd0dc;border-radius:22px;background:linear-gradient(135deg,#fff7fa,#fff);box-shadow:0 12px 32px rgba(242,13,70,.14);text-align:center;animation:kcInlineConfirmIn .28s ease both}
+.kc-inline-confirm-icon{width:62px;height:62px;margin:0 auto 12px;border:4px solid #8db9cc;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#75aabd}
+.kc-inline-confirm-title{font-size:28px;font-weight:950;color:#222}
+.kc-inline-confirm-text{margin-top:10px;font-size:18px;line-height:1.55;color:#555}
+.kc-inline-confirm-note{margin-top:9px;color:#777;font-size:14px}
+.kc-inline-confirm-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.kc-inline-confirm-actions .kc-btn{min-width:150px}
+.kc-inline-cancel{background:#747d87!important;color:#fff!important;border:0!important}
+@keyframes kcInlineConfirmIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+</style>
 </head>
 
 
@@ -4027,7 +4039,7 @@ function openProduct(slug) {
       '</div>' +
       '</div>' +
       '</div>' +
-      '<div class="kc-detail-buybar">' +
+      '<div class="kc-detail-buybar" id="kcDetailBuyBar">' +
       '<div>' +
       '<div class="kc-total-label">Số lượng và tổng tiền</div>' +
       '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">' +
@@ -4138,6 +4150,30 @@ function openProduct(slug) {
   }
   window.openProcessingOrder = openProcessingOrder;
 
+  var kcPendingPurchaseProceed = null;
+
+  function cancelInlinePurchaseConfirm() {
+    kcPendingPurchaseProceed = null;
+    var box = document.getElementById("kcInlinePurchaseConfirm");
+    if (box) box.remove();
+    var buybar = document.getElementById("kcDetailBuyBar");
+    if (buybar) buybar.style.display = "flex";
+  }
+  window.cancelInlinePurchaseConfirm = cancelInlinePurchaseConfirm;
+
+  function runInlinePurchaseConfirm() {
+    if (typeof kcPendingPurchaseProceed === "function") {
+      var proceed = kcPendingPurchaseProceed;
+      kcPendingPurchaseProceed = null;
+      var box = document.getElementById("kcInlinePurchaseConfirm");
+      if (box) box.remove();
+      var buybar = document.getElementById("kcDetailBuyBar");
+      if (buybar) buybar.style.display = "none";
+      proceed();
+    }
+  }
+  window.runInlinePurchaseConfirm = runInlinePurchaseConfirm;
+
   function confirmProductPurchase() {
     if (!activeProduct) {
       return;
@@ -4155,9 +4191,36 @@ function openProduct(slug) {
       return;
     }
 
-    var confirmText = "Mua " + activeProduct.title + " x" + productQuantity + " với giá " + formatMoney(total) + "?";
+    /*
+     * XÉ NGAY chỉ mở xác nhận NGAY BÊN TRONG cửa sổ Túi May Mắn.
+     * Không dùng Swal/confirm của trình duyệt vì chúng che toàn bộ luồng mua.
+     */
+    var body = document.getElementById("kcProductModalBody");
+    if (!body) return;
 
-    var proceed = function () {
+    var old = document.getElementById("kcInlinePurchaseConfirm");
+    if (old) old.remove();
+
+    var buybar = document.getElementById("kcDetailBuyBar");
+    if (buybar) buybar.style.display = "none";
+
+    var confirmBox = document.createElement("div");
+    confirmBox.id = "kcInlinePurchaseConfirm";
+    confirmBox.className = "kc-inline-purchase-confirm";
+    confirmBox.innerHTML = '' +
+      '<div class="kc-inline-confirm-icon">?</div>' +
+      '<div class="kc-inline-confirm-title">Xác nhận mua?</div>' +
+      '<div class="kc-inline-confirm-text">Mua <b>' + safeText(activeProduct.title) + '</b> x' + safeText(productQuantity) + ' với giá <b>' + safeText(formatMoney(total)) + '</b>?</div>' +
+      '<div class="kc-inline-confirm-note">Số dư hiện tại: <b>' + safeText(formatMoney(currentBalance)) + '</b></div>' +
+      '<div class="kc-inline-confirm-actions">' +
+        '<button type="button" class="kc-btn kc-btn-primary" onclick="runInlinePurchaseConfirm()">✓ Mua ngay</button>' +
+        '<button type="button" class="kc-btn kc-inline-cancel" onclick="cancelInlinePurchaseConfirm()">Hủy</button>' +
+      '</div>';
+
+    body.appendChild(confirmBox);
+    confirmBox.scrollIntoView({behavior:"smooth", block:"center"});
+
+    kcPendingPurchaseProceed = function () {
       showToast("Đang tạo đơn...", "");
 
       createGameOrder(activeProduct, productQuantity, total)
@@ -4170,28 +4233,9 @@ function openProduct(slug) {
         .catch(function (error) {
           console.error(error);
           showToast(error.message || "Không thể tạo đơn.", "error");
+          if (buybar) buybar.style.display = "flex";
         });
     };
-
-    if (typeof Swal !== "undefined") {
-      Swal.fire({
-        title: "Xác nhận mua?",
-        text: confirmText,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Mua ngay",
-        cancelButtonText: "Hủy",
-        confirmButtonColor: "#f20d46"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          proceed();
-        }
-      });
-    } else {
-      if (window.confirm(confirmText)) {
-        proceed();
-      }
-    }
   }
 
   window.confirmProductPurchase = confirmProductPurchase;
