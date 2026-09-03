@@ -8858,6 +8858,88 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 --shop-completeness-slot-03615: 3615;
 }
 </style>
+
+<style id="repair-visual-layer">
+/* Visual repair layer: keeps the original dark shop layout while tightening mobile spacing. */
+.modal{padding:20px}
+.modal h2{font-size:25px}
+.bag-modal{gap:22px}
+.deposit-step{padding:2px 0}
+.deposit-title{font-size:22px;font-weight:800;margin:0 0 14px;letter-spacing:.2px}
+.warning-box,.qr-warning{font-size:14px;line-height:1.55}
+.qr-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border:1px solid #2c65a5;background:#14243a;border-radius:15px;font-size:16px}
+.qr-head b{color:#58a2ff}
+.qr-warning{margin:14px 0;padding:16px;border:1px solid #a72d48;background:#35151f;border-radius:15px;color:#ff9b87;font-weight:700}
+.qr-box{padding:18px;border:1px solid #303340;background:#0b0d13;border-radius:18px;text-align:center}
+.qr-box img{display:block;width:min(100%,390px);max-height:390px;object-fit:contain;margin:0 auto;border-radius:12px;background:#fff}
+.qr-download{width:100%;margin-top:14px;padding:13px 15px;font-size:14px}
+.bank-lines{display:grid;gap:8px;margin-top:15px;text-align:left}
+.bank-line{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
+.bank-line span{color:#858b9b}.bank-line b{text-align:right;word-break:break-word}
+.qr-note{margin:13px 0;color:#9298a8;font-size:13px;line-height:1.6;text-align:center}
+.amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 16px}
+.amount-btn{border:1px solid #303341;background:#171923;color:#ddd;border-radius:11px;padding:12px 8px;font-weight:800}
+.amount-btn:hover{border-color:#ff6b1c;color:#fff;transform:translateY(-1px)}
+.ack-row{display:flex;align-items:center;gap:9px;color:#c6cad5;font-size:14px;margin:14px 0}
+.deposit-primary{width:100%;margin-top:9px}
+/* V8 game stage */
+.game-stage{position:relative;padding:20px;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 50% 8%,rgba(115,67,255,.30),transparent 34%),linear-gradient(145deg,#100c1d,#17102a 52%,#0a0b12);border:1px solid #403061;box-shadow:inset 0 0 80px rgba(109,55,255,.08),0 20px 70px rgba(0,0,0,.35)}
+.game-stage:before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent 0 72%,rgba(132,72,255,.09) 78%,transparent 84%);animation:stageSpin 12s linear infinite;pointer-events:none}
+@keyframes stageSpin{to{transform:rotate(360deg)}}
+.game-stage>*{position:relative;z-index:1}
+.game-status{display:flex;align-items:center;justify-content:center;gap:8px;color:#b9a8ff;font-weight:800;font-size:13px;margin-bottom:12px}
+.game-status:before{content:"";width:8px;height:8px;border-radius:50%;background:#8b5cff;box-shadow:0 0 14px #8b5cff;animation:statusPulse 1s infinite}
+@keyframes statusPulse{50%{opacity:.25;transform:scale(.7)}}
+.cards.game-cards{gap:14px;margin-top:8px}
+.game-cards .flip-card{height:235px}
+.game-cards .face-front{background:linear-gradient(145deg,#24133f,#5122a7 52%,#24113e);border-color:#774bd0;box-shadow:inset 0 0 30px rgba(173,117,255,.13),0 15px 35px rgba(0,0,0,.32)}
+.game-cards .face-front:before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.13) 45%,transparent 65%);transform:translateX(-130%);animation:cardShine 2.7s ease-in-out infinite}
+.game-cards .face-front:after{content:none}
+@keyframes cardShine{0%,25%{transform:translateX(-130%)}70%,100%{transform:translateX(130%)}}
+.card-question{position:absolute;inset:0;display:grid;place-items:center;font-size:62px;font-weight:900;color:#fff;text-shadow:0 0 20px rgba(176,125,255,.85),0 3px 0 rgba(0,0,0,.3)}
+.game-cards .back{background:radial-gradient(circle at 50% 18%,#4c4d8e,#151729 58%,#0e1018);border-color:#5b65ad}
+.game-cards .back img{width:78%;height:72%;object-fit:contain;border-radius:10px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.35))}
+.game-cards .back .reward{margin-top:8px}
+.flip-card:not(.flipped):hover{transform:translateY(-7px) rotateZ(-1deg)}
+.flip-card:not(.flipped):active{transform:scale(.97)}
+.flip-card.disabled{opacity:.32;filter:saturate(.35) blur(.2px);transform:scale(.96)}
+.flip-card.selected-card{z-index:5}
+.flip-card.selected-card .face{box-shadow:0 0 0 2px rgba(255,188,72,.6),0 0 35px rgba(255,132,26,.28),0 20px 50px rgba(0,0,0,.45)}
+.game-win-flash{animation:winFlash .65s ease-out}
+@keyframes winFlash{0%{box-shadow:0 0 0 0 rgba(255,194,79,.65)}100%{box-shadow:0 0 0 28px rgba(255,194,79,0)}}
+.credential-grid{display:grid;gap:8px;margin-top:10px}
+.credential-row{display:grid;grid-template-columns:72px 1fr auto;gap:8px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.16);border-radius:10px}
+.credential-row>span{color:#8e95a6;font-size:12px}.credential-row strong{word-break:break-all;font-size:14px}
+.won-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}
+/* Admin polish */
+.admin-page h3{margin:5px 0 15px;font-size:21px}.admin-nav{scrollbar-width:none}.admin-nav::-webkit-scrollbar{display:none}
+.admin-nav button{transition:.18s}.admin-nav button:hover{transform:translateY(-1px);border-color:#555b70}
+.admin-card{box-shadow:0 8px 24px rgba(0,0,0,.13)}
+@media(max-width:760px){
+ .modal{padding:15px;border-radius:18px;max-height:94vh}
+ .modal h2{font-size:22px}
+ .amount-grid{grid-template-columns:repeat(2,1fr)}
+ .deposit-title{font-size:19px}
+ .qr-head{font-size:14px;padding:12px}
+ .qr-box{padding:12px}
+ .qr-box img{width:min(100%,330px);max-height:330px}
+ .bank-line{font-size:13px;align-items:flex-start}
+ .game-stage{padding:12px}
+ .game-cards{gap:7px!important}
+ .game-cards .flip-card{height:175px}
+ .card-question{font-size:48px}
+ .credential-row{grid-template-columns:58px 1fr;}
+ .credential-row .copy{grid-column:1/-1;float:none;width:100%}
+}
+@media(max-width:420px){
+ .modal{padding:12px}
+ .qr-box img{width:100%;max-height:300px}
+ .game-cards .flip-card{height:150px}
+ .card-question{font-size:40px}
+ .game-status{font-size:11px}
+ .bank-line{display:grid;grid-template-columns:70px 1fr}.bank-line b{text-align:left}
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">🔥 Thuê acc giá rẻ · Nạp thẻ không chiết khấu · Cho thuê tự động 24/7 · Uy tín hàng nghìn lượt thuê</div></div>
@@ -8872,7 +8954,7 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 <button class="chat" onclick="openHelp()"><i class="fa-regular fa-comment-dots"></i></button><div class="notice" id="notice"></div>
 
 <!-- AUTH -->
-<div class="overlay" id="authOverlay"><div class="modal" style="max-width:460px"><div class="modal-head"><h2>Tài khoản</h2><button class="close" onclick="closeModal('authOverlay')">×</button></div><div class="auth-tabs"><button class="tab active" id="loginTab" onclick="switchAuth(false)">Đăng nhập</button><button class="tab" id="registerTab" onclick="switchAuth(true)">Đăng ký</button></div><form class="login-form" onsubmit="submitAuth(event)"><input class="field" id="authEmail" type="email" placeholder="Email" required><input class="field" id="authPass" type="password" placeholder="Mật khẩu" minlength="6" required><input class="field hidden" id="authName" placeholder="Tên hiển thị"><button class="btn" id="authSubmit">Đăng nhập</button></form><p id="authMsg" style="color:#969bab"></p></div></div>
+<div class="overlay" id="authOverlay"><div class="modal" style="max-width:460px"><div class="modal-head"><h2>Tài khoản</h2><button class="close" onclick="closeModal('authOverlay')">×</button></div><div class="auth-tabs"><button class="tab active" id="loginTab" onclick="switchAuth(false)">Đăng nhập</button><button class="tab" id="registerTab" onclick="switchAuth(true)">Đăng ký</button></div><form class="login-form" onsubmit="submitAuth(event)"><input class="field" id="authEmail" type="text" placeholder="Tên đăng nhập" autocomplete="username" required><input class="field" id="authPass" type="password" placeholder="Mật khẩu" minlength="6" required><input class="field hidden" id="authName" placeholder="Tên hiển thị"><button class="btn" id="authSubmit">Đăng nhập</button></form><p id="authMsg" style="color:#969bab"></p></div></div>
 
 <!-- BAG -->
 <div class="overlay" id="bagOverlay"><div class="modal"><div class="modal-head"><h2 id="bagTitle">Túi mù</h2><button class="close" onclick="closeModal('bagOverlay')">×</button></div><div class="bag-modal"><div><div class="bag-preview"><img id="bagPreview"><div class="preview-glow"></div></div><div class="stock" id="bagStock"></div><p class="game-note">Bấm <b>Chơi ngay</b> để mua lượt. Sau đó chọn 1 trong 3 thẻ để lật. Mỗi thẻ chỉ được mở một lần.</p></div><div><p id="bagDesc" style="color:#aaa;line-height:1.7"></p><div class="plans" id="plans"></div><button class="btn" style="width:100%" id="playBtn" onclick="startBag()">🎴 Chơi ngay</button><div class="cards" id="cards"></div><div id="winBox"></div></div></div></div></div>
@@ -8891,13 +8973,13 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 
 <!-- ADMIN -->
 <div class="overlay" id="adminOverlay"><div class="modal" style="width:min(1280px,100%)"><div class="modal-head"><h2>⚙️ Admin • Shop</h2><button class="close" onclick="closeModal('adminOverlay')">×</button></div><div class="admin" id="adminApp"><div class="admin-nav"><button class="active" data-page="dashboard">Dashboard</button><button data-page="bags">Túi mù</button><button data-page="inventory">Kho acc</button><button data-page="users">Người dùng</button><button data-page="orders">Đơn hàng</button><button data-page="deposits">Nạp tiền</button><button data-page="settings">Cài đặt</button><button data-page="logs">Nhật ký</button></div>
-<div class="admin-page active" id="page-dashboard"><div class="stats"><div class="stat"><small>Người dùng</small><b id="sUsers">0</b></div><div class="stat"><small>Đơn hàng</small><b id="sOrders">0</b></div><div class="stat"><small>Doanh thu</small><b id="sRevenue">0đ</b></div><div class="stat"><small>Kho còn</small><b id="sStock">0</b></div></div><div class="admin-card"><h4>⚡ Thao tác nhanh</h4><div class="admin-toolbar"><button class="btn small" onclick="switchAdminPage('bags')">+ Túi mù</button><button class="btn small green" onclick="switchAdminPage('inventory')">+ Nhập acc</button><button class="btn small dark" onclick="switchAdminPage('deposits')">Xử lý nạp</button><button class="btn small dark" onclick="switchAdminPage('users')">Quản lý user</button></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Khách</th><th>Túi</th><th>Giá</th><th>Phần thưởng</th><th>Trạng thái</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
+<div class="admin-page active" id="page-dashboard"><div class="stats"><div class="stat"><small>Người dùng</small><b id="sUsers">0</b></div><div class="stat"><small>Đơn hàng</small><b id="sOrders">0</b></div><div class="stat"><small>Doanh thu</small><b id="sRevenue">0đ</b></div><div class="stat"><small>Kho còn</small><b id="sStock">0</b></div><div class="stat"><small>Nạp chờ duyệt</small><b id="sPending">0</b></div></div><div class="admin-card"><h4>⚡ Thao tác nhanh</h4><div class="admin-toolbar"><button class="btn small" onclick="switchAdminPage('bags')">+ Túi mù</button><button class="btn small green" onclick="switchAdminPage('inventory')">+ Nhập acc</button><button class="btn small dark" onclick="switchAdminPage('deposits')">Xử lý nạp</button><button class="btn small dark" onclick="switchAdminPage('users')">Quản lý user</button></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Khách</th><th>Túi</th><th>Giá</th><th>Phần thưởng</th><th>Trạng thái</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
 <div class="admin-page" id="page-bags"><h3>Quản lý túi mù</h3><form class="admin-form" onsubmit="saveBag(event)"><input type="hidden" id="editBagId"><div class="two-col"><input class="field" id="bagNameInput" placeholder="Tên túi" required><input class="field" id="bagPriceInput" type="number" min="0" placeholder="Giá từ" required></div><input class="field" id="bagImageInput" placeholder="Link ảnh" required><textarea class="field" id="bagDescInput" placeholder="Mô tả"></textarea><input class="field" id="bagPlansInput" placeholder="Các gói giá, ví dụ: 39000,79000,195000,39000"><button class="btn">Lưu túi</button></form><div class="table-wrap"><table class="table"><thead><tr><th>Tên</th><th>Giá</th><th>Tồn</th><th>Gói</th><th>Thao tác</th></tr></thead><tbody id="bagAdminRows"></tbody></table></div></div>
-<div class="admin-page" id="page-inventory"><h3>Kho tài khoản</h3><form class="admin-form" onsubmit="addInventory(event)"><div class="two-col"><select class="field" id="invBag"></select><input class="field" id="invRank" placeholder="Rank / mô tả"></div><div class="two-col"><input class="field" id="invLogin" placeholder="Tài khoản / UID" required><input class="field" id="invPass" placeholder="Mật khẩu" required></div><textarea class="field" id="invNote" placeholder="Ghi chú nội bộ"></textarea><button class="btn">+ Thêm acc</button></form><div class="admin-toolbar"><input class="field" id="inventorySearch" placeholder="Tìm tài khoản / UID / rank" oninput="filterInventory()" style="max-width:420px"><button class="btn dark small" onclick="refreshInventory()">Làm mới</button></div><div class="table-wrap"><table class="table"><thead><tr><th>Túi</th><th>Login</th><th>Rank</th><th>Trạng thái</th><th>Ngày nhập</th><th></th></tr></thead><tbody id="inventoryRows"></tbody></table></div></div>
-<div class="admin-page" id="page-users"><h3>Người dùng</h3><div class="admin-toolbar"><input class="field" id="userSearch" placeholder="Tìm email / tên" oninput="filterUsers()" style="max-width:420px"></div><div class="table-wrap"><table class="table"><thead><tr><th>Email</th><th>Tên</th><th>Số dư</th><th>Tạo lúc</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table></div></div>
+<div class="admin-page" id="page-inventory"><h3>Kho tài khoản</h3><form class="admin-form" onsubmit="addInventory(event)"><div class="two-col"><select class="field" id="invBag"></select><input class="field" id="invRank" placeholder="Rank / mô tả"></div><div class="two-col"><input class="field" id="invLogin" placeholder="Tài khoản / UID" required><input class="field" id="invPass" placeholder="Mật khẩu" required></div><textarea class="field" id="invNote" placeholder="Ghi chú nội bộ"></textarea><button class="btn">+ Thêm acc</button></form><div class="admin-toolbar"><input class="field" id="inventorySearch" placeholder="Tìm tài khoản / UID / rank" oninput="filterInventory()" style="max-width:420px"><button class="btn dark small" onclick="refreshInventory()">Làm mới</button></div><div class="table-wrap"><table class="table"><thead><tr><th>Túi</th><th>Login</th><th>Mật khẩu</th><th>Rank</th><th>Trạng thái</th><th>Người nhận</th><th>Ngày nhập</th><th>Thao tác</th></tr></thead><tbody id="inventoryRows"></tbody></table></div></div>
+<div class="admin-page" id="page-users"><h3>Người dùng</h3><div class="admin-toolbar"><input class="field" id="userSearch" placeholder="Tìm email / tên" oninput="filterUsers()" style="max-width:420px"></div><div class="table-wrap"><table class="table"><thead><tr><th>Tài khoản</th><th>Tên</th><th>UID</th><th>Số dư</th><th>Acc trúng</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table></div></div>
 <div class="admin-page" id="page-orders"><h3>Đơn hàng / lịch sử mở túi</h3><div class="admin-toolbar"><select class="field" id="orderFilter" onchange="loadOrders()" style="max-width:220px"><option value="all">Tất cả</option><option value="completed">Hoàn thành</option><option value="failed">Lỗi</option></select></div><div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>User</th><th>Túi</th><th>Giá</th><th>Kết quả</th><th>Thời gian</th></tr></thead><tbody id="orderRows"></tbody></table></div></div>
-<div class="admin-page" id="page-deposits"><h3>Yêu cầu nạp tiền</h3><div class="table-wrap"><table class="table"><thead><tr><th>User</th><th>Số tiền</th><th>Phương thức</th><th>Trạng thái</th><th>Thời gian</th><th></th></tr></thead><tbody id="depositRows"></tbody></table></div></div>
-<div class="admin-page" id="page-settings"><h3>Cài đặt website</h3><form class="admin-form" onsubmit="saveSettings(event)"><input class="field" id="setLogo" placeholder="Link logo"><input class="field" id="setNotice" placeholder="Thanh thông báo"><textarea class="field" id="setBank" placeholder="Thông tin ngân hàng"></textarea><input class="field" id="setAdminEmails" placeholder="Email admin, ngăn cách bằng dấu phẩy"><input class="field" id="setSupport" placeholder="Hotline / Zalo / liên hệ"><button class="btn">Lưu cài đặt</button></form><div class="admin-card"><h4>🔐 Bảo mật</h4><p class="mini">Giao diện admin không phải lớp bảo mật. Muốn hệ thống thật an toàn phải khóa quyền ghi bằng Firebase Security Rules/Cloud Functions và không lưu mật khẩu khách dạng text trong Realtime Database.</p></div></div>
+<div class="admin-page" id="page-deposits"><h3>Yêu cầu nạp tiền</h3><div class="table-wrap"><table class="table"><thead><tr><th>User</th><th>Số tiền</th><th>Phương thức</th><th>Nội dung</th><th>Nhà mạng</th><th>Trạng thái</th><th>Ghi chú</th><th>Thời gian</th><th>Thao tác</th></tr></thead><tbody id="depositRows"></tbody></table></div></div>
+<div class="admin-page" id="page-settings"><h3>Cài đặt website</h3><form class="admin-form" onsubmit="saveSettings(event)"><input class="field" id="setLogo" placeholder="Link logo"><input class="field" id="setNotice" placeholder="Thanh thông báo"><textarea class="field" id="setBank" placeholder="Thông tin ngân hàng"></textarea><input class="field" id="setQr" value="qr_banking.png.jpg" readonly><input class="field" id="setAdminEmails" placeholder="Email admin, ngăn cách bằng dấu phẩy"><input class="field" id="setSupport" placeholder="Hotline / Zalo / liên hệ"><label class="check-row"><input type="checkbox" id="setMaintenance"> Bật chế độ bảo trì</label><label class="check-row"><input type="checkbox" id="setRegisterOpen" checked> Cho phép đăng ký tài khoản mới</label><button class="btn">Lưu cài đặt</button></form><div class="admin-card"><h4>🔐 Bảo mật</h4><p class="mini">Giao diện admin không phải lớp bảo mật. Muốn hệ thống thật an toàn phải khóa quyền ghi bằng Firebase Security Rules/Cloud Functions và không lưu mật khẩu khách dạng text trong Realtime Database.</p></div></div>
 <div class="admin-page" id="page-logs"><h3>Nhật ký quản trị</h3><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Admin</th><th>Hành động</th><th>Chi tiết</th></tr></thead><tbody id="logRows"></tbody></table></div></div>
 </div></div></div>
 
@@ -8938,7 +9020,7 @@ function openMenu(){$('sideMenu').classList.add('open')}function closeMenu(){$('
 $('menuBtn').onclick=openMenu;
 function renderBags(){if(!bags.length){$('bagGrid').innerHTML='<div class="empty">Chưa có túi nào.</div>';return}$('bagGrid').innerHTML=bags.map(b=>`<article class="bag" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(b.image)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">Đang kiểm tra kho...</div><button class="btn bag-open" onclick="event.stopPropagation();openBag('${esc(b.id)}')">🎴 Bóc túi</button></div></article>`).join('');bags.forEach(updateStock)}
 async function updateStock(b){try{const s=await db.ref('inventory').orderByChild('bagId').equalTo(b.id).once('value');let n=0;s.forEach(x=>{if((x.val()||{}).status==='available')n++});const el=$('stock-'+b.id);if(el)el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}catch(e){}}
-function openBag(id){currentBag=bags.find(x=>x.id===id);if(!currentBag)return;$('bagTitle').textContent=currentBag.name;$('bagPreview').src=currentBag.image;$('bagDesc').textContent=currentBag.desc||'';$('winBox').innerHTML='';$('cards').innerHTML='';$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';currentPlan=0;$('plans').innerHTML=(currentBag.plans||[currentBag.price]).map((p,i)=>`<button class="plan ${i===0?'active':''}" onclick="selectPlan(${i})"><span>Gói ${i+1}</span><b>${money(p)}</b></button>`).join('');openModal('bagOverlay');updateStock(currentBag)}
+function openBag(id){currentBag=bags.find(x=>x.id===id);if(!currentBag)return;$('bagTitle').textContent=currentBag.name;$('bagPreview').src=currentBag.image;$('bagDesc').textContent=currentBag.desc||'';$('winBox').innerHTML='';$('cards').innerHTML='';$('cards').classList.remove('game-cards');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';currentPlan=0;$('plans').innerHTML=(currentBag.plans||[currentBag.price]).map((p,i)=>`<button class="plan ${i===0?'active':''}" onclick="selectPlan(${i})"><span>Gói ${i+1}</span><b>${money(p)}</b></button>`).join('');openModal('bagOverlay');updateStock(currentBag)}
 function selectPlan(i){currentPlan=i;[...$('plans').children].forEach((x,j)=>x.classList.toggle('active',j===i))}
 async function getAvailableInventory(bagId){const s=await db.ref('inventory').orderByChild('bagId').equalTo(bagId).once('value');const arr=[];s.forEach(x=>{if((x.val()||{}).status==='available')arr.push({key:x.key,val:x.val()})});return arr}
 async function claimInventory(item){const ref=db.ref('inventory/'+item.key);const result=await ref.transaction(v=>{if(!v||v.status!=='available')return;return {...v,status:'sold',soldAt:firebase.database.ServerValue.TIMESTAMP,soldTo:auth.currentUser.uid}});return result.committed}
@@ -8949,7 +9031,7 @@ function buildCards(item){const pool=[{img:cardImages.random,label:'Acc Ngẫu N
 function flipCard(i){if(!currentRound)return;if(currentRound.flipped)return;currentRound.flipped=true;const card=$('fc'+i);if(!card)return;card.classList.add('flipped','selected-card');document.querySelectorAll('.flip-card').forEach((x,j)=>{if(j!==i)x.classList.add('disabled')});setTimeout(()=>{$('winBox').innerHTML=`<div class="win"><div class="result-title">🎉 Chúc mừng!</div><div class="result-line">Bạn nhận được: <strong>${esc(currentRound.item.val.rank||'Tài khoản game')}</strong></div><div class="result-line">Tài khoản: <strong>${esc(currentRound.item.val.login)}</strong></div><div class="result-line">Mật khẩu: <strong>${esc(currentRound.item.val.pass)}</strong><button class="copy" onclick="copyText('${esc(currentRound.item.val.login+' | '+currentRound.item.val.pass)}')">Copy</button></div></div>`;confetti();showNotice('Nhận tài khoản thành công')},700)}
 function copyText(t){navigator.clipboard?.writeText(t);showNotice('Đã copy tài khoản')}
 function confetti(){for(let i=0;i<42;i++){const el=document.createElement('i');el.className='confetti';el.style.left=(45+Math.random()*10)+'%';el.style.top='15%';el.style.setProperty('--dx',(Math.random()*520-260)+'px');el.style.transform=`rotate(${Math.random()*180}deg)`;el.style.background=`hsl(${Math.random()*360} 90% 60%)`;document.body.appendChild(el);setTimeout(()=>el.remove(),1900)}}
-async function loadAll(){const s=await db.ref('bags').once('value');let x=[];s.forEach(k=>x.push({...k.val(),id:k.key}));bags=x.length?x:defaultBags;renderBags()}
+async function loadAll(){try{const s=await db.ref('bags').once('value');let x=[];s.forEach(k=>x.push({...k.val(),id:k.key}));bags=x.length?x:defaultBags}catch(e){console.warn('Firebase bags unavailable; using local defaults',e);bags=defaultBags}renderBags()}
 function openAdmin(){if(!auth.currentUser){openAuth();return}ensureAdmin().then(ok=>{if(ok){openModal('adminOverlay');loadDashboard()}})}
 async function ensureAdmin(){if(!auth.currentUser){showNotice('Hãy đăng nhập tài khoản admin');return false}await checkAdmin(auth.currentUser.email);if(!isAdmin){showNotice('Tài khoản không có quyền admin');return false}$('adminApp').classList.add('active');return true}
 function switchAdminPage(page){document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));({dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,deposits:loadDeposits,settings:loadSettings,logs:loadLogs}[page]||loadDashboard)()}
@@ -9069,6 +9151,7 @@ function subscribeCustomer(uid){
  let first=true;let last=0;
  const bcb=s=>{const b=Number(s.val()||0);$('balance').textContent=money(b);$('sideBalance').textContent=money(b);if(!first&&b!==last){const delta=b-last;showNotice(delta>0?`💰 Bạn vừa được cộng ${money(delta)}`:`💸 Số dư giảm ${money(Math.abs(delta))}`);openNotificationButton();}last=b;first=false;};
  br.on('value',bcb);nr.on('child_added',snap=>{const n=snap.val()||{};if(!n.read){showNotice('🔔 '+(n.title||'Thông báo')+(n.message?' — '+n.message:''));openNotificationButton();}});pr.on('value',snap=>{const p=snap.val()||{};const s=localSession();if(s&&!s.admin){s.name=p.name||s.username;setSession(s);$('userChip').textContent=s.name;}});
+ const dr=ref('deposits'); const dcb=snap=>{const d=snap.val()||{};const me=localSession();if(!me||me.admin||d.uid!==uid)return;if(d.status==='approved'&&d.approvedAt){const q=localRead(QR_KEY);if(q&&q.depositId===snap.key){localStorage.removeItem(QR_KEY);clearInterval(window.qrTick);showNotice('💰 Nạp tiền đã được duyệt. QR cũ hết hạn, lần nạp tiếp theo sẽ có nội dung mới + 900 giây.');}}}; dr.limitToLast(50).on('child_changed',dcb);
  customerBalanceUnsub=()=>br.off('value',bcb);customerNotifyUnsub=()=>nr.off('child_added');customerProfileUnsub=()=>pr.off('value');
  loadCustomerBalance(uid);openNotificationButton();
 }
@@ -9131,8 +9214,30 @@ window.startBag=async function(){
   currentRound={item:claimed,price,orderId:order.key,flipped:false};closeModal('bagOverlay');openModal('bagOverlay');$('cards').innerHTML='';buildCards(claimed);$('playBtn').textContent='Chọn 1 thẻ để lật';$('playBtn').disabled=true;await activity('purchase',`Mua ${currentBag.name} ${money(price)} → ${claimed.val.login}`,s.uid,s.username);showNotice('Mua lượt thành công — chọn một thẻ để lật');renderBags();
  }catch(err){console.error(err);showNotice(err.message||'Không thể mua');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay'}
 };
-window.buildCards=function(item){const imgs=[cardImages.random,cardImages.vip8,cardImages.maxim];for(let i=imgs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[imgs[i],imgs[j]]=[imgs[j],imgs[i]]}$('cards').innerHTML=[0,1,2].map(i=>`<div class="flip-card" id="fc${i}" onclick="flipCard(${i})"><div class="flip-inner"><div class="face face-front"><span style="font-size:64px;font-weight:800">?</span></div><div class="face back"><img src="${esc(item.val.cardImage||imgs[i])}" alt="Phần thưởng"><div class="reward">${esc(item.val.rank||'Tài khoản game')}</div></div></div></div>`).join('');};
-window.flipCard=async function(i){if(!currentRound||currentRound.flipped)return;currentRound.flipped=true;const card=$('fc'+i);if(!card)return;card.classList.add('flipped','selected-card');document.querySelectorAll('.flip-card').forEach((x,j)=>{if(j!==i)x.classList.add('disabled')});setTimeout(async()=>{const o=(await ref('orders/'+currentRound.orderId).once('value')).val()||{};$('winBox').innerHTML=`<div class="win"><div class="result-title">🎉 CHÚC MỪNG — BẠN ĐÃ TRÚNG ACC</div><div class="result-line">${esc(o.bagName||currentBag?.name||'')}</div><div class="credential-grid"><div class="credential-row"><span>Tài khoản</span><strong>${esc(o.rewardLogin||'')}</strong><button class="copy" onclick="copyText('${esc(o.rewardLogin||'')}','tài khoản game');activity('copy','TK game')">Sao chép</button></div><div class="credential-row"><span>Mật khẩu</span><strong>${esc(o.rewardPass||'')}</strong><button class="copy" onclick="copyText('${esc(o.rewardPass||'')}','mật khẩu');activity('copy','MK game')">Sao chép</button></div></div><div class="mini">Lịch sử đã lưu trong Tài khoản → Acc trúng.</div></div>`;await notify(o.uid,'🎉 Trúng tài khoản game',`Bạn đã nhận ${o.bagName||'acc'}. TK: ${o.rewardLogin||''}.`,'success',{orderId:currentRound.orderId});await activity('flip',`Lật thẻ ${i+1} → ${o.rewardLogin||''}`,o.uid,o.username||'');showNotice('Đã nhận tài khoản — thông tin đã lưu vào lịch sử');confetti()},700)};
+window.buildCards=function(item){
+ const imgs=[cardImages.random,cardImages.vip8,cardImages.maxim];
+ for(let i=imgs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[imgs[i],imgs[j]]=[imgs[j],imgs[i]]}
+ $('cards').classList.add('game-cards');
+ $('cards').innerHTML=[0,1,2].map(i=>`<div class="flip-card" id="fc${i}" onclick="flipCard(${i})"><div class="flip-inner"><div class="face face-front"><span class="card-question">?</span><span class="mini" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#cbbcff">LẬT THẺ</span></div><div class="face back"><img src="${esc(item.val.cardImage||imgs[i])}" alt="Phần thưởng"><div class="reward">${esc(item.val.rank||'Tài khoản game')}</div></div></div></div>`).join('');
+ setTimeout(()=>document.querySelectorAll('.game-cards .flip-card').forEach((c,i)=>c.style.animationDelay=(i*90)+'ms'),20);
+};
+window.flipCard=async function(i){
+ if(!currentRound||currentRound.flipped)return;
+ const card=$('fc'+i);if(!card)return;
+ currentRound.flipped=true;
+ document.querySelectorAll('.flip-card').forEach((x,j)=>{if(j!==i)x.classList.add('disabled')});
+ card.classList.add('flipped','selected-card');
+ $('cards').classList.add('revealing');
+ showNotice('✨ Đang mở phần thưởng...');
+ setTimeout(async()=>{
+   const o=(await ref('orders/'+currentRound.orderId).once('value')).val()||{};
+   $('winBox').innerHTML=`<div class="win game-win-flash"><div class="result-title">🎉 CHÚC MỪNG — BẠN ĐÃ TRÚNG ACC</div><div class="result-line">${esc(o.bagName||currentBag?.name||'')}</div><div class="credential-grid"><div class="credential-row"><span>Tài khoản</span><strong>${esc(o.rewardLogin||'')}</strong><button class="copy" onclick="copyOrderField('${esc(currentRound.orderId)}','login')">Sao chép</button></div><div class="credential-row"><span>Mật khẩu</span><strong>${esc(o.rewardPass||'')}</strong><button class="copy" onclick="copyOrderField('${esc(currentRound.orderId)}','pass')">Sao chép</button></div></div><div class="mini">Đã lưu vào Tài khoản → Acc trúng. Bạn có thể sao chép TK/MK bất cứ lúc nào.</div></div>`;
+   await notify(o.uid,'🎉 Trúng tài khoản game',`Bạn đã nhận ${o.bagName||'acc'}. TK: ${o.rewardLogin||''}.`,'success',{orderId:currentRound.orderId});
+   await activity('flip',`Lật thẻ ${i+1} → ${o.rewardLogin||''}`,o.uid,o.username||'');
+   showNotice('🎁 Nhận tài khoản thành công');
+   confetti();
+ },900);
+};
 window.ensureAdmin=async function(){const s=currentUser();if(!s?.admin){showNotice('Hãy đăng nhập tài khoản admin');return false}return true};
 window.openAdmin=function(){if(!currentUser()?.admin){openAuth();showNotice('Đăng nhập admin trước');return}openModal('adminOverlay');$('adminApp').classList.add('active');loadDashboard()};
 window.adjustUser=async function(uid,m){if(!await ensureAdmin())return;const raw=prompt('Nhập số tiền cần '+(m>0?'cộng':'trừ'),'50000');if(raw===null)return;const amount=Number(raw);if(!Number.isFinite(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return}const note=prompt('Ghi chú cho khách (có thể bỏ trống):','');if(note===null)return;const tr=await balanceRef(uid).transaction(v=>Math.max(0,Number(v||0)+m*amount));if(!tr.committed){showNotice('Không cập nhật được số dư');return}const username=((await userRef(uid).once('value')).val()||{}).username||uid;const before=Number(tr.snapshot.val()||0)-m*amount;const after=Number(tr.snapshot.val()||0);await ref('transactions/'+uid).push().set({type:m>0?'admin_credit':'admin_debit',amount,before,after,note,admin:ADMIN_USERNAME,createdAt:dbNow()});await notify(uid,m>0?'💰 Admin đã cộng tiền': '💸 Admin đã trừ tiền',`${m>0?'Bạn được cộng':'Bạn bị trừ'} ${money(amount)}.${note?' Ghi chú: '+note:''}`,'success',{amount,note,admin:ADMIN_USERNAME});await adminLog(m>0?'credit_balance':'debit_balance',`${username} | ${money(amount)} | ${note||''}`);await activity('admin_balance',`${m>0?'Cộng':'Trừ'} ${money(amount)} cho ${username}`,uid,username);showNotice('Đã cập nhật số dư và gửi thông báo cho khách');loadUsers();loadDashboard()};
@@ -9200,5 +9305,39 @@ window.switchAdminPage=function(page){
 })();
 </script>
 
+
+<script>
+/* LIVE ADMIN MONITOR + FINAL VISUAL SAFETY */
+(function(){
+ let adminLiveOff=[];
+ function stopAdminLive(){adminLiveOff.forEach(fn=>{try{fn()}catch(e){}});adminLiveOff=[];}
+ window.startAdminLive=function(){
+   stopAdminLive();
+   if(!currentUser()?.admin)return;
+   const paths=['deposits','orders','inventory','userProfiles','activities'];
+   paths.forEach(path=>{
+     const r=ref(path);
+     const cb=snap=>{
+       if(!currentUser()?.admin)return;
+       if(path==='deposits')loadDeposits();
+       else if(path==='orders')loadOrders();
+       else if(path==='inventory'){loadInventory();renderBags();}
+       else if(path==='userProfiles')loadUsers();
+       else if(path==='activities'&&document.getElementById('page-activities')?.classList.contains('active'))loadActivities();
+     };
+     r.on('value',cb);adminLiveOff.push(()=>r.off('value',cb));
+   });
+ };
+ const baseOpenAdmin=window.openAdmin;
+ window.openAdmin=async function(){
+   if(!currentUser()?.admin){openAuth();showNotice('Đăng nhập admin trước');return;}
+   openModal('adminOverlay');$('adminApp').classList.add('active');startAdminLive();await loadDashboard();
+ };
+ const baseClose=window.closeModal;
+ window.closeModal=function(id){if(id==='adminOverlay')stopAdminLive();return baseClose(id)};
+ // Keep the public category visual stable if remote bag data is empty or temporarily unavailable.
+ document.addEventListener('error',function(e){const el=e.target;if(el&&el.tagName==='IMG'&&el.classList.contains('bag-img'))el.src=logoUrl},true);
+})();
+</script>
 </body>
 </html>
