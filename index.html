@@ -177,7 +177,7 @@ a{text-decoration:none;color:inherit}
 <script>
 window.SHOP_KC_CONFIG = {
   firebase: {
-    apiKey: 'AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs',
+    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: 'shop-kc.firebaseapp.com',
     projectId: 'shop-kc',
     storageBucket: 'shop-kc.firebasestorage.app',
@@ -1047,9 +1047,9 @@ button {
                 <div class="container">
                     <div class="header-content">
                         <!-- Logo -->
-                        <a class="header-logo" href="index.html">
+                        <a class="header-logo" href="#home" id="cenaffSecretLogo" onclick="return cenaffSecretLogoClick(event)">
                             <img src="https://cenaff.com/assets/uploads/1784823429_8c96415b9a61d7b8.png"
-                                alt="Giao Dịch Tự Động - Săn Túi Mù FF - Nhận Acc Siêu Phẩm">
+                                alt="Cenaff">
                         </a>
 
                         <!-- Search Bar -->
@@ -2482,7 +2482,7 @@ button {
   var cfg = window.SHOP_KC_CONFIG || {};
 
   var firebaseConfig = cfg.firebase || {
-    apiKey: 'AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs',
+    apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
     authDomain: "shop-kc.firebaseapp.com",
     projectId: "shop-kc",
     storageBucket: "shop-kc.firebasestorage.app",
@@ -2718,6 +2718,9 @@ button {
 
   var storage = null;
 
+  // Tài khoản quản trị: vẫn phải xác thực bằng Firebase Auth; không lưu mật khẩu trong mã nguồn.
+  var CENAFF_ADMIN_USERNAME = "phong23112007";
+
   function initFirebase() {
     if (typeof firebase === "undefined") {
       showToast("Firebase chưa tải được. Kiểm tra kết nối mạng.", "error");
@@ -2897,7 +2900,7 @@ button {
   }
 
   function updateAuthUI() {
-    var loggedIn = !!currentUser && !!currentProfile;
+    var loggedIn = !!currentUser && !!(currentProfile || localStorage.getItem("cenaff_logged_username"));
 
     document.querySelectorAll("._no_login").forEach(function (element) {
       element.style.display = loggedIn ? "none" : "";
@@ -2947,10 +2950,11 @@ button {
 
     loadProfile(user)
       .then(function (profile) {
-        var username = profile.user || profile.displayName || (user.email || "user").split("@")[0];
+        var username = profile.user || profile.displayName || (function(){ try{return localStorage.getItem("cenaff_logged_username")}catch(e){return null} })() || (user.email || "user").split("@")[0];
         profile.user = username;
         profile.displayName = profile.displayName || username;
         currentProfile = profile;
+        try { localStorage.setItem("cenaff_logged_username", username); } catch(e) {}
         bindBalance(username);
         updateAuthUI();
         refreshAccountHistory();
@@ -2966,6 +2970,7 @@ button {
           email: user.email || "",
           uid: user.uid
         };
+        try { localStorage.setItem("cenaff_logged_username", currentProfile.user); } catch(e) {}
         bindBalance(currentProfile.user);
         updateAuthUI();
       });
@@ -3073,16 +3078,15 @@ button {
         bindBalance(profile.user);
         updateAuthUI();
 
-        var isAdmin=profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
+        var isAdmin=(String(username).toLowerCase()===CENAFF_ADMIN_USERNAME.toLowerCase()) || profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
+        try { sessionStorage.setItem("cenaff_admin_session", isAdmin ? "1" : "0"); } catch(e) {}
         message.textContent="";
         closeModal("kcLoginModal");
         showToast("Đăng nhập thành công.", "success");
-        if(isAdmin){
-          setTimeout(function(){ if(window.ShopKCOpenAdmin) window.ShopKCOpenAdmin(); else location.hash="#admin"; },80);
-        }
       }).catch(function(profileError){
         console.warn("Không đọc được userProfiles sau đăng nhập, dùng hồ sơ tối thiểu:", profileError);
         message.textContent="";
+        try { sessionStorage.setItem("cenaff_admin_session", String(username).toLowerCase()===CENAFF_ADMIN_USERNAME.toLowerCase() ? "1" : "0"); } catch(e) {}
         closeModal("kcLoginModal");
         showToast("Đăng nhập thành công.", "success");
         updateAuthUI();
@@ -3228,6 +3232,7 @@ button {
 
     auth.signOut()
       .then(function () {
+        try { localStorage.removeItem("cenaff_logged_username"); } catch(e) {}
         closeModal("kcAccountModal");
         closeModal("kcHistoryModal");
         closeModal("kcDepositModal");
@@ -4204,37 +4209,62 @@ button {
   }
 
 
-  function openAdminPanelHidden() {
-    var modal = document.getElementById("kcAdminHiddenModal");
-    var msg = document.getElementById("kcAdminMessage");
-    if (msg) msg.textContent = "";
-    if (modal) {
-      openModal("kcAdminHiddenModal");
-      setTimeout(function(){ var u=document.getElementById("kcAdminUsername"); if(u)u.focus(); },120);
+  var cenaffSecretLogoClicks = 0;
+  var cenaffSecretLogoTimer = null;
+  function cenaffSecretLogoClick(event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    cenaffSecretLogoClicks += 1;
+    if (cenaffSecretLogoTimer) clearTimeout(cenaffSecretLogoTimer);
+    cenaffSecretLogoTimer = setTimeout(function(){ cenaffSecretLogoClicks = 0; }, 1800);
+    if (cenaffSecretLogoClicks >= 7) {
+      cenaffSecretLogoClicks = 0;
+      if (cenaffSecretLogoTimer) clearTimeout(cenaffSecretLogoTimer);
+      openAdminPanelHidden();
     }
+    return false;
+  }
+  window.cenaffSecretLogoClick = cenaffSecretLogoClick;
+
+  function openAdminPanelHidden() {
+    var isAdmin = !!currentUser && String(getUsername() || "").toLowerCase() === CENAFF_ADMIN_USERNAME.toLowerCase();
+    if (!isAdmin) {
+      return false;
+    }
+    if (window.shopKCOpenEmbedded) {
+      window.shopKCOpenEmbedded("admin");
+      return true;
+    }
+    location.hash = "#admin";
+    return true;
   }
 
   function adminHiddenLogin() {
     var username = String(document.getElementById("kcAdminUsername").value || "").trim();
     var password = String(document.getElementById("kcAdminPassword").value || "");
     var msg = document.getElementById("kcAdminMessage");
-    if (!username || !password) { if(msg)msg.textContent="Nhập đủ tài khoản và mật khẩu Admin."; return; }
+    if (!username || !password) { if(msg)msg.textContent="Nhập đủ tài khoản và mật khẩu."; return; }
     if (!db || !auth) { if(msg)msg.textContent="Firebase chưa sẵn sàng."; return; }
-    if(msg)msg.textContent="Đang xác thực Admin...";
-    db.ref("userProfiles").orderByChild("user").equalTo(username).once("value").then(function(snap){
-      var found=null;
-      snap.forEach(function(ch){ if(!found) found=ch.val()||{}; });
-      if(!found || !found.email) throw new Error("Không tìm thấy tài khoản Admin trong Firebase.");
-      return auth.signInWithEmailAndPassword(String(found.email), password).then(function(cred){
+    if(msg)msg.textContent="Đang xác thực...";
+    var synthetic=username.toLowerCase()+"@accounts.shop-kc.local";
+    auth.signInWithEmailAndPassword(synthetic,password).then(function(cred){
+      var ok=String(username).toLowerCase()===CENAFF_ADMIN_USERNAME.toLowerCase();
+      if(!ok){
         return db.ref("userProfiles/"+cred.user.uid).once("value").then(function(ps){
           var profile=ps.val()||{};
-          var ok=profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
-          if(!ok){ return auth.signOut().then(function(){throw new Error("Tài khoản này không có quyền Admin.");}); }
-          sessionStorage.setItem("shopkc_admin_verified","1");
-          window.ShopKCOpenAdmin ? window.ShopKCOpenAdmin() : (location.hash="#admin");
+          ok=profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
+          if(!ok) throw new Error("Tài khoản này không có quyền quản trị.");
+          return true;
         });
-      });
-    }).catch(function(e){ console.error(e); if(msg)msg.textContent=e.message||"Đăng nhập quản lý thất bại."; });
+      }
+      return true;
+    }).then(function(){
+      sessionStorage.setItem("shopkc_admin_verified","1");
+      if(msg)msg.textContent="";
+      window.ShopKCOpenAdmin ? window.ShopKCOpenAdmin() : (location.hash="#admin");
+    }).catch(function(e){
+      console.error("ADMIN LOGIN",e);
+      if(msg)msg.textContent=(e&&e.code==='auth/invalid-login-credentials')?"Sai tài khoản hoặc mật khẩu Admin.":(e&&e.code==='auth/wrong-password'?"Sai mật khẩu Admin.":(e.message||"Đăng nhập quản lý thất bại."));
+    });
   }
   window.adminHiddenLogin = adminHiddenLogin;
   window.ShopKCOpenAdmin = openAdminPanelHidden;
@@ -5543,7 +5573,7 @@ Admin approval remains the source of truth for wallet top-ups.
   </form>
 </div>
 
-<header><div class="top"><div class="brand"><b>⚙️ Quản lý Cenaff</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn btn-gray" onclick="location.reload()">↻ Làm mới</button><button class="btn admin-logout" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
+<header><div class="top"><div class="brand"><b>⚙️ Quản lý Cenaff</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn admin-logout" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
 <div class="wrap">
 <div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('nickOrders',this)">Nick Game</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
@@ -5621,7 +5651,7 @@ Admin approval remains the source of truth for wallet top-ups.
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
 <script>
 const firebaseConfig={
- apiKey:'AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs',
+ apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
  authDomain:'shop-kc.firebaseapp.com',
  projectId:'shop-kc',
  storageBucket:'shop-kc.firebasestorage.app',
@@ -5798,7 +5828,8 @@ function adminLogin(e){
   function verifyAndOpen(cred){
     return db.ref('userProfiles/'+cred.user.uid).once('value').then(function(s){
       const profile=s.val()||{};
-      const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
+      const authName=String(cred.user.email||'').split('@')[0].toLowerCase();
+      const allowed=authName===CENAFF_ADMIN_USERNAME.toLowerCase() || profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
       if(!allowed){ return adminAuth.signOut().then(function(){throw new Error('Tài khoản này không có quyền Admin.');}); }
       adminProfile=profile;adminUnlocked=true;applyAdminLock();bootAdmin();
     });
@@ -5809,7 +5840,7 @@ function adminLogin(e){
     return db.ref('userProfiles').orderByChild('user').equalTo(u).once('value').then(function(s){
       let profile=null;s.forEach(function(ch){if(!profile)profile=ch.val()||{};});
       if(!profile||!profile.email) throw new Error('Không tìm thấy tài khoản Admin trong userProfiles.');
-      const allowed=profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
+      const allowed=String(u).toLowerCase()===CENAFF_ADMIN_USERNAME.toLowerCase() || profile.role==='admin'||profile.admin===true||profile.isAdmin===true;
       if(!allowed) throw new Error('Tài khoản này không có quyền Admin.');
       return adminAuth.signInWithEmailAndPassword(String(profile.email),p).then(function(cred){adminProfile=profile;adminUnlocked=true;applyAdminLock();bootAdmin();});
     });
@@ -5825,7 +5856,7 @@ function adminLogout(){adminUnlocked=false;adminProfile=null;adminAuth.signOut()
 adminAuth.onAuthStateChanged(function(user){
   if(!user){adminUnlocked=false;applyAdminLock();return;}
   db.ref('userProfiles/'+user.uid).once('value').then(function(s){
-    const p=s.val()||{};const allowed=p.role==='admin'||p.admin===true||p.isAdmin===true;
+    const p=s.val()||{};const authName=String(user.email||'').split('@')[0].toLowerCase();const allowed=authName===CENAFF_ADMIN_USERNAME.toLowerCase()||p.role==='admin'||p.admin===true||p.isAdmin===true;
     if(allowed){adminProfile=p;adminUnlocked=true;applyAdminLock();bootAdmin();}
     else{adminAuth.signOut();adminUnlocked=false;applyAdminLock();}
   }).catch(function(){adminUnlocked=false;applyAdminLock();});
@@ -7512,7 +7543,7 @@ Backup checklist 150: kiểm tra mục 150 của nhóm Backup trước khi thay 
 <div id="buyModal" class="modal"><div class="dialog"><button class="close" onclick="closeModal()">×</button><h2>Mua Nick Game</h2><div id="buyInfo"></div><label>Ghi chú</label><textarea id="note" rows="3" placeholder="Thông tin thêm (nếu có)"></textarea><button class="btn primary" style="width:100%" onclick="submitOrder()">Xác nhận mua</button><div id="buyStatus" class="status"></div></div></div>
 <script>
 const firebaseConfig={
- apiKey:'AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs',
+ apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
  authDomain:'shop-kc.firebaseapp.com',
  projectId:'shop-kc',
  storageBucket:'shop-kc.firebasestorage.app',
@@ -7558,7 +7589,7 @@ auth.onAuthStateChanged(u=>{currentUser=u||null;if(u){db.ref('customerRegistry')
   function boot(){
     if(!window.firebase) return;
     const firebaseConfig={
- apiKey:'AIzaSyCt2ExrDlNqixjs3bfEewOviB4ICTfrsEs',
+ apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
  authDomain:'shop-kc.firebaseapp.com',
  projectId:'shop-kc',
  storageBucket:'shop-kc.firebasestorage.app',
@@ -7653,14 +7684,14 @@ CENAFF ONE-FILE BUILD NOTES
 002: admin.html và nickgame.html được giữ nguyên nội dung trong template.
 003: iframe srcdoc chạy cùng origin với index.html.
 004: Firebase Auth persistence được dùng chung theo origin.
-005: Admin đăng nhập xong sẽ mở khu Admin ngay trên index.html.
+005: Admin đăng nhập xong vẫn ở trang khách; bấm logo Cenaff 7 lần để mở khu Admin.
 006: Nick Game mở ngay trên index.html, không cần trang HTML thứ hai.
 007: Các nút cũ href="nickgame.html" đã được chuyển sang #nickgame.
 008: Không lưu mật khẩu khách vào Realtime Database.
 009: Username khách vẫn được dùng phía trước email nội bộ của Firebase Auth.
 010: Email nội bộ chỉ là cơ chế tương thích với Firebase Email/Password.
 011: Người dùng không phải nhập Gmail/email ở giao diện khách.
-012: Admin phải có role=admin hoặc admin=true hoặc isAdmin=true.
+012: Admin phong23112007 được nhận diện sau khi Firebase Auth xác thực; các admin khác vẫn có thể dùng role=admin/admin=true/isAdmin=true.
 013: Dữ liệu orders vẫn dùng node orders.
 014: Dữ liệu nick vẫn dùng node nickOrders.
 015: Dữ liệu số dư vẫn dùng node balances/{encodeURIComponent(username)}.
