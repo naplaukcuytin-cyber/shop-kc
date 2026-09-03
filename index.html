@@ -2231,6 +2231,10 @@ button {
 <div class="kc-toast-wrap" id="kcToastWrap" aria-live="polite"></div>
 
 <style id="cenaff-processing-style">
+.kc-inline-confirm{margin:18px 0 0;padding:22px;border:2px solid #ffd0dc;border-radius:20px;background:linear-gradient(180deg,#fff8fa,#fff);box-shadow:0 10px 30px rgba(242,13,70,.10);text-align:center}
+.kc-inline-confirm-icon{font-size:42px;margin-bottom:4px}.kc-inline-confirm h3{font-size:24px;margin:4px 0 8px;color:#172033}.kc-inline-confirm p{color:#687386;line-height:1.55;margin:0 0 14px}
+.kc-inline-confirm-info{display:grid;grid-template-columns:1fr 1fr;gap:9px;text-align:left;margin:12px 0 16px}.kc-inline-confirm-info>div{padding:10px 11px;border-radius:12px;background:#f6f8fb}.kc-inline-confirm-info span{display:block;font-size:12px;color:#7b8492;margin-bottom:3px}.kc-inline-confirm-info b{display:block;color:#172033;word-break:break-word}.kc-confirm-money{color:#f20d46!important;font-size:17px}.kc-inline-confirm-actions{display:flex;gap:10px;justify-content:center}.kc-inline-confirm-actions .kc-btn{flex:1;min-height:48px}.kc-btn-gray{background:#eef1f5!important;color:#263246!important}.kc-confirm-error{color:#d71945!important;font-weight:800}.kc-spinning{display:inline-block;animation:cenaffSpin .8s linear infinite}
+@media(max-width:600px){.kc-inline-confirm{padding:18px}.kc-inline-confirm-info{grid-template-columns:1fr}.kc-inline-confirm-actions{flex-direction:column}}
 .cenaff-processing-box{max-width:440px;text-align:center;padding:28px 24px!important}
 .cenaff-spinner{width:74px;height:74px;margin:4px auto 18px;border:7px solid #edf1f7;border-top-color:#f20d46;border-right-color:#1769ff;border-radius:50%;animation:cenaffSpin .82s linear infinite}
 @keyframes cenaffSpin{to{transform:rotate(360deg)}}
@@ -3409,35 +3413,26 @@ button {
   }
 
   function readUserOrders(limit) {
-    if (!db || !getUsername()) {
-      return Promise.resolve([]);
-    }
+    if (!db || !getUsername()) return Promise.resolve([]);
 
-    return db.ref("orders")
-      .orderByChild("user")
-      .equalTo(getUsername())
-      .once("value")
-      .then(function (snapshot) {
-        var items = [];
+    var username=getUsername();
+    var normalPromise=db.ref("orders").orderByChild("user").equalTo(username).once("value");
+    var nickPromise=db.ref("nickOrders").orderByChild("user").equalTo(username).once("value");
 
-        snapshot.forEach(function (child) {
-          var value = child.val() || {};
-
-          value.id = child.key;
-
-          items.push(value);
-        });
-
-        items.sort(function (a, b) {
-          return (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0);
-        });
-
-        if (limit) {
-          return items.slice(0, limit);
-        }
-
-        return items;
+    return Promise.all([normalPromise,nickPromise]).then(function(results){
+      var items=[];
+      results[0].forEach(function(child){
+        var value=child.val()||{}; value.id=child.key; items.push(value);
       });
+      results[1].forEach(function(child){
+        var value=child.val()||{}; value.id=child.key;
+        value.historyType="nick_game";
+        value.game=value.game||"Nick Game";
+        items.push(value);
+      });
+      items.sort(function(a,b){return (Number(b.timestamp)||0)-(Number(a.timestamp)||0);});
+      return limit ? items.slice(0,limit) : items;
+    });
   }
 
   function refreshHistory() {
@@ -4099,62 +4094,107 @@ button {
   }
   window.openProcessingOrder = openProcessingOrder;
 
-  function confirmProductPurchase() {
-    if (!activeProduct) {
-      return;
-    }
+  function showProductPurchaseConfirm() {
+    if (!activeProduct) return;
+    if (!requireLogin()) return;
 
-    if (!requireLogin()) {
+    var accountEl=document.getElementById("kcGameAccount");
+    var passEl=document.getElementById("kcGamePassword");
+    var gameAccount=accountEl ? String(accountEl.value||"").trim() : "";
+    var gamePassword=passEl ? String(passEl.value||"") : "";
+
+    if (!gameAccount || !gamePassword) {
+      showToast("Hãy nhập tài khoản và mật khẩu game ngay trong cửa sổ túi.", "error");
       return;
     }
 
     var total = activeProduct.price * productQuantity;
-
     if (currentBalance < total) {
       showToast("Số dư không đủ. Hãy nạp tiền trước.", "error");
-      openDeposit();
       return;
     }
 
-    var confirmText = "Mua " + activeProduct.title + " x" + productQuantity + " với giá " + formatMoney(total) + "?";
+    var old=document.getElementById("kcInlinePurchaseConfirm");
+    if(old) old.remove();
 
-    var proceed = function () {
-      showToast("Đang tạo đơn...", "");
+    var body=document.getElementById("kcProductModalBody");
+    if(!body) return;
 
-      createGameOrder(activeProduct, productQuantity, total)
-        .then(function (result) {
-          refreshHistory();
-          refreshAccountHistory();
-          refreshProductHistory(activeProduct.slug);
-          closeModal("kcProductModal");
-          openProcessingOrder(result.id);
-        })
-        .catch(function (error) {
-          console.error(error);
-          showToast(error.message || "Không thể tạo đơn.", "error");
-        });
-    };
+    var box=document.createElement("div");
+    box.id="kcInlinePurchaseConfirm";
+    box.className="kc-inline-confirm";
+    box.innerHTML =
+      '<div class="kc-inline-confirm-icon">🛒</div>' +
+      '<h3>Xác nhận mua túi</h3>' +
+      '<p>Bạn chắc chắn muốn mua <b>'+safeText(activeProduct.title)+'</b> không?</p>' +
+      '<div class="kc-inline-confirm-info">' +
+        '<div><span>Khách hàng</span><b>'+safeText(getUsername())+'</b></div>' +
+        '<div><span>Túi số</span><b>'+safeText(selectedBoxIndex)+'</b></div>' +
+        '<div><span>Số lượng</span><b>'+safeText(productQuantity)+'</b></div>' +
+        '<div><span>Tổng tiền</span><b class="kc-confirm-money">'+safeText(formatMoney(total))+'</b></div>' +
+        '<div><span>TK game</span><b>'+safeText(gameAccount)+'</b></div>' +
+        '<div><span>MK game</span><b>••••••••</b></div>' +
+      '</div>' +
+      '<div class="kc-inline-confirm-actions">' +
+        '<button type="button" class="kc-btn kc-btn-gray" onclick="cancelProductPurchaseConfirm()">Quay lại</button>' +
+        '<button type="button" class="kc-btn kc-btn-primary" onclick="executeProductPurchase()">✓ Xác nhận mua</button>' +
+      '</div>';
 
-    if (typeof Swal !== "undefined") {
-      Swal.fire({
-        title: "Xác nhận mua?",
-        text: confirmText,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Mua ngay",
-        cancelButtonText: "Hủy",
-        confirmButtonColor: "#f20d46"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          proceed();
+    body.appendChild(box);
+    box.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  function cancelProductPurchaseConfirm() {
+    var box=document.getElementById("kcInlinePurchaseConfirm");
+    if(box) box.remove();
+  }
+
+  function executeProductPurchase() {
+    if (!activeProduct || !requireLogin()) return;
+
+    var total = activeProduct.price * productQuantity;
+    if (currentBalance < total) {
+      showToast("Số dư không đủ. Hãy nạp tiền trước.", "error");
+      cancelProductPurchaseConfirm();
+      return;
+    }
+
+    var confirmBox=document.getElementById("kcInlinePurchaseConfirm");
+    if(confirmBox){
+      confirmBox.innerHTML =
+        '<div class="kc-inline-confirm-icon kc-spinning">⟳</div>' +
+        '<h3>Đang tạo đơn...</h3>' +
+        '<p>Đang kiểm tra số dư và gửi đơn của bạn. Vui lòng chờ.</p>';
+    }
+
+    createGameOrder(activeProduct, productQuantity, total)
+      .then(function(result){
+        refreshHistory();
+        refreshAccountHistory();
+        refreshProductHistory(activeProduct.slug);
+        closeModal("kcProductModal");
+        cancelProductPurchaseConfirm();
+        openProcessingOrder(result.id);
+      })
+      .catch(function(error){
+        console.error(error);
+        if(confirmBox){
+          confirmBox.innerHTML =
+            '<div class="kc-inline-confirm-icon">⚠️</div>' +
+            '<h3>Chưa thể tạo đơn</h3>' +
+            '<p class="kc-confirm-error">'+safeText(error.message || "Không thể tạo đơn.")+'</p>' +
+            '<div class="kc-inline-confirm-actions"><button type="button" class="kc-btn kc-btn-gray" onclick="cancelProductPurchaseConfirm()">Quay lại</button></div>';
         }
       });
-    } else {
-      if (window.confirm(confirmText)) {
-        proceed();
-      }
-    }
   }
+
+  function confirmProductPurchase() {
+    showProductPurchaseConfirm();
+  }
+
+  window.showProductPurchaseConfirm = showProductPurchaseConfirm;
+  window.cancelProductPurchaseConfirm = cancelProductPurchaseConfirm;
+  window.executeProductPurchase = executeProductPurchase;
 
   window.confirmProductPurchase = confirmProductPurchase;
 
@@ -5731,7 +5771,7 @@ Admin approval remains the source of truth for wallet top-ups.
   <div class="actions"><button class="btn btn-primary" onclick="saveBlindBagProducts()">💾 Lưu túi mù</button></div>
 </div>
 </section>
-<section id="nickOrders" style="display:none"><div class="card"><b>🎮 ĐƠN NICK GAME • REALTIME</b><p class="muted">Đơn từ <b>nickgame.html</b> ghi vào <b>nickOrders</b>. Admin có thể xác nhận đã xử lý hoặc hủy đơn.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Nick / Game</th><th>UID</th><th>Giá</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="nickOrdersBody"></tbody></table></div></div></section>
+<section id="nickOrders" style="display:none"><div class="card"><b>🎮 ĐƠN NICK GAME • REALTIME</b><p class="muted">Đơn Nick Game ghi vào <b>nickOrders</b>. Admin có thể xác nhận đã xử lý hoặc hủy đơn.</p><div class="table"><table><thead><tr><th>Khách</th><th>Nick / Game</th><th>Thông tin TK/MK khách + TK/MK cấp</th><th>Giá</th><th>Ghi chú</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="nickOrdersBody"></tbody></table></div></div></section>
 <section id="games" style="display:none"><div class="card"><b>GAME & GIÁ</b><p class="muted">Có thể chỉnh giá trực tiếp. Nhớ giữ JSON hợp lệ.</p><textarea id="gameConfig" style="min-height:360px;font-family:monospace"></textarea><div class="actions"><button class="btn btn-primary" onclick="saveGames()">💾 Lưu game & giá</button></div></div></section>
 </div>
 <div class="modal" id="proofModal"><div class="modal-box"><button class="btn btn-gray" style="float:right" onclick="closeProof()">Đóng</button><h3>Ảnh xác nhận</h3><img id="proofImage" class="proof" style="max-width:100%;max-height:70vh" src="" alt="Proof"></div></div>
@@ -6008,16 +6048,37 @@ function renderNickOrders(data){
   const arr=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((a,b)=>(Number(b.timestamp)||0)-(Number(a.timestamp)||0));
   body.innerHTML=arr.map(o=>{
     let act='';
-    if(o.status==='pending') act='<button class="btn btn-green btn-xs" onclick="completeNickOrder(\''+o.id+'\')">Đã giao</button> <button class="btn btn-red btn-xs" onclick="rejectNickOrder(\''+o.id+'\')">Hủy</button>';
-    return '<tr><td><b>'+esc(o.user||'Khách')+'</b></td><td>'+esc(o.product||'-')+'<br><span class="muted">'+esc(o.game||'')+'</span></td><td>'+esc(o.uid||'-')+'</td><td>'+fmt(o.price)+'</td><td>'+esc(o.note||'-')+'</td><td>'+esc(o.time||when(o.timestamp))+'</td><td>'+badge(o.status)+'</td><td>'+act+'</td></tr>';
+    if(o.status==='pending'||o.status==='processing') act='<button class="btn btn-green btn-xs" onclick="completeNickOrder(\''+o.id+'\')">✓ Phê duyệt / Giao</button> <button class="btn btn-red btn-xs" onclick="rejectNickOrder(\''+o.id+'\')">Hủy</button>';
+    const gameSecret='<b>TK khách:</b> '+esc(o.gameAccount||o.customerGameUsername||'-')+'<br><b>MK khách:</b> '+esc(o.gamePassword||o.customerGamePassword||'-');
+    const result=(o.rewardUsername||o.rewardPassword)?'<div style="margin-top:5px;color:#00885e"><b>TK cấp:</b> '+esc(o.rewardUsername||'-')+'<br><b>MK cấp:</b> '+esc(o.rewardPassword||'-')+'</div>':'';
+    return '<tr><td><b>'+esc(o.user||'Khách')+'</b></td><td>'+esc(o.product||'-')+'<br><span class="muted">'+esc(o.game||'')+'</span></td><td>'+gameSecret+result+'</td><td>'+fmt(o.price)+'</td><td>'+esc(o.note||'-')+'</td><td>'+esc(o.time||when(o.timestamp))+'</td><td>'+badge(o.status)+'</td><td>'+act+'</td></tr>';
   }).join('')||'<tr><td colspan="8" style="text-align:center;padding:18px">Chưa có đơn Nick Game.</td></tr>';
 }
 function completeNickOrder(id){
-  db.ref('nickOrders/'+id).transaction(function(o){if(!o||o.status!=='pending')return;return Object.assign({},o,{status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'});}).then(r=>{if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');alert('Đã đánh dấu đã giao Nick Game.');}).catch(e=>alert('Lỗi: '+e.message));
+  const account=prompt('Nhập TÀI KHOẢN NICK/ACC cấp cho khách (để trống nếu chỉ đánh dấu đã giao):','');
+  if(account===null)return;
+  const password=prompt('Nhập MẬT KHẨU NICK/ACC cấp cho khách (có thể để trống):','');
+  if(password===null)return;
+  const note=prompt('Ghi chú kết quả cho khách (không bắt buộc):','')||'';
+  db.ref('nickOrders/'+id).transaction(function(o){
+    if(!o||!['pending','processing'].includes(o.status))return;
+    return Object.assign({},o,{status:'completed',completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN',rewardUsername:account.trim(),rewardPassword:password,rewardNote:note});
+  }).then(function(r){
+    if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');
+    alert('✓ Đã phê duyệt Nick Game. Khách sẽ thấy hiệu ứng ĐÃ PHÊ DUYỆT và thông tin được cấp.');
+  }).catch(function(e){alert('Lỗi: '+e.message);});
 }
 function rejectNickOrder(id){
-  db.ref('nickOrders/'+id).transaction(function(o){if(!o||o.status!=='pending')return;return Object.assign({},o,{status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN'});}).then(r=>{if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');alert('Đã hủy đơn Nick Game.');}).catch(e=>alert('Lỗi: '+e.message));
+  if(!confirm('Hủy đơn Nick Game này?'))return;
+  db.ref('nickOrders/'+id).transaction(function(o){
+    if(!o||!['pending','processing'].includes(o.status))return;
+    return Object.assign({},o,{status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN'});
+  }).then(function(r){
+    if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');
+    alert('Đã hủy đơn Nick Game.');
+  }).catch(function(e){alert('Lỗi: '+e.message);});
 }
+
 
 function bootAdmin(){
   if(!adminUnlocked)return;
@@ -7622,87 +7683,57 @@ Backup checklist 150: kiểm tra mục 150 của nhóm Backup trước khi thay 
 </template>
 
 <!-- Source đầy đủ của nickgame.html được giữ nguyên trong template và chạy trong iframe cùng origin. -->
-<template id="shopkcNickSource">
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Nick Game • Cenaff</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-<style>*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172033;font-family:Lexend,Arial,sans-serif}.wrap{max-width:1200px;margin:auto;padding:16px}.top{background:#fff;border-bottom:1px solid #e6eaf0;position:sticky;top:0;z-index:20}.bar{max-width:1200px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-weight:800;color:#1683ff;text-decoration:none;font-size:20px}.actions{display:flex;gap:8px;align-items:center}.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.primary{background:#1683ff;color:white}.gray{background:#eef1f5;color:#445}.hero{background:linear-gradient(135deg,#1683ff,#6b5cff);color:white;border-radius:20px;padding:28px;margin:18px 0}.hero h1{margin:0 0 8px}.hero p{margin:0;opacity:.9}.tools{display:flex;gap:10px;margin-bottom:16px}.tools input,.tools select{flex:1;border:1px solid #e0e5ed;border-radius:12px;padding:12px;font:inherit;background:#fff}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:1px solid #e6eaf0;border-radius:16px;overflow:hidden;box-shadow:0 5px 20px rgba(20,30,50,.05)}.pic{width:100%;height:180px;object-fit:cover;background:#eef1f5}.body{padding:14px}.name{font-weight:800;min-height:42px}.meta{color:#697386;font-size:12px;margin:7px 0}.price{font-weight:800;color:#e53935;font-size:18px;margin:8px 0}.empty{text-align:center;padding:40px;color:#697386}.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.modal.show{display:flex}.dialog{background:#fff;border-radius:18px;width:min(480px,100%);padding:20px}.dialog h2{margin-top:0}.dialog input,.dialog textarea{width:100%;padding:11px;border:1px solid #dfe4ec;border-radius:10px;margin:6px 0 12px;font:inherit}.close{float:right;border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}.note{font-size:12px;color:#697386}.status{margin-top:10px;font-size:13px}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.grid{grid-template-columns:1fr 1fr;gap:9px}.pic{height:130px}.body{padding:10px}.name{font-size:13px}.price{font-size:15px}.hero{padding:20px}.tools{flex-direction:column}.actions .btn{padding:8px 10px;font-size:12px}}
+<template id="shopkcNickSource"><!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cenaff - Nick Game</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7f8fb;color:#20242b}.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #eee;padding:14px 16px;display:flex;gap:10px;align-items:center}.top h2{margin:0;font-size:20px}.top button{border:0;border-radius:12px;padding:10px 14px;font-weight:800;background:#eef2f7}.wrap{max-width:1100px;margin:auto;padding:18px}.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.tools input,.tools select{flex:1;min-width:180px;padding:13px;border:1px solid #ddd;border-radius:12px;background:#fff}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:18px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.06)}.pic{width:100%;height:190px;object-fit:cover;background:#eee}.body{padding:14px}.name{font-size:18px;font-weight:900}.meta{color:#727b88;margin:7px 0}.price{font-size:21px;font-weight:900;color:#f20d46;margin:9px 0}.btn{border:0;border-radius:12px;padding:12px 15px;font-weight:900;cursor:pointer}.primary{background:#f20d46;color:#fff}.modal{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;align-items:center;justify-content:center;padding:18px;z-index:99}.modal.show{display:flex}.modalbox{background:#fff;border-radius:22px;max-width:500px;width:100%;padding:22px}.modalbox h3{margin-top:0}.modalbox input,.modalbox textarea{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ddd;border-radius:11px}.empty{padding:30px;text-align:center;color:#777}.status{min-height:24px;font-weight:800;color:#f20d46}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.grid{grid-template-columns:1fr}.pic{height:210px}}
 </style></head><body>
-<header class="top"><div class="bar"><a class="brand" href="index.html">CENAFF</a><div class="actions"><button class="btn gray" onclick="goHome()"><i class="fa fa-home"></i> Trang chủ</button><button class="btn primary" id="accountBtn" onclick="accountAction()"><i class="fa fa-user"></i> Đăng nhập</button></div></div></header>
-<main class="wrap"><section class="hero"><h1>🎮 NICK GAME</h1><p>Kho tài khoản game cập nhật realtime từ Cenaff.</p></section><div class="tools"><input id="search" placeholder="Tìm nick, game, tên tài khoản..." oninput="render()"><select id="gameFilter" onchange="render()"><option value="">Tất cả game</option></select></div><section id="grid" class="grid"></section></main>
-<div id="buyModal" class="modal"><div class="dialog"><button class="close" onclick="closeModal()">×</button><h2>Mua Nick Game</h2><div id="buyInfo"></div><label>Ghi chú</label><textarea id="note" rows="3" placeholder="Thông tin thêm (nếu có)"></textarea><button class="btn primary" style="width:100%" onclick="submitOrder()">Xác nhận mua</button><div id="buyStatus" class="status"></div></div></div>
+<div class="top"><button onclick="goHome()">← Trang khách</button><h2>Cenaff • Nick Game</h2><button style="margin-left:auto" id="accountBtn" onclick="accountAction()">Đăng nhập</button></div>
+<div class="wrap"><div class="tools"><input id="search" placeholder="Tìm nick / game / UID..." oninput="render()"><select id="gameFilter" onchange="render()"><option value="">Tất cả game</option></select></div><div id="grid" class="grid"><div class="empty">Đang tải nick...</div></div></div>
+<div class="modal" id="buyModal"><div class="modalbox"><button style="float:right" class="btn" onclick="closeModal()">×</button><h3>Xác nhận mua Nick Game</h3><div id="buyInfo"></div><label>Ghi chú cho Admin</label><textarea id="note" rows="3" placeholder="Ví dụ: muốn nhận thông tin qua lịch sử..."></textarea><div id="buyStatus" class="status"></div><div style="display:flex;gap:9px;margin-top:10px"><button class="btn" style="flex:1" onclick="closeModal()">Hủy</button><button class="btn primary" style="flex:1" onclick="submitOrder()">Xác nhận mua</button></div></div></div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-const firebaseConfig={
- apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
- authDomain:'shop-kc.firebaseapp.com',
- projectId:'shop-kc',
- storageBucket:'shop-kc.firebasestorage.app',
- messagingSenderId:'1073242689799',
- appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',
- measurementId:'G-Q9VN7NZHR0',
- databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'
-};
-firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.database();let products={},selected=null,currentUser=null,currentUsername='';
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function goHome(){location.href='index.html'}
-function accountAction(){if(currentUser) alert('Tài khoản: '+currentUsername);else location.href='index.html#login'}
+const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:1073242689799:web:41d0dc7795eb74a93df5a',databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'};
+firebase.initializeApp(firebaseConfig);const db=firebase.database(),auth=firebase.auth();let products={},selected=null,currentUser=null,currentUsername='';
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function parentWindow(){try{return window.parent&&window.parent!==window?window.parent:null}catch(e){return null}}
+function localSession(){try{let p=parentWindow();return JSON.parse((p||window).localStorage.getItem('cenaff_local_session_v2')||'null')}catch(e){return null}}
+function localAccounts(){try{let p=parentWindow();return JSON.parse((p||window).localStorage.getItem('cenaff_local_accounts_v2')||'{}')}catch(e){return {}}}
+function getLocalAccount(){let ses=localSession();if(!ses||!ses.username)return null;let a=localAccounts();return a[String(ses.username).trim().toLowerCase()]||null}
+function parentDB(){try{let p=parentWindow();return p&&p.db?p.db:null}catch(e){return null}}
+function parentUser(){try{let p=parentWindow();return p&&p.currentUser?p.currentUser:null}catch(e){return null}}
+function parentBalance(){let a=getLocalAccount();if(a)return Number(a.balance)||0;return 0}
+function goHome(){try{window.parent.location.hash='';window.parent.shopKCCloseEmbedded&&window.parent.shopKCCloseEmbedded()}catch(e){location.href='index.html'}}
+function accountAction(){if(currentUsername){alert('Tài khoản: '+currentUsername+' • Số dư: '+Number(parentBalance()).toLocaleString('vi-VN')+'đ')}else{goHome();try{window.parent.location.hash='#login'}catch(e){}}}
 function load(){
-  db.ref('products').on('value',s=>{
-    var root=s.val()||{};
-    if(Object.keys(root).length){ products=root; buildFilters(); render(); return; }
-    db.ref('siteConfig/nickProducts').on('value',s2=>{products=s2.val()||{};buildFilters();render()},e=>{document.getElementById('grid').innerHTML='<div class="empty">Không tải được danh sách nick. '+esc(e.message)+'</div>'});
-  },e=>{document.getElementById('grid').innerHTML='<div class="empty">Không tải được danh sách nick. '+esc(e.message)+'</div>'});
+  var pdb=parentDB();
+  if(pdb){pdb.ref('siteConfig/nickProducts').once('value').then(function(x){var v=x.val()||{};if(Object.keys(v).length){products=v;buildFilters();render();return}return db.ref('products').once('value')}).then(function(x){if(x){products=x.val()||{};buildFilters();render()}}).catch(function(){fallbackProducts()})}
+  else db.ref('products').on('value',s=>{products=s.val()||{};buildFilters();render()},()=>fallbackProducts());
 }
-function buildFilters(){const sel=document.getElementById('gameFilter'),old=sel.value, games=[...new Set(Object.values(products).map(p=>String(p.game||p.category||'').trim()).filter(Boolean))];sel.innerHTML='<option value="">Tất cả game</option>'+games.map(g=>'<option>'+esc(g)+'</option>').join('');sel.value=games.includes(old)?old:''}
-function render(){const q=document.getElementById('search').value.toLowerCase().trim(),g=document.getElementById('gameFilter').value;const arr=Object.entries(products).map(([id,p])=>({id,...p})).filter(p=>p.status!=='sold'&&p.sold!==true).filter(p=>(!g||String(p.game||p.category||'')===g)&&(!q||JSON.stringify(p).toLowerCase().includes(q)));const grid=document.getElementById('grid');if(!arr.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Chưa có nick phù hợp.</div>';return}grid.innerHTML=arr.map(p=>`<article class="card"><img class="pic" src="${esc(p.image||p.img||'')}" onerror="this.style.display='none'"><div class="body"><div class="name">${esc(p.name||p.title||p.game||'Nick Game')}</div><div class="meta">🎮 ${esc(p.game||p.category||'Game')} ${p.uid?' • UID '+esc(p.uid):''}</div><div class="price">${Number(p.price||0).toLocaleString('vi-VN')}đ</div><button class="btn primary" style="width:100%" onclick="openBuy('${esc(p.id||'')}')">Mua ngay</button></div></article>`).join('')}
-function openBuy(id){selected=products[id];if(!selected){selected=Object.values(products).find(p=>p.id===id)}if(!selected)return;if(!currentUser){location.href='index.html#login';return}document.getElementById('buyInfo').innerHTML='<b>'+esc(selected.name||selected.title||selected.game||'Nick Game')+'</b><p>'+Number(selected.price||0).toLocaleString('vi-VN')+'đ</p>';document.getElementById('buyStatus').textContent='';document.getElementById('note').value='';document.getElementById('buyModal').classList.add('show')}
+function fallbackProducts(){products={};document.getElementById('grid').innerHTML='<div class="empty">Chưa có dữ liệu Nick Game. Admin hãy thêm nick trước.</div>'}
+function buildFilters(){const sel=document.getElementById('gameFilter'),old=sel.value,games=[...new Set(Object.values(products).map(p=>String(p.game||p.category||'').trim()).filter(Boolean))];sel.innerHTML='<option value="">Tất cả game</option>'+games.map(g=>'<option value="'+esc(g)+'">'+esc(g)+'</option>').join('');sel.value=games.includes(old)?old:''}
+function render(){const q=document.getElementById('search').value.toLowerCase().trim(),g=document.getElementById('gameFilter').value;const arr=Object.entries(products).map(([id,p])=>({id,...p})).filter(p=>p.status!=='sold'&&p.sold!==true).filter(p=>(!g||String(p.game||p.category||'')===g)&&(!q||JSON.stringify(p).toLowerCase().includes(q)));const grid=document.getElementById('grid');if(!arr.length){grid.innerHTML='<div class="empty">Chưa có nick phù hợp.</div>';return}grid.innerHTML=arr.map(p=>'<article class="card"><img class="pic" src="'+esc(p.image||p.img||'')+'" onerror="this.style.display=\'none\'"><div class="body"><div class="name">'+esc(p.name||p.title||p.game||'Nick Game')+'</div><div class="meta">🎮 '+esc(p.game||p.category||'Game')+(p.uid?' • UID '+esc(p.uid):'')+'</div><div class="price">'+Number(p.price||0).toLocaleString('vi-VN')+'đ</div><button class="btn primary" style="width:100%" onclick="openBuy(\''+esc(p.id||'')+'\')">Mua ngay</button></div></article>').join('')}
+function openBuy(id){selected=products[id]||Object.values(products).find(p=>p.id===id);if(!selected)return;currentUsername=getCurrentUsername();if(!currentUsername){goHome();try{window.parent.location.hash='#login'}catch(e){}return}document.getElementById('buyInfo').innerHTML='<b>'+esc(selected.name||selected.title||selected.game||'Nick Game')+'</b><p>Giá: '+Number(selected.price||0).toLocaleString('vi-VN')+'đ</p><p>Khách: '+esc(currentUsername)+'</p><p>Số dư: <b>'+parentBalance().toLocaleString('vi-VN')+'đ</b></p>';document.getElementById('buyStatus').textContent='';document.getElementById('note').value='';document.getElementById('buyModal').classList.add('show')}
+function getCurrentUsername(){let a=getLocalAccount();if(a)return a.username;try{let p=parentWindow();if(p&&p.currentProfile&&p.currentProfile.user)return p.currentProfile.user}catch(e){}return currentUsername}
 function closeModal(){document.getElementById('buyModal').classList.remove('show')}
-function submitOrder(){
-  if(!currentUser||!selected)return;
-  const price=Number(selected.price||0);
-  if(price<=0)return;
-  const status=document.getElementById('buyStatus');
-  status.textContent='Đang kiểm tra số dư...';
-  const balRef=db.ref('balances/'+encodeURIComponent(currentUsername));
-  balRef.once('value').then(function(s){
-    const raw=s.val(); const balance=Number(raw&&typeof raw==='object'?(raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0):raw)||0;
-    if(balance<price) throw new Error('Số dư không đủ.');
-    const id=db.ref('nickOrders').push().key;
-    const order={productId:selected.id||null,product:selected.name||selected.title||selected.game||'Nick Game',game:selected.game||selected.category||'',price,user:currentUsername,uid:selected.uid||'',note:document.getElementById('note').value.trim(),status:'pending',timestamp:firebase.database.ServerValue.TIMESTAMP};
-    return db.ref('nickOrders/'+id).set(order);
-  }).then(()=>{status.textContent='Đã gửi đơn. Admin sẽ xử lý đơn của bạn.';setTimeout(closeModal,1200)}).catch(e=>status.textContent='Lỗi: '+e.message);
+function writeOrder(order){
+  var pdb=parentDB();
+  if(!pdb)return Promise.reject(new Error('Không kết nối được dữ liệu đơn hàng.'));
+  return pdb.ref('balances/'+encodeURIComponent(order.user)).transaction(function(raw){var n=raw;if(raw&&typeof raw==='object')n=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0;n=Number(n)||0;if(n<order.price)return;return n-order.price}).then(function(r){if(!r||!r.committed)throw new Error('Số dư không đủ hoặc Firebase Rules chưa cho phép cập nhật ví.');return r.snapshot.val()}).then(function(newBal){order.balanceAfter=Number(newBal)||0;return pdb.ref('nickOrders').push(order).then(function(ref){return {id:ref.key,balance:order.balanceAfter}}).catch(function(e){return pdb.ref('balances/'+encodeURIComponent(order.user)).transaction(function(v){var n=v;if(v&&typeof v==='object')n=v.balance??v.amount??v.money??v.wallet??v.value??0;return (Number(n)||0)+order.price}).then(()=>{throw e})})})
 }
-auth.onAuthStateChanged(u=>{currentUser=u||null;if(u){db.ref('customerRegistry').orderByChild('uid').equalTo(u.uid).once('value').then(s=>{const v=s.val()||{};const k=Object.keys(v)[0];currentUsername=k||u.email.split('@')[0];document.getElementById('accountBtn').innerHTML='<i class="fa fa-user"></i> '+esc(currentUsername)}).catch(()=>{currentUsername=u.email.split('@')[0];document.getElementById('accountBtn').innerHTML='<i class="fa fa-user"></i> '+esc(currentUsername)})}else{currentUsername='';document.getElementById('accountBtn').innerHTML='<i class="fa fa-user"></i> Đăng nhập'}});load();
-</script>
-<script id="shopKCNickAuthSync">
-(function(){
-  function boot(){
-    if(!window.firebase) return;
-    const firebaseConfig={
- apiKey: 'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',
- authDomain:'shop-kc.firebaseapp.com',
- projectId:'shop-kc',
- storageBucket:'shop-kc.firebasestorage.app',
- messagingSenderId:'1073242689799',
- appId:'1:1073242689799:web:41d0dc7795eb74a93df5a2',
- measurementId:'G-Q9VN7NZHR0',
- databaseURL:'https://shop-kc-default-rtdb.firebaseio.com'
-};
-    if(!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    var a=firebase.auth();
-    a.onAuthStateChanged(function(user){
-      window.shopKCCurrentUser=user||null;
-      document.querySelectorAll('[data-shopkc-account]').forEach(function(el){
-        el.textContent=user ? ('Tài khoản: '+(user.email||'Đã đăng nhập')) : 'Đăng nhập';
-      });
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
-})();
-</script>
-</body></html>
-
-</template>
+function submitOrder(){
+  if(!selected)return;
+  currentUsername=getCurrentUsername();if(!currentUsername){document.getElementById('buyStatus').textContent='Vui lòng đăng nhập trước.';return}
+  const price=Number(selected.price||0);if(price<=0)return;
+  const balance=parentBalance();if(balance<price){document.getElementById('buyStatus').textContent='Số dư không đủ.';return}
+  const status=document.getElementById('buyStatus');status.textContent='⏳ Đang tạo đơn và trừ số dư...';
+  const order={productId:selected.id||null,product:selected.name||selected.title||selected.game||'Nick Game',game:selected.game||selected.category||'',price,user:currentUsername,uid:selected.uid||'',note:document.getElementById('note').value.trim(),status:'processing',timestamp:firebase.database.ServerValue.TIMESTAMP,source:'cenaff-nickgame'};
+  writeOrder(order).then(function(r){status.textContent='✓ Đã tạo đơn. Đang xử lý...';setTimeout(closeModal,900)}).catch(e=>status.textContent='Lỗi: '+e.message);
+}
+function sync(){currentUsername=getCurrentUsername();document.getElementById('accountBtn').textContent=currentUsername?('👤 '+currentUsername):'Đăng nhập';}
+auth.onAuthStateChanged(function(u){currentUser=u||null;sync()});setInterval(sync,1000);load();
+</script></body></html></template>
 
 <script id="shopkc-onefile-router">
 (function(){
@@ -8770,3 +8801,43 @@ ONEFILE CHECKLIST 900: Không xóa khu chức năng đã nhúng; kiểm tra liê
 </body>
 
 </html>
+  function openNickProcessingOrder(orderId) {
+    if (!db || !orderId) return;
+    stopProcessingOrderListener();
+    cenaffProcessingOrderId = orderId;
+    var title = document.getElementById("cenaffProcessingTitle");
+    var text = document.getElementById("cenaffProcessingText");
+    var status = document.getElementById("cenaffProcessingStatus");
+    var spinner = document.getElementById("cenaffProcessingSpinner");
+    if (title) title.textContent = "Đang xử lý Nick Game";
+    if (text) text.textContent = "Đơn đã được gửi. Bạn có thể đóng cửa sổ này; kết quả sẽ được lưu trong Lịch sử đã mua.";
+    if (status) status.textContent = "⏳ Đang chờ Admin xử lý...";
+    if (spinner) spinner.style.display = "block";
+    openModal("cenaffProcessingModal");
+    var ref = db.ref("nickOrders/" + orderId);
+    var handler = function(snapshot){
+      var o=snapshot.val()||{}, st=String(o.status||"processing");
+      if(st==="completed" || st==="approved"){
+        if(spinner) spinner.style.display="none";
+        if(title) title.textContent="🎉 Nick Game đã được phê duyệt";
+        if(text) text.textContent="Admin đã hoàn tất đơn. Vào Lịch sử đã mua để xem thông tin Nick Game.";
+        if(status){status.textContent="✓ ĐÃ PHÊ DUYỆT";status.className="cenaff-processing-status cenaff-approved-flash";}
+        stopProcessingOrderListener();
+        refreshHistory(); refreshAccountHistory();
+      }else if(st==="rejected" || st==="cancelled"){
+        if(spinner) spinner.style.display="none";
+        if(title) title.textContent="Đơn Nick Game đã bị từ chối";
+        if(text) text.textContent="Đơn đã được Admin cập nhật. Vào Lịch sử để xem chi tiết.";
+        if(status) status.textContent="Đã hủy / từ chối";
+        stopProcessingOrderListener();
+        refreshHistory(); refreshAccountHistory();
+      }else{
+        if(spinner) spinner.style.display="block";
+        if(title) title.textContent="Đang xử lý Nick Game";
+        if(status) status.textContent="⏳ Đang chờ Admin xử lý...";
+      }
+    };
+    cenaffProcessingOrderListener=handler;
+    ref.on("value",handler);
+  }
+  window.openNickProcessingOrder=openNickProcessingOrder;
