@@ -1030,26 +1030,42 @@ button {
 @keyframes kcInlineConfirmIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
 </style>
 <style id="shopkc-inline-confirm-final-fix">
+/* XÉ NGAY: xác nhận nằm giữa màn hình nhưng vẫn là một lớp bên trong modal Túi.
+   Không chèn vào luồng nội dung nên tuyệt đối không làm modal tự cuộn xuống. */
+#kcProductModal .kc-modal-panel{position:relative!important;}
+#kcProductModal .kc-modal-body.kc-confirm-open{overflow:hidden!important;}
 .kc-inline-purchase-confirm{
-  margin:0 0 18px!important;
-  padding:22px!important;
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(560px,calc(100vw - 32px))!important;
+  max-height:min(78vh,620px)!important;
+  overflow:auto!important;
+  margin:0!important;
+  padding:26px 24px!important;
+  box-sizing:border-box!important;
   border:2px solid #ffd0dc!important;
-  border-radius:18px!important;
-  background:#fff8fa!important;
-  box-shadow:none!important;
-  position:relative!important;
-  z-index:3!important;
+  border-radius:22px!important;
+  background:#fff!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.28),0 0 0 9999px rgba(0,0,0,.10)!important;
+  text-align:center!important;
+  z-index:999999!important;
+  animation:kcInlineConfirmCenterIn .22s ease both!important;
 }
-.kc-inline-confirm-title{font-size:25px!important;font-weight:900!important;margin-bottom:9px!important;color:#222!important}
-.kc-inline-confirm-text{font-size:17px!important;line-height:1.5!important;color:#555!important}
-.kc-inline-confirm-note{margin-top:8px!important;color:#666!important}
-.kc-inline-confirm-actions{display:flex!important;gap:10px!important;margin-top:16px!important}
-.kc-inline-confirm-actions .kc-btn{flex:1!important;min-height:52px!important}
+.kc-inline-confirm-title{font-size:27px!important;font-weight:900!important;margin-bottom:10px!important;color:#222!important}
+.kc-inline-confirm-text{font-size:18px!important;line-height:1.5!important;color:#555!important}
+.kc-inline-confirm-note{margin-top:9px!important;color:#666!important}
+.kc-inline-confirm-actions{display:flex!important;gap:10px!important;margin-top:18px!important;justify-content:center!important}
+.kc-inline-confirm-actions .kc-btn{flex:1!important;min-height:54px!important}
 .kc-inline-cancel{background:#747d87!important;color:#fff!important;border:0!important}
+@keyframes kcInlineConfirmCenterIn{from{opacity:0;transform:translate(-50%,-50%) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @media(max-width:600px){
- .kc-inline-purchase-confirm{padding:17px!important;border-radius:15px!important}
+ .kc-inline-purchase-confirm{width:calc(100vw - 28px)!important;max-height:72vh!important;padding:20px 16px!important;border-radius:18px!important}
+ .kc-inline-confirm-icon{width:56px!important;height:56px!important;font-size:30px!important}
  .kc-inline-confirm-title{font-size:22px!important}
  .kc-inline-confirm-text{font-size:15px!important}
+ .kc-inline-confirm-actions .kc-btn{min-height:50px!important}
 }
 </style>
 </head>
@@ -2718,6 +2734,13 @@ button {
   }
 
   function closeModal(id) {
+    if (id === "kcProductModal") {
+      var inlineConfirm = document.getElementById("kcInlinePurchaseConfirm");
+      if (inlineConfirm) inlineConfirm.remove();
+      var inlineBody = document.getElementById("kcProductModalBody");
+      if (inlineBody) inlineBody.classList.remove("kc-confirm-open");
+      if (typeof kcPendingPurchaseProceed !== "undefined") kcPendingPurchaseProceed = null;
+    }
     var element = document.getElementById(id);
 
     if (!element) {
@@ -4179,6 +4202,8 @@ function openProduct(slug) {
     kcPendingPurchaseProceed = null;
     var box = document.getElementById("kcInlinePurchaseConfirm");
     if (box) box.remove();
+    var body = document.getElementById("kcProductModalBody");
+    if (body) body.classList.remove("kc-confirm-open");
     var buybar = document.getElementById("kcDetailBuyBar");
     if (buybar) buybar.style.display = "flex";
   }
@@ -4190,6 +4215,8 @@ function openProduct(slug) {
       kcPendingPurchaseProceed = null;
       var box = document.getElementById("kcInlinePurchaseConfirm");
       if (box) box.remove();
+      var body = document.getElementById("kcProductModalBody");
+      if (body) body.classList.remove("kc-confirm-open");
       var buybar = document.getElementById("kcDetailBuyBar");
       if (buybar) buybar.style.display = "none";
       proceed();
@@ -4229,6 +4256,7 @@ function openProduct(slug) {
 
     var buybar = document.getElementById("kcDetailBuyBar");
     if (buybar) buybar.style.display = "none";
+    body.classList.add("kc-confirm-open");
 
     var confirmBox = document.createElement("div");
     confirmBox.id = "kcInlinePurchaseConfirm";
@@ -4243,8 +4271,11 @@ function openProduct(slug) {
         '<button type="button" class="kc-btn kc-inline-cancel" onclick="cancelInlinePurchaseConfirm()">Hủy</button>' +
       '</div>';
 
-    if (buybar && buybar.parentNode) {
-      buybar.parentNode.insertBefore(confirmBox, buybar);
+    /* Đặt lớp xác nhận vào chính modal Túi. CSS position:fixed giữ nó ở giữa màn hình
+       dù người dùng đang đứng ở bất kỳ vị trí nào trong nội dung túi. */
+    var modalPanel = document.querySelector("#kcProductModal .kc-modal-panel");
+    if (modalPanel) {
+      modalPanel.appendChild(confirmBox);
     } else {
       body.appendChild(confirmBox);
     }
