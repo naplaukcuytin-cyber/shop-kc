@@ -2365,6 +2365,7 @@ button {
             <button class="kc-amount-chip active" onclick="setDepositAmount(50000,this)">50.000đ</button>
             <button class="kc-amount-chip" onclick="setDepositAmount(100000,this)">100.000đ</button>
             <button class="kc-amount-chip" onclick="setDepositAmount(200000,this)">200.000đ</button>
+             <button class="kc-amount-chip" onclick="setDepositAmount(500000,this)">500.000đ</button>
           </div>
 
           <div class="kc-payment-info-title">💳 THÔNG TIN NẠP TIỀN</div>
@@ -2389,6 +2390,11 @@ button {
             </div>
             <div class="kc-qr-wrap">
               <img id="kcBankQr" alt="QR chuyển khoản" src="">
+              <div class="kc-qr-actions">
+                <button type="button" class="kc-copy-btn" onclick="copyDepositField('account')">📋 Sao chép STK</button>
+                <button type="button" class="kc-copy-btn" onclick="copyDepositField('memo')">📋 Sao chép nội dung</button>
+                <a class="kc-copy-btn kc-download-btn" href="qr_banking.png.jpg" download="qr_banking.png.jpg">⬇️ Tải ảnh QR</a>
+              </div>
             </div>
           </div>
           <div class="kc-payment-highlight">
@@ -2765,8 +2771,12 @@ button {
     if (id === "kcProductModal") {
       var inlineConfirm = document.getElementById("kcInlinePurchaseConfirm");
       if (inlineConfirm) inlineConfirm.remove();
+      var purchaseResult = document.getElementById("kcPurchaseResult");
+      if (purchaseResult) purchaseResult.remove();
       var inlineBody = document.getElementById("kcProductModalBody");
       if (inlineBody) inlineBody.classList.remove("kc-confirm-open");
+      var inlineBuyBar = document.getElementById("kcDetailBuyBar");
+      if (inlineBuyBar) inlineBuyBar.style.display = "flex";
       if (typeof kcPendingPurchaseProceed !== "undefined") kcPendingPurchaseProceed = null;
     }
     var element = document.getElementById(id);
@@ -3690,10 +3700,60 @@ button {
       return "NAPTIEN";
     }
 
-    var compact = username.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+    var compact = username.replace(/[^A-Za-z0-9_.-]/g, "").slice(0, 24);
 
-    return ("NAP" + compact).slice(0, 20);
+    // Nội dung giữ ổn định trong phiên để khách không bị đổi mã sau mỗi lần mở QR.
+    var key = "shopkc_deposit_memo_" + compact.toLowerCase();
+    try {
+      var saved = sessionStorage.getItem(key);
+      if (saved && /^.{1,30}[0-9]{3,8}$/.test(saved)) return saved;
+      var suffix = String(Math.floor(1000 + Math.random() * 9000));
+      var memo = (compact + suffix).slice(0, 30);
+      sessionStorage.setItem(key, memo);
+      return memo;
+    } catch (e) {
+      return compact + String(Math.floor(1000 + Math.random() * 9000));
+    }
   }
+
+  function copyDepositText(text, successText) {
+    text = String(text || "");
+    var done = function(){ showToast(successText || "Đã sao chép.", "success"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function(){
+        fallbackCopyDepositText(text, done);
+      });
+    } else {
+      fallbackCopyDepositText(text, done);
+    }
+  }
+
+  function fallbackCopyDepositText(text, done) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      done();
+    } catch(e) {
+      showToast("Không thể sao chép, hãy giữ để sao chép thủ công.", "error");
+    }
+  }
+
+  function copyDepositField(field) {
+    if (field === "account") {
+      copyDepositText(paymentConfig.accountNumber || "PSP2621916400000092", "Đã sao chép số tài khoản.");
+      return;
+    }
+    if (field === "memo") {
+      copyDepositText(getDepositMemo(), "Đã sao chép nội dung chuyển khoản.");
+    }
+  }
+  window.copyDepositField = copyDepositField;
 
   function updateDepositQr() {
     var qr = document.getElementById("kcBankQr");
@@ -3725,6 +3785,7 @@ button {
     ].join("&");
 
     qr.src = "qr_banking.png.jpg";
+    qr.title = "QR chuyển khoản";
     qr.onerror = function(){ this.onerror=null; this.src="https://img.vietqr.io/image/" + encodeURIComponent(bankCode) + "-" + encodeURIComponent(account) + "-compact2.png?" + params; };
   }
 
@@ -4034,7 +4095,16 @@ button {
         el.innerHTML = '✓ <b>ĐÃ PHÊ DUYỆT</b> — Hệ thống đã xác nhận đơn của bạn.';
       } else if (order.status === "completed") {
         el.className = "kc-result-status approved-result";
-        el.innerHTML = '🎉 <b>ĐÃ HOÀN TẤT</b> — Đơn của bạn đã được xử lý xong.';
+        var reward = "";
+        if (order.rewardUsername || order.rewardPassword) {
+          reward = '<div class="kc-result-credentials">' +
+            '<div class="kc-result-complete-title">🎉 ĐÃ XỬ LÝ THÀNH CÔNG</div>' +
+            '<div><b>Tài khoản:</b> ' + safeText(order.rewardUsername || "-") + '</div>' +
+            '<div><b>Mật khẩu:</b> ' + safeText(order.rewardPassword || "-") + '</div>' +
+            (order.rewardNote ? '<div><b>Ghi chú:</b> ' + safeText(order.rewardNote) + '</div>' : '') +
+            '</div>';
+        }
+        el.innerHTML = '🎉 <b>ĐÃ HOÀN TẤT</b> — Hệ thống đã xử lý đơn của bạn.' + reward;
       } else if (order.status === "rejected") {
         el.className = "kc-result-status rejected-result";
         el.innerHTML = '✕ <b>ĐƠN ĐÃ HỦY</b> — Vui lòng liên hệ hỗ trợ nếu cần.';
@@ -4050,6 +4120,16 @@ function openProduct(slug) {
     if (!requireLogin()) {
       return;
     }
+
+    // Mở gói mới luôn bắt đầu từ giao diện sạch, không giữ kết quả đơn trước.
+    var staleResult = document.getElementById("kcPurchaseResult");
+    if (staleResult) staleResult.remove();
+    var staleConfirm = document.getElementById("kcInlinePurchaseConfirm");
+    if (staleConfirm) staleConfirm.remove();
+    var staleBody = document.getElementById("kcProductModalBody");
+    if (staleBody) staleBody.classList.remove("kc-confirm-open");
+    var staleBuyBar = document.getElementById("kcDetailBuyBar");
+    if (staleBuyBar) staleBuyBar.style.display = "flex";
 
     var product = productCatalog[slug];
 
@@ -4072,6 +4152,11 @@ function openProduct(slug) {
   window.openProduct = openProduct;
 
   function renderProductDetail(product) {
+    var staleResult = document.getElementById("kcPurchaseResult");
+    if (staleResult) staleResult.remove();
+    var staleConfirm = document.getElementById("kcInlinePurchaseConfirm");
+    if (staleConfirm) staleConfirm.remove();
+
     var title = document.getElementById("kcProductModalTitle");
 
     var body = document.getElementById("kcProductModalBody");
@@ -5852,6 +5937,12 @@ Admin approval remains the source of truth for wallet top-ups.
 .kc-purchase-result{position:fixed!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(560px,calc(100vw - 32px))!important;max-height:min(78vh,620px)!important;overflow:auto!important;margin:0!important;padding:26px 24px!important;box-sizing:border-box;border-radius:22px;text-align:center;border:2px solid #ffd2df;background:linear-gradient(135deg,#fff7fa,#fff);box-shadow:0 24px 70px rgba(0,0,0,.24),0 12px 35px rgba(242,13,70,.12);z-index:100000!important;animation:kcPurchasePopCenter .3s ease both}
 .kc-result-icon{width:58px;height:58px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:#00b879;color:#fff;font-size:32px;font-weight:950;box-shadow:0 0 0 8px #eafff5}
 .kc-result-title{font-size:23px;font-weight:950;color:#222}.kc-result-sub{margin-top:7px;color:#666}.kc-result-money{margin-top:10px;color:var(--kc-red);font-size:22px;font-weight:950}.kc-result-status{margin-top:12px;padding:12px;border-radius:12px;background:#fff4d8;color:#8a6200;font-weight:850}.kc-result-status.approved-result{background:#eafff5;color:#00885e;animation:kcApprovedPulse 1.4s ease-in-out infinite}.kc-result-status.rejected-result{background:#ffeaee;color:#b0163e}.kc-result-id{margin-top:8px;color:#888;font-size:12px}.kc-btn{cursor:pointer}
+.kc-qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.kc-copy-btn{border:0;border-radius:10px;padding:9px 12px;background:#f1f4f8;color:#263246;font-weight:900;text-decoration:none;cursor:pointer;font-size:13px}
+.kc-copy-btn:hover{filter:brightness(.97)}
+.kc-download-btn{display:inline-flex;align-items:center;justify-content:center}
+.kc-result-credentials{margin-top:12px;padding:13px;border-radius:14px;background:#edfff7;border:1px solid #bcefd8;text-align:left;color:#116b50;line-height:1.65}
+.kc-result-complete-title{text-align:center;font-size:18px;font-weight:950;margin-bottom:6px;color:#00885e}
 @keyframes kcPurchasePop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
 @keyframes kcPurchasePopCenter{from{opacity:0;transform:translate(-50%,-50%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 @keyframes kcApprovedPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,184,121,.08)}50%{box-shadow:0 0 0 7px rgba(0,184,121,.13)}}
