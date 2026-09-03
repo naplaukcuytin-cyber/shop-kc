@@ -618,12 +618,41 @@ button {
   word-break: break-word;
 }
 
+.kc-bank-value-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kc-inline-copy {
+  flex: 0 0 auto;
+  min-width: 66px;
+  height: 30px;
+  padding: 0 7px;
+  border: 1px solid #e7dfe3;
+  border-radius: 8px;
+  background: #f5f6f8;
+  color: #222;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.kc-inline-copy:active {
+  transform: scale(.96);
+}
+
 .kc-qr-wrap {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   min-height: 220px;
-  padding: 8px;
+  padding: 12px;
   border-radius: 12px;
   background: #fff;
   border: 1px solid #eee;
@@ -635,6 +664,25 @@ button {
   max-width: 200px;
   aspect-ratio: 1;
   object-fit: contain;
+}
+
+.kc-qr-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  min-height: 42px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: #f20d46;
+  color: #fff !important;
+  font-weight: 950;
+  text-decoration: none;
+  box-shadow: 0 5px 14px rgba(242,13,70,.18);
+}
+
+.kc-qr-download:active {
+  transform: scale(.98);
 }
 
 .kc-transfer-note {
@@ -926,6 +974,21 @@ button {
 }
 
 @media (max-width: 600px) {
+  .kc-bank-line {
+    gap: 8px;
+  }
+  .kc-bank-value-wrap {
+    max-width: 72%;
+  }
+  .kc-bank-value {
+    font-size: 14px;
+  }
+  .kc-inline-copy {
+    min-width: 62px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
   .kc-modal {
     align-items: flex-end;
     padding: 0;
@@ -2375,26 +2438,31 @@ button {
                 <span class="kc-bank-label">Ngân hàng</span>
                 <span class="kc-bank-value" id="kcBankName">MB Bank</span>
               </div>
-              <div class="kc-bank-line">
+              <div class="kc-bank-line kc-copy-line">
                 <span class="kc-bank-label">Số tài khoản</span>
-                <span class="kc-bank-value" id="kcBankNumber">0000000000</span>
+                <span class="kc-bank-value-wrap">
+                  <span class="kc-bank-value" id="kcBankNumber">PSP2621916400000092</span>
+                  <button type="button" class="kc-inline-copy" onclick="copyDepositField('account')" aria-label="Sao chép số tài khoản">Sao chép</button>
+                </span>
               </div>
               <div class="kc-bank-line">
                 <span class="kc-bank-label">Chủ tài khoản</span>
-                <span class="kc-bank-value" id="kcBankOwner">CENAFF</span>
+                <span class="kc-bank-value-wrap">
+                  <span class="kc-bank-value" id="kcBankOwner">TRUONG VAN PHONG</span>
+                  <button type="button" class="kc-inline-copy" onclick="copyDepositField('owner')" aria-label="Sao chép tên chủ tài khoản">Sao chép</button>
+                </span>
               </div>
-              <div class="kc-bank-line">
+              <div class="kc-bank-line kc-copy-line">
                 <span class="kc-bank-label">Nội dung</span>
-                <span class="kc-bank-value" id="kcBankMemo">NAPTIEN</span>
+                <span class="kc-bank-value-wrap">
+                  <span class="kc-bank-value" id="kcBankMemo">NAPTIEN</span>
+                  <button type="button" class="kc-inline-copy" onclick="copyDepositField('memo')" aria-label="Sao chép nội dung">Sao chép</button>
+                </span>
               </div>
             </div>
             <div class="kc-qr-wrap">
-              <img id="kcBankQr" alt="QR chuyển khoản" src="">
-              <div class="kc-qr-actions">
-                <button type="button" class="kc-copy-btn" onclick="copyDepositField('account')">📋 Sao chép STK</button>
-                <button type="button" class="kc-copy-btn" onclick="copyDepositField('memo')">📋 Sao chép nội dung</button>
-                <a class="kc-copy-btn kc-download-btn" href="qr_banking.png.jpg" download="qr_banking.png.jpg">⬇️ Tải ảnh QR</a>
-              </div>
+              <img id="kcBankQr" alt="QR chuyển khoản" src="qr_banking.png.jpg">
+              <a class="kc-qr-download" href="qr_banking.png.jpg" download="qr_banking.png.jpg">⬇️ TẢI ẢNH QR</a>
             </div>
           </div>
           <div class="kc-payment-highlight">
@@ -3751,6 +3819,10 @@ button {
     }
     if (field === "memo") {
       copyDepositText(getDepositMemo(), "Đã sao chép nội dung chuyển khoản.");
+      return;
+    }
+    if (field === "owner") {
+      copyDepositText(paymentConfig.accountName || "TRUONG VAN PHONG", "Đã sao chép tên chủ tài khoản.");
     }
   }
   window.copyDepositField = copyDepositField;
