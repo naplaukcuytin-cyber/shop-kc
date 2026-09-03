@@ -2225,7 +2225,26 @@ button {
 
 <script>
 /* Cơ chế Admin ẩn: đăng nhập tài khoản Firebase có role=admin, sau đó chạm logo 7 lần. */
-(function(){var _adm=0,_timer=null;document.addEventListener("click",function(e){if(!e.target.closest(".header-logo")){return;} _adm++;clearTimeout(_timer);_timer=setTimeout(function(){_adm=0;},1800);if(_adm>=7){_adm=0;if(window.ShopKCOpenAdmin){window.ShopKCOpenAdmin();}else{alert("Hệ thống Admin chưa sẵn sàng.");}}});})();
+(function(){
+  var _adm=0,_timer=null;
+  document.addEventListener("click",function(e){
+    var logo=e.target.closest(".header-logo");
+    if(!logo){return;}
+    e.preventDefault();
+    e.stopPropagation();
+    _adm++;
+    clearTimeout(_timer);
+    _timer=setTimeout(function(){_adm=0;},2500);
+    if(_adm>=7){
+      _adm=0;
+      if(window.ShopKCOpenAdmin){
+        window.ShopKCOpenAdmin();
+      }else{
+        alert("Hệ thống Admin chưa sẵn sàng.");
+      }
+    }
+  },true);
+})();
 </script>
 
 <!-- ====================================================================
@@ -2877,9 +2896,7 @@ button {
     });
 
     document.querySelectorAll(".mobile-account-label").forEach(function (element) {
-      element.textContent = (currentUser && currentProfile)
-        ? (getUsername() + " • " + formatMoney(currentBalance))
-        : "Đăng nhập";
+      element.textContent = (currentUser && currentProfile) ? "Tài khoản" : "Đăng nhập";
     });
 
     var accountBalance = document.getElementById("kcAccountBalance");
@@ -2893,11 +2910,11 @@ button {
     var loggedIn = !!currentUser && !!currentProfile;
 
     document.querySelectorAll("._no_login").forEach(function (element) {
-      element.style.display = loggedIn ? "none" : "";
+      element.style.setProperty("display", loggedIn ? "none" : "flex", "important");
     });
 
     document.querySelectorAll("._has_login").forEach(function (element) {
-      element.style.display = loggedIn ? "" : "none";
+      element.style.setProperty("display", loggedIn ? "flex" : "none", "important");
     });
 
     var accountName = document.getElementById("kcAccountName");
