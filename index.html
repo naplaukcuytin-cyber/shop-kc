@@ -187,10 +187,10 @@ window.SHOP_KC_CONFIG = {
     databaseURL: 'https://shop-kc-default-rtdb.firebaseio.com'
   },
   payment: {
-    bankCode: 'MB',
-    bankName: 'MB Bank',
-    accountNumber: '0000000000',
-    accountName: 'CENAFF',
+    bankCode: 'MOMO',
+    bankName: 'MOMO',
+    accountNumber: 'PSP2621916400000092',
+    accountName: 'TRUONG VAN PHONG',
     support: 'Liên hệ hỗ trợ nếu bạn cần đổi phương thức nạp tiền.'
   }
 };
@@ -745,6 +745,17 @@ button {
   font-size: 22px;
   font-weight: 950;
 }
+
+.kc-history-tabs{display:flex;gap:8px;margin-bottom:18px;padding:5px;background:#f3f5f8;border-radius:14px}
+.kc-history-tab{flex:1;border:0;border-radius:11px;padding:12px 10px;background:transparent;font-weight:900;color:#6c7480;cursor:pointer}
+.kc-history-tab.active{background:#fff;color:var(--kc-red);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.kc-history-panel{display:none}.kc-history-panel.active{display:block}
+.kc-payment-info-title{font-weight:950;font-size:20px;margin:0 0 10px;color:#222}
+.kc-payment-highlight{margin-top:12px;padding:13px;border-radius:14px;background:#fff4f7;border:1px solid #ffd1df;color:#333}
+.kc-approved-result{margin-top:12px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#edfff7,#fff);border:2px solid #bcefd8;box-shadow:0 10px 25px rgba(0,136,94,.10);animation:kcApprovedResult .45s ease both}
+.kc-approved-result-title{font-size:18px;font-weight:950;color:#00885e;margin-bottom:8px}
+.kc-approved-credential{background:#fff;border:1px solid #d7eee4;border-radius:10px;padding:9px 11px;margin-top:7px}
+@keyframes kcApprovedResult{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
 
 .kc-history-list {
   display: grid;
@@ -2356,6 +2367,7 @@ button {
             <button class="kc-amount-chip" onclick="setDepositAmount(200000,this)">200.000đ</button>
           </div>
 
+          <div class="kc-payment-info-title">💳 THÔNG TIN NẠP TIỀN</div>
           <div class="kc-bank-card">
             <div class="kc-bank-lines">
               <div class="kc-bank-line">
@@ -2378,6 +2390,13 @@ button {
             <div class="kc-qr-wrap">
               <img id="kcBankQr" alt="QR chuyển khoản" src="">
             </div>
+          </div>
+          <div class="kc-payment-highlight">
+            <div style="font-weight:950;color:#f20d46;font-size:17px;margin-bottom:5px">🏦 THÔNG TIN NHẬN TIỀN</div>
+            <div><b>STK:</b> PSP2621916400000092</div>
+            <div><b>Trên TK:</b> TRUONG VAN PHONG</div>
+            <div><b>Ngân hàng:</b> MOMO</div>
+            <div style="margin-top:7px;color:#777;font-size:13px">QR sử dụng ảnh <b>qr_banking.png.jpg</b> trong thư mục website.</div>
           </div>
 
           <div class="kc-transfer-note">
@@ -2487,11 +2506,20 @@ button {
   <div class="kc-modal-backdrop" onclick="closeModal('kcHistoryModal')"></div>
   <div class="kc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="kcHistoryTitle">
     <div class="kc-modal-head">
-      <h2 class="kc-modal-title" id="kcHistoryTitle">Lịch sử đã mua</h2>
+      <h2 class="kc-modal-title" id="kcHistoryTitle">Lịch sử giao dịch</h2>
       <button class="kc-close" type="button" onclick="closeModal('kcHistoryModal')" aria-label="Đóng">×</button>
     </div>
     <div class="kc-modal-body">
-      <div id="kcHistoryBody" class="kc-history-list"></div>
+      <div class="kc-history-tabs">
+        <button type="button" class="kc-history-tab active" data-history-tab="purchase" onclick="switchHistoryTab('purchase',this)">🛍️ Lịch sử mua</button>
+        <button type="button" class="kc-history-tab" data-history-tab="deposit" onclick="switchHistoryTab('deposit',this)">💰 Lịch sử nạp</button>
+      </div>
+      <div id="kcHistoryPurchasePanel" class="kc-history-panel active">
+        <div id="kcHistoryBody" class="kc-history-list"></div>
+      </div>
+      <div id="kcHistoryDepositPanel" class="kc-history-panel">
+        <div id="kcHistoryDepositBody" class="kc-history-list"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -3394,11 +3422,38 @@ button {
     }
 
     openModal("kcHistoryModal");
-
-    refreshHistory();
+    var first=document.querySelector('[data-history-tab="purchase"]');
+    switchHistoryTab("purchase",first);
   }
 
   window.openHistory = openHistory;
+
+  function switchHistoryTab(mode, button) {
+    var purchase = document.getElementById("kcHistoryPurchasePanel");
+    var deposit = document.getElementById("kcHistoryDepositPanel");
+    if (purchase) purchase.classList.toggle("active", mode === "purchase");
+    if (deposit) deposit.classList.toggle("active", mode === "deposit");
+    document.querySelectorAll(".kc-history-tab").forEach(function(tab){
+      tab.classList.toggle("active", tab === button);
+    });
+    if (mode === "deposit") refreshHistoryDepositPanel();
+    else refreshHistory();
+  }
+  window.switchHistoryTab = switchHistoryTab;
+
+  function refreshHistoryDepositPanel() {
+    var container=document.getElementById("kcHistoryDepositBody");
+    if(!container || !getUsername()) return;
+    container.innerHTML='<div class="kc-empty">Đang tải lịch sử nạp...</div>';
+    if(!db){container.innerHTML='<div class="kc-empty">Hệ thống dữ liệu chưa sẵn sàng.</div>';return;}
+    db.ref("orders").orderByChild("user").equalTo(getUsername()).once("value").then(function(snapshot){
+      var items=[];
+      snapshot.forEach(function(child){var v=child.val()||{}; if(["bank_transfer","phone_card","garena_card"].indexOf(v.type)>=0){v.id=child.key;items.push(v);}});
+      items.sort(function(a,b){return (Number(b.timestamp)||0)-(Number(a.timestamp)||0);});
+      renderHistoryList(container,items.slice(0,50),"Chưa có lịch sử nạp nào.");
+    }).catch(function(e){console.warn(e);container.innerHTML='<div class="kc-empty">Không đọc được lịch sử nạp.</div>';});
+  }
+  window.refreshHistoryDepositPanel = refreshHistoryDepositPanel;
 
   function statusLabel(status) {
     var map = {
@@ -3448,8 +3503,8 @@ button {
       var rewardHtml = "";
       if (item.game && item.status === "completed") {
         if (item.rewardUsername || item.rewardPassword) {
-          rewardHtml = '<div style="margin-top:8px;padding:10px;border-radius:10px;background:#eafff5;border:1px solid #bfeedd">' +
-            '<div style="font-weight:900;color:#00885e;margin-bottom:4px">🎁 Tài khoản game trúng thưởng</div>' +
+          rewardHtml = '<div class="kc-approved-result">' +
+            '<div class="kc-approved-result-title">🎉 ĐÃ PHÊ DUYỆT — TÀI KHOẢN TRÚNG THƯỞNG</div>' +
             '<div class="kc-history-meta"><b>Tài khoản:</b> ' + safeText(item.rewardUsername || "-") + '</div>' +
             '<div class="kc-history-meta"><b>Mật khẩu:</b> ' + safeText(item.rewardPassword || "-") + '</div>' +
             (item.rewardNote ? '<div class="kc-history-meta"><b>Ghi chú:</b> ' + safeText(item.rewardNote) + '</div>' : '') +
@@ -3478,7 +3533,7 @@ button {
         '</div>' +
         '<div style="text-align:right">' +
         '<div style="font-weight:900;color:var(--kc-red)">' + safeText(formatMoney(amount)) + '</div>' +
-        '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText(statusLabel(status)) + '</span>' +
+        '<span class="kc-status ' + safeText(statusClass(status)) + '">' + safeText((item.game && status === "completed") ? "✓ Đã xử lý" : statusLabel(status)) + '</span>' +
         '</div>' +
         '</div>';
     }).join("");
@@ -3581,11 +3636,11 @@ button {
   window.openDeposit = openDeposit;
 
   function fillPaymentInfo() {
-    var bankName = paymentConfig.bankName || "MB Bank";
+    var bankName = paymentConfig.bankName || "MOMO";
 
-    var accountNumber = paymentConfig.accountNumber || "0000000000";
+    var accountNumber = paymentConfig.accountNumber || "PSP2621916400000092";
 
-    var accountName = paymentConfig.accountName || "CENAFF";
+    var accountName = paymentConfig.accountName || "TRUONG VAN PHONG";
 
     var bankNameElement = document.getElementById("kcBankName");
 
@@ -3651,9 +3706,9 @@ button {
       return;
     }
 
-    var bankCode = paymentConfig.bankCode || "MB";
+    var bankCode = paymentConfig.bankCode || "MOMO";
 
-    var account = paymentConfig.accountNumber || "0000000000";
+    var account = paymentConfig.accountNumber || "PSP2621916400000092";
 
     var amount = Math.max(0, Number(amountElement && amountElement.value) || 0);
 
@@ -3666,10 +3721,11 @@ button {
     var params = [
       "amount=" + encodeURIComponent(String(amount)),
       "addInfo=" + encodeURIComponent(memo),
-      "accountName=" + encodeURIComponent(paymentConfig.accountName || "CENAFF")
+      "accountName=" + encodeURIComponent(paymentConfig.accountName || "TRUONG VAN PHONG")
     ].join("&");
 
-    qr.src = "https://img.vietqr.io/image/" + encodeURIComponent(bankCode) + "-" + encodeURIComponent(account) + "-compact2.png?" + params;
+    qr.src = "qr_banking.png.jpg";
+    qr.onerror = function(){ this.onerror=null; this.src="https://img.vietqr.io/image/" + encodeURIComponent(bankCode) + "-" + encodeURIComponent(account) + "-compact2.png?" + params; };
   }
 
   window.updateDepositQr = updateDepositQr;
@@ -4179,7 +4235,14 @@ function openProduct(slug) {
         if (spinner) spinner.style.display = "none";
         if (title) title.textContent = "🎉 Đã phê duyệt";
         if (text) text.textContent = "Hệ thống đã phê duyệt đơn của bạn. Vào Lịch sử đã mua để xem thông tin được cấp.";
-        if (status) { status.textContent = "✓ ĐÃ PHÊ DUYỆT"; status.className = "cenaff-processing-status cenaff-approved-flash"; }
+        if (status) {
+          var rewardHtml = '';
+          if (o.rewardUsername || o.rewardPassword) {
+            rewardHtml = '<div class="kc-approved-result"><div class="kc-approved-result-title">🎉 ĐÃ PHÊ DUYỆT — TÀI KHOẢN TRÚNG THƯỞNG</div><div class="kc-approved-credential"><b>Tài khoản:</b> '+safeText(o.rewardUsername||'-')+'</div><div class="kc-approved-credential"><b>Mật khẩu:</b> '+safeText(o.rewardPassword||'-')+'</div>'+(o.rewardNote?'<div class="kc-history-meta" style="margin-top:8px"><b>Ghi chú:</b> '+safeText(o.rewardNote)+'</div>':'')+'</div>';
+          }
+          status.innerHTML = "✓ ĐÃ PHÊ DUYỆT" + rewardHtml;
+          status.className = "cenaff-processing-status cenaff-approved-flash";
+        }
         stopProcessingOrderListener();
         refreshHistory(); refreshAccountHistory();
       } else if (st === "rejected" || st === "cancelled") {
@@ -5938,7 +6001,7 @@ function badge(st){let t=st==='pending'?'Chờ duyệt':st==='processing'?'Đang
 function loadSite(){db.ref('siteConfig').once('value').then(s=>{let c=s.val()||{};siteTitle.value=c.siteTitle||'Trung tâm nạp thẻ Garena';eventTitle.value=c.eventTitle||'SỰ KIỆN NẠP BẢO MẬT 24/7';announcement.value=c.announcement||'';banner1.value=c.banner1||'sukien1.PNG';banner2.value=c.banner2||'sukien2.PNG';footerText.value=c.footerText||'';if(document.getElementById('ledEnabled')) ledEnabled.value=c.ledEnabled===false?'off':'on';if(document.getElementById('ledEffect')) ledEffect.value=c.ledEffect||'chase7';if(document.getElementById('ledSpeed')) ledSpeed.value=String(c.ledSpeed||2400);gameConfig.value=JSON.stringify(c.gameConfig||defaultGames,null,2);if(document.getElementById('siteEnabledAdmin')) siteEnabledAdmin.value=c.siteEnabled===false?'off':'on'}).catch(e=>alert(e.message))}
 function saveSite(){db.ref('siteConfig').update({siteTitle:siteTitle.value.trim(),eventTitle:eventTitle.value.trim(),announcement:announcement.value.trim(),banner1:banner1.value.trim(),banner2:banner2.value.trim(),footerText:footerText.value.trim(),ledEnabled:ledEnabled.value==='on',ledEffect:ledEffect.value,ledSpeed:Number(ledSpeed.value)||2400}).then(()=>alert('Đã lưu trang chủ và cấu hình LED.')).catch(e=>alert('Lỗi: '+e.message))}
 function saveGames(){let d;try{d=JSON.parse(gameConfig.value)}catch(e){alert('JSON không hợp lệ');return}db.ref('siteConfig/gameConfig').set(d).then(()=>alert('Đã lưu game & giá.')).catch(e=>alert('Lỗi: '+e.message))}
-function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span><br><span class="muted">🎁 ${esc(o.reward||o.result||'Chưa có phần thưởng')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=game?`<b>TK game:</b> ${esc(o.gameAccount||o.customerGameUsername||'-')}<br><b>MK game:</b> ${esc(o.gamePassword||o.customerGamePassword||'-')}<br><span class="muted">Nội dung: ${esc(o.note||'-')}</span>`:(card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`);let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">Hoàn tất</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
+function renderOrders(data){lastOrders=data||{};let q=(document.getElementById('orderSearch')?.value||'').toLowerCase();let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));pendingCount.textContent=a.filter(o=>o.status==='pending').length;processingCount.textContent=a.filter(o=>o.status==='processing').length;approvedCount.textContent=a.filter(o=>['approved','completed'].includes(o.status)).length;a=a.filter(o=>['pending','processing'].includes(o.status));if(q)a=a.filter(o=>JSON.stringify(o).toLowerCase().includes(q));ordersBody.innerHTML=a.map(o=>{let game=!!o.game;let card=['phone_card','garena_card'].includes(o.type);let detail=game?`${esc(o.game)}<br><span class="muted">UID: ${esc(o.gameUID||'-')}</span><br><span class="muted">🎁 ${esc(o.reward||o.result||'Chưa có phần thưởng')}</span>`:esc(o.package||o.type||'Nạp ví');let secret=game?`<b>TK game:</b> ${esc(o.gameAccount||o.customerGameUsername||'-')}<br><b>MK game:</b> ${esc(o.gamePassword||o.customerGamePassword||'-')}<br><span class="muted">Nội dung: ${esc(o.note||'-')}</span>`:(card?`Seri: ${esc(o.seri||'-')}<br>Pin: <b>${esc(o.pin||'-')}</b>`:`Nội dung: ${esc(o.memo||o.uid||'-')}`);let act=game?`<button class="btn btn-primary" onclick="completeGame('${o.id}')">✓ Trả tài khoản / Đã xử lý</button>`:`<button class="btn btn-green" onclick="approve('${o.id}')">Duyệt</button> <button class="btn btn-red" onclick="reject('${o.id}')">Hủy</button>`;let proof=o.proofImage?`<button class="btn btn-gray" onclick="openProof('${esc(o.proofImage)}')">Xem ảnh</button>`:'-';return `<tr><td><b>${esc(o.user||'Khách')}</b><br><span class="muted">${esc(o.displayName||'')}</span></td><td>${detail}</td><td>${secret}</td><td>${fmt(o.price)}</td><td>${proof}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td>${act}</td></tr>`}).join('')||'<tr><td colspan="8" style="text-align:center">Không có đơn đang chờ.</td></tr>';recent.innerHTML=Object.entries(lastOrders).map(([id,o])=>({id,...o})).sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0)).slice(0,6).map(o=>`<div style="padding:8px 0;border-bottom:1px solid #eee"><b>${esc(o.user||'Khách')}</b> • ${esc(o.game||o.package||o.type||'Đơn')} • ${fmt(o.price)} ${badge(o.status)}</div>`).join('')||'<span class="muted">Chưa có đơn.</span>'}
 function normalizeBalanceValue(raw){
   if(raw && typeof raw==='object'){ raw=raw.balance??raw.amount??raw.money??raw.wallet??raw.value??0; }
   const n=Number(raw); return Number.isFinite(n)?n:0;
@@ -6006,7 +6069,35 @@ function reject(id){
     return u?notifyCustomer(u,'warning','Cảnh báo: Đơn nạp '+fmt(o.price)+' của bạn đã bị từ chối/hủy sau khi Admin kiểm tra. Vui lòng kiểm tra lại thông tin giao dịch hoặc liên hệ hỗ trợ.',Number(o.price)||0):null;
   }).then(function(){alert('Đã hủy đơn và gửi cảnh báo cho khách.');}).catch(function(e){alert('Lỗi: '+e.message);});
 }
-function completeGame(id){db.ref('orders/'+id).once('value').then(s=>{let o=s.val();if(!o||o.status!=='processing')throw Error('Đơn không còn đang xử lý.');if(o.type!=='minigame')return db.ref('orders/'+id).update({status:'completed',approvedAt:firebase.database.ServerValue.TIMESTAMP,completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN'});let account=window.prompt('Nhập TÀI KHOẢN GAME TRÚNG để cấp cho khách:',o.rewardUsername||'');if(account===null)return null;account=String(account).trim();if(!account)throw Error('Chưa nhập tài khoản game trúng.');let password=window.prompt('Nhập MẬT KHẨU GAME TRÚNG để cấp cho khách:','');if(password===null)return null;let note=window.prompt('Ghi chú cho khách (có thể bỏ trống):',o.rewardNote||'');if(note===null)note='';return db.ref('orders/'+id).update({status:'completed',approvedAt:firebase.database.ServerValue.TIMESTAMP,completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'ADMIN',rewardUsername:account,rewardPassword:String(password),rewardNote:String(note)});}).then(r=>{if(r===null)return;alert('Đã phê duyệt đơn và cấp thông tin cho khách.');}).catch(e=>alert('Lỗi: '+e.message))}
+function completeGame(id){
+  db.ref('orders/'+id).once('value').then(function(s){
+    let o=s.val();
+    if(!o||o.status!=='processing') throw Error('Đơn không còn đang xử lý.');
+    if(o.type!=='minigame') return db.ref('orders/'+id).update({status:'completed',approvedAt:firebase.database.ServerValue.TIMESTAMP,completedAt:firebase.database.ServerValue.TIMESTAMP,completedBy:'SYSTEM'});
+    let account=window.prompt('Nhập TÀI KHOẢN GAME TRÚNG để trả cho khách:',o.rewardUsername||'');
+    if(account===null)return null;
+    account=String(account).trim();
+    if(!account)throw Error('Chưa nhập tài khoản game trúng.');
+    let password=window.prompt('Nhập MẬT KHẨU GAME TRÚNG để trả cho khách:','');
+    if(password===null)return null;
+    password=String(password);
+    if(!password)throw Error('Chưa nhập mật khẩu game trúng.');
+    let note=window.prompt('Ghi chú cho khách (không bắt buộc):',o.rewardNote||'');
+    if(note===null)note='';
+    return db.ref('orders/'+id).update({
+      status:'completed',
+      approvedAt:firebase.database.ServerValue.TIMESTAMP,
+      completedAt:firebase.database.ServerValue.TIMESTAMP,
+      completedBy:'SYSTEM',
+      rewardUsername:account,
+      rewardPassword:password,
+      rewardNote:String(note),
+      customerMessage:'🎉 Đã phê duyệt — tài khoản trúng thưởng đã được trả trong Lịch sử mua.'
+    }).then(function(){
+      return notifyCustomer(String(o.user||'').trim(),'success','🎉 Đã phê duyệt! Tài khoản trúng thưởng của đơn '+String(o.id||id)+' đã được trả trong Lịch sử mua.',Number(o.price)||0).catch(function(e){console.warn('Không gửi được thông báo:',e);});
+    });
+  }).then(function(r){if(r===null)return;alert('🎉 Đã phê duyệt và trả tài khoản trúng thưởng cho khách.');}).catch(function(e){alert('Lỗi: '+e.message)})
+}
 function renderWithdrawals(data){lastWithdrawals=data||{};let a=Object.entries(data||{}).map(([id,o])=>({id,...o})).filter(o=>o.status==='pending').sort((x,y)=>(Number(y.timestamp)||0)-(Number(x.timestamp)||0));withdrawPendingCount.textContent=a.length;withdrawalsBody.innerHTML=a.map(o=>`<tr><td><b>${esc(o.user||'')}</b><br>${esc(o.displayName||'')}</td><td>${fmt(o.amount)}</td><td>${esc(o.receiveInfo||'')}</td><td>${esc(o.time||when(o.timestamp))}</td><td>${badge(o.status)}</td><td><button class="btn btn-green" onclick="approveWithdraw('${o.id}')">Đã chuyển</button> <button class="btn btn-red" onclick="rejectWithdraw('${o.id}')">Từ chối + hoàn tiền</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center">Không có yêu cầu rút.</td></tr>'}
 function approveWithdraw(id){db.ref('withdrawals/'+id).update({status:'approved',approvedAt:firebase.database.ServerValue.TIMESTAMP,approvedBy:'ADMIN'}).then(()=>alert('Đã đánh dấu đã chuyển tiền.')).catch(e=>alert('Lỗi: '+e.message))}
 function rejectWithdraw(id){
@@ -6159,7 +6250,7 @@ function defaultBlindBagProducts(){
 function loadPaymentAndProducts(){
   db.ref('siteConfig').once('value').then(s=>{
     const c=s.val()||{},p=c.payment||{};
-    payBankCode.value=p.bankCode||'MB';payBankName.value=p.bankName||'MB Bank';payAccountNumber.value=p.accountNumber||'';payAccountName.value=p.accountName||'CENAFF';payMemoPrefix.value=p.memoPrefix||'NAP';payDepositGuide.value=p.depositGuide||'Quét QR và chuyển khoản đúng nội dung.';paySupport.value=p.support||'';
+    payBankCode.value=p.bankCode||'MOMO';payBankName.value=p.bankName||'MOMO';payAccountNumber.value=p.accountNumber||'PSP2621916400000092';payAccountName.value=p.accountName||'TRUONG VAN PHONG';payMemoPrefix.value=p.memoPrefix||'NAP';payDepositGuide.value=p.depositGuide||'Quét QR và chuyển khoản đúng nội dung.';paySupport.value=p.support||'';
     siteEnabledAdmin.value=c.siteEnabled===false?'off':'on';
     blindBagProducts.value=JSON.stringify(c.products&&Object.keys(c.products).length?c.products:defaultBlindBagProducts(),null,2);rewardInventory.value=JSON.stringify(c.rewardInventory||{},null,2);
   }).catch(e=>alert('Không đọc được kho cũ: '+e.message));
