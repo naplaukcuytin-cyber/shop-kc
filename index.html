@@ -2722,6 +2722,63 @@ button {
   var CENAFF_ADMIN_USERNAME = "phong23112007";
   var CENAFF_ADMIN_PASSWORD = "Muathu12345";
 
+  /* Chế độ tài khoản nội bộ cho giao diện CENAFF.
+     Đăng nhập/đăng ký khách không phụ thuộc Firebase Auth, nên không bị chặn
+     bởi lỗi API key trên domain. Dữ liệu tài khoản khách được lưu trong trình
+     duyệt này; Firebase vẫn được giữ cho các chức năng realtime khác khi khả dụng. */
+  var CENAFF_LOCAL_ACCOUNTS_KEY = "cenaff_local_accounts_v2";
+  var CENAFF_LOCAL_SESSION_KEY = "cenaff_local_session_v2";
+
+  function localAccountsRead() {
+    try { return JSON.parse(localStorage.getItem(CENAFF_LOCAL_ACCOUNTS_KEY) || "{}"); } catch(e) { return {}; }
+  }
+  function localAccountsWrite(data) {
+    try { localStorage.setItem(CENAFF_LOCAL_ACCOUNTS_KEY, JSON.stringify(data || {})); return true; } catch(e) { return false; }
+  }
+  function localSessionRead() {
+    try { return JSON.parse(localStorage.getItem(CENAFF_LOCAL_SESSION_KEY) || "null"); } catch(e) { return null; }
+  }
+  function localSessionWrite(username) {
+    try { localStorage.setItem(CENAFF_LOCAL_SESSION_KEY, JSON.stringify({username:String(username),at:Date.now()})); return true; } catch(e) { return false; }
+  }
+  function localSessionClear() {
+    try { localStorage.removeItem(CENAFF_LOCAL_SESSION_KEY); } catch(e) {}
+  }
+  function localAccountKey(username) { return String(username || "").trim().toLowerCase(); }
+  function localCustomerLogin(username, password) {
+    var key=localAccountKey(username), accounts=localAccountsRead(), acc=accounts[key];
+    if(!acc || acc.password !== password) return false;
+    localSessionWrite(acc.username);
+    currentUser={uid:"local-customer-"+key, email:key+"@local.cenaff", localOnly:true};
+    currentProfile={uid:currentUser.uid,user:acc.username,displayName:acc.username,email:currentUser.email,localOnly:true};
+    currentBalance=Number(acc.balance)||0;
+    updateAuthUI();
+    return true;
+  }
+  function localCustomerRegister(username,password) {
+    var key=localAccountKey(username), accounts=localAccountsRead();
+    if(accounts[key]) return {ok:false,error:"USERNAME_EXISTS"};
+    accounts[key]={username:String(username).trim(),password:String(password),balance:0,createdAt:Date.now(),updatedAt:Date.now()};
+    if(!localAccountsWrite(accounts)) return {ok:false,error:"STORAGE"};
+    localSessionWrite(accounts[key].username);
+    currentUser={uid:"local-customer-"+key,email:key+"@local.cenaff",localOnly:true};
+    currentProfile={uid:currentUser.uid,user:accounts[key].username,displayName:accounts[key].username,email:currentUser.email,localOnly:true};
+    currentBalance=0;
+    updateAuthUI();
+    return {ok:true};
+  }
+  function localCustomerLoadSession() {
+    var session=localSessionRead();
+    if(!session || !session.username) return false;
+    var accounts=localAccountsRead(), acc=accounts[localAccountKey(session.username)];
+    if(!acc) { localSessionClear(); return false; }
+    currentUser={uid:"local-customer-"+localAccountKey(acc.username),email:localAccountKey(acc.username)+"@local.cenaff",localOnly:true};
+    currentProfile={uid:currentUser.uid,user:acc.username,displayName:acc.username,email:currentUser.email,localOnly:true};
+    currentBalance=Number(acc.balance)||0;
+    updateAuthUI();
+    return true;
+  }
+
   function initFirebase() {
     if (typeof firebase === "undefined") {
       showToast("Firebase chưa tải được. Kiểm tra kết nối mạng.", "error");
@@ -2837,6 +2894,14 @@ button {
       balanceListener = null;
     }
 
+    if (currentUser && currentUser.localOnly) {
+      var accounts=localAccountsRead();
+      var acc=accounts[localAccountKey(username)];
+      currentBalance=acc ? (Number(acc.balance)||0) : 0;
+      updateBalanceUI();
+      return;
+    }
+
     if (!db || !username) {
       currentBalance = 0;
       updateBalanceUI();
@@ -2901,7 +2966,8 @@ button {
   }
 
   function updateAuthUI() {
-    var loggedIn = !!currentUser && !!(currentProfile || localStorage.getItem("cenaff_logged_username"));
+    var localSession=localSessionRead();
+    var loggedIn = !!currentUser && !!(currentProfile || localStorage.getItem("cenaff_logged_username") || localSession);
 
     document.querySelectorAll("._no_login").forEach(function (element) {
       element.style.display = loggedIn ? "none" : "";
@@ -2933,6 +2999,9 @@ button {
   }
 
   function authStateChanged(user) {
+    /* Phiên khách nội bộ phải được ưu tiên; Firebase có thể phát ra null khi
+       API key/Auth lỗi và không được phép làm mất tên + số dư trên giao diện. */
+    if (localCustomerLoadSession()) { return; }
     currentUser = user || null;
 
     if (!user) {
@@ -3052,18 +3121,13 @@ button {
       return;
     }
 
-    /* ADMIN CỐ ĐỊNH: dùng đúng tài khoản chủ trong HTML.
-       Đây là cơ chế dự phòng khi Firebase/Auth đang báo API key lỗi. */
+    /* Chủ: nhận diện trực tiếp, không gọi Firebase Auth. */
     if (username.toLowerCase() === CENAFF_ADMIN_USERNAME.toLowerCase() && password === CENAFF_ADMIN_PASSWORD) {
       var adminUid = "cenaff-local-admin";
-      currentUser = { uid: adminUid, email: username.toLowerCase()+"@accounts.shop-kc.local", localAdmin: true };
-      currentProfile = { uid: adminUid, user: username, displayName: username, role: "admin", admin: true, localAdmin: true };
+      currentUser = { uid: adminUid, email: username.toLowerCase()+"@local.cenaff", localAdmin: true, localOnly: true };
+      currentProfile = { uid: adminUid, user: username, displayName: username, role: "admin", admin: true, localAdmin: true, localOnly: true };
       currentBalance = 0;
-      try {
-        localStorage.setItem("cenaff_logged_username", username);
-        sessionStorage.setItem("cenaff_admin_session", "1");
-        sessionStorage.setItem("shopkc_admin_verified", "1");
-      } catch(e) {}
+      try { localStorage.setItem("cenaff_logged_username", username); sessionStorage.setItem("cenaff_admin_session", "1"); sessionStorage.setItem("shopkc_admin_verified", "1"); } catch(e) {}
       if(message) message.textContent = "";
       closeModal("kcLoginModal");
       updateAuthUI();
@@ -3071,130 +3135,62 @@ button {
       return;
     }
 
-    if (!auth || !db) {
-      if(message) message.textContent = "Hệ thống đăng nhập chưa sẵn sàng.";
+    /* Khách: dùng tài khoản nội bộ trong trình duyệt, không phụ thuộc Firebase Auth. */
+    var accounts=localAccountsRead();
+    var acc=accounts[localAccountKey(username)];
+    if(acc) {
+      if(acc.password !== password) { if(message) message.textContent="Sai mật khẩu."; return; }
+      localSessionWrite(acc.username);
+      currentUser={uid:"local-customer-"+localAccountKey(acc.username),email:localAccountKey(acc.username)+"@local.cenaff",localOnly:true};
+      currentProfile={uid:currentUser.uid,user:acc.username,displayName:acc.username,email:currentUser.email,localOnly:true};
+      currentBalance=Number(acc.balance)||0;
+      try { localStorage.setItem("cenaff_logged_username", acc.username); } catch(e) {}
+      if(message) message.textContent="";
+      closeModal("kcLoginModal");
+      updateAuthUI();
+      showToast("Đăng nhập thành công.", "success");
       return;
     }
 
-    if(message) message.textContent = "Đang đăng nhập...";
-    var internalEmail = username.toLowerCase() + "@accounts.shop-kc.local";
-
-    function finishLogin(credential) {
-      currentUser = credential.user;
-      var fallbackProfile = {
-        user: username,
-        displayName: username,
-        email: credential.user.email || "",
-        uid: credential.user.uid
-      };
-      currentProfile = fallbackProfile;
-      try { localStorage.setItem("cenaff_logged_username", username); } catch(e) {}
-      bindBalance(username);
-      updateAuthUI();
-
-      return db.ref("userProfiles/" + credential.user.uid).once("value").then(function(profileSnap){
-        var profile=profileSnap.val()||{};
-        profile.user = profile.user || profile.displayName || username;
-        profile.displayName = profile.displayName || profile.user;
-        profile.email = profile.email || credential.user.email || "";
-        profile.uid = credential.user.uid;
-        currentProfile = profile;
-        try { localStorage.setItem("cenaff_logged_username", profile.user); } catch(e) {}
-        bindBalance(profile.user);
-        updateAuthUI();
-        try { sessionStorage.setItem("cenaff_admin_session", (profile.role==="admin"||profile.admin===true||profile.isAdmin===true) ? "1" : "0"); } catch(e) {}
-        if(message) message.textContent="";
-        closeModal("kcLoginModal");
-        showToast("Đăng nhập thành công.", "success");
-      }).catch(function(profileError){
-        console.warn("Không đọc được userProfiles sau đăng nhập, dùng hồ sơ tối thiểu:", profileError);
-        if(message) message.textContent="";
-        closeModal("kcLoginModal");
-        showToast("Đăng nhập thành công.", "success");
-        updateAuthUI();
-      });
-    }
-
-    auth.signInWithEmailAndPassword(internalEmail, password)
-      .then(finishLogin)
-      .catch(function (firstError) {
-        if (!db || (firstError && !["auth/user-not-found","auth/invalid-login-credentials","auth/wrong-password"].includes(firstError.code))) {
-          throw firstError;
-        }
-        return db.ref("userProfiles").orderByChild("user").equalTo(username).once("value").then(function(snap){
-          var found=null;
-          snap.forEach(function(ch){ if(!found) found=ch.val()||{}; });
-          if(!found || !found.email) throw firstError;
-          var allowed=found.role==="admin" || found.admin===true || found.isAdmin===true;
-          if(!allowed) throw firstError;
-          return auth.signInWithEmailAndPassword(String(found.email), password).then(finishLogin);
-        });
-      })
-      .catch(function (error) {
-        console.error("CENAFF LOGIN ERROR", error);
-        if(message) message.textContent = friendlyAuthError(error);
-      });
+    if(message) message.textContent="Tài khoản chưa có trên thiết bị này. Hãy bấm Đăng ký để tạo tài khoản.";
   }
 
   window.loginUser = loginUser;
 
   function registerUser() {
-    if (!auth || !db) {
-      showToast("Hệ thống đăng ký chưa sẵn sàng.", "error");
-      return;
-    }
-
     var username = String(document.getElementById("kcRegisterUsername").value || "").trim();
     var password = String(document.getElementById("kcRegisterPassword").value || "");
     var password2 = String(document.getElementById("kcRegisterPassword2").value || "");
     var message = document.getElementById("kcRegisterMessage");
 
     if (!/^[A-Za-z0-9_.-]{3,32}$/.test(username)) {
-      message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, .";
+      if(message) message.textContent = "Tên tài khoản 3-32 ký tự, chỉ dùng chữ, số, _, -, .";
       return;
     }
-
+    if (username.toLowerCase() === CENAFF_ADMIN_USERNAME.toLowerCase()) {
+      if(message) message.textContent = "Tên tài khoản này đã được dành cho hệ thống.";
+      return;
+    }
     if (password.length < 6) {
-      message.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
+      if(message) message.textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
       return;
     }
-
     if (password !== password2) {
-      message.textContent = "Hai mật khẩu không giống nhau.";
+      if(message) message.textContent = "Hai mật khẩu không giống nhau.";
       return;
     }
 
-    message.textContent = "Đang tạo tài khoản...";
-
-    var internalEmail = username.toLowerCase() + "@accounts.shop-kc.local";
-
-    /* Không đọc customerRegistry trước khi đăng nhập. Firebase Auth tự kiểm tra
-       tài khoản đã tồn tại; việc đọc RTDB khi khách chưa đăng nhập có thể bị
-       Security Rules từ chối và làm đăng ký thất bại. */
-    auth.createUserWithEmailAndPassword(internalEmail, password)
-      .then(function (credential) {
-        currentUser = credential.user;
-        return saveProfile(username).then(function () {
-          return loadProfile(credential.user);
-        });
-      })
-      .then(function () {
-        bindBalance(getUsername());
-        updateAuthUI();
-        refreshAccountHistory();
-        refreshHistory();
-        message.textContent = "";
-        closeModal("kcLoginModal");
-        showToast("Tạo tài khoản thành công.", "success");
-      })
-      .catch(function (error) {
-        console.error("CENAFF REGISTER ERROR", error);
-        if (error && error.message === "USERNAME_EXISTS") {
-          message.textContent = "Tên tài khoản đã tồn tại.";
-          return;
-        }
-        message.textContent = friendlyAuthError(error);
-      });
+    if(message) message.textContent="Đang tạo tài khoản...";
+    var result=localCustomerRegister(username,password);
+    if(!result.ok) {
+      if(message) message.textContent=result.error==="USERNAME_EXISTS" ? "Tên tài khoản đã tồn tại." : "Không thể lưu tài khoản trên thiết bị này.";
+      return;
+    }
+    try { localStorage.setItem("cenaff_logged_username", username); } catch(e) {}
+    if(message) message.textContent="";
+    closeModal("kcLoginModal");
+    updateAuthUI();
+    showToast("Tạo tài khoản thành công.", "success");
   }
 
   window.registerUser = registerUser;
@@ -3247,25 +3243,22 @@ button {
   }
 
   function logoutUser() {
-    if (!auth) {
-      return;
-    }
-
-    auth.signOut()
-      .then(function () {
-        try { localStorage.removeItem("cenaff_logged_username"); } catch(e) {}
-        closeModal("kcAccountModal");
-        closeModal("kcHistoryModal");
-        closeModal("kcDepositModal");
-        showToast("Đã đăng xuất.", "success");
-      })
-      .catch(function (error) {
-        console.error(error);
-        showToast("Không thể đăng xuất.", "error");
-      });
+    var wasLocal=!!(currentUser && (currentUser.localOnly || currentUser.localAdmin));
+    localSessionClear();
+    try { localStorage.removeItem("cenaff_logged_username"); sessionStorage.removeItem("cenaff_admin_session"); sessionStorage.removeItem("shopkc_admin_verified"); } catch(e) {}
+    if (balanceListener) { try { balanceListener(); } catch(e) {} balanceListener=null; }
+    currentUser=null; currentProfile=null; currentBalance=0;
+    if(auth && !wasLocal) { try { auth.signOut(); } catch(e) {} }
+    closeModal("kcAccountModal");
+    closeModal("kcHistoryModal");
+    closeModal("kcDepositModal");
+    updateAuthUI();
+    if(window.shopKCCloseEmbedded) window.shopKCCloseEmbedded();
+    showToast("Đã đăng xuất.", "success");
   }
 
   window.logoutUser = logoutUser;
+  window.cenaffLocalLogout = function(){ logoutUser(); };
 
   function openAccount() {
     if (!requireLogin()) {
@@ -4323,6 +4316,7 @@ button {
 
     diagnoseFirebaseConfig();
     initFirebase();
+    localCustomerLoadSession();
 
     if (auth) {
       auth.onAuthStateChanged(authStateChanged);
@@ -7672,7 +7666,7 @@ auth.onAuthStateChanged(u=>{currentUser=u||null;if(u){db.ref('customerRegistry')
     if(mode==="admin"){
       html=html.replace('let adminUnlocked=false;', 'let adminUnlocked=(function(){try{return parent.sessionStorage.getItem("cenaff_admin_session")==="1";}catch(e){return false;}})();');
       html=html.replace('if(!user){adminUnlocked=false;applyAdminLock();return;}', 'if(!user){try{if(parent.sessionStorage.getItem("cenaff_admin_session")==="1"){adminUnlocked=true;applyAdminLock();if(typeof bootAdmin==="function")bootAdmin();return;}}catch(e){} adminUnlocked=false;applyAdminLock();return;}');
-      html=html.replace('function adminLogout(){adminUnlocked=false;adminProfile=null;adminAuth.signOut().finally(function(){location.reload();});}', 'function adminLogout(){try{parent.sessionStorage.removeItem("cenaff_admin_session");parent.sessionStorage.removeItem("shopkc_admin_verified");}catch(e){} adminUnlocked=false;adminProfile=null;try{adminAuth.signOut();}catch(e){} if(parent.shopKCCloseEmbedded)parent.shopKCCloseEmbedded();}');
+      html=html.replace('function adminLogout(){adminUnlocked=false;adminProfile=null;adminAuth.signOut().finally(function(){location.reload();});}', 'function adminLogout(){try{parent.sessionStorage.removeItem("cenaff_admin_session");parent.sessionStorage.removeItem("shopkc_admin_verified");parent.localStorage.removeItem("cenaff_logged_username");}catch(e){} adminUnlocked=false;adminProfile=null;try{adminAuth.signOut();}catch(e){} if(parent.cenaffLocalLogout)parent.cenaffLocalLogout(); else if(parent.shopKCCloseEmbedded)parent.shopKCCloseEmbedded();}');
     }
     frame.srcdoc=html;
     overlay.classList.add("show");
