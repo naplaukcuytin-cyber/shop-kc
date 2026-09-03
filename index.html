@@ -758,6 +758,8 @@ button {
   font-weight: 700;
 }
 
+.kc-header-logout{margin-left:8px!important;background:#f3f4f6!important;color:#222!important;border:1px solid #ddd!important;font-weight:800!important}.kc-header-logout:active{transform:scale(.97)}
+
 .kc-account-hero {
   display: grid;
   grid-template-columns: auto minmax(0,1fr) auto;
@@ -1214,6 +1216,9 @@ button {
 
                             <button class="btn-header btn-cart" href="#deposit" onclick="event.preventDefault();openDeposit()">
                                 <span>Nạp tiền</span>
+                            </button>
+                            <button class="btn-header kc-header-logout _has_login" type="button" onclick="logoutUser();return false;" style="display:none">
+                                <span>Đăng xuất</span>
                             </button>
                         </div>
                     </div>
@@ -3787,28 +3792,29 @@ button {
   function copyDepositText(text, successText) {
     text = String(text || "");
     var done = function(){ showToast(successText || "Đã sao chép.", "success"); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done).catch(function(){
-        fallbackCopyDepositText(text, done);
-      });
-    } else {
-      fallbackCopyDepositText(text, done);
-    }
-  }
-
-  function fallbackCopyDepositText(text, done) {
+    // iPhone/Safari: ưu tiên execCommand ngay trong cú click để không mất user gesture.
     try {
       var ta = document.createElement("textarea");
       ta.value = text;
+      ta.setAttribute("readonly", "");
       ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      ta.style.top = "0";
       ta.style.opacity = "0";
       document.body.appendChild(ta);
-      ta.focus(); ta.select();
-      document.execCommand("copy");
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      var ok = document.execCommand("copy");
       ta.remove();
-      done();
-    } catch(e) {
-      showToast("Không thể sao chép, hãy giữ để sao chép thủ công.", "error");
+      if (ok) { done(); return; }
+    } catch(e) {}
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function(){
+        showToast("Không thể sao chép, hãy giữ vào nội dung để sao chép.", "error");
+      });
+    } else {
+      showToast("Không thể sao chép, hãy giữ vào nội dung để sao chép.", "error");
     }
   }
 
@@ -6047,7 +6053,15 @@ Admin approval remains the source of truth for wallet top-ups.
 <!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><title>Quản lý • Cenaff</title>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <style>
-:root{--bg:#f3f6fb;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e6eaf0;--green:#159957;--red:#df3f4a;--orange:#f59e0b;--purple:#7c3aed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:14px}.top{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1200px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;white-space:nowrap}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-orange{background:#fff1d6;color:#9a6100}.btn-purple{background:#eee5ff;color:#6230b0}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}.stat{background:#f8fafc;border-radius:12px;padding:14px}.stat b{font-size:23px}.muted{color:var(--muted);font-size:12px}.table{overflow:auto}table{width:100%;min-width:980px;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{font-size:11px;color:var(--muted)}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:11px;font-weight:800}.pending{background:#fff2cc;color:#946200}.processing{background:#e7f1ff;color:#075db5}.approved{background:#dcf8e8;color:#08733e}.rejected{background:#ffe4e5;color:#a91e24}.completed{background:#dcf8e8;color:#08733e}.notice{padding:11px;border-radius:10px;background:#fff8df;color:#806300;font-size:12px}.danger-note{padding:11px;border-radius:10px;background:#ffecee;color:#9e2731;font-size:12px}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.mini-grid{grid-template-columns:1fr}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.active{display:flex}.modal-box{background:#fff;border-radius:16px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:18px}.proof{max-width:180px;max-height:180px;border-radius:10px;border:1px solid var(--line);display:block;margin-top:8px}.search{max-width:360px}.top-actions{display:flex;gap:8px;align-items:center}
+:root{--bg:#f3f6fb;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e6eaf0;--green:#159957;--red:#df3f4a;--orange:#f59e0b;--purple:#7c3aed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:14px}.top{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1200px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;white-space:nowrap}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-orange{background:#fff1d6;color:#9a6100}.btn-purple{background:#eee5ff;color:#6230b0}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){
+  .kc-bank-card{grid-template-columns:1fr;gap:12px}
+  .kc-bank-line{gap:8px}
+  .kc-bank-label{font-size:12px;flex:0 0 auto}
+  .kc-bank-value{font-size:14px;white-space:nowrap}
+  .kc-bank-value-wrap{gap:4px;max-width:calc(100% - 60px)}
+  .kc-inline-copy{min-width:48px;width:48px;height:26px;font-size:9px;padding:0 3px}
+}
+@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}.stat{background:#f8fafc;border-radius:12px;padding:14px}.stat b{font-size:23px}.muted{color:var(--muted);font-size:12px}.table{overflow:auto}table{width:100%;min-width:980px;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{font-size:11px;color:var(--muted)}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:11px;font-weight:800}.pending{background:#fff2cc;color:#946200}.processing{background:#e7f1ff;color:#075db5}.approved{background:#dcf8e8;color:#08733e}.rejected{background:#ffe4e5;color:#a91e24}.completed{background:#dcf8e8;color:#08733e}.notice{padding:11px;border-radius:10px;background:#fff8df;color:#806300;font-size:12px}.danger-note{padding:11px;border-radius:10px;background:#ffecee;color:#9e2731;font-size:12px}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.mini-grid{grid-template-columns:1fr}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.active{display:flex}.modal-box{background:#fff;border-radius:16px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:18px}.proof{max-width:180px;max-height:180px;border-radius:10px;border:1px solid var(--line);display:block;margin-top:8px}.search{max-width:360px}.top-actions{display:flex;gap:8px;align-items:center}
 .customer-row-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.live-balance{font-size:16px;font-weight:900;color:#159957}.balance-tools{display:inline-flex;gap:5px;margin-left:8px}.btn-xs{padding:6px 8px!important;font-size:11px}.fraud-panel{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}.notice-ok{background:#e9fff2;color:#08733e;padding:10px;border-radius:10px;font-size:12px}.notice-warn{background:#fff0f1;color:#a91e24;padding:10px;border-radius:10px;font-size:12px}@keyframes adminLedPreview{from{background-position:100% 0}to{background-position:-100% 0}} 
 .admin-lock{position:fixed;inset:0;background:linear-gradient(135deg,#0d1117,#202938);z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px}.admin-login-box{width:min(430px,100%);background:#fff;border-radius:26px;padding:28px;box-shadow:0 30px 100px rgba(0,0,0,.35)}.admin-login-box h1{margin:0 0 8px;font-size:28px}.admin-login-box p{color:#697386;line-height:1.5}.admin-login-box input{margin-bottom:10px;padding:14px;border-radius:13px}.admin-login-btn{width:100%;padding:14px;border:0;border-radius:13px;background:#1683ff;color:#fff;font-weight:900;font-size:16px;cursor:pointer}.admin-login-error{min-height:20px;color:#df3f4a;font-size:13px;font-weight:800;margin:8px 0}.admin-logout{background:#ffe4e5;color:#a91e24}.admin-secret-note{background:#fff8df;color:#806300;padding:10px;border-radius:10px;font-size:12px;line-height:1.5}
 </style></head><body>
