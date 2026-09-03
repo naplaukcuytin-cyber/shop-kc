@@ -20,7 +20,7 @@
 
     <meta name="google" content="notranslate">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- css -->
     <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -117,6 +117,42 @@ header{position:sticky!important;top:0!important;z-index:50000!important;backgro
     border-radius: 7px;
   }
 }
+
+/* CENAFF XIN PATCH 2026-09-03 */
+html,body{touch-action:pan-y;overscroll-behavior-x:none;-webkit-text-size-adjust:100%;}
+body{-webkit-user-select:none;user-select:none;}
+input,textarea,select,code,.kc-history-meta,.kc-result-id{-webkit-user-select:text;user-select:text;}
+@media(max-width:600px){
+  .category-grid,.categories-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;}
+  .category-card,.minigame-card,.account-card{width:100%!important;min-width:0!important;height:300px!important;min-height:300px!important;max-height:300px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;border-radius:0!important;box-sizing:border-box!important;}
+  .category-card-image{height:150px!important;min-height:150px!important;flex:0 0 150px!important;overflow:hidden!important;display:grid!important;place-items:center!important;}
+  .category-card-image img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;}
+  .category-card-body{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important;overflow:hidden!important;padding:14px!important;}
+  .category-card-title{font-size:24px!important;line-height:1.12!important;word-break:normal!important;overflow-wrap:anywhere!important;}
+  .category-card-meta,.category-card-description{font-size:15px!important;line-height:1.35!important;}
+  .category-card-action{margin-top:auto!important;}
+}
+.kc-rental-panel{max-width:1100px!important;width:min(1100px,96vw)!important;}
+.kc-rental-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch;}
+.kc-rental-card{border:1px solid #e8e8ef;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.07);display:flex;flex-direction:column;min-width:0;}
+.kc-rental-card img{width:100%;height:190px;object-fit:cover;background:#f3f4f6;display:block;}
+.kc-rental-body{padding:16px;display:flex;flex-direction:column;flex:1;gap:8px;}
+.kc-rental-title{font-size:21px;font-weight:950;color:#182033;}
+.kc-rental-price{font-size:24px;font-weight:950;color:#f20d46;}
+.kc-rental-desc{color:#667085;line-height:1.45;min-height:44px;}
+.kc-rental-buy{margin-top:auto;width:100%;}
+.kc-rental-success{padding:8px 0 4px;text-align:center;}
+.kc-rental-success h2{font-size:30px;color:#07854f;margin:4px 0 10px;}
+.kc-credential{display:flex;align-items:center;gap:10px;justify-content:space-between;background:#f6f8fb;border:1px solid #e4e7ec;border-radius:14px;padding:12px 14px;margin-top:10px;text-align:left;}
+.kc-credential code{font-size:16px;font-weight:900;word-break:break-all;}
+.kc-copy-btn{border:0;background:#f20d46;color:#fff;border-radius:9px;padding:8px 10px;font-weight:900;white-space:nowrap;cursor:pointer;}
+.kc-admin-toolgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}
+.kc-admin-tool{border:1px solid #e7e9ee;border-radius:16px;background:#fff;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);}
+.kc-admin-tool b{display:block;margin-bottom:6px;font-size:16px;}
+.kc-admin-tool button{width:100%;margin-top:8px;}
+@media(max-width:700px){.kc-rental-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.kc-rental-card img{height:145px}.kc-admin-toolgrid{grid-template-columns:1fr}.kc-rental-title{font-size:18px}.kc-rental-price{font-size:20px}.kc-rental-desc{font-size:14px}}
+@media(max-width:430px){.kc-rental-grid{grid-template-columns:1fr}.kc-rental-card img{height:190px}.kc-rental-panel{width:100%!important}}
+
 </style>
 
     
@@ -172,7 +208,9 @@ a{text-decoration:none;color:inherit}
 .side-nav-body{padding:4px 0}.side-nav-divider{display:none}.side-nav-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid #f1f1f1}.side-nav-item:hover{background:#fafafa}.side-nav-icon img{width:35px;height:35px;border-radius:5px;object-fit:cover}.side-nav-label{font-size:13px;line-height:1.25;flex:1}.side-nav-arrow{color:#aaa}.side-nav-footer{display:block;text-align:center;padding:11px;color:var(--red);font-weight:700;font-size:13px}
 .hero-banner{min-width:0;border-radius:5px;overflow:hidden;background:#eee}.hero-banner-slide,.hero-banner-slide img{width:100%;height:100%;display:block}.hero-banner-slide img{object-fit:cover;min-height:330px}
 .hero-sidebar{display:grid;grid-template-rows:1fr 1fr;gap:14px}.hero-sidebar-banner{display:block;border-radius:5px;overflow:hidden;background:#eee}.hero-sidebar-banner img{width:100%;height:100%;display:block;object-fit:cover}
-.hero-categories{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:15px}.hero-category-card{border:1px solid #ddd;background:#fff;min-height:112px;padding:18px;display:flex;align-items:center;gap:16px;transition:.2s}.hero-category-card:hover{border-color:#f22;transform:translateY(-1px)}.hero-category-icon{width:64px;height:64px;flex:none;border-radius:17px;background:#fff0f3;color:var(--red);display:grid;place-items:center}.hero-category-icon svg{width:30px;height:30px}.hero-category-title{font-size:19px;margin:0 0 5px;font-weight:800}.hero-category-count{font-size:14px;color:#777}
+.hero-categories{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:15px}.hero-category-card{border:1px solid #ddd;background:#fff;min-height:112px;padding:18px;display:flex;align-items:center;gap:16px;transition:.2s}
+.hero-category-card{aspect-ratio:1/1;min-height:0;height:auto;overflow:hidden}.hero-category-info{min-width:0}.hero-category-title,.hero-category-count{overflow-wrap:anywhere}
+@media(max-width:600px){.hero-category-card{aspect-ratio:1/1;min-height:0;height:auto;padding:18px;align-items:center}.hero-category-info{min-width:0}.hero-category-title{font-size:18px;line-height:1.25}.hero-category-count{font-size:13px;line-height:1.45}}.hero-category-card:hover{border-color:#f22;transform:translateY(-1px)}.hero-category-icon{width:64px;height:64px;flex:none;border-radius:17px;background:#fff0f3;color:var(--red);display:grid;place-items:center}.hero-category-icon svg{width:30px;height:30px}.hero-category-title{font-size:19px;margin:0 0 5px;font-weight:800}.hero-category-count{font-size:14px;color:#777}
 /* Product sections */
 .container-service{background:#f7f7f7;padding:45px 0 0}
 .categories-section{padding:0 0 62px}.section-header{text-align:center;margin:0 0 32px}.section-title{font-size:34px;line-height:1.2;margin:0;font-weight:900;letter-spacing:-.5px}
@@ -1234,6 +1272,11 @@ button {
  .kc-account-hero-actions .kc-btn{padding:7px 7px!important;font-size:11px!important}
 }
 </style>
+
+<style id="cenaff-rental-style">
+.kc-rental-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.kc-rental-card{border:1px solid #eee;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.06)}.kc-rental-card img{width:100%;aspect-ratio:1.55/1;object-fit:cover;display:block;background:#f3f3f3}.kc-rental-body{padding:14px}.kc-rental-title{font-size:20px;font-weight:950;margin-bottom:5px}.kc-rental-price{color:#f20d46;font-size:22px;font-weight:950;margin:5px 0 10px}.kc-rental-desc{color:#6b6b6b;font-size:13px;min-height:40px}.kc-rental-buy{width:100%;margin-top:12px}.kc-rental-success{border:2px solid #b8f2d3;background:linear-gradient(180deg,#f0fff7,#fff);border-radius:22px;padding:24px}.kc-rental-success h2{margin:0 0 12px;color:#07834f;font-size:28px}.kc-credential{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid #dcefe5;background:#fff;border-radius:12px;padding:11px;margin-top:9px}.kc-credential code{font-size:16px;font-weight:900;word-break:break-all}.kc-copy-btn{flex:none;border:0;border-radius:8px;background:#f20d46;color:#fff;padding:7px 10px;font-weight:900;cursor:pointer}.kc-rental-panel{max-width:980px}.kc-rental-success-panel{max-width:620px}@media(max-width:600px){.kc-rental-grid{grid-template-columns:1fr}.kc-rental-title{font-size:18px}}
+html,body{touch-action:pan-x pan-y;overscroll-behavior-x:none}.kc-modal-panel{touch-action:pan-y}
+</style>
 </head>
 
 
@@ -1681,7 +1724,7 @@ button {
                     <h2 class="section-title">NICK GAME</h2>
                 </div>
                 <div class="categories-grid">
-                                            <a href="/account/thue-acc-free-fire" class="category-card account-card">
+                                            <a href="#thueacc" onclick="event.preventDefault();openRentalStore();" class="category-card account-card">
                             <div class="category-card-image">
                                 <img loading="eager" src="https://cenaff.com/assets/uploads/1784821011_53f906a137cb0282.png"
                                     onerror="this.src='https://cenaff.com/assets/images/images.avif';" alt="Thuê Acc Free Fire">
@@ -2474,6 +2517,21 @@ button {
   </div>
 </div>
 
+
+<div class="kc-modal" id="kcRentalModal" aria-hidden="true">
+  <div class="kc-modal-backdrop" onclick="closeModal('kcRentalModal')"></div>
+  <div class="kc-modal-panel kc-rental-panel" role="dialog" aria-modal="true" aria-labelledby="kcRentalTitle">
+    <div class="kc-modal-head"><h2 class="kc-modal-title" id="kcRentalTitle">🎮 THUÊ ACC GAME</h2><button class="kc-close" type="button" onclick="closeModal('kcRentalModal')">×</button></div>
+    <div class="kc-modal-body"><div id="kcRentalGrid" class="kc-rental-grid"><div class="kc-empty">Đang tải kho acc...</div></div></div>
+  </div>
+</div>
+<div class="kc-modal" id="kcRentalSuccessModal" aria-hidden="true">
+  <div class="kc-modal-backdrop" onclick="closeModal('kcRentalSuccessModal')"></div>
+  <div class="kc-modal-panel kc-rental-success-panel" role="dialog" aria-modal="true">
+    <div class="kc-modal-body"><div id="kcRentalSuccessBody"></div><div class="kc-actions" style="margin-top:18px"><button class="kc-btn kc-btn-primary" onclick="closeModal('kcRentalSuccessModal')">Đóng</button><button class="kc-btn kc-btn-dark" onclick="closeModal('kcRentalSuccessModal');openHistory()">Xem lịch sử mua</button></div></div>
+  </div>
+</div>
+
 <div class="kc-modal" id="kcDepositModal" aria-hidden="true">
   <div class="kc-modal-backdrop" onclick="closeModal('kcDepositModal')"></div>
   <div class="kc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="kcDepositTitle">
@@ -2842,7 +2900,7 @@ button {
   var productRules = [
     "Mỗi lượt mua sẽ được ghi nhận thành một đơn hàng riêng.",
     "Tài khoản phải có đủ số dư trước khi xác nhận mua.",
-    "Sau khi trừ tiền, đơn được chuyển sang trạng thái đang xử lý.",
+    "Sau khi thanh toán thành công và còn tài khoản trong kho, hệ thống giao tài khoản ngay.",
     "Hệ thống hoàn tất đơn sau khi kiểm tra và thực hiện phần thưởng.",
     "Không tự ý gửi lại tiền hoặc tạo nhiều đơn ngoài hệ thống.",
     "Nếu có vấn đề, hãy liên hệ bộ phận hỗ trợ của Cenaff."
@@ -4170,72 +4228,51 @@ button {
     if (!requireLogin()) return Promise.reject(new Error("LOGIN_REQUIRED"));
     var username = getUsername();
     if (!username) return Promise.reject(new Error("Không xác định được tài khoản khách."));
-
-    return transactionBalance(username, -total)
-      .then(function (newBalance) {
-        var order = {
-          user: username,
-          displayName: (currentProfile && currentProfile.displayName) || username,
-          game: product.title,
-          gameSlug: product.slug,
-          gameUID: "",
-          type: "minigame",
-          package: product.title,
-          price: total,
-          quantity: quantity,
-          boxNumber: selectedBoxIndex,
-          unitPrice: product.price,
-          status: "processing",
-          historyType: "xengay",
-          realOrder: true,
-          timestamp: firebase && firebase.database ? firebase.database.ServerValue.TIMESTAMP : Date.now(),
-          time: new Date().toLocaleString("vi-VN"),
-          balanceAfter: newBalance,
-          source: "cenaff-customer-web"
-        };
-
-        if (!db) throw new Error("Hệ thống đơn hàng chưa sẵn sàng.");
-        return db.ref("orders").push(order)
-          .then(function (reference) {
-            return { id: reference.key, balance: newBalance, order: order };
-          })
-          .catch(function (error) {
-            return transactionBalance(username, total).then(function () { throw error; });
-          });
-      })
-      .catch(function (error) {
-        if (error && error.message === "INSUFFICIENT_BALANCE") {
-          throw new Error("Số dư không đủ để mua túi này.");
-        }
-        throw error;
+    if (!db) return Promise.reject(new Error("Hệ thống đơn hàng chưa sẵn sàng."));
+    quantity = Math.max(1, Number(quantity)||1);
+    total = Number(total)||0;
+    var slug = String(product.slug||product.id||'').trim();
+    var inventoryRef = db.ref("siteConfig/rewardInventory/" + encodeKey(slug));
+    var reserved = [];
+    return inventoryRef.transaction(function(raw){
+      var data = raw && typeof raw === 'object' ? raw : {};
+      var keys = Object.keys(data).filter(function(k){ var x=data[k]||{}; return x.status !== 'sold' && String(x.account||x.username||'').trim() && String(x.password||x.pass||'').trim(); });
+      if(keys.length < quantity) return;
+      reserved = keys.slice(0,quantity).map(function(k){ var x=data[k]||{}; return {key:k,account:String(x.account||x.username||'').trim(),password:String(x.password||x.pass||'').trim(),note:String(x.note||x.info||'').trim()}; });
+      reserved.forEach(function(r){ data[r.key] = Object.assign({}, data[r.key], {status:'sold',soldTo:username,soldAt:firebase.database.ServerValue.TIMESTAMP}); });
+      return data;
+    }).then(function(invResult){
+      if(!invResult || !invResult.committed || reserved.length < quantity) throw new Error("HẾT TÀI KHOẢN: Túi này hiện chưa có đủ tài khoản để giao.");
+      return transactionBalance(username,-total).then(function(newBalance){
+        var order={user:username,displayName:(currentProfile&&currentProfile.displayName)||username,game:product.title,gameSlug:slug,gameUID:"",type:"minigame",package:product.title,price:total,quantity:quantity,boxNumber:selectedBoxIndex,unitPrice:product.price,status:"completed",historyType:"xengay",realOrder:true,timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString("vi-VN"),balanceAfter:newBalance,source:"cenaff-customer-web",rewardUsername:reserved[0].account,rewardPassword:reserved[0].password,rewardNote:reserved[0].note,rewards:reserved,customerMessage:"🎉 Đã xử lý thành công — tài khoản trúng thưởng đã được giao ngay."};
+        return db.ref("orders").push(order).then(function(reference){ return {id:reference.key,balance:newBalance,order:order}; }).catch(function(error){
+          return inventoryRef.transaction(function(raw){ var d=raw&&typeof raw==='object'?raw:{}; reserved.forEach(function(r){if(d[r.key]){d[r.key]=Object.assign({},d[r.key],{status:'available'}); delete d[r.key].soldTo; delete d[r.key].soldAt;}}); return d; }).then(function(){return transactionBalance(username,total);}).then(function(){throw error;});
+        });
+      }).catch(function(error){
+        if(error && error.message==='INSUFFICIENT_BALANCE') { return inventoryRef.transaction(function(raw){ var d=raw&&typeof raw==='object'?raw:{}; reserved.forEach(function(r){if(d[r.key]){d[r.key]=Object.assign({},d[r.key],{status:'available'}); delete d[r.key].soldTo; delete d[r.key].soldAt;}}); return d; }).then(function(){throw new Error("Số dư không đủ để mua túi này.");}); }
+        return inventoryRef.transaction(function(raw){ var d=raw&&typeof raw==='object'?raw:{}; reserved.forEach(function(r){if(d[r.key]){d[r.key]=Object.assign({},d[r.key],{status:'available'}); delete d[r.key].soldTo; delete d[r.key].soldAt;}}); return d; }).then(function(){throw error;});
       });
+    });
   }
 
   function showProductPurchaseResult(result) {
     var body = document.getElementById("kcProductModalBody");
     if (!body || !result) return;
-    var old = document.getElementById("kcPurchaseResult");
-    if (old) old.remove();
-    var order = result.order || {};
-    var wrap = document.createElement("div");
-    wrap.id = "kcPurchaseResult";
-    wrap.className = "kc-purchase-result pending-result";
-    wrap.innerHTML = '' +
-      '<div class="kc-result-icon">✓</div>' +
-      '<div class="kc-result-title">Đã xác nhận mua túi!</div>' +
-      '<div class="kc-result-sub">Túi số <b>' + safeText(order.boxNumber || selectedBoxIndex) + '</b> • ' + safeText(order.package || order.game || '') + '</div>' +
-      '<div class="kc-result-money">Đã trừ ' + safeText(formatMoney(order.price || 0)) + '</div>' +
-      '<div class="kc-result-status" id="kcPurchaseStatus">⏳ Đơn đang được hệ thống xử lý...</div>' +
-      '<div class="kc-result-id">Mã đơn: ' + safeText(result.id) + '</div>' +
-      '<button type="button" class="kc-btn kc-btn-primary" style="margin-top:12px" onclick="closeModal(\'kcProductModal\')">Đóng</button>';
-    var modalPanel = document.querySelector("#kcProductModal .kc-modal-panel");
-    if (modalPanel) {
-      modalPanel.appendChild(wrap);
-    } else {
-      body.appendChild(wrap);
-    }
-    watchProductOrderStatus(result.id);
+    var old = document.getElementById("kcPurchaseResult"); if(old) old.remove();
+    var order=result.order||{}, rewards=Array.isArray(order.rewards)&&order.rewards.length?order.rewards:[{account:order.rewardUsername,password:order.rewardPassword,note:order.rewardNote}];
+    var wrap=document.createElement("div"); wrap.id="kcPurchaseResult"; wrap.className="kc-purchase-result approved-result";
+    var creds=rewards.map(function(r){return '<div class="kc-result-credentials"><div class="kc-result-complete-title">🎉 ĐÃ XỬ LÝ THÀNH CÔNG</div><div class="kc-credential"><span><b>Tài khoản:</b> <code>'+safeText(r.account||'-')+'</code></span><button class="kc-copy-btn" onclick="copyTextCenaff('+JSON.stringify(String(r.account||''))+',this)">Sao chép</button></div><div class="kc-credential"><span><b>Mật khẩu:</b> <code>'+safeText(r.password||'-')+'</code></span><button class="kc-copy-btn" onclick="copyTextCenaff('+JSON.stringify(String(r.password||''))+',this)">Sao chép</button></div>'+(r.note?'<div style="margin-top:8px"><b>Ghi chú:</b> '+safeText(r.note)+'</div>':'')+'</div>';}).join('');
+    wrap.innerHTML='<div class="kc-result-icon">✓</div><div class="kc-result-title">ĐÃ XÁC NHẬN MUA TÚI!</div><div class="kc-result-sub">Túi số <b>'+safeText(order.boxNumber||selectedBoxIndex)+'</b> • '+safeText(order.package||order.game||'')+'</div><div class="kc-result-money">Đã trừ '+safeText(formatMoney(order.price||0))+'</div>'+creds+'<div class="kc-result-id">Mã đơn: '+safeText(result.id)+'</div><button type="button" class="kc-btn kc-btn-primary" style="margin-top:12px" onclick="closeModal(\'kcProductModal\')">Đóng</button>';
+    var panel=document.querySelector("#kcProductModal .kc-modal-panel"); if(panel) panel.appendChild(wrap); else body.appendChild(wrap);
+    refreshHistory(); refreshAccountHistory();
   }
+  function copyTextCenaff(text,button){
+    text=String(text||''); var ok=false;
+    try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand('copy');ta.remove();}catch(e){}
+    if(!ok && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ok=true;}).catch(function(){});
+    if(button){var old=button.textContent;button.textContent='Đã sao chép';setTimeout(function(){button.textContent=old},1200);}
+  }
+  window.copyTextCenaff=copyTextCenaff;
 
   function watchProductOrderStatus(orderId) {
     if (!db || !orderId) return;
@@ -4449,6 +4486,7 @@ function openProduct(slug) {
   window.closeProcessingOrder = closeProcessingOrder;
 
   function openProcessingOrder(orderId) {
+    return; /* giao túi đã hoàn tất ngay, không dùng màn hình đang xử lý */
     if (!db || !orderId) return;
     stopProcessingOrderListener();
     cenaffProcessingOrderId = orderId;
@@ -4599,6 +4637,47 @@ function openProduct(slug) {
   }
 
   window.confirmProductPurchase = confirmProductPurchase;
+
+  var cenaffRentalsCache={};
+  function openRentalStore(){
+    openModal('kcRentalModal');
+    var grid=document.getElementById('kcRentalGrid'); if(grid) grid.innerHTML='<div class="kc-empty">Đang tải kho acc...</div>';
+    if(!db){if(grid)grid.innerHTML='<div class="kc-empty">Firebase chưa sẵn sàng.</div>';return;}
+    db.ref('siteConfig/rentals').once('value').then(function(snap){
+      var raw=snap.val()||{}; cenaffRentalsCache=raw;
+      var arr=Object.keys(raw).map(function(id){return Object.assign({id:id},raw[id]||{});}).filter(function(x){return x.status!=='sold'&&x.active!==false&&x.account&&x.password;});
+      if(!arr.length){grid.innerHTML='<div class="kc-empty">Chưa có acc cho thuê. Admin hãy thêm acc trong Quản lý.</div>';return;}
+      grid.innerHTML=arr.map(function(x){var img=x.image||'';return '<article class="kc-rental-card"><img src="'+safeText(img)+'" alt="'+safeText(x.title||'Acc game')+'" onerror="this.style.opacity=.25"><div class="kc-rental-body"><div class="kc-rental-title">'+safeText(x.title||'Acc Game')+'</div><div class="kc-rental-price">'+safeText(formatMoney(x.price||0))+'</div><div class="kc-rental-desc">'+safeText(x.description||'Acc game chất lượng, giao thông tin ngay sau khi thanh toán.')+'</div><button class="kc-btn kc-btn-primary kc-rental-buy" onclick="buyRentalAccount('+JSON.stringify(x.id)+')">🎮 THUÊ NGAY</button></div></article>';}).join('');
+    }).catch(function(e){if(grid)grid.innerHTML='<div class="kc-empty">Không tải được kho acc: '+safeText(e.message)+'</div>';});
+  }
+  window.openRentalStore=openRentalStore;
+  function buyRentalAccount(id){
+    if(!requireLogin()) return; var item=cenaffRentalsCache[id]; if(!item)return;
+    var price=Number(item.price)||0; if(price<=0){showToast('Giá thuê chưa được cấu hình.','error');return;}
+    if(currentBalance<price){showToast('Số dư không đủ. Hãy nạp tiền trước.','error');openDeposit();return;}
+    var old=document.getElementById('kcRentalConfirm');if(old)old.remove();
+    var panel=document.querySelector('#kcRentalModal .kc-modal-panel'); if(!panel)return;
+    var box=document.createElement('div');box.id='kcRentalConfirm';box.className='kc-inline-purchase-confirm';
+    box.innerHTML='<div class="kc-inline-confirm-icon">🎮</div><div class="kc-inline-confirm-title">Xác nhận thuê acc?</div><div class="kc-inline-confirm-text">Thuê <b>'+safeText(item.title||'Acc Game')+'</b> với giá <b>'+safeText(formatMoney(price))+'</b>.</div><div class="kc-inline-confirm-note">Số dư hiện tại: <b>'+safeText(formatMoney(currentBalance))+'</b></div><div class="kc-inline-confirm-actions"><button type="button" class="kc-btn kc-btn-primary" id="kcRentalConfirmYes">✓ Thuê ngay</button><button type="button" class="kc-btn kc-inline-cancel" onclick="document.getElementById(\'kcRentalConfirm\')?.remove()">Hủy</button></div>';
+    panel.appendChild(box);document.getElementById('kcRentalConfirmYes').onclick=function(){box.remove();
+      var ref=db.ref('siteConfig/rentals/'+encodeKey(id));
+      ref.transaction(function(x){if(!x||x.status==='sold'||x.active===false)return;return Object.assign({},x,{status:'sold',rentedBy:getUsername(),rentedAt:firebase.database.ServerValue.TIMESTAMP});}).then(function(r){
+        if(!r||!r.committed)throw new Error('Acc này vừa được khách khác thuê.');
+        return transactionBalance(getUsername(),-price).then(function(newBalance){
+          var order={user:getUsername(),productId:id,product:item.title||'Acc Game',price:price,status:'completed',type:'rental',historyType:'rental',timestamp:firebase.database.ServerValue.TIMESTAMP,time:new Date().toLocaleString('vi-VN'),balanceAfter:newBalance,rewardUsername:item.account,rewardPassword:item.password,rewardNote:item.note||'',image:item.image||'',customerMessage:'🎉 Thuê acc thành công — thông tin đăng nhập đã được giao ngay.'};
+          return db.ref('rentalOrders').push(order).then(function(ref2){return{id:ref2.key,order:order};}).catch(function(e){return transactionBalance(getUsername(),price).then(function(){throw e;});});
+        }).catch(function(e){return ref.transaction(function(x){if(!x)return x;if(x.rentedBy===getUsername()&&x.status==='sold')return Object.assign({},x,{status:'available',active:true,rentedBy:null,rentedAt:null});return x;}).then(function(){throw e;});});
+      }).then(function(result){
+        closeModal('kcRentalModal');var o=result.order,b=document.getElementById('kcRentalSuccessBody');
+        b.innerHTML='<div class="kc-rental-success"><div class="kc-result-icon">✓</div><h2>🎉 THUÊ ACC THÀNH CÔNG</h2><p>Đã trừ <b>'+safeText(formatMoney(o.price))+'</b> từ số dư của bạn.</p><div class="kc-credential"><span><b>Tài khoản:</b> <code>'+safeText(o.rewardUsername)+'</code></span><button class="kc-copy-btn" onclick="copyTextCenaff('+JSON.stringify(String(o.rewardUsername||''))+',this)">Sao chép</button></div><div class="kc-credential"><span><b>Mật khẩu:</b> <code>'+safeText(o.rewardPassword)+'</code></span><button class="kc-copy-btn" onclick="copyTextCenaff('+JSON.stringify(String(o.rewardPassword||''))+',this)">Sao chép</button></div>'+(o.rewardNote?'<p><b>Ghi chú:</b> '+safeText(o.rewardNote)+'</p>':'')+'<p style="color:#08733e;font-weight:800">✓ Giao tài khoản thành công • Mã đơn: '+safeText(result.id)+'</p></div>';
+        openModal('kcRentalSuccessModal');refreshHistory();refreshAccountHistory();
+      }).catch(function(e){showToast(e.message||'Không thể thuê acc.','error');openRentalStore();});
+    };
+  }
+  window.buyRentalAccount=buyRentalAccount;
+
+
+(function(){document.addEventListener('gesturestart',function(e){e.preventDefault();},{passive:false});document.addEventListener('gesturechange',function(e){e.preventDefault();},{passive:false});document.addEventListener('gestureend',function(e){e.preventDefault();},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});document.addEventListener('wheel',function(e){if(e.ctrlKey)e.preventDefault();},{passive:false});})();
 
   function attachSearch() {
     var form = document.querySelector(".search-form");
@@ -4799,6 +4878,8 @@ window.ShopKCCreateNickOrder=function(selected,price,note){
   window.addEventListener("hashchange", handleEntryHash);
 
   function init() {
+    document.addEventListener("gesturestart", function(e){e.preventDefault();}, {passive:false});
+    document.addEventListener("touchmove", function(e){if(e.touches&&e.touches.length>1)e.preventDefault();}, {passive:false});
     preventModalScrollThrough();
     installFirebaseDiagnostics();
 
@@ -6086,7 +6167,7 @@ Admin approval remains the source of truth for wallet top-ups.
 <!-- Source đầy đủ của admin.html được giữ nguyên trong template và chạy trong iframe cùng origin. -->
 <template id="shopkcAdminSource">
 <!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"><title>Quản lý • Cenaff</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--blue:#1683ff;--text:#172033;--muted:#697386;--line:#e6eaf0;--green:#159957;--red:#df3f4a;--orange:#f59e0b;--purple:#7c3aed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:14px}.top{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand b{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:4px}.wrap{max-width:1200px;margin:18px auto;padding:0 14px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.tabs button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;white-space:nowrap}.tabs button{background:#e9edf3;color:#566070}.tabs .active{background:var(--blue);color:#fff}.btn-primary{background:var(--blue);color:#fff}.btn-green{background:#dcf8e8;color:#08733e}.btn-red{background:#ffe4e5;color:#a91e24}.btn-orange{background:#fff1d6;color:#9a6100}.btn-purple{background:#eee5ff;color:#6230b0}.btn-gray{background:#eef1f5;color:#4d5868}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px rgba(20,30,50,.04)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){
   .kc-bank-card{grid-template-columns:1fr;gap:12px}
@@ -6117,8 +6198,9 @@ Admin approval remains the source of truth for wallet top-ups.
 
 <header><div class="top"><div class="brand"><b>⚙️ Quản lý Cenaff</b><small>Realtime • Nạp ví • Thẻ cào • Garena • Game • Rút tiền • Người dùng</small></div><div class="top-actions"><button class="btn admin-logout" onclick="adminLogout()">Đăng xuất Admin</button></div></div></header>
 <div class="wrap">
-<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('nickOrders',this)">Nick Game</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
+<div class="tabs"><button class="active" onclick="showTab('dashboard',this)">Tổng quan</button><button onclick="showTab('orders',this)">Đơn nạp</button><button onclick="showTab('orderHistory',this)">Lịch sử thật</button><button onclick="showTab('withdrawals',this)">Rút tiền</button><button onclick="showTab('users',this)">Khách hàng</button><button onclick="showTab('site',this)">Trang chủ</button><button onclick="showTab('games',this)">Game & giá</button><button onclick="showTab('nickOrders',this)">Nick Game</button><button onclick="showTab('rentals',this)">🎮 Thuê Acc</button><button onclick="showTab('config',this)">Thanh toán & túi mù</button></div>
 <section id="dashboard"><div class="grid"><div class="card stat"><span class="muted">Chờ duyệt</span><br><b id="pendingCount">0</b></div><div class="card stat"><span class="muted">Game đang xử lý</span><br><b id="processingCount">0</b></div><div class="card stat"><span class="muted">Rút đang chờ</span><br><b id="withdrawPendingCount">0</b></div><div class="card stat"><span class="muted">Đã duyệt / hoàn tất</span><br><b id="approvedCount">0</b></div></div><div class="card"><b>Đơn gần đây</b><div id="recent" style="margin-top:10px"></div></div><div class="danger-note"><b>Quyền Admin:</b> có thể duyệt/hủy đơn, hoàn tất đơn game, cộng/trừ số dư và xử lý yêu cầu rút tiền. Không hiển thị hoặc lưu mật khẩu khách hàng.</div></section>
+<div class="card"><b>⚡ CÔNG CỤ QUẢN TRỊ NHANH</b><div class="kc-admin-toolgrid"><div class="kc-admin-tool"><b>🔄 Đồng bộ dữ liệu</b><span class="muted">Tải lại kho, túi, đơn và cấu hình mới nhất.</span><button class="btn btn-primary" onclick="adminHardRefresh()">Làm mới ngay</button></div><div class="kc-admin-tool"><b>🛑 Bảo trì website</b><span class="muted">Ẩn website khách trong một chạm.</span><button class="btn btn-red" onclick="adminCloseSiteNow()">Đóng website</button></div><div class="kc-admin-tool"><b>🟢 Mở website</b><span class="muted">Mở lại website cho khách ngay.</span><button class="btn btn-green" onclick="adminOpenSiteNow()">Mở website</button></div><div class="kc-admin-tool"><b>🎁 Nạp nhanh kho túi</b><span class="muted">Đi tới ô thêm tài khoản game.</span><button class="btn btn-primary" onclick="showTab('config',document.querySelector('.tabs button:nth-child(10)'))">Mở kho tài khoản</button></div><div class="kc-admin-tool"><b>🎮 Kho thuê Acc</b><span class="muted">Thêm ảnh, giá, tài khoản và mật khẩu.</span><button class="btn btn-primary" onclick="showTab('rentals',document.querySelector('.tabs button:nth-child(9)'))">Mở kho thuê</button></div><div class="kc-admin-tool"><b>📊 Đơn đang chờ</b><span class="muted">Xem nhanh các đơn chưa hoàn tất.</span><button class="btn btn-primary" onclick="showTab('orders',document.querySelector('.tabs button:nth-child(2)'))">Xem đơn</button></div></div></div>
 <section id="orders" style="display:none"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>ĐƠN NẠP REALTIME</b><p class="muted">QR/Banking, thẻ điện thoại, Garena và đơn game đều về Firebase.</p></div><input class="search" id="orderSearch" placeholder="Tìm tài khoản / game / UID / seri..." oninput="renderOrders(lastOrders)"></div><div class="table" style="margin-top:10px"><table><thead><tr><th>Tài khoản</th><th>Loại / Game / UID</th><th>Thẻ / Nội dung</th><th>Số tiền</th><th>Ảnh</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="ordersBody"></tbody></table></div></div></section>
 <section id="withdrawals" style="display:none"><div class="card"><b>YÊU CẦU RÚT TIỀN</b><p class="muted">Khi khách gửi yêu cầu, số dư đã được tạm trừ. Hủy yêu cầu sẽ hoàn lại số dư.</p><div class="table"><table><thead><tr><th>Tài khoản</th><th>Số tiền</th><th>Thông tin nhận</th><th>Thời gian</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="withdrawalsBody"></tbody></table></div></div></section>
 <section id="users" style="display:none"><div class="card"><b>👥 KHÁCH HÀNG • SỐ DƯ REALTIME</b><p class="muted">Danh sách lấy từ Firebase và được giữ trong <b>customerRegistry</b>. Khi khách đăng ký, nạp tiền hoặc phát sinh đơn, hồ sơ sẽ được ghi nhận để Admin tiếp tục kiểm tra về sau. Số dư cập nhật theo thời gian thực.</p><div class="mini-grid"><div><label>Tài khoản</label><input id="admUser" placeholder="username"></div><div><label>Số tiền (+ để cộng / - để trừ)</label><input id="admAmount" type="number" placeholder="Ví dụ 500000 hoặc -500000"></div></div><label>Ghi chú gửi cho khách</label><textarea id="admNote" placeholder="Ví dụ: Tài khoản đã được cộng 500.000đ. / Cảnh báo: Vui lòng kiểm tra lại thông tin giao dịch..."></textarea><div class="mini-grid"><div><label>Loại ghi chú</label><select id="admNoteType"><option value="success">🔔 Thông báo</option><option value="warning">⚠️ Cảnh báo / Lưu ý</option></select></div><div><label>&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="adminAdjustMoney()">💰 Cộng / Trừ tiền + Gửi ghi chú</button></div></div><div class="actions"><button class="btn btn-gray" onclick="clearMoneyForm()">Xóa form</button></div><div id="fraudPanel" class="fraud-panel" style="display:none"></div><div class="table" style="margin-top:14px"><table><thead><tr><th>Khách hàng</th><th>Tài khoản</th><th>Thời gian ghi nhận</th><th>Số dư realtime + thao tác</th><th>Kiểm tra</th></tr></thead><tbody id="usersBody"></tbody></table></div></div></section>
@@ -6149,6 +6231,7 @@ Admin approval remains the source of truth for wallet top-ups.
 </div>
 </section>
 
+<section id="rentals" style="display:none"><div class="card"><b>🎮 QUẢN LÝ KHO THUÊ ACC</b><p class="muted">Thêm ảnh + giá + tài khoản + mật khẩu trong cùng một khuôn. Bấm Lưu là acc xuất hiện ngay ở trang khách.</p><input type="hidden" id="rentEditId" value=""><div class="mini-grid"><div><label>Tên acc / tên hiển thị</label><input id="rentTitle" placeholder="Acc Free Fire VIP #1"></div><div><label>Giá thuê (đ)</label><input id="rentPrice" type="number" placeholder="50000"></div></div><label>Ảnh skin / acc</label><input id="rentImageFile" type="file" accept="image/*"><div id="rentUploadStatus" class="muted"></div><label>Hoặc URL ảnh</label><input id="rentImageUrl" placeholder="https://..."><div class="mini-grid"><div><label>Tài khoản game</label><input id="rentAccount" autocomplete="off" placeholder="Nhập tài khoản"></div><div><label>Mật khẩu game</label><input id="rentPassword" autocomplete="off" placeholder="Nhập mật khẩu"></div></div><label>Ghi chú</label><textarea id="rentNote" placeholder="Skin, rank, lưu ý đăng nhập..."></textarea><div class="actions"><button class="btn btn-primary" onclick="saveRentalItem()">💾 LƯU ACC</button><button class="btn btn-gray" onclick="clearRentalForm()">Xóa form</button></div></div><div class="card"><b>📦 KHO ACC ĐANG CÓ</b><div class="table"><table><thead><tr><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Tài khoản</th><th>Mật khẩu</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="rentalsBody"></tbody></table></div></div></section>
 <section id="config" style="display:none">
 <div class="card">
   <b>💳 CẤU HÌNH THANH TOÁN — LƯU VÀO KHO CŨ</b>
@@ -6168,7 +6251,8 @@ Admin approval remains the source of truth for wallet top-ups.
 <div class="card">
   <b>🎮 KHO TÀI KHOẢN GIAO TỰ ĐỘNG</b>
   <p class="muted">Mỗi tài khoản trong kho sẽ được giao cho khách sau khi họ đăng nhập, đủ số dư và chạm ảnh túi để xé. Trạng thái <b>available</b> là còn hàng, <b>sold</b> là đã giao.</p>
-  <textarea id="rewardInventory" style="min-height:420px;font-family:monospace" placeholder='{"tui-cena-49k":{"acc001":{"account":"acc1","password":"pass1","note":"Đăng nhập bằng tài khoản game"}}}'></textarea>
+  <div class="mini-grid" style="margin-top:10px"><div><label>Túi nhận tài khoản</label><select id="rewardSlugQuick"><option value="tui-cena-49k">Túi Cena 49K</option><option value="tui-cena-79k">Túi Cena 79K</option><option value="tui-cena-99k">Túi Cena 99K</option><option value="tui-cena-149k">Túi Cena 149K</option><option value="tui-cena-199k">Túi Cena 199K</option><option value="tui-cena-249k">Túi Cena 249K</option><option value="tui-cena-499k">Túi Cena 499K</option></select></div><div><label>Tài khoản game</label><input id="quickRewardAccount" placeholder="Nhập tài khoản"></div><div><label>Mật khẩu game</label><input id="quickRewardPassword" placeholder="Nhập mật khẩu"></div><div><label>&nbsp;</label><button class="btn btn-primary" style="width:100%" onclick="quickAddReward()">➕ THÊM TÀI KHOẢN</button></div></div>
+<textarea id="rewardInventory" style="min-height:420px;font-family:monospace" placeholder='{"tui-cena-49k":{"acc001":{"account":"acc1","password":"pass1","note":"Đăng nhập bằng tài khoản game"}}}'></textarea>
   <div class="actions"><button class="btn btn-primary" onclick="saveRewardInventory()">💾 Lưu kho tài khoản</button></div>
   <div class="notice">Lưu ý: đây là kho giao hàng của Shop. Không cho khách quyền ghi <b>siteConfig/rewardInventory</b> trong Firebase Rules nếu muốn bảo mật; tốt nhất dùng Cloud Function/Admin SDK khi chạy thật.</div>
 </div>
@@ -6459,6 +6543,31 @@ function defaultBlindBagProducts(){
     "tui-cena-499k":{slug:"tui-cena-499k",title:"Túi Cena 499K",price:499000,sold:5301,image:"https://cenaff.com/assets/uploads/1784820487_8ef7e16bdc5f2f55.gif",badge:"HOT",description:"Túi mù 499K.",rewards:["Phần thưởng ngẫu nhiên","Acc Free Fire","Skin / vật phẩm","Quà trong game","Phần thưởng đặc biệt","Ưu đãi ngẫu nhiên","Quà may mắn","Phần thưởng hiếm"]}
   };
 }
+function loadRentals(){
+  db.ref('siteConfig/rentals').on('value',function(s){renderRentals(s.val()||{});});
+}
+function renderRentals(data){
+  const body=document.getElementById('rentalsBody'); if(!body)return;
+  const arr=Object.entries(data||{}).map(([id,x])=>({id,...(x||{})})).sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+  body.innerHTML=arr.map(x=>'<tr><td>'+ (x.image?'<img class="proof" src="'+esc(x.image)+'">':'-') +'</td><td><b>'+esc(x.title||'-')+'</b><br><span class="muted">'+esc(x.description||'')+'</span></td><td>'+fmt(x.price)+'</td><td>'+esc(x.account||'-')+'</td><td>'+esc(x.password||'-')+'</td><td>'+badge(x.status||'available')+'</td><td>'+(x.status==='sold'?'<button class="btn btn-green btn-xs" onclick="restoreRental(\''+x.id+'\')">Mở lại</button> ':'')+'<button class="btn btn-primary btn-xs" onclick="editRental(\''+x.id+'\')">Sửa</button> <button class="btn btn-red btn-xs" onclick="deleteRental(\''+x.id+'\')">Xóa</button></td></tr>').join('')||'<tr><td colspan="7" style="text-align:center;padding:18px">Chưa có acc.</td></tr>';
+}
+function clearRentalForm(){['rentTitle','rentPrice','rentImageUrl','rentAccount','rentPassword','rentNote','rentEditId'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});var f=document.getElementById('rentImageFile');if(f)f.value='';var st=document.getElementById('rentUploadStatus');if(st)st.textContent='';var btn=document.querySelector('button[onclick="saveRentalItem()"]');if(btn)btn.textContent='💾 LƯU ACC';}
+function compressRentalImage(file){return new Promise(function(resolve,reject){if(!file){resolve('');return;}var r=new FileReader();r.onload=function(){var img=new Image();img.onload=function(){var max=1000,w=img.width,h=img.height;if(w>max||h>max){var ratio=Math.min(max/w,max/h);w=Math.round(w*ratio);h=Math.round(h*ratio);}var c=document.createElement('canvas');c.width=w;c.height=h;var ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);resolve(c.toDataURL('image/jpeg',.82));};img.onerror=reject;img.src=r.result;};r.onerror=reject;r.readAsDataURL(file);});}
+function saveRentalItem(){
+  const title=String(document.getElementById('rentTitle').value||'').trim(),price=Number(document.getElementById('rentPrice').value)||0,account=String(document.getElementById('rentAccount').value||'').trim(),password=String(document.getElementById('rentPassword').value||'');
+  const editId=String(document.getElementById('rentEditId').value||'').trim();
+  if(!title||price<=0||!account||!password){alert('Nhập đủ tên, giá, tài khoản và mật khẩu.');return;}
+  if(!db){alert('Firebase chưa sẵn sàng.');return;}
+  const file=document.getElementById('rentImageFile').files[0]; const url=String(document.getElementById('rentImageUrl').value||'').trim(); const id=editId||('rent_'+Date.now()+'_'+Math.random().toString(36).slice(2,7));
+  var status=document.getElementById('rentUploadStatus');
+  var save=function(image){var data={id,title,price,image:image||'',account,password,note:String(document.getElementById('rentNote').value||'').trim(),description:String(document.getElementById('rentNote').value||'').trim(),status:'available',active:true,updatedAt:firebase.database.ServerValue.TIMESTAMP};if(!editId)data.createdAt=firebase.database.ServerValue.TIMESTAMP;return db.ref('siteConfig/rentals/'+id).update(data).then(function(){alert(editId?'✅ Đã cập nhật acc thuê.':'🎉 Đã lưu acc thuê thành công.');clearRentalForm();});};
+  if(file){if(status)status.textContent='Đang xử lý ảnh...';compressRentalImage(file).then(function(data){if(status)status.textContent='Ảnh đã nén, đang lưu...';return save(data);}).catch(function(e){if(status)status.textContent='';alert('Không xử lý được ảnh: '+e.message);});}else save(url).catch(function(e){alert('Lỗi lưu acc: '+e.message);});
+}
+function editRental(id){db.ref('siteConfig/rentals/'+encodeKey(id)).once('value').then(function(s){var x=s.val();if(!x)throw Error('Không tìm thấy acc.');document.getElementById('rentEditId').value=id;document.getElementById('rentTitle').value=x.title||'';document.getElementById('rentPrice').value=x.price||'';document.getElementById('rentImageUrl').value=(x.image&&String(x.image).indexOf('data:image/')!==0)?x.image:'';document.getElementById('rentAccount').value=x.account||'';document.getElementById('rentPassword').value=x.password||'';document.getElementById('rentNote').value=x.note||x.description||'';var b=document.querySelector('button[onclick="saveRentalItem()"]');if(b)b.textContent='💾 CẬP NHẬT ACC';window.scrollTo({top:document.getElementById('rentals').offsetTop,behavior:'smooth'});}).catch(function(e){alert('Lỗi: '+e.message);});}
+
+function restoreRental(id){db.ref('siteConfig/rentals/'+id).update({status:'available',active:true}).then(()=>alert('Đã mở lại acc.')).catch(e=>alert('Lỗi: '+e.message));}
+function deleteRental(id){if(!confirm('Xóa acc này khỏi kho?'))return;db.ref('siteConfig/rentals/'+id).remove().then(()=>alert('Đã xóa acc.')).catch(e=>alert('Lỗi: '+e.message));}
+
 function loadPaymentAndProducts(){
   db.ref('siteConfig').once('value').then(s=>{
     const c=s.val()||{},p=c.payment||{};
@@ -6475,6 +6584,11 @@ function savePaymentConfig(){
 function saveSiteVisibility(){
   const enabled=siteEnabledAdmin.value==='on';
   db.ref('siteConfig/siteEnabled').set(enabled).then(()=>alert(enabled?'Đã MỞ website cho khách.':'Đã ẨN website với khách.')).catch(e=>alert('Lỗi: '+e.message));
+}
+function quickAddReward(){
+  var slug=String(document.getElementById('rewardSlugQuick').value||''),acc=String(document.getElementById('quickRewardAccount').value||'').trim(),pass=String(document.getElementById('quickRewardPassword').value||'');
+  if(!slug||!acc||!pass){alert('Nhập đủ túi, tài khoản và mật khẩu.');return;}
+  var ref=db.ref('siteConfig/rewardInventory/'+slug).push(); ref.set({account:acc,password:pass,status:'available',createdAt:firebase.database.ServerValue.TIMESTAMP}).then(function(){alert('🎉 Đã thêm tài khoản vào kho '+slug+'.');document.getElementById('quickRewardAccount').value='';document.getElementById('quickRewardPassword').value='';return loadPaymentAndProducts();}).catch(function(e){alert('Lỗi: '+e.message);});
 }
 function saveRewardInventory(){
   let data;
@@ -6508,6 +6622,10 @@ function rejectNickOrder(id){
   db.ref('nickOrders/'+id).transaction(function(o){if(!o||o.status!=='pending')return;return Object.assign({},o,{status:'rejected',rejectedAt:firebase.database.ServerValue.TIMESTAMP,rejectedBy:'ADMIN'});}).then(r=>{if(!r||!r.committed)throw Error('Đơn không còn chờ xử lý.');alert('Đã hủy đơn Nick Game.');}).catch(e=>alert('Lỗi: '+e.message));
 }
 
+function adminHardRefresh(){try{loadSite();loadRentals();loadPaymentAndProducts();db.ref('orders').once('value').then(function(s){renderOrders(s.val()||{});renderOrderHistory(s.val()||{});});db.ref('withdrawals').once('value').then(function(s){renderWithdrawals(s.val()||{});});db.ref('nickOrders').once('value').then(function(s){renderNickOrders(s.val()||{});});alert('✅ Đã đồng bộ dữ liệu mới nhất.');}catch(e){alert('Lỗi đồng bộ: '+e.message);}}
+function adminCloseSiteNow(){if(!confirm('Đóng website với khách ngay?'))return;db.ref('siteConfig/siteEnabled').set(false).then(function(){if(document.getElementById('siteEnabledAdmin'))document.getElementById('siteEnabledAdmin').value='off';alert('🛑 Website đã đóng.');}).catch(function(e){alert('Lỗi: '+e.message);});}
+function adminOpenSiteNow(){db.ref('siteConfig/siteEnabled').set(true).then(function(){if(document.getElementById('siteEnabledAdmin'))document.getElementById('siteEnabledAdmin').value='on';alert('🟢 Website đã mở.');}).catch(function(e){alert('Lỗi: '+e.message);});}
+
 function bootAdmin(){
   if(!adminUnlocked)return;
   applyAdminLock();
@@ -6517,6 +6635,7 @@ function bootAdmin(){
   db.ref('userProfiles').on('value',s=>renderUsers(s.val()));
   startCustomerRealtime();
   loadSite();
+  loadRentals();
 }
 function openProof(url){proofImage.src=url;proofModal.classList.add('active')}function closeProof(){proofModal.classList.remove('active');proofImage.src=''}
 applyAdminLock();if(adminUnlocked){bootAdmin();}
