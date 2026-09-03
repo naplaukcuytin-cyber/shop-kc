@@ -2947,14 +2947,27 @@ button {
 
     loadProfile(user)
       .then(function (profile) {
-        bindBalance(profile.user);
+        var username = profile.user || profile.displayName || (user.email || "user").split("@")[0];
+        profile.user = username;
+        profile.displayName = profile.displayName || username;
+        currentProfile = profile;
+        bindBalance(username);
         updateAuthUI();
         refreshAccountHistory();
         refreshHistory();
       })
       .catch(function (error) {
-        console.error(error);
-        showToast("Không tải được hồ sơ tài khoản.", "error");
+        /* Không để lỗi đọc profile làm mất trạng thái đăng nhập. */
+        console.error("PROFILE LOAD", error);
+        var fallbackUsername = (user.email || "user").split("@")[0];
+        currentProfile = currentProfile || {
+          user: fallbackUsername,
+          displayName: fallbackUsername,
+          email: user.email || "",
+          uid: user.uid
+        };
+        bindBalance(currentProfile.user);
+        updateAuthUI();
       });
   }
 
@@ -3036,21 +3049,43 @@ button {
        đăng nhập để tránh phụ thuộc vào quyền đọc Database của khách chưa đăng nhập. */
     var internalEmail = username.toLowerCase() + "@accounts.shop-kc.local";
     function finishLogin(credential) {
+      currentUser = credential.user;
+      /* Sau khi Auth đăng nhập thành công, luôn dựng hồ sơ tối thiểu từ tên
+         tài khoản trước. Như vậy giao diện không bị quay về "Đăng nhập" nếu
+         userProfiles đang chậm hoặc Rules chưa cho đọc ngay lập tức. */
+      var fallbackProfile = {
+        user: username,
+        displayName: username,
+        email: credential.user.email || "",
+        uid: credential.user.uid
+      };
+      currentProfile = fallbackProfile;
+      bindBalance(username);
+      updateAuthUI();
+
       return db.ref("userProfiles/" + credential.user.uid).once("value").then(function(profileSnap){
         var profile=profileSnap.val()||{};
+        profile.user = profile.user || profile.displayName || username;
+        profile.displayName = profile.displayName || profile.user;
+        profile.email = profile.email || credential.user.email || "";
+        profile.uid = credential.user.uid;
+        currentProfile = profile;
+        bindBalance(profile.user);
+        updateAuthUI();
+
         var isAdmin=profile.role==="admin" || profile.admin===true || profile.isAdmin===true;
-        currentUser = credential.user;
-        if (profile.user) currentProfile = profile;
         message.textContent="";
         closeModal("kcLoginModal");
+        showToast("Đăng nhập thành công.", "success");
         if(isAdmin){
-          showToast("Đăng nhập thành công.", "success");
-          updateAuthUI();
           setTimeout(function(){ if(window.ShopKCOpenAdmin) window.ShopKCOpenAdmin(); else location.hash="#admin"; },80);
-        }else{
-          showToast("Đăng nhập thành công.", "success");
-          authStateChanged(credential.user);
         }
+      }).catch(function(profileError){
+        console.warn("Không đọc được userProfiles sau đăng nhập, dùng hồ sơ tối thiểu:", profileError);
+        message.textContent="";
+        closeModal("kcLoginModal");
+        showToast("Đăng nhập thành công.", "success");
+        updateAuthUI();
       });
     }
 
@@ -5770,7 +5805,7 @@ function adminLogin(e){
   }
   adminAuth.signInWithEmailAndPassword(synthetic,p).then(verifyAndOpen).catch(function(first){
     /* Tương thích Admin cũ dùng email thật. Chỉ dùng fallback khi Auth không tìm thấy synthetic account. */
-    if(first&&first.code!=='auth/user-not-found'&&first.code!=='auth/invalid-email'){throw first;}
+    if(first&&['auth/user-not-found','auth/invalid-login-credentials','auth/invalid-email'].indexOf(first.code)===-1){throw first;}
     return db.ref('userProfiles').orderByChild('user').equalTo(u).once('value').then(function(s){
       let profile=null;s.forEach(function(ch){if(!profile)profile=ch.val()||{};});
       if(!profile||!profile.email) throw new Error('Không tìm thấy tài khoản Admin trong userProfiles.');
