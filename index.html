@@ -1143,8 +1143,7 @@ button {
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <span
-                            class="_state_username">0₫</span>
+                        <span class="mobile-account-label">Khách • 0₫</span>
                     </a>
 
                     <a class="_no_login mobile-nav-item" href="#login" onclick="event.preventDefault();openLogin()">
@@ -2874,11 +2873,13 @@ button {
     var elements = document.querySelectorAll("._state_username");
 
     elements.forEach(function (element) {
-      if (currentUser && currentProfile) {
-        element.textContent = formatMoney(currentBalance);
-      } else {
-        element.textContent = "Đăng nhập";
-      }
+      element.textContent = (currentUser && currentProfile) ? formatMoney(currentBalance) : "Đăng nhập";
+    });
+
+    document.querySelectorAll(".mobile-account-label").forEach(function (element) {
+      element.textContent = (currentUser && currentProfile)
+        ? (getUsername() + " • " + formatMoney(currentBalance))
+        : "Đăng nhập";
     });
 
     var accountBalance = document.getElementById("kcAccountBalance");
@@ -3086,9 +3087,15 @@ button {
     auth.createUserWithEmailAndPassword(internalEmail, password)
       .then(function (credential) {
         currentUser = credential.user;
-        return saveProfile(username);
+        return saveProfile(username).then(function () {
+          return loadProfile(credential.user);
+        });
       })
       .then(function () {
+        bindBalance(getUsername());
+        updateAuthUI();
+        refreshAccountHistory();
+        refreshHistory();
         message.textContent = "";
         closeModal("kcLoginModal");
         showToast("Tạo tài khoản thành công.", "success");
