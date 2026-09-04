@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -585,6 +586,198 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
   window.refreshAdminData=function(){if(!isAdmin)return;const active=document.querySelector('.admin-page.active');if(active)switchAdminPage(active.id.replace('page-',''));};
   window.addEventListener('shop-storage-change',()=>{if(isAdmin){const el=$('adminLastSync');if(el)el.textContent='Đồng bộ '+nowText();refreshAdminData();}else updateHeader();});
   setTimeout(()=>{try{initFirebaseSync();}catch(e){}},80);
+})();
+
+
+/* ===== FIX: inventory one-time claim + admin deposit credit ===== */
+(function(){
+  const FIX_MARK='SHOPCENAVN_FIX_V2';
+  if(window[FIX_MARK]) return;
+  window[FIX_MARK]=true;
+
+  function saveInventoryLocal(a){
+    write(STORAGE.inventory,Array.isArray(a)?a:[]);
+  }
+
+  /* Claim and REMOVE one account from the inventory atomically in Firebase.
+     The order keeps a copy of the credentials, so the removed inventory item
+     can never be selected again. */
+  async function reserveInventoryOnce(bagId,uid){
+    if(firebaseSyncReady&&firebaseDB){
+      try{
+        const ref=firebaseDB.ref('shopcenavn/'+FB_MAP.inventory);
+        let chosen=null;
+        const result=await ref.transaction(current=>{
+          const arr=Array.isArray(current)?current:[];
+          const available=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
+          if(!available.length) return;
+          const item=available[Math.floor(Math.random()*available.length)];
+          chosen=item;
+          return arr.filter(x=>x.id!==item.id);
+        });
+        if(result.committed&&chosen){
+          saveInventoryLocal(result.snapshot.val()||[]);
+          return chosen;
+        }
+        return null;
+      }catch(e){console.warn('Firebase inventory transaction failed',e)}
+    }
+    const arr=getInventory();
+    const available=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
+    if(!available.length)return null;
+    const item=available[Math.floor(Math.random()*available.length)];
+    const next=arr.filter(x=>x.id!==item.id);
+    saveInventoryLocal(next);
+    return item;
+  }
+
+  /* Replace the old startBag. Account is removed from inventory before the
+     game starts. If charging fails, it is restored locally/Firebase. */
+  window.startBag=async function(){
+    const s=currentUser();
+    if(!s){openAuth();return}
+    if(isAdmin){showNotice('Admin không cần mua túi');return}
+    if(!currentBag)return;
+    const price=selectedPrice();
+    $('playBtn').disabled=true;
+    $('playBtn').textContent='Đang chuẩn bị...';
+    closeModal('playConfirmOverlay');
+    if(getBalance(s.uid)<price){
+      showNotice('Số dư không đủ');
+      $('playBtn').disabled=false;
+      $('playBtn').textContent='🎴 Chơi ngay';
+      closeModal('bagOverlay');openDeposit();return;
+    }
+    const item=await reserveInventoryOnce(currentBag.id,s.uid);
+    if(!item){
+      showNotice('Túi hiện đã hết kho');
+      $('playBtn').disabled=false;
+      $('playBtn').textContent='🎴 Chơi ngay';
+      renderBags();return;
+    }
+    if(!deductBalance(s.uid,price)){
+      /* restore only if payment could not be made */
+      const restore={...item,status:'available',soldTo:null,soldAt:null};
+      if(firebaseSyncReady&&firebaseDB){
+        try{
+          await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
+            const arr=Array.isArray(cur)?cur:[];
+            if(arr.some(x=>x&&x.id===restore.id))return;
+            return arr.concat(restore);
+          });
+        }catch(e){}
+      }
+      const local=getInventory();
+      if(!local.some(x=>x.id===restore.id))saveInventoryLocal(local.concat(restore));
+      showNotice('Số dư không đủ');
+      $('playBtn').disabled=false;
+      $('playBtn').textContent='🎴 Chơi ngay';
+      return;
+    }
+    const now=Date.now();
+    const order={id:rid(),uid:s.uid,username:s.username,bagId:currentBag.id,bagName:currentBag.name,price,rewardInventoryId:item.id,rewardLogin:item.login,rewardPass:item.pass,rewardRank:item.rank||'',status:'completed',createdAt:now};
+    const orders=getOrders();orders.push(order);write(STORAGE.orders,orders);
+    const users=getUsers(),u=users.find(x=>x.uid===s.uid);
+    if(u){
+      u.wonAccounts=u.wonAccounts||[];
+      u.wonAccounts.unshift({orderId:order.id,bagName:order.bagName,login:item.login,pass:item.pass,rank:item.rank||'',price,createdAt:now});
+      u.transactionHistory=u.transactionHistory||[];
+      u.transactionHistory.unshift({id:rid(),type:'purchase',amount:price,balanceAfter:getBalance(s.uid),createdAt:now,orderId:order.id});
+      write(STORAGE.users,users);
+    }
+    currentRound={item:{key:item.id,val:item},price,orderId:order.id,flipped:false};
+    closeModal('bagOverlay');openModal('gameOverlay');
+    $('gameScreen').style.backgroundImage=`url("${currentBag.image||''}")`;
+    $('gameScreen').style.setProperty('--game-bg',`url("${currentBag.image||''}")`);
+    buildGameCards();
+    $('gameTitle').textContent=currentBag.name;
+    $('gameSubtitle').textContent='🔀 Đang xáo thẻ...';
+    $('gameAction').textContent='🔀 Đang xáo thẻ...';
+    $('gameCards').classList.add('game-loading');$('gameWin').innerHTML='';
+    renderBags();updateHeader();
+    setTimeout(()=>{
+      if(!currentRound)return;
+      $('gameCards').classList.remove('game-loading');
+      $('gameSubtitle').textContent='🃏 Chọn 1 thẻ để lật';
+      $('gameSubtitle').classList.add('ready');
+      $('gameAction').textContent='🃏 Chọn 1 thẻ để lật';
+      showNotice('Xáo thẻ xong — chọn một thẻ');
+    },1400);
+  };
+
+  /* Approve a deposit exactly once. A transaction on the user list records
+     the deposit id as credited, preventing double-credit on double-click or
+     multiple admin sessions. */
+  window.approveDeposit=async function(id){
+    if(!ensureAdmin())return;
+    const deps=getDeposits(),d=deps.find(x=>x.id===id);
+    if(!d||d.status!=='pending')return;
+    const amount=Number(d.amount||0);
+    if(!Number.isFinite(amount)||amount<=0){showNotice('Số tiền nạp không hợp lệ');return}
+    const now=Date.now();
+    let credited=false;
+    let targetUser=null;
+
+    if(firebaseSyncReady&&firebaseDB){
+      try{
+        const usersRef=firebaseDB.ref('shopcenavn/'+FB_MAP.users);
+        const tr=await usersRef.transaction(cur=>{
+          const arr=Array.isArray(cur)?cur:[];
+          const idx=arr.findIndex(u=>u&&u.uid===d.uid);
+          if(idx<0)return;
+          const u={...arr[idx]};
+          u.depositCredits=Array.isArray(u.depositCredits)?u.depositCredits.slice():[];
+          if(u.depositCredits.includes(id))return;
+          const old=Number(u.balance||0);
+          u.balance=old+amount;
+          u.depositCredits.push(id);
+          u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory.slice():[];
+          u.transactionHistory.unshift({id:rid(),type:'deposit',depositId:id,amount,balanceBefore:old,balanceAfter:u.balance,createdAt:now,admin:ADMIN_USERNAME});
+          arr[idx]=u;
+          return arr;
+        });
+        if(tr.committed){
+          credited=true;
+          const arr=tr.snapshot.val()||[];
+          writeLocal(STORAGE.users,arr);
+          targetUser=arr.find(u=>u&&u.uid===d.uid)||null;
+        }else{
+          /* It may already have been credited by another admin. */
+          const arr=tr.snapshot.val()||[];
+          targetUser=arr.find(u=>u&&u.uid===d.uid)||null;
+          if(targetUser?.depositCredits?.includes(id)){credited=true;writeLocal(STORAGE.users,arr)}
+        }
+      }catch(e){console.warn('Firebase deposit transaction failed',e)}
+    }
+
+    if(!credited){
+      const users=getUsers();
+      const u=users.find(v=>v.uid===d.uid);
+      if(!u){d.status='rejected';write(STORAGE.deposits,deps);showNotice('Không tìm thấy tài khoản khách');return}
+      u.depositCredits=Array.isArray(u.depositCredits)?u.depositCredits:[];
+      if(!u.depositCredits.includes(id)){
+        const old=Number(u.balance||0);
+        u.balance=old+amount;
+        u.depositCredits.push(id);
+        u.transactionHistory=u.transactionHistory||[];
+        u.transactionHistory.unshift({id:rid(),type:'deposit',depositId:id,amount,balanceBefore:old,balanceAfter:u.balance,createdAt:now,admin:ADMIN_USERNAME});
+        credited=true;
+      }else credited=true;
+      write(STORAGE.users,users);targetUser=u;
+    }
+
+    if(credited){
+      const latest=getDeposits(),ld=latest.find(x=>x.id===id);
+      if(ld&&ld.status==='pending'){
+        ld.status='approved';ld.approvedAt=now;ld.approvedBy=ADMIN_USERNAME;ld.creditedAmount=amount;
+        write(STORAGE.deposits,latest);
+      }
+      logAdmin('approve_deposit',id+' +'+amount+' → '+(targetUser?.username||d.uid));
+      if(typeof logActivity==='function')logActivity('admin_deposit','Admin duyệt nạp '+id+' +'+money(amount));
+      showNotice('Đã duyệt và cộng '+money(amount)+' cho khách');
+      loadDeposits();loadDashboard();updateHeader();
+    }
+  };
 })();
 
 </script>
