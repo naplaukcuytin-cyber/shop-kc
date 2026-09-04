@@ -1912,6 +1912,44 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   };
 })();
 </script>
+
+<style id="final-admin-account-isolation">
+/* Admin tuyệt đối không dùng giao diện tài khoản khách. */
+</style>
+<script id="final-admin-account-isolation-js">
+(function(){
+  const oldOpenAccount=window.openAccount;
+  window.openAccount=function(){
+    const s=typeof currentUser==='function'?currentUser():null;
+    if(s && (s.admin===true || s.uid==='admin' || window.isAdmin===true)){
+      if(typeof window.openAdmin==='function'){window.openAdmin();}
+      return;
+    }
+    if(typeof oldOpenAccount==='function')oldOpenAccount();
+    /* Khách không còn mục Lịch sử giao dịch/đơn hàng trong giao diện tài khoản. */
+    const box=document.getElementById('accountContent');
+    if(box){
+      Array.from(box.querySelectorAll('.account-tabs button')).filter(el=>/Lịch sử giao dịch/i.test(el.textContent||'')).forEach(el=>el.remove());
+    }
+  };
+  const oldRender=window.renderAccountTab;
+  window.renderAccountTab=function(tab){
+    const s=typeof currentUser==='function'?currentUser():null;
+    if(s && (s.admin===true || s.uid==='admin' || window.isAdmin===true)){
+      if(typeof window.openAdmin==='function')window.openAdmin();
+      return;
+    }
+    if(tab==='orders'){
+      return;
+    }
+    if(typeof oldRender==='function')oldRender(tab);
+    if(tab!=='orders'){
+      const box=document.getElementById('accountContent');
+      if(box)Array.from(box.querySelectorAll('.account-tabs button')).filter(el=>/Lịch sử giao dịch/i.test(el.textContent||'')).forEach(el=>el.remove());
+    }
+  };
+})();
+</script>
 </body>
 
 <style id="final-force-mystery-plans-v3">
