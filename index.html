@@ -8,7 +8,124 @@
 <title>SHOPCENAVN • Bóc Acc Xịn</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">/* ===== SĂN LÙNG: 3 GÓI + TỶ LỆ TRÚNG CÓ THỂ CHỈNH TRONG ADMIN ===== */
+(function(){
+  const PRIZES={
+    random:{label:'Acc Ngẫu Nhiên',image:cardImages.random},
+    vip8:{label:'Acc VIP8',image:cardImages.vip8},
+    maxim:{label:'Acc Maxim',image:cardImages.maxim}
+  };
+  function prizeTypeOf(v){
+    const t=String(v?.prizeType||'').toLowerCase();
+    if(PRIZES[t])return t;
+    const q=(String(v?.rank||'')+' '+String(v?.note||'')).toLowerCase();
+    if(/vip\s*8|vip8/.test(q))return 'vip8';
+    if(/maxim|maximum/.test(q))return 'maxim';
+    return 'random';
+  }
+  function getPrizeConfig(b){
+    const p=b?.prizes||{};
+    let r=Number(p.random??50),v=Number(p.vip8??30),m=Number(p.maxim??20);
+    r=Number.isFinite(r)&&r>=0?r:50;v=Number.isFinite(v)&&v>=0?v:30;m=Number.isFinite(m)&&m>=0?m:20;
+    const total=r+v+m;
+    if(total<=0)return {random:50,vip8:30,maxim:20};
+    return {random:r*100/total,vip8:v*100/total,maxim:m*100/total};
+  }
+  function weightedPrize(b){
+    const p=getPrizeConfig(b),n=Math.random()*100;
+    if(n<p.random)return 'random';
+    if(n<p.random+p.vip8)return 'vip8';
+    return 'maxim';
+  }
+  function candidates(bagId,type){
+    return getInventory().filter(x=>x&&x.bagId===bagId&&x.status==='available'&&prizeTypeOf(x)===type);
+  }
+  function chooseInventory(bagId,type){
+    let a=candidates(bagId,type);
+    if(!a.length)a=availableForBag(bagId);
+    return a.length?a[Math.floor(Math.random()*a.length)]:null;
+  }
+  function setProbFields(b){
+    const p=getPrizeConfig(b);
+    if($('bagProbRandom'))$('bagProbRandom').value=Math.round(p.random);
+    if($('bagProbVip8'))$('bagProbVip8').value=Math.round(p.vip8);
+    if($('bagProbMaxim'))$('bagProbMaxim').value=Math.round(p.maxim);
+  }
+  const oldEditBag=window.editBag;
+  window.editBag=function(id){
+    if(typeof oldEditBag==='function')oldEditBag(id);
+    const b=bags.find(x=>x.id===id);if(b)setProbFields(b);
+  };
+  const oldLoadBagAdmin=window.loadBagAdmin;
+  window.loadBagAdmin=function(){
+    if(!ensureAdmin())return;
+    const data=read(STORAGE.bags,defaultBags);
+    $('bagAdminRows').innerHTML=data.map(b=>{const p=getPrizeConfig(b);return `<tr><td>${esc(b.name)}</td><td>${money(b.price)}</td><td>${availableForBag(b.id).length}</td><td>${getInventory().filter(x=>x&&x.bagId===b.id&&x.status==='sold').length}</td><td>${Math.round(p.random)}% / ${Math.round(p.vip8)}% / ${Math.round(p.maxim)}%</td><td>${(b.plans||[]).map(money).join(' · ')}</td><td><button class="btn dark small" onclick="editBag('${esc(b.id)}')">Sửa</button> <button class="btn danger small" onclick="deleteBag('${esc(b.id)}')">Xóa</button></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">Chưa có túi</td></tr>';
+    if($('editBagId')?.value){const b=bags.find(x=>x.id===$('editBagId').value);if(b)setProbFields(b)}
+  };
+  window.saveBag=function(e){
+    e.preventDefault();if(!ensureAdmin())return;
+    const r=Math.max(0,Number($('bagProbRandom')?.value||0));
+    const v=Math.max(0,Number($('bagProbVip8')?.value||0));
+    const m=Math.max(0,Number($('bagProbMaxim')?.value||0));
+    const total=r+v+m;
+    if(Math.abs(total-100)>0.001){showNotice('Tỷ lệ 3 loại acc phải đủ 100%');return}
+    const a=read(STORAGE.bags,defaultBags),id=$('editBagId').value||rid();
+    const plans=$('bagPlansInput').value.split(',').map(x=>Number(x.trim())).filter(x=>Number.isFinite(x)&&x>=0);
+    const b={id,name:$('bagNameInput').value.trim(),price:Number($('bagPriceInput').value),image:$('bagImageInput').value.trim()||logoUrl,desc:$('bagDescInput').value.trim(),plans:plans.length?plans:[Number($('bagPriceInput').value)],prizes:{random:r,vip8:v,maxim:m}};
+    const i=a.findIndex(x=>x.id===id);if(i>=0)a[i]={...a[i],...b};else a.push(b);
+    write(STORAGE.bags,a);bags=a;logAdmin('save_bag',id);showNotice('Đã lưu túi + tỷ lệ trúng');e.target.reset();$('editBagId').value='';
+    if($('bagProbRandom'))$('bagProbRandom').value=50;if($('bagProbVip8'))$('bagProbVip8').value=30;if($('bagProbMaxim'))$('bagProbMaxim').value=20;
+    loadAll();loadBagAdmin();
+  };
+  window.buildGameCards=function(){
+    const type=currentRound?.prizeType||prizeTypeOf(currentRound?.item?.val);
+    const prize=PRIZES[type]||PRIZES.random;
+    $('gameCards').innerHTML=[0,1,2].map(i=>`<button type="button" class="game-card flip-card" id="gfc${i}" onclick="flipGameCard(${i})"><span class="flip-inner"><span class="face face-front"><span class="card-mark">?</span><span class="card-shine"></span></span><span class="face back"><img src="${esc(prize.image)}" alt="${esc(prize.label)}"><span class="reward">${esc(prize.label)}</span></span></span></button>`).join('');
+  };
+  window.flipGameCard=function(i){
+    if(!currentRound||currentRound.flipped||$('gameCards').classList.contains('game-loading'))return;
+    const card=$('gfc'+i);if(!card)return;currentRound.flipped=true;
+    document.querySelectorAll('.game-card').forEach((x,j)=>{x.classList.toggle('chosen',j===i);x.classList.toggle('disabled',j!==i)});
+    card.classList.add('flipped','selected-card');
+    setTimeout(()=>{
+      const item=currentRound.item.val,type=currentRound.prizeType||prizeTypeOf(item),prize=PRIZES[type]||PRIZES.random;
+      $('gameWin').innerHTML=`<div class="win"><div class="result-title">🎉 Chúc mừng!</div><div class="result-line">Gói trúng: <strong>${esc(prize.label)}</strong></div><div class="result-line">Rank / mô tả: <strong>${esc(item.rank||'Tài khoản game')}</strong></div><div class="result-line">Tài khoản: <strong>${esc(item.login)}</strong></div><div class="result-line">Mật khẩu: <strong>${esc(item.pass)}</strong><button class="copy" onclick="copyText('${esc(item.login+' | '+item.pass)}')">Copy</button></div></div>`;
+      confetti();$('gameAction').textContent='🎉 Nhận tài khoản thành công';
+    },950);
+  };
+  window.addInventory=function(e){
+    e.preventDefault();if(!ensureAdmin())return;
+    const a=getInventory();
+    a.push({id:rid(),bagId:$('invBag').value,prizeType:$('invPrizeType')?.value||'random',login:$('invLogin').value.trim(),pass:$('invPass').value,rank:$('invRank').value.trim(),cardImage:$('invCardImage')?.value.trim()||'',note:$('invNote').value.trim(),status:'available',createdAt:Date.now()});
+    write(STORAGE.inventory,a);logAdmin('add_inventory',$('invLogin').value.trim());e.target.reset();showNotice('Đã thêm acc vào kho');loadInventory();renderBags();
+  };
+  // Only replace the play flow for Săn Lùng. The existing account/inventory/payment logic remains intact.
+  window.startBag=function(){
+    const s=currentUser();if(!s){openAuth();return}if(isAdmin){showNotice('Admin không cần mua túi');return}if(!currentBag)return;
+    const price=selectedPrice();$('playBtn').disabled=true;$('playBtn').textContent='🔀 Đang xáo thẻ...';closeModal('playConfirmOverlay');
+    const b=getBalance(s.uid);if(b<price){showNotice('Số dư không đủ');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';closeModal('bagOverlay');openDeposit();return}
+    const prizeType=weightedPrize(currentBag);let item=chooseInventory(currentBag.id,prizeType);
+    if(!item){showNotice('Túi hiện đã hết kho');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';return}
+    if(!claimInventory({key:item.id,val:item})){item=chooseInventory(currentBag.id,prizeType);if(!item||!claimInventory({key:item.id,val:item})){showNotice('Phần thưởng vừa được nhận, hãy thử lại');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';return}}
+    if(!deductBalance(s.uid,price)){const a=getInventory(),x=a.find(z=>z.id===item.id);if(x){x.status='available';x.soldTo=null;x.soldAt=null;write(STORAGE.inventory,a)}showNotice('Số dư không đủ');$('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';return}
+    const now=Date.now(),order={id:rid(),uid:s.uid,username:s.username,bagId:currentBag.id,bagName:currentBag.name,price,rewardInventoryId:item.id,rewardLogin:item.login,rewardPass:item.pass,rewardRank:item.rank||'',prizeType,status:'completed',createdAt:now};
+    const orders=getOrders();orders.push(order);write(STORAGE.orders,orders);
+    const users=getUsers(),u=users.find(x=>x.uid===s.uid);if(u){u.wonAccounts=u.wonAccounts||[];u.wonAccounts.unshift({orderId:order.id,bagName:order.bagName,login:item.login,pass:item.pass,rank:item.rank||'',prizeType,price,createdAt:now});write(STORAGE.users,users)}
+    currentRound={item:{key:item.id,val:item},price,orderId:order.id,flipped:false,prizeType};
+    closeModal('bagOverlay');openModal('gameOverlay');$('gameScreen').style.backgroundImage=`url("${currentBag.image||''}")`;$('gameScreen').style.setProperty('--game-bg',`url("${currentBag.image||''}")`);buildGameCards();$('gameTitle').textContent=currentBag.name;$('gameSubtitle').textContent='🔀 Đang xáo thẻ...';$('gameAction').textContent='🔀 Đang xáo thẻ...';$('gameCards').classList.add('game-loading');$('gameWin').innerHTML='';renderBags();updateHeader();
+    setTimeout(()=>{if(!currentRound)return;$('gameCards').classList.remove('game-loading');$('gameSubtitle').textContent='🃏 Chọn 1 thẻ để lật';$('gameSubtitle').classList.add('ready');$('gameAction').textContent='🃏 Chọn 1 thẻ để lật';showNotice('Xáo thẻ xong — chọn một thẻ')},1400);
+  };
+  // Show the three real prize images before Play Now is pressed.
+  const oldOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof oldOpenBag==='function')oldOpenBag(id);
+    const b=bags.find(x=>x.id===id);if(!b||/Túi/i.test(b.name)){
+      if(b&&$('bagCategoryView'))$('bagCategoryView').innerHTML=`<div class="v8-preview v8-live-preview"><div class="v8-preview-title">${esc(b.name)}</div><div class="v8-preview-note">Bấm “Chơi ngay” để úp thẻ, sau đó chọn 1 thẻ để lật.</div><div class="preview-card-stage"><div class="preview-glow"></div>${Object.entries(PRIZES).map(([k,v])=>`<button type="button" class="preview-flip-card prize-preview" aria-label="${esc(v.label)}" onclick="openPlayConfirm()"><img src="${esc(v.image)}" alt="${esc(v.label)}"><span>${esc(v.label)}</span></button>`).join('')}</div></div><div class="possible-title">CÁC BỘ CÓ THỂ TRÚNG</div><div class="prize-grid">${Object.values(PRIZES).map(x=>`<div class="prize-card"><img src="${esc(x.image)}" alt="${esc(x.label)}"><b>${esc(x.label)}</b></div>`).join('')}</div>`;
+    }
+  };
+})();
+</script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
 :root{--bg:#080a10;--bg2:#0d0f16;--panel:#11131c;--panel2:#171923;--line:#272a35;--line2:#343744;--text:#f7f7fa;--muted:#9297a8;--muted2:#727789;--green:#35e58a;--green2:#16b968;--orange:#ff5726;--orange2:#ff9c10;--purple:#7b3cff;--red:#ff425c;--blue:#438cff;--radius:18px;--shadow:0 25px 80px rgba(0,0,0,.38)}
@@ -339,7 +456,10 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   #adminOverlay .table td{grid-template-columns:78px minmax(0,1fr);font-size:11px;}
   #adminOverlay .admin-nav button{font-size:11px;}
 }
-</style>
+<style id="prize-probability-style">
+.admin-prize-settings{margin-top:4px;padding:15px;border:1px solid #303340;border-radius:14px;background:#12141d}.admin-prize-title{font-weight:800;font-size:16px;margin-bottom:11px}.admin-prize-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.admin-prize-grid label{display:grid;gap:6px;color:#c9cdd8;font-size:13px;font-weight:700}.admin-prize-grid .field{margin:0}.admin-prize-note{margin-top:9px;color:#858b9e;font-size:12px;line-height:1.45}
+@media(max-width:700px){.admin-prize-grid{grid-template-columns:1fr}.admin-prize-settings{padding:12px}.admin-prize-title{font-size:15px}}
+</style></style>
 
 </head>
 <body>
@@ -424,13 +544,13 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 
       <div class="admin-page" id="page-bags">
         <h3>🎁 Quản lý túi mù / danh mục</h3>
-        <form class="admin-form" onsubmit="saveBag(event)"><input type="hidden" id="editBagId"><div class="two-col"><input class="field" id="bagNameInput" placeholder="Tên túi" required><input class="field" id="bagPriceInput" type="number" min="0" placeholder="Giá từ" required></div><input class="field" id="bagImageInput" placeholder="Link ảnh" required><textarea class="field" id="bagDescInput" placeholder="Mô tả"></textarea><input class="field" id="bagPlansInput" placeholder="Các gói giá, ví dụ: 39000,79000,195000,39000"><button class="btn">Lưu túi</button></form>
-        <div class="table-wrap"><table class="table"><thead><tr><th>Tên</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Gói</th><th>Thao tác</th></tr></thead><tbody id="bagAdminRows"></tbody></table></div>
+        <form class="admin-form" onsubmit="saveBag(event)"><input type="hidden" id="editBagId"><div class="two-col"><input class="field" id="bagNameInput" placeholder="Tên túi" required><input class="field" id="bagPriceInput" type="number" min="0" placeholder="Giá từ" required></div><input class="field" id="bagImageInput" placeholder="Link ảnh" required><textarea class="field" id="bagDescInput" placeholder="Mô tả"></textarea><input class="field" id="bagPlansInput" placeholder="Các gói giá, ví dụ: 39000,79000,195000,39000"><div class="admin-prize-settings"><div class="admin-prize-title">🎯 Tỷ lệ trúng 3 loại acc</div><div class="admin-prize-grid"><label>🎴 Acc Ngẫu Nhiên (%)<input class="field" id="bagProbRandom" type="number" min="0" max="100" step="1" value="50"></label><label>👑 Acc VIP8 (%)<input class="field" id="bagProbVip8" type="number" min="0" max="100" step="1" value="30"></label><label>🏆 Acc Maxim (%)<input class="field" id="bagProbMaxim" type="number" min="0" max="100" step="1" value="20"></label></div><div class="admin-prize-note">Tổng tỷ lệ phải bằng 100%. Ví dụ mặc định: 50% · 30% · 20%.</div></div><button class="btn">Lưu túi</button></form>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Tên</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Tỷ lệ Ngẫu / VIP8 / Maxim</th><th>Gói</th><th>Thao tác</th></tr></thead><tbody id="bagAdminRows"></tbody></table></div>
       </div>
 
       <div class="admin-page" id="page-inventory">
         <h3>🎮 Kho tài khoản game</h3>
-        <form class="admin-form" onsubmit="addInventory(event)"><div class="two-col"><select class="field" id="invBag"></select><input class="field" id="invRank" placeholder="Rank / mô tả"></div><div class="two-col"><input class="field" id="invLogin" placeholder="Tài khoản / UID" required><input class="field" id="invPass" placeholder="Mật khẩu" required></div><input class="field" id="invCardImage" placeholder="Ảnh phần thưởng (không bắt buộc)"><textarea class="field" id="invNote" placeholder="Ghi chú nội bộ"></textarea><button class="btn">+ Thêm acc</button></form>
+        <form class="admin-form" onsubmit="addInventory(event)"><div class="two-col"><select class="field" id="invBag"></select><select class="field" id="invPrizeType"><option value="random">🎴 Acc Ngẫu Nhiên</option><option value="vip8">👑 Acc VIP8</option><option value="maxim">🏆 Acc Maxim</option></select></div><div class="two-col"><input class="field" id="invRank" placeholder="Rank / mô tả"><input class="field" id="invCardImage" placeholder="Ảnh phần thưởng (không bắt buộc)"></div><div class="two-col"><input class="field" id="invLogin" placeholder="Tài khoản / UID" required><input class="field" id="invPass" placeholder="Mật khẩu" required></div><textarea class="field" id="invNote" placeholder="Ghi chú nội bộ"></textarea><button class="btn">+ Thêm acc</button></form>
         <div class="admin-toolbar"><input class="field" id="inventorySearch" placeholder="Tìm tài khoản / UID / rank / túi" oninput="filterInventory()" style="max-width:420px"><select class="field" id="inventoryStatusFilter" onchange="filterInventory()" style="max-width:180px"><option value="all">Tất cả trạng thái</option><option value="available">Còn kho</option><option value="sold">Đã bán</option></select><button class="btn dark small" onclick="refreshInventory()">Làm mới</button></div>
         <div class="table-wrap"><table class="table"><thead><tr><th>Túi</th><th>TK game</th><th>MK</th><th>Rank</th><th>Trạng thái</th><th>Ngày nhập</th><th>Người nhận</th><th>Thao tác</th></tr></thead><tbody id="inventoryRows"></tbody></table></div>
       </div>
