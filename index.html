@@ -589,19 +589,14 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
 })();
 
 
-/* ===== FIX: inventory one-time claim + admin deposit credit ===== */
+/* ===== FIX V3: inventory one-time claim + reliable admin deposit credit ===== */
 (function(){
-  const FIX_MARK='SHOPCENAVN_FIX_V2';
+  const FIX_MARK='SHOPCENAVN_FIX_V3';
   if(window[FIX_MARK]) return;
   window[FIX_MARK]=true;
 
-  function saveInventoryLocal(a){
-    write(STORAGE.inventory,Array.isArray(a)?a:[]);
-  }
+  function saveInventoryLocal(a){ writeLocal(STORAGE.inventory,Array.isArray(a)?a:[]); }
 
-  /* Claim and REMOVE one account from the inventory atomically in Firebase.
-     The order keeps a copy of the credentials, so the removed inventory item
-     can never be selected again. */
   async function reserveInventoryOnce(bagId,uid){
     if(firebaseSyncReady&&firebaseDB){
       try{
@@ -619,20 +614,16 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
           saveInventoryLocal(result.snapshot.val()||[]);
           return chosen;
         }
-        return null;
-      }catch(e){console.warn('Firebase inventory transaction failed',e)}
+      }catch(e){ console.warn('Firebase inventory transaction failed',e); }
     }
     const arr=getInventory();
     const available=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
     if(!available.length)return null;
     const item=available[Math.floor(Math.random()*available.length)];
-    const next=arr.filter(x=>x.id!==item.id);
-    saveInventoryLocal(next);
+    saveInventoryLocal(arr.filter(x=>x.id!==item.id));
     return item;
   }
 
-  /* Replace the old startBag. Account is removed from inventory before the
-     game starts. If charging fails, it is restored locally/Firebase. */
   window.startBag=async function(){
     const s=currentUser();
     if(!s){openAuth();return}
@@ -644,34 +635,24 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     closeModal('playConfirmOverlay');
     if(getBalance(s.uid)<price){
       showNotice('Số dư không đủ');
-      $('playBtn').disabled=false;
-      $('playBtn').textContent='🎴 Chơi ngay';
+      $('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';
       closeModal('bagOverlay');openDeposit();return;
     }
     const item=await reserveInventoryOnce(currentBag.id,s.uid);
     if(!item){
       showNotice('Túi hiện đã hết kho');
-      $('playBtn').disabled=false;
-      $('playBtn').textContent='🎴 Chơi ngay';
+      $('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';
       renderBags();return;
     }
     if(!deductBalance(s.uid,price)){
-      /* restore only if payment could not be made */
       const restore={...item,status:'available',soldTo:null,soldAt:null};
       if(firebaseSyncReady&&firebaseDB){
-        try{
-          await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
-            const arr=Array.isArray(cur)?cur:[];
-            if(arr.some(x=>x&&x.id===restore.id))return;
-            return arr.concat(restore);
-          });
-        }catch(e){}
+        try{ await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{const arr=Array.isArray(cur)?cur:[];return arr.some(x=>x&&x.id===restore.id)?arr:arr.concat(restore)}); }catch(e){}
       }
       const local=getInventory();
       if(!local.some(x=>x.id===restore.id))saveInventoryLocal(local.concat(restore));
       showNotice('Số dư không đủ');
-      $('playBtn').disabled=false;
-      $('playBtn').textContent='🎴 Chơi ngay';
+      $('playBtn').disabled=false;$('playBtn').textContent='🎴 Chơi ngay';
       return;
     }
     const now=Date.now();
@@ -689,94 +670,114 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     closeModal('bagOverlay');openModal('gameOverlay');
     $('gameScreen').style.backgroundImage=`url("${currentBag.image||''}")`;
     $('gameScreen').style.setProperty('--game-bg',`url("${currentBag.image||''}")`);
-    buildGameCards();
-    $('gameTitle').textContent=currentBag.name;
-    $('gameSubtitle').textContent='🔀 Đang xáo thẻ...';
-    $('gameAction').textContent='🔀 Đang xáo thẻ...';
-    $('gameCards').classList.add('game-loading');$('gameWin').innerHTML='';
-    renderBags();updateHeader();
+    buildGameCards();$('gameTitle').textContent=currentBag.name;
+    $('gameSubtitle').textContent='🔀 Đang xáo thẻ...';$('gameAction').textContent='🔀 Đang xáo thẻ...';
+    $('gameCards').classList.add('game-loading');$('gameWin').innerHTML='';renderBags();updateHeader();
     setTimeout(()=>{
       if(!currentRound)return;
       $('gameCards').classList.remove('game-loading');
-      $('gameSubtitle').textContent='🃏 Chọn 1 thẻ để lật';
-      $('gameSubtitle').classList.add('ready');
-      $('gameAction').textContent='🃏 Chọn 1 thẻ để lật';
-      showNotice('Xáo thẻ xong — chọn một thẻ');
+      $('gameSubtitle').textContent='🃏 Chọn 1 thẻ để lật';$('gameSubtitle').classList.add('ready');
+      $('gameAction').textContent='🃏 Chọn 1 thẻ để lật';showNotice('Xáo thẻ xong — chọn một thẻ');
     },1400);
   };
 
-  /* Approve a deposit exactly once. A transaction on the user list records
-     the deposit id as credited, preventing double-credit on double-click or
-     multiple admin sessions. */
+  /* Credit the customer on Firebase without replacing the whole users list.
+     This supports both the site's normal array format and a keyed-object format. */
+  async function creditUserFirebase(uid,depositId,amount,now){
+    if(!(firebaseSyncReady&&firebaseDB))return {ok:false,reason:'firebase_offline'};
+    const ref=firebaseDB.ref('shopcenavn/'+FB_MAP.users);
+    const snap=await ref.once('value');
+    if(!snap.exists())return {ok:false,reason:'users_missing'};
+    const raw=snap.val();
+    let key=null,user=null;
+    if(Array.isArray(raw)){
+      const idx=raw.findIndex(u=>u&&u.uid===uid);
+      if(idx<0)return {ok:false,reason:'user_missing'};
+      key=String(idx);user={...raw[idx]};
+    }else if(raw&&typeof raw==='object'){
+      const found=Object.entries(raw).find(([k,u])=>u&&u.uid===uid);
+      if(!found)return {ok:false,reason:'user_missing'};
+      key=found[0];user={...found[1]};
+    }else return {ok:false,reason:'users_invalid'};
+
+    user.depositCredits=Array.isArray(user.depositCredits)?user.depositCredits.slice():[];
+    if(user.depositCredits.includes(depositId))return {ok:true,already:true,user};
+    const old=Number(user.balance||0);
+    const next=old+amount;
+    user.balance=next;
+    user.depositCredits.push(depositId);
+    user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory.slice():[];
+    user.transactionHistory.unshift({id:rid(),type:'deposit',depositId,amount,balanceBefore:old,balanceAfter:next,createdAt:now,admin:ADMIN_USERNAME});
+
+    const updates={};
+    updates[key+'/balance']=next;
+    updates[key+'/depositCredits']=user.depositCredits;
+    updates[key+'/transactionHistory']=user.transactionHistory;
+    await ref.update(updates);
+
+    /* Verify the value really reached Firebase before marking the deposit approved. */
+    const verify=await ref.child(key).once('value');
+    const vu=verify.val()||{};
+    if(Number(vu.balance||0)!==next || !Array.isArray(vu.depositCredits) || !vu.depositCredits.includes(depositId)){
+      return {ok:false,reason:'verify_failed',user};
+    }
+    return {ok:true,already:false,user:vu};
+  }
+
   window.approveDeposit=async function(id){
     if(!ensureAdmin())return;
-    const deps=getDeposits(),d=deps.find(x=>x.id===id);
+    const deps=getDeposits();
+    const d=deps.find(x=>x.id===id);
     if(!d||d.status!=='pending')return;
     const amount=Number(d.amount||0);
     if(!Number.isFinite(amount)||amount<=0){showNotice('Số tiền nạp không hợp lệ');return}
     const now=Date.now();
-    let credited=false;
-    let targetUser=null;
 
+    /* Firebase is authoritative when realtime sync is enabled. */
     if(firebaseSyncReady&&firebaseDB){
       try{
-        const usersRef=firebaseDB.ref('shopcenavn/'+FB_MAP.users);
-        const tr=await usersRef.transaction(cur=>{
-          const arr=Array.isArray(cur)?cur:[];
-          const idx=arr.findIndex(u=>u&&u.uid===d.uid);
-          if(idx<0)return;
-          const u={...arr[idx]};
-          u.depositCredits=Array.isArray(u.depositCredits)?u.depositCredits.slice():[];
-          if(u.depositCredits.includes(id))return;
-          const old=Number(u.balance||0);
-          u.balance=old+amount;
-          u.depositCredits.push(id);
-          u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory.slice():[];
-          u.transactionHistory.unshift({id:rid(),type:'deposit',depositId:id,amount,balanceBefore:old,balanceAfter:u.balance,createdAt:now,admin:ADMIN_USERNAME});
-          arr[idx]=u;
-          return arr;
-        });
-        if(tr.committed){
-          credited=true;
-          const arr=tr.snapshot.val()||[];
-          writeLocal(STORAGE.users,arr);
-          targetUser=arr.find(u=>u&&u.uid===d.uid)||null;
-        }else{
-          /* It may already have been credited by another admin. */
-          const arr=tr.snapshot.val()||[];
-          targetUser=arr.find(u=>u&&u.uid===d.uid)||null;
-          if(targetUser?.depositCredits?.includes(id)){credited=true;writeLocal(STORAGE.users,arr)}
+        const result=await creditUserFirebase(d.uid,id,amount,now);
+        if(!result.ok){
+          const msg={users_missing:'Không tìm thấy dữ liệu khách trên Firebase',user_missing:'Không tìm thấy tài khoản khách trên Firebase',users_invalid:'Dữ liệu users trên Firebase không hợp lệ',verify_failed:'Firebase chưa ghi được số dư khách',firebase_offline:'Firebase đang offline'}[result.reason]||'Không thể cộng tiền vào tài khoản khách';
+          showNotice(msg);
+          console.warn('approveDeposit:',result.reason,id,d.uid);
+          return;
         }
-      }catch(e){console.warn('Firebase deposit transaction failed',e)}
-    }
-
-    if(!credited){
+        writeLocal(STORAGE.users,Array.isArray(result.user)?result.user:[...getUsers().filter(x=>x&&x.uid!==d.uid),result.user]);
+      }catch(e){
+        console.error('approveDeposit Firebase error:',e);
+        showNotice('Không thể cộng tiền: kiểm tra Firebase Rules');
+        return;
+      }
+    }else{
+      /* Only use local fallback when Firebase is genuinely unavailable. */
       const users=getUsers();
       const u=users.find(v=>v.uid===d.uid);
-      if(!u){d.status='rejected';write(STORAGE.deposits,deps);showNotice('Không tìm thấy tài khoản khách');return}
+      if(!u){showNotice('Không tìm thấy tài khoản khách');return}
       u.depositCredits=Array.isArray(u.depositCredits)?u.depositCredits:[];
       if(!u.depositCredits.includes(id)){
         const old=Number(u.balance||0);
         u.balance=old+amount;
         u.depositCredits.push(id);
-        u.transactionHistory=u.transactionHistory||[];
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
         u.transactionHistory.unshift({id:rid(),type:'deposit',depositId:id,amount,balanceBefore:old,balanceAfter:u.balance,createdAt:now,admin:ADMIN_USERNAME});
-        credited=true;
-      }else credited=true;
-      write(STORAGE.users,users);targetUser=u;
+      }
+      writeLocal(STORAGE.users,users);
     }
 
-    if(credited){
-      const latest=getDeposits(),ld=latest.find(x=>x.id===id);
-      if(ld&&ld.status==='pending'){
-        ld.status='approved';ld.approvedAt=now;ld.approvedBy=ADMIN_USERNAME;ld.creditedAmount=amount;
-        write(STORAGE.deposits,latest);
-      }
-      logAdmin('approve_deposit',id+' +'+amount+' → '+(targetUser?.username||d.uid));
-      if(typeof logActivity==='function')logActivity('admin_deposit','Admin duyệt nạp '+id+' +'+money(amount));
-      showNotice('Đã duyệt và cộng '+money(amount)+' cho khách');
-      loadDeposits();loadDashboard();updateHeader();
+    const latest=getDeposits();
+    const ld=latest.find(x=>x.id===id);
+    if(ld&&ld.status==='pending'){
+      ld.status='approved';
+      ld.approvedAt=now;
+      ld.approvedBy=ADMIN_USERNAME;
+      ld.creditedAmount=amount;
+      write(STORAGE.deposits,latest);
     }
+    logAdmin('approve_deposit',id+' +'+amount+' → '+(d.username||d.uid));
+    if(typeof logActivity==='function')logActivity('admin_deposit','Admin duyệt nạp '+id+' +'+money(amount));
+    showNotice('Đã duyệt và cộng '+money(amount)+' cho khách');
+    loadDeposits();loadDashboard();updateHeader();
   };
 })();
 
