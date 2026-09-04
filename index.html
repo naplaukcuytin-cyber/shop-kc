@@ -499,6 +499,15 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   .menu-btn{width:40px!important;height:40px!important;border-radius:10px!important;font-size:19px!important;}
 }
 </style>
+
+<style id="v8-home-image-effect-fix">
+/* Chỉ thêm hiệu ứng nền ảnh mờ cho 2 gói Săn Lùng V8 ở trang chủ. Không thay đổi chức năng lật thẻ. */
+.v8-home-bag{isolation:isolate;overflow:hidden;position:relative;}
+.v8-home-bag:before{content:"";position:absolute;inset:-28px;background-image:var(--v8-bg);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(24px) saturate(1.2);opacity:.34;transform:scale(1.08);z-index:-1;pointer-events:none;}
+.v8-home-bag:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(122,52,255,.16),transparent 52%),linear-gradient(180deg,rgba(18,10,30,.16),rgba(8,7,17,.46));z-index:-1;pointer-events:none;}
+.v8-home-bag .bag-body{position:relative;z-index:1;}
+.v8-home-bag .bag-img-wrap{position:relative;z-index:1;}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">🔥 Thuê acc giá rẻ · Nạp thẻ không chiết khấu · Cho thuê tự động 24/7 · Uy tín hàng nghìn lượt thuê</div></div>
@@ -1586,7 +1595,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     });
     const grid=$('bagGrid');
     if(!grid)return;
-    grid.innerHTML=visibleBags.length?visibleBags.map(b=>{const c=bagColorFor(b),img=bagImageFor(b);return `<article class="bag ${c?'bag-tone':''}" style="${c?`--bag-color:${c};--bag-glow:${c}`:''}" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(img)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">${getStockNumber(b)?'Còn '+getStockNumber(b)+' phần thưởng':'Hết kho'}</div></div></article>`}).join(''):'<div class="empty">Chưa có túi nào.</div>';
+    grid.innerHTML=visibleBags.length?visibleBags.map(b=>{const c=bagColorFor(b),img=bagImageFor(b);return `<article class="bag ${c?'bag-tone':''} ${/^v8-/.test(String(b.id||''))?'v8-home-bag':''}" style="${c?`--bag-color:${c};--bag-glow:${c}`:''}${/^v8-/.test(String(b.id||''))?`;--v8-bg:url(\"${esc(img)}\")`:''}" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(img)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">${getStockNumber(b)?'Còn '+getStockNumber(b)+' phần thưởng':'Hết kho'}</div></div></article>`}).join(''):'<div class="empty">Chưa có túi nào.</div>';
   };
 
   const baseLoadBagAdmin=window.loadBagAdmin;
