@@ -482,6 +482,21 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   }
 }
 </style>
+<style id="final-header-half-and-storefront-filter">
+/* FINAL: compact mobile header. Do not alter other sections. */
+@media(max-width:760px){
+  .header{height:64px!important;min-height:64px!important;}
+  .header-inner{height:64px!important;min-height:64px!important;}
+  .logo{width:min(220px,52vw)!important;height:32px!important;}
+  .menu-btn{width:44px!important;height:44px!important;border-radius:11px!important;font-size:21px!important;}
+}
+@media(max-width:420px){
+  .header{height:58px!important;min-height:58px!important;}
+  .header-inner{height:58px!important;min-height:58px!important;}
+  .logo{width:min(190px,50vw)!important;height:28px!important;}
+  .menu-btn{width:40px!important;height:40px!important;border-radius:10px!important;font-size:19px!important;}
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">🔥 Thuê acc giá rẻ · Nạp thẻ không chiết khấu · Cho thuê tự động 24/7 · Uy tín hàng nghìn lượt thuê</div></div>
@@ -764,7 +779,7 @@ function downloadQrImage(){const img=$('qrImage');if(!img)return;const a=documen
 function createDeposit(e){e.preventDefault();const s=currentUser();if(!s)return;const amount=Number($('depAmount')?.value||0);if(amount<10000)return showNotice('Số tiền tối thiểu 10.000đ');const a=getDeposits();a.push({id:rid(),uid:s.uid,username:s.username,amount,method:$('depMethod')?.value||'Chuyển khoản',code:$('depCode')?.value.trim()||'',status:'pending',createdAt:Date.now()});write(STORAGE.deposits,a);showNotice('Đã tạo yêu cầu nạp');closeModal('depositOverlay')}
 function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-xmark"></i>'} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-bars"></i>'} $('menuBtn').onclick=openMenu; window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
 function availableForBag(bagId){return getInventory().filter(x=>x.bagId===bagId&&x.status==='available')}
-function renderBags(){bags=read(STORAGE.bags,defaultBags);$('bagGrid').innerHTML=bags.length?bags.map(b=>`<article class="bag" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(b.image)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">Đang kiểm tra kho...</div><button class="btn bag-open" onclick="event.stopPropagation();openBag('${esc(b.id)}')">🎴 Bóc túi</button></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';bags.forEach(updateStock)}
+function renderBags(){bags=read(STORAGE.bags,defaultBags);const visibleBags=bags.filter(b=>{const n=String(b.name||'').trim().toLowerCase();if(n==='maxim'||n==='acc maxim')return false;if(n==='săn lùng v8'||n==='san lung v8')return b.id==='v8-39'||b.id==='v8-79';return true});$('bagGrid').innerHTML=visibleBags.length?visibleBags.map(b=>`<article class="bag" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(b.image)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">Đang kiểm tra kho...</div><button class="btn bag-open" onclick="event.stopPropagation();openBag('${esc(b.id)}')">🎴 Bóc túi</button></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';visibleBags.forEach(updateStock)}
 function updateStock(b){const n=availableForBag(b.id).length;const el=$('stock-'+b.id);if(el)el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}
 function openBag(id){currentBag=bags.find(x=>x.id===id);if(!currentBag)return;$('bagTitle').textContent=currentBag.name;$('playBtn').disabled=false;currentPlan=3;const plans=currentBag.plans?.length?currentBag.plans:[Math.round(currentBag.price*.005),Math.round(currentBag.price*.03),Math.round(currentBag.price*.25),currentBag.price];$('plans').innerHTML=plans.map((p,i)=>`<button type="button" class="plan ${i===3?'active':''}" onclick="selectPlan(${i})"><span>${['1 ngày','1 tháng','1 năm','20 năm'][i]||'Gói '+(i+1)}${i<3?' · Sắp có':''}</span><b>${money(p)}</b></button>`).join('');const isBag=/Túi/i.test(currentBag.name);if(isBag){$('bagDesc').innerHTML=`🎁 ${esc(currentBag.name)} – Cơ hội nhận ngẫu nhiên một trong các loại tài khoản trong kho. <b>Chọn 1 túi bất kỳ để mở.</b>`;$('bagCategoryView').innerHTML=`<div class="bag-choice-title">${esc(currentBag.name)}</div><div class="bag-choice-sub">Chọn 1 túi bất kỳ để nhận NGẪU NHIÊN 1 tài khoản trong danh mục</div><div class="mini-bag-grid">${Array.from({length:8},(_,i)=>`<button type="button" class="mini-bag" onclick="openBagConfirm()"><img src="https://pub-b6c2f07575804ca98a0ecfee622b3274.r2.dev/products/508c45f1-6c41-4521-8eef-e855023db2d5.gif" alt="Túi ${i+1}"><div class="mini-bag-num">${i+1}</div><div class="mini-bag-open">🔓 Mở ngay</div></button>`).join('')}</div>`;$('bagStock').textContent=availableForBag(currentBag.id).length?'Còn '+availableForBag(currentBag.id).length+' phần thưởng':'Hết kho';$('playBtn').textContent='👆 Nhấn 1 túi để mở'}else{$('bagDesc').textContent=`Bấm "Chơi ngay" để úp thẻ, sau đó chọn 1 thẻ để lật · mỗi lượt ${money(currentBag.price)}`;$('bagCategoryView').innerHTML=`<div class="v8-preview v8-live-preview"><div class="v8-preview-title">${esc(currentBag.name)}</div><div class="v8-preview-note">Bấm "Chơi ngay" để úp thẻ, sau đó chọn 1 thẻ để lật.</div><div class="preview-card-stage"><div class="preview-glow"></div>${[
   [cardImages.random,'Acc Ngẫu Nhiên'],
@@ -1467,6 +1482,238 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     $('gameWin').innerHTML='';
     renderBagOpening();renderBags();updateHeader();
   };
+})();
+</script>
+
+
+<script id="virtual-stock-feature">
+(function(){
+  if(window.__SHOP_VIRTUAL_STOCK_V2__) return;
+  window.__SHOP_VIRTUAL_STOCK_V2__=true;
+
+  /*
+   * Tồn hiển thị thuộc CHÍNH TÚI GỐC (bag.displayStock).
+   * Không tạo túi mới, không tạo acc ảo.
+   * - Admin chỉnh 500 -> túi đó hiện 500.
+   * - Acc thật phải nằm trong inventory và có cùng bagId.
+   * - Khách mua -> bắt buộc lấy 1 acc thật rồi mới trừ số hiển thị.
+   * - Nếu kho acc thật = 0 -> số hiển thị của túi về 0.
+   * - Admin thêm 1 acc thật -> số hiển thị +1.
+   */
+
+  function realStock(bagId){
+    return getInventory().filter(x=>x&&x.bagId===bagId&&x.status==='available').length;
+  }
+
+  function getStockNumber(b){
+    const real=realStock(b?.id);
+    if(real<=0) return 0;
+    const n=Number(b?.displayStock);
+    if(Number.isFinite(n)&&n>=0) return Math.floor(n);
+    return real;
+  }
+
+  function saveBags(a){
+    write(STORAGE.bags,a);
+    bags=a;
+  }
+
+  function setStockNumber(bagId,value){
+    const a=read(STORAGE.bags,defaultBags);
+    const b=a.find(x=>x.id===bagId);
+    if(!b)return false;
+    b.displayStock=Math.max(0,Math.floor(Number(value)||0));
+    /* Nếu kho thật đã hết thì túi gốc phải về 0 ngay. */
+    if(realStock(bagId)<=0)b.displayStock=0;
+    saveBags(a);
+    return true;
+  }
+
+  function changeStockNumber(bagId,delta){
+    const a=read(STORAGE.bags,defaultBags);
+    const b=a.find(x=>x.id===bagId);
+    if(!b)return false;
+    const real=realStock(bagId);
+    const current=Number.isFinite(Number(b.displayStock)) ? Math.max(0,Math.floor(Number(b.displayStock))) : real;
+    b.displayStock=Math.max(0,current+Math.floor(Number(delta)||0));
+    if(real<=0)b.displayStock=0;
+    saveBags(a);
+    return true;
+  }
+
+  window.getDisplayStock=getStockNumber;
+  window.setDisplayStock=setStockNumber;
+  window.changeDisplayStock=changeStockNumber;
+
+  function ensureStockField(){
+    const form=document.querySelector('#page-bags form.admin-form');
+    if(!form)return;
+    const plans=document.getElementById('bagPlansInput');
+    if(!plans)return;
+    if(document.getElementById('bagVirtualStock'))return;
+    const wrap=document.createElement('div');
+    wrap.className='two-col';
+    wrap.innerHTML='<input class="field" id="bagVirtualStock" type="number" min="0" step="1" placeholder="Số hàng hiển thị của túi này">';
+    plans.insertAdjacentElement('afterend',wrap);
+    const note=document.createElement('div');
+    note.className='mini';
+    note.style.margin='-5px 0 4px';
+    note.textContent='Đây là số hiển thị của chính túi này. Không tạo túi mới/acc ảo. Khách chỉ nhận acc thật trong kho.';
+    wrap.insertAdjacentElement('afterend',note);
+  }
+
+  /* Render shop: luôn render đúng các túi gốc đang có. */
+  const baseRenderBags=window.renderBags || renderBags;
+  window.renderBags=function(){
+    bags=read(STORAGE.bags,defaultBags);
+    const visibleBags=bags.filter(b=>{
+      const n=String(b.name||'').trim().toLowerCase();
+      if(n==='maxim'||n==='acc maxim')return false;
+      if(n==='săn lùng v8'||n==='san lung v8')return b.id==='v8-39'||b.id==='v8-79';
+      return true;
+    });
+    const grid=$('bagGrid');
+    if(!grid)return;
+    grid.innerHTML=visibleBags.length?visibleBags.map(b=>`<article class="bag" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(b.image)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">${getStockNumber(b)?'Còn '+getStockNumber(b)+' phần thưởng':'Hết kho'}</div><button class="btn bag-open" onclick="event.stopPropagation();openBag('${esc(b.id)}')">🎴 Bóc túi</button></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';
+  };
+
+  const baseLoadBagAdmin=window.loadBagAdmin;
+  window.loadBagAdmin=function(){
+    if(typeof baseLoadBagAdmin==='function')baseLoadBagAdmin();
+    ensureStockField();
+    const data=read(STORAGE.bags,defaultBags);
+    const rows=document.getElementById('bagAdminRows');
+    if(!rows)return;
+    rows.innerHTML=data.map(b=>{
+      const real=realStock(b.id);
+      const shown=getStockNumber(b);
+      const sold=getInventory().filter(x=>x&&x.bagId===b.id&&x.status==='sold').length;
+      const p=b.prizes||{};
+      const total=Number(p.random||0)+Number(p.vip8||0)+Number(p.maxim||0);
+      const r=total?Math.round(Number(p.random||0)*100/total):50;
+      const v=total?Math.round(Number(p.vip8||0)*100/total):30;
+      const m=total?Math.round(Number(p.maxim||0)*100/total):20;
+      return `<tr><td>${esc(b.name)}</td><td>${money(b.price)}</td><td><b style="color:#35e58a">${shown}</b><div class="mini">Acc thật: ${real}</div></td><td>${sold}</td><td>${r}% / ${v}% / ${m}%</td><td>${(b.plans||[]).map(money).join(' · ')}</td><td><button class="btn dark small" onclick="editBag('${esc(b.id)}')">Sửa</button> <button class="btn danger small" onclick="deleteBag('${esc(b.id)}')">Xóa</button></td></tr>`;
+    }).join('')||'<tr><td colspan="7" class="empty">Chưa có túi</td></tr>';
+  };
+
+  const baseEditBag=window.editBag;
+  window.editBag=function(id){
+    if(typeof baseEditBag==='function')baseEditBag(id);
+    ensureStockField();
+    const b=read(STORAGE.bags,defaultBags).find(x=>x.id===id);
+    const input=document.getElementById('bagVirtualStock');
+    if(input)input.value=Number.isFinite(Number(b?.displayStock))?Math.max(0,Math.floor(Number(b.displayStock))):realStock(id);
+  };
+
+  /* Lưu số hàng vào đúng bag.id hiện tại, tuyệt đối không tạo bag mới. */
+  window.saveBag=function(e){
+    e.preventDefault();
+    if(!ensureAdmin())return;
+    ensureStockField();
+    const a=read(STORAGE.bags,defaultBags);
+    const id=document.getElementById('editBagId').value||rid();
+    const old=a.find(x=>x.id===id);
+    const r=Math.max(0,Number(document.getElementById('bagProbRandom')?.value||0));
+    const v=Math.max(0,Number(document.getElementById('bagProbVip8')?.value||0));
+    const m=Math.max(0,Number(document.getElementById('bagProbMaxim')?.value||0));
+    const total=r+v+m;
+    if(Math.abs(total-100)>0.001){showNotice('Tỷ lệ 3 loại acc phải đủ 100%');return}
+    const plans=document.getElementById('bagPlansInput').value.split(',').map(x=>Number(x.trim())).filter(x=>Number.isFinite(x)&&x>=0);
+    const input=document.getElementById('bagVirtualStock');
+    const requested=input&&input.value!==''?Math.max(0,Math.floor(Number(input.value)||0)):getStockNumber(old);
+    const b={
+      id,
+      name:document.getElementById('bagNameInput').value.trim(),
+      price:Number(document.getElementById('bagPriceInput').value),
+      image:document.getElementById('bagImageInput').value.trim()||logoUrl,
+      desc:document.getElementById('bagDescInput').value.trim(),
+      plans:plans.length?plans:[Number(document.getElementById('bagPriceInput').value)],
+      prizes:{random:r,vip8:v,maxim:m},
+      displayStock:realStock(id)<=0?0:requested
+    };
+    const i=a.findIndex(x=>x.id===id);
+    if(i>=0)a[i]={...a[i],...b};else a.push(b);
+    saveBags(a);
+    logAdmin('save_bag',id+' · displayStock '+b.displayStock);
+    showNotice('Đã lưu đúng túi gốc + số hàng hiển thị');
+    e.target.reset();
+    document.getElementById('editBagId').value='';
+    if(document.getElementById('bagProbRandom'))document.getElementById('bagProbRandom').value=50;
+    if(document.getElementById('bagProbVip8'))document.getElementById('bagProbVip8').value=30;
+    if(document.getElementById('bagProbMaxim'))document.getElementById('bagProbMaxim').value=20;
+    loadAll();loadBagAdmin();
+  };
+
+  /* Thêm acc thật vào ĐÚNG túi đang chọn. */
+  window.addInventory=function(e){
+    e.preventDefault();
+    if(!ensureAdmin())return;
+    const bagId=document.getElementById('invBag').value;
+    const login=document.getElementById('invLogin').value.trim();
+    const pass=document.getElementById('invPass').value;
+    const a=getInventory();
+    if(a.some(x=>x&&x.login===login&&x.status==='available')){showNotice('TK này đang tồn tại trong kho');return}
+    a.push({id:rid(),bagId,prizeType:document.getElementById('invPrizeType')?.value||'random',login,pass,rank:document.getElementById('invRank').value.trim(),cardImage:document.getElementById('invCardImage')?.value.trim()||'',note:document.getElementById('invNote').value.trim(),status:'available',createdAt:Date.now()});
+    write(STORAGE.inventory,a);
+    /* 1 acc thật thêm vào túi nào -> chính túi đó +1. */
+    changeStockNumber(bagId,1);
+    logAdmin('add_inventory',login+' · bag '+bagId+' · stock +1');
+    e.target.reset();
+    showNotice('Đã thêm acc thật vào đúng túi · số lượng +1');
+    loadInventory();renderBags();loadBagAdmin();
+  };
+
+  /* Xóa acc thật khỏi kho: nếu còn available thì chính túi đó -1. */
+  window.removeInventory=function(id){
+    if(!ensureAdmin()||!confirm('Xóa acc khỏi kho?'))return;
+    const item=getInventory().find(x=>x&&x.id===id);
+    if(!item)return;
+    write(STORAGE.inventory,getInventory().filter(x=>x.id!==id));
+    if(item.status==='available')changeStockNumber(item.bagId,-1);
+    logAdmin('remove_inventory',id+(item.status==='available'?' · stock -1':''));
+    showNotice('Đã xóa acc'+(item.status==='available'?' · số lượng túi -1':''));
+    loadInventory();renderBags();loadBagAdmin();
+  };
+
+  /*
+   * Mua túi: KHÔNG dùng số ảo để phát acc.
+   * Luôn lấy 1 acc thật của chính bagId. Nếu còn 40 acc thật thì bán được 40 lần
+   * dù số hiển thị đang là 500. Khi acc thật về 0, displayStock của túi về 0.
+   */
+  const previousStartBag=window.startBag;
+  window.startBag=async function(){
+    const b=currentBag;
+    if(b){
+      const real=realStock(b.id);
+      if(real<=0){
+        setStockNumber(b.id,0);
+        showNotice('Túi hiện đã hết acc thật trong kho');
+        renderBags();
+        return;
+      }
+    }
+    if(typeof previousStartBag!=='function')return;
+    await previousStartBag();
+    /* previousStartBag đã lấy và xóa 1 acc thật thành công khi currentRound có orderId. */
+    if(b&&currentRound?.orderId){
+      changeStockNumber(b.id,-1);
+      if(realStock(b.id)<=0)setStockNumber(b.id,0);
+      renderBags();
+    }
+  };
+
+  /* Đồng bộ hiển thị khi Firebase/LocalStorage thay đổi. */
+  window.updateStock=function(b){
+    const el=document.getElementById('stock-'+b.id);
+    if(el){const n=getStockNumber(b);el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}
+  };
+  window.addEventListener('shop-storage-change',()=>{
+    bags=read(STORAGE.bags,defaultBags);
+    if(isAdmin){ensureStockField();loadBagAdmin();}
+    renderBags();
+  });
+  setTimeout(()=>{ensureStockField();renderBags();},0);
 })();
 </script>
 
