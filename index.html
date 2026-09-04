@@ -1833,38 +1833,114 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
 </script>
 
 
-<style id="mystery-bag-maintenance-only">
-/* Chỉ bổ sung 4 ô thời gian cho 7 túi mù 49K-999K */
-.mystery-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;pointer-events:none!important;}
-.mystery-maintenance-plan span,.mystery-maintenance-plan b{color:#35e58a!important;}
+<style id="final-bag-maintenance-only">
+/* Chỉ thêm 4 ô thời gian cho 7 túi mù 49K–999K; không thay đổi phần khác. */
+.bag-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;}
+.bag-maintenance-plan b,.bag-maintenance-plan span{color:#35e58a!important;}
 </style>
-<script id="mystery-bag-maintenance-only-js">
+<script id="final-bag-maintenance-only-js">
 (function(){
-  const BAG_IDS=new Set(['bag49','bag99','bag149','bag199','bag249','bag499','bag999']);
+  const BAGIDS=new Set(['bag49','bag99','bag149','bag199','bag249','bag499','bag999']);
   const labels=['1 ngày','1 tháng','1 năm','20 năm'];
-  function prices(price){
-    const p=Number(price)||0;
-    return [Math.round(p*.005),Math.round(p*.03),Math.round(p*.25),p];
-  }
-  function renderMysteryPlans(b){
+  const priceFor=(price,i)=>{const p=Number(price)||0;return [Math.round(p*.005),Math.round(p*.03),Math.round(p*.25),p][i]};
+  function renderBagPlans(b){
     const box=$('plans');
-    if(!box||!b||!BAG_IDS.has(String(b.id)))return;
-    const ps=prices(b.price);
+    if(!box||!b||!BAGIDS.has(String(b.id)))return;
     currentPlan=3;
     box.innerHTML=labels.map((label,i)=>{
       const disabled=i<3;
-      return `<button type="button" class="plan ${i===3?'active':''} ${disabled?'mystery-maintenance-plan':''}" ${disabled?'disabled aria-disabled="true"':''} onclick="${disabled?'return false':'selectPlan('+i+')'}"><span>${label}${disabled?' · Bảo trì':''}</span><b>${money(ps[i])}</b></button>`;
+      const p=priceFor(b.price,i);
+      return `<button type="button" class="plan ${i===3?'active':''} ${disabled?'bag-maintenance-plan':''}" ${disabled?'disabled aria-disabled="true"':''} onclick="${disabled?'return false':'selectPlan('+i+')'}"><span>${label}${disabled?' · Bảo trì':''}</span><b>${money(p)}</b></button>`;
     }).join('');
   }
-  const previousOpenBag=window.openBag;
+  const prevOpenBag=window.openBag;
   window.openBag=function(id){
-    if(typeof previousOpenBag==='function')previousOpenBag(id);
-    const b=(window.bags||[]).find(x=>String(x.id)===String(id));
-    if(BAG_IDS.has(String(b?.id)))renderMysteryPlans(b);
+    if(typeof prevOpenBag==='function')prevOpenBag(id);
+    const list=bags||[];
+    const b=list.find(x=>String(x.id)===String(id));
+    if(b&&BAGIDS.has(String(b.id)))renderBagPlans(b);
+  };
+})();
+</script>
+
+<style id="final-history-credentials-fix">
+/* Chỉ đảm bảo TK/MK trong lịch sử luôn ẩn mặc định + mắt + sao chép. */
+.history-credential-row{display:grid!important;grid-template-columns:110px minmax(0,1fr) auto auto!important;align-items:center;gap:8px!important;margin-top:8px}
+.history-credential-value{min-width:0;overflow-wrap:anywhere;word-break:break-all}
+.history-credential-eye{border:0!important;background:transparent!important;color:#b9bdca!important;font-size:18px!important;padding:5px!important;cursor:pointer!important;line-height:1!important}
+@media(max-width:600px){.history-credential-row{grid-template-columns:1fr auto auto!important}.history-credential-row>span:first-child{grid-column:1/-1}.history-credential-value{grid-column:1}.history-credential-eye{grid-column:2}.history-credential-row .copy{grid-column:3}}
+</style>
+<script id="final-history-credentials-fix-js">
+(function(){
+  function escH(v){return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function maskH(v){
+    v=String(v||'');
+    const at=v.indexOf('@');
+    if(at>1){return v.slice(0,Math.min(4,at))+'***'+v.slice(at)}
+    return '••••••••••';
+  }
+  window.toggleHistoryCredential=function(id){
+    const el=document.getElementById(id);if(!el)return;
+    const hidden=el.getAttribute('data-visible')!=='1';
+    const real=el.getAttribute('data-secret')||'';
+    el.textContent=hidden?real:maskH(real);
+    el.setAttribute('data-visible',hidden?'1':'0');
+    const eye=el.parentElement?.querySelector('.history-credential-eye');
+    if(eye)eye.textContent=hidden?'🙈':'👁️';
+  };
+  function historyCred(label,value,copyFn){
+    const id='histcred_'+Math.random().toString(36).slice(2,10)+'_'+Date.now();
+    const real=String(value||'');
+    return `<div class="history-credential-row"><span>${escH(label)}</span><strong id="${id}" class="history-credential-value" data-secret="${escH(real)}" data-visible="0">${escH(maskH(real))}</strong><button type="button" class="history-credential-eye" onclick="toggleHistoryCredential('${id}')">👁️</button><button type="button" class="copy" onclick="${copyFn}">📋 Sao chép</button></div>`;
+  }
+  const oldRender=window.renderAccountTab;
+  window.renderAccountTab=function(tab){
+    if(typeof oldRender==='function')oldRender(tab);
+    if(tab!=='accounts'&&tab!=='orders')return;
+    const s=currentUser?.();if(!s||s.admin)return;
+    const u=getUsers().find(x=>x.uid===s.uid),c=$('accountTabContent');if(!c)return;
+    const orders=getOrders().filter(x=>x.uid===s.uid).slice().reverse();
+    const won=(u?.wonAccounts||[]).slice().reverse();
+    if(tab==='accounts'){
+      c.innerHTML=won.length?won.map(x=>{
+        const oid=x.orderId||'';
+        return `<div class="admin-card won-account-card"><div class="won-head"><b>🏆 ${escH(x.rank||'Tài khoản game')}</b><span class="mini">${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</span></div>${historyCred('Tài khoản game',x.login,`copyWonField('${escH(oid)}','login')`)}${historyCred('Mật khẩu',x.pass,`copyWonField('${escH(oid)}','pass')`)}<div class="mini">Đơn: ${escH(oid)} · ${money(x.price)}</div></div>`
+      }).join(''):'<div class="empty">Chưa có acc đã nhận.</div>';
+    }else{
+      c.innerHTML=orders.length?orders.map(x=>`<div class="admin-card"><div class="won-head"><b>${escH(x.bagName)}</b><span>${money(x.price)}</span></div><div class="mini">Đơn: ${escH(x.id)}</div>${historyCred('Tài khoản',x.rewardLogin,`copyOrderField('${escH(x.id)}','login')`)}${historyCred('Mật khẩu',x.rewardPass,`copyOrderField('${escH(x.id)}','pass')`)}<div class="mini">${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>';
+    }
   };
 })();
 </script>
 </body>
+
+<style id="final-force-mystery-plans-v3">
+.bag-maintenance-plan{cursor:not-allowed!important;opacity:.78!important;pointer-events:none!important;}
+.bag-maintenance-plan span,.bag-maintenance-plan b{color:#35e58a!important;}
+</style>
+<script id="final-force-mystery-plans-v3-js">
+(function(){
+  const IDS=new Set(['bag49','bag99','bag149','bag199','bag249','bag499','bag999']);
+  const labels=['1 ngày','1 tháng','1 năm','20 năm'];
+  const calc=(base,i)=>{base=Number(base)||0;return [Math.round(base*.005),Math.round(base*.03),Math.round(base*.25),base][i]};
+  function forcePlans(b){
+    const box=document.getElementById('plans');
+    if(!box||!b||!IDS.has(String(b.id)))return;
+    window.currentPlan=3;
+    box.innerHTML=labels.map((label,i)=>{
+      const disabled=i<3, price=calc(b.price,i);
+      return '<button type="button" class="plan '+(i===3?'active ':'')+(disabled?'bag-maintenance-plan':'')+'" '+(disabled?'disabled aria-disabled="true"':'onclick="selectPlan('+i+')"')+'><span>'+label+(disabled?' (Bảo trì)':'')+'</span><b>'+money(price)+'</b></button>';
+    }).join('');
+  }
+  const old=window.openBag;
+  window.openBag=function(id){
+    if(typeof old==='function')old(id);
+    const list=bags||[];
+    const b=list.find(x=>String(x.id)===String(id));
+    if(b&&IDS.has(String(b.id))){forcePlans(b);setTimeout(()=>forcePlans(b),0);setTimeout(()=>forcePlans(b),50);}
+  };
+})();
+</script>
 </html>
 <style id="final-user-v8-maintenance-credentials">
 /* Chỉ sửa 4 ô thời gian + ẩn/hiện TK/MK. Các phần khác giữ nguyên. */
@@ -1893,7 +1969,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   const prevOpenBag=window.openBag;
   window.openBag=function(id){
     if(typeof prevOpenBag==='function')prevOpenBag(id);
-    const b=(window.bags||[]).find(x=>String(x.id)===String(id));
+    const b=(bags||[]).find(x=>String(x.id)===String(id));
     if(b&&V8IDS.has(String(b.id)))renderV8Plans(b);
   };
   function credentialHtml(label,value,field){
