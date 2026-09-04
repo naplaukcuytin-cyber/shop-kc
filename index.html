@@ -3,7 +3,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#090a10">
 <title>SHOPCENAVN • Bóc Acc Xịn</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1941,6 +1941,67 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   };
 })();
 </script>
+
+<style id="final-home-layout-fix">
+/* Chỉ chỉnh 2 ô nạp ở trang chủ: luôn cân nhau và dạng chữ nhật dài. */
+.quick-grid{
+  grid-template-columns:1fr!important;
+  gap:16px!important;
+}
+.quick{
+  width:100%!important;
+  min-height:128px!important;
+  height:128px!important;
+  padding:22px 28px!important;
+  gap:22px!important;
+  align-items:center!important;
+}
+.quick:nth-child(1),.quick:nth-child(2){height:128px!important;min-height:128px!important}
+
+/* Hiệu ứng ánh sáng của 2 ô nạp: chậm và nhẹ hơn, không bị chạy loang. */
+.quick:after{
+  opacity:.32!important;
+  animation:sweepSoft 9s ease-in-out infinite!important;
+}
+@keyframes sweepSoft{
+  0%,55%{transform:translateX(-65%);opacity:0}
+  68%{opacity:.24}
+  82%,100%{transform:translateX(65%);opacity:0}
+}
+
+/* Khóa phóng to/thu nhỏ bằng thao tác chạm trong giao diện. */
+html,body{
+  touch-action:pan-x pan-y!important;
+}
+
+/* Làm hiệu ứng glow của ô BÓC ACC XỊN gọn và ổn định hơn. */
+.hero-box:before{
+  animation:floatGlowSoft 8s ease-in-out infinite!important;
+  opacity:.55!important;
+}
+@keyframes floatGlowSoft{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-8px,-7px) scale(1.04)}
+}
+
+@media(max-width:760px){
+  .quick-grid{grid-template-columns:1fr!important;gap:14px!important}
+  .quick,.quick:nth-child(1),.quick:nth-child(2){
+    height:112px!important;
+    min-height:112px!important;
+    padding:18px 22px!important;
+    gap:18px!important;
+  }
+}
+@media(max-width:420px){
+  .quick,.quick:nth-child(1),.quick:nth-child(2){
+    height:106px!important;
+    min-height:106px!important;
+    padding:16px 18px!important;
+    gap:15px!important;
+  }
+}
+</style>
 </html>
 <style id="final-user-v8-maintenance-credentials">
 /* Chỉ sửa 4 ô thời gian + ẩn/hiện TK/MK. Các phần khác giữ nguyên. */
@@ -2054,5 +2115,153 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   }
   function watch(id){const el=document.getElementById(id);if(!el)return;enhance(el);new MutationObserver(()=>enhance(el)).observe(el,{childList:true,subtree:true});}
   document.addEventListener('DOMContentLoaded',function(){watch('gameWin');watch('bagOpenResult');watch('accountTabContent');});
+})();
+</script>
+
+<style id="final-homepage-only-fix">
+/* CHỈ chỉnh giao diện trang chủ theo yêu cầu: khối nạp dài, hero gọn hơn, ẩn tồn kho phía khách. */
+.quick-grid{
+  grid-template-columns:1fr!important;
+  gap:18px!important;
+  margin-bottom:48px!important;
+}
+.quick{
+  width:100%!important;
+  min-height:126px!important;
+  padding:24px 42px!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  text-align:left!important;
+}
+.quick-icon{
+  margin:0!important;
+  width:72px!important;
+  height:72px!important;
+  flex:none!important;
+}
+.quick h3{font-size:25px!important}
+.quick p{font-size:17px!important}
+
+/* Làm ô BÓC ACC XỊN gọn hơn, giữ nguyên màu/nội dung/nút. */
+.hero{padding:34px 0 22px!important}
+.hero-box{
+  min-height:0!important;
+  padding:38px 44px!important;
+}
+.hero-badge{padding:11px 22px!important}
+.hero h1{
+  font-size:clamp(34px,5.2vw,52px)!important;
+  margin:24px 0 13px!important;
+}
+.hero p{
+  font-size:clamp(16px,1.9vw,20px)!important;
+  line-height:1.55!important;
+}
+.actions{margin-top:22px!important}
+
+/* Khách không cần thấy Còn phần thưởng / Hết kho ở trang chủ và modal chọn túi. */
+#bagGrid .stock,
+#bagStock{
+  display:none!important;
+}
+
+@media(max-width:760px){
+  .hero{padding-top:28px!important;padding-bottom:18px!important}
+  .hero-box{padding:28px 24px!important}
+  .hero-badge{padding:10px 18px!important;font-size:14px!important}
+  .hero h1{font-size:34px!important;margin:20px 0 12px!important}
+  .hero p{font-size:16px!important;line-height:1.55!important}
+  .actions{margin-top:20px!important;gap:12px!important}
+  .actions .btn{padding:14px 9px!important}
+
+  .quick-grid{grid-template-columns:1fr!important;gap:14px!important}
+  .quick{min-height:112px!important;padding:20px 22px!important;display:flex!important;flex-direction:row!important;gap:18px!important}
+  .quick-icon{width:64px!important;height:64px!important;font-size:29px!important;margin:0!important}
+  .quick h3{font-size:20px!important;margin-bottom:5px!important}
+  .quick p{font-size:14px!important}
+}
+
+@media(max-width:420px){
+  .hero-box{padding:24px 20px!important}
+  .hero-badge{padding:9px 15px!important;font-size:13px!important}
+  .hero h1{font-size:31px!important;margin:17px 0 10px!important}
+  .hero p{font-size:15px!important}
+  .quick{min-height:104px!important;padding:17px 18px!important;gap:15px!important}
+  .quick-icon{width:58px!important;height:58px!important;font-size:26px!important}
+  .quick h3{font-size:18px!important}
+  .quick p{font-size:13px!important}
+}
+</style>
+
+
+<style id="final-user-quick-center-and-mini-bag-confirm">
+/* Chỉ căn lại 2 ô nạp và bỏ nút cam dưới 8 túi. Các phần khác giữ nguyên. */
+.quick-grid{width:100%!important;box-sizing:border-box!important;}
+.quick,.quick:nth-child(1),.quick:nth-child(2){
+  width:100%!important;
+  box-sizing:border-box!important;
+  justify-content:center!important;
+}
+@media(max-width:760px){
+  .quick,.quick:nth-child(1),.quick:nth-child(2){
+    width:100%!important;
+    justify-content:center!important;
+  }
+}
+@media(max-width:420px){
+  .quick,.quick:nth-child(1),.quick:nth-child(2){
+    width:100%!important;
+    justify-content:center!important;
+  }
+}
+</style>
+<script id="final-user-mini-bag-confirm-js">
+(function(){
+  const MYSTERY_IDS=new Set(['bag49','bag99','bag149','bag199','bag249','bag499','bag999']);
+  function isMystery(id){return MYSTERY_IDS.has(String(id));}
+  function setMysteryBottomHidden(){
+    const btn=$('playBtn');
+    if(btn)btn.style.display='none';
+  }
+  function setNormalBottomVisible(){
+    const btn=$('playBtn');
+    if(btn)btn.style.display='';
+  }
+
+  const prevOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof prevOpenBag==='function')prevOpenBag(id);
+    if(isMystery(id)){
+      setMysteryBottomHidden();
+      setTimeout(setMysteryBottomHidden,0);
+      setTimeout(setMysteryBottomHidden,50);
+      setTimeout(setMysteryBottomHidden,150);
+    }else{
+      setNormalBottomVisible();
+    }
+  };
+
+  const prevSelectMiniBag=window.selectMiniBag;
+  window.selectMiniBag=function(i){
+    if(typeof prevSelectMiniBag==='function')prevSelectMiniBag(i);
+    if(!currentBag||!isMystery(currentBag.id))return;
+    const available=typeof availableForBag==='function'?availableForBag(currentBag.id):[];
+    if(!available.length)return;
+    setMysteryBottomHidden();
+    /* Chọn 1 trong 8 ô là mở ngay phần xác nhận mua. */
+    setTimeout(function(){
+      if(currentBag&&isMystery(currentBag.id)&&typeof openPlayConfirm==='function')openPlayConfirm();
+    },0);
+  };
+
+  /* Nếu renderChoice được gọi lại, nút cam vẫn luôn bị ẩn với 7 túi mù. */
+  const oldRenderChoice=window.renderChoice;
+  if(typeof oldRenderChoice==='function'){
+    window.renderChoice=function(){
+      oldRenderChoice();
+      if(currentBag&&isMystery(currentBag.id))setMysteryBottomHidden();
+    };
+  }
 })();
 </script>
