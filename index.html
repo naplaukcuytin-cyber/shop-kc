@@ -108,7 +108,239 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 /* ===== PROFESSIONAL ADMIN + CREDENTIAL UI ===== */
 .admin-status-card{display:flex;align-items:center;justify-content:space-between;gap:20px}.admin-live{display:flex;align-items:center;gap:8px;white-space:nowrap}.live-dot{width:10px;height:10px;border-radius:50%;background:#35e58a;box-shadow:0 0 14px #35e58a;display:inline-block;animation:pulse 1.4s infinite}.stat-sub{display:block;margin-top:7px;color:#858b9e;font-size:11px}.credential-grid{display:grid;gap:10px;margin-top:14px}.credential-row{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;padding:10px;border:1px solid #2d303c;border-radius:10px;background:#0b0d13}.credential-row span{color:#9096a8;font-size:12px}.credential-row strong{word-break:break-all}.copy{border:1px solid #454957;background:#20232e;color:#fff;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer}.copy:hover{background:#2b2e3b}.won-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}.won-account-card{border-color:#4b3a61}.admin-nav{scrollbar-width:thin}.admin-page h3{font-size:24px;margin:10px 0 15px}.table td b{word-break:break-word}.admin-card{box-shadow:0 8px 24px rgba(0,0,0,.14)}
 @media(max-width:760px){.admin-status-card{display:block}.admin-live{margin-top:10px}.credential-row{grid-template-columns:1fr auto}.credential-row span{grid-column:1/-1}.credential-row strong{grid-column:1}.credential-row .copy{grid-column:2;grid-row:2}.admin-nav button{font-size:12px}.table{min-width:980px}}
+
+/* ===== MOBILE OPTIMIZATION — UI/CSS ONLY, KEEP DESKTOP DESIGN ===== */
+@media (max-width:760px){
+  html{font-size:16px;-webkit-text-size-adjust:100%;}
+  body{min-width:0;overflow-x:hidden;}
+  body.modal-open{overflow:hidden;}
+
+  /* Modal chung: vừa màn hình iPhone, không bị tràn / khuất nút */
+  .overlay{padding:8px;align-items:center;}
+  .modal{width:100%;max-width:100%!important;max-height:calc(100dvh - 16px);height:auto;overflow:auto;border-radius:16px;padding:15px;-webkit-overflow-scrolling:touch;}
+  .modal-head{position:relative;gap:9px;min-height:48px;}
+  .modal-head h2{font-size:23px!important;line-height:1.2;min-width:0;word-break:break-word;}
+  .close{width:46px;height:46px;min-width:46px;flex:0 0 46px;}
+  .field,.btn{font-size:16px;min-height:46px;}
+  textarea.field{min-height:105px;}
+
+  /* Trang tài khoản */
+  #accountOverlay .stats{grid-template-columns:1fr 1fr;gap:9px;}
+  #accountOverlay .stat{padding:15px;min-width:0;}
+  #accountOverlay .stat b{font-size:22px;overflow-wrap:anywhere;}
+  #accountOverlay .account-tabs{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;margin:14px 0!important;}
+  #accountOverlay .account-tabs .btn{width:100%;padding:12px 8px;font-size:13px;line-height:1.2;white-space:normal;}
+  #accountOverlay .credential-row{grid-template-columns:1fr auto;gap:8px;padding:11px;}
+  #accountOverlay .credential-row span{grid-column:1/-1;}
+  #accountOverlay .credential-row strong{min-width:0;overflow-wrap:anywhere;font-size:14px;}
+  #accountOverlay .credential-row .copy{grid-column:2;grid-row:2;white-space:nowrap;}
+  #accountOverlay .won-head{align-items:flex-start;flex-direction:column;gap:4px;}
+
+  /* Lật thẻ: giảm chiều cao để kết quả không bị đẩy xuống ngoài màn hình */
+  #gameOverlay .modal{padding:10px;}
+  #gameOverlay .modal-head{padding:0 3px;}
+  #gameOverlay .game-screen{min-height:0;height:auto;padding:18px 10px 20px;border-radius:15px;}
+  #gameOverlay .game-content h2{font-size:25px;}
+  #gameOverlay .shuffle-status{font-size:14px;padding:9px 13px;max-width:100%;}
+  #gameOverlay .game-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:24px auto 22px;width:100%;}
+  #gameOverlay .game-card{height:175px;min-width:0;}
+  #gameOverlay .game-card .face{border-radius:14px;}
+  #gameOverlay .game-card .face-front:after{font-size:50px;}
+  #gameOverlay .game-card .back{padding:8px;}
+  #gameOverlay .game-card .back .reward{font-size:14px;line-height:1.25;overflow-wrap:anywhere;}
+  #gameOverlay .game-buy{min-width:0;width:100%;font-size:16px;padding:13px 10px;}
+  #gameOverlay .game-win{width:100%;font-size:14px;}
+  #gameOverlay .win{padding:14px;margin-top:12px;overflow-wrap:anywhere;}
+  #gameOverlay .result-title{font-size:18px;}
+
+  /* Túi / chọn gói */
+  .bag-modal{gap:15px;}
+  .category-modal{padding:15px!important;}
+  .category-modal .modal-head h2{font-size:25px!important;}
+  .category-copy{font-size:14px;}
+  .category-plans .plans{grid-template-columns:1fr 1fr;gap:8px;}
+  .category-plans .plan{min-height:62px;padding:11px;font-size:13px;}
+  .mini-bag-grid{grid-template-columns:1fr 1fr;gap:9px;}
+  .mini-bag{padding:7px;border-radius:13px;}
+  .mini-bag-num{font-size:15px;margin:8px 2px 3px;}
+  .mini-bag-open{font-size:11px;margin-left:2px;}
+  .prize-grid{grid-template-columns:repeat(3,1fr);gap:7px;}
+  .prize-card{padding:6px;}
+  .prize-card b{font-size:12px;padding:7px 2px 2px;}
+
+  /* ===== ADMIN ===== */
+  #adminOverlay{padding:5px;align-items:stretch;}
+  #adminOverlay .modal{
+    width:100%!important;
+    height:calc(100dvh - 10px);
+    max-height:none!important;
+    padding:12px;
+    border-radius:15px;
+  }
+  #adminOverlay .modal-head{
+    position:sticky;
+    top:-12px;
+    z-index:20;
+    padding:7px 0 10px;
+    background:linear-gradient(180deg,#11131c 82%,rgba(17,19,28,0));
+  }
+  #adminOverlay .modal-head h2{font-size:21px!important;}
+  #adminOverlay .admin-nav{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    padding:7px 0 12px;
+    overflow:visible;
+  }
+  #adminOverlay .admin-nav button{
+    width:100%;
+    min-height:44px;
+    padding:9px 6px;
+    font-size:12px;
+    line-height:1.2;
+    white-space:normal;
+  }
+  #adminOverlay .admin-page h3{font-size:20px;margin:8px 0 12px;line-height:1.25;}
+  #adminOverlay .admin-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0;}
+  #adminOverlay .admin-toolbar .field,
+  #adminOverlay .admin-toolbar .btn{max-width:none!important;width:100%;min-width:0;}
+  #adminOverlay .admin-toolbar .field:first-child{grid-column:1/-1;}
+  #adminOverlay .two-col{grid-template-columns:1fr;gap:9px;}
+  #adminOverlay .admin-form{gap:9px;}
+  #adminOverlay .admin-form .btn{width:100%;}
+  #adminOverlay .stats{grid-template-columns:1fr 1fr;gap:8px;}
+  #adminOverlay .stat{padding:13px;min-width:0;}
+  #adminOverlay .stat b{font-size:21px;overflow-wrap:anywhere;}
+  #adminOverlay .stat-sub{font-size:10px;}
+  #adminOverlay .admin-status-card{align-items:flex-start;flex-direction:column;gap:10px;}
+  #adminOverlay .credential-row{grid-template-columns:1fr auto;}
+
+  /* Bảng admin thành thẻ trên điện thoại — không phải kéo ngang */
+  #adminOverlay .table-wrap{overflow:visible;margin-top:10px;}
+  #adminOverlay .table{width:100%;min-width:0;border-collapse:separate;border-spacing:0 9px;display:block;}
+  #adminOverlay .table thead{display:none;}
+  #adminOverlay .table tbody{display:block;width:100%;}
+  #adminOverlay .table tr{
+    display:block;
+    width:100%;
+    padding:8px 10px;
+    background:#151720;
+    border:1px solid #2c2f3a;
+    border-radius:13px;
+    box-shadow:0 7px 18px rgba(0,0,0,.12);
+  }
+  #adminOverlay .table td{
+    display:grid;
+    grid-template-columns:88px minmax(0,1fr);
+    gap:7px;
+    width:100%;
+    padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,.055);
+    font-size:12px;
+    line-height:1.35;
+    min-width:0;
+    overflow-wrap:anywhere;
+  }
+  #adminOverlay .table td:last-child{border-bottom:0;}
+  #adminOverlay .table td:before{
+    color:#858b9e;
+    font-weight:700;
+    content:'';
+  }
+  #adminOverlay .table td > *{min-width:0;max-width:100%;}
+  #adminOverlay .table td .btn{width:auto;min-height:38px;padding:8px 10px;font-size:12px;white-space:normal;}
+  #adminOverlay .table td .copy{float:none;width:auto;}
+
+  /* Nhãn từng bảng */
+  #page-dashboard .table td:nth-child(1):before{content:'Thời gian';}
+  #page-dashboard .table td:nth-child(2):before{content:'User / Khách';}
+  #page-dashboard .table td:nth-child(3):before{content:'Hoạt động / Túi';}
+  #page-dashboard .table td:nth-child(4):before{content:'Chi tiết / Giá';}
+  #page-dashboard .table td:nth-child(5):before{content:'Thiết bị / TK';}
+  #page-dashboard .table td:nth-child(6):before{content:'Mật khẩu';}
+
+  #page-bags .table td:nth-child(1):before{content:'Tên';}
+  #page-bags .table td:nth-child(2):before{content:'Giá';}
+  #page-bags .table td:nth-child(3):before{content:'Tồn';}
+  #page-bags .table td:nth-child(4):before{content:'Đã bán';}
+  #page-bags .table td:nth-child(5):before{content:'Gói';}
+  #page-bags .table td:nth-child(6):before{content:'Thao tác';}
+
+  #page-inventory .table td:nth-child(1):before{content:'Túi';}
+  #page-inventory .table td:nth-child(2):before{content:'TK game';}
+  #page-inventory .table td:nth-child(3):before{content:'Mật khẩu';}
+  #page-inventory .table td:nth-child(4):before{content:'Rank';}
+  #page-inventory .table td:nth-child(5):before{content:'Trạng thái';}
+  #page-inventory .table td:nth-child(6):before{content:'Ngày nhập';}
+  #page-inventory .table td:nth-child(7):before{content:'Người nhận';}
+  #page-inventory .table td:nth-child(8):before{content:'Thao tác';}
+
+  #page-users .table td:nth-child(1):before{content:'User';}
+  #page-users .table td:nth-child(2):before{content:'Tên';}
+  #page-users .table td:nth-child(3):before{content:'UID';}
+  #page-users .table td:nth-child(4):before{content:'Số dư';}
+  #page-users .table td:nth-child(5):before{content:'Acc trúng';}
+  #page-users .table td:nth-child(6):before{content:'Giao dịch';}
+  #page-users .table td:nth-child(7):before{content:'Tham gia';}
+  #page-users .table td:nth-child(8):before{content:'Thao tác';}
+
+  #page-orders .table td:nth-child(1):before{content:'Mã đơn';}
+  #page-orders .table td:nth-child(2):before{content:'User';}
+  #page-orders .table td:nth-child(3):before{content:'Túi';}
+  #page-orders .table td:nth-child(4):before{content:'Giá';}
+  #page-orders .table td:nth-child(5):before{content:'TK game';}
+  #page-orders .table td:nth-child(6):before{content:'Mật khẩu';}
+  #page-orders .table td:nth-child(7):before{content:'Rank';}
+  #page-orders .table td:nth-child(8):before{content:'Thời gian';}
+  #page-orders .table td:nth-child(9):before{content:'Thao tác';}
+
+  #page-deposits .table td:nth-child(1):before{content:'User';}
+  #page-deposits .table td:nth-child(2):before{content:'Số tiền';}
+  #page-deposits .table td:nth-child(3):before{content:'Phương thức';}
+  #page-deposits .table td:nth-child(4):before{content:'Nội dung';}
+  #page-deposits .table td:nth-child(5):before{content:'Seri';}
+  #page-deposits .table td:nth-child(6):before{content:'Mã thẻ';}
+  #page-deposits .table td:nth-child(7):before{content:'Trạng thái';}
+  #page-deposits .table td:nth-child(8):before{content:'Thời gian';}
+  #page-deposits .table td:nth-child(9):before{content:'Thao tác';}
+
+  #page-activities .table td:nth-child(1):before{content:'Thời gian';}
+  #page-activities .table td:nth-child(2):before{content:'User';}
+  #page-activities .table td:nth-child(3):before{content:'Hoạt động';}
+  #page-activities .table td:nth-child(4):before{content:'Chi tiết';}
+  #page-activities .table td:nth-child(5):before{content:'Thiết bị';}
+
+  #page-logs .table td:nth-child(1):before{content:'Thời gian';}
+  #page-logs .table td:nth-child(2):before{content:'Admin';}
+  #page-logs .table td:nth-child(3):before{content:'Hành động';}
+  #page-logs .table td:nth-child(4):before{content:'Chi tiết';}
+
+  /* Cài đặt admin */
+  #page-settings .check-row{padding:11px;background:#151720;border:1px solid #2c2f3a;border-radius:11px;}
+  #page-settings .check-row input{width:20px;height:20px;flex:0 0 20px;}
+  #adminOverlay .json-box{min-height:160px;max-width:100%;overflow:auto;}
+
+  /* Nạp tiền */
+  .amount-grid{grid-template-columns:1fr 1fr 1fr;gap:7px;}
+  .amount-btn{padding:12px 5px;font-size:14px;min-width:0;}
+  .qr-box img{width:min(300px,100%);}
+  .bank-line{align-items:flex-start;gap:8px;}
+  .bank-line b{overflow-wrap:anywhere;}
+}
+
+@media (max-width:390px){
+  .container{width:calc(100% - 24px);}
+  #gameOverlay .modal{padding:7px;}
+  #gameOverlay .game-screen{padding:15px 7px 17px;}
+  #gameOverlay .game-card{height:155px;}
+  #gameOverlay .game-card .face-front:after{font-size:42px;}
+  #gameOverlay .game-cards{gap:5px;margin-top:20px;}
+  #adminOverlay .modal{padding:9px;}
+  #adminOverlay .table td{grid-template-columns:78px minmax(0,1fr);font-size:11px;}
+  #adminOverlay .admin-nav button{font-size:11px;}
+}
 </style>
+
 </head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">🔥 Thuê acc giá rẻ · Nạp thẻ không chiết khấu · Cho thuê tự động 24/7 · Uy tín hàng nghìn lượt thuê</div></div>
