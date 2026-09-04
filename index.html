@@ -1159,6 +1159,123 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
   };
 })();
 
+
+/* ===== FINAL FIX: TÚI 49-999 = MỞ TÚI, KHÔNG LẬT 3 THẺ ===== */
+(function(){
+  const isRealBag=()=>!!currentBag&&/Túi/i.test(String(currentBag.name||''));
+  function ensureBagReveal(){
+    if(document.getElementById('bagRevealOverlay'))return;
+    const st=document.createElement('style');
+    st.id='bag-reveal-style';
+    st.textContent=`
+      #bagRevealOverlay .bag-reveal-modal{max-width:620px;text-align:center;padding:28px 24px}
+      .bag-reveal-stage{position:relative;width:min(280px,72vw);margin:8px auto 18px;height:300px;display:grid;place-items:center}
+      .bag-reveal-glow{position:absolute;inset:25px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,31,.45),transparent 68%);filter:blur(8px);animation:bagGlow 1.15s ease-in-out infinite alternate}
+      .bag-reveal-img{position:relative;width:220px;height:250px;object-fit:cover;border-radius:22px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.5));animation:bagOpenPop 1.25s cubic-bezier(.2,.8,.2,1) both}
+      .bag-reveal-burst{position:absolute;font-size:44px;inset:0;display:grid;place-items:center;pointer-events:none;animation:bagBurst 1.1s ease-out both}
+      .bag-reveal-result{border:1px solid #236b49;background:linear-gradient(135deg,#0b251a,#0e3020);border-radius:16px;padding:18px;text-align:left;animation:bagResultIn .45s ease-out both}
+      .bag-reveal-result h3{margin:0 0 10px;font-size:24px}.bag-reveal-result strong{color:#48ed98}
+      .bag-reveal-result .bag-result-line{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.5}
+      @keyframes bagGlow{to{transform:scale(1.14);opacity:.75}}
+      @keyframes bagOpenPop{0%{transform:scale(.55) rotate(-7deg);opacity:.25}55%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+      @keyframes bagBurst{0%{transform:scale(.3);opacity:0}35%{transform:scale(1.15);opacity:1}100%{transform:scale(1.45);opacity:0}}
+      @keyframes bagResultIn{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
+      @media(max-width:760px){#bagRevealOverlay .bag-reveal-modal{padding:22px 16px}.bag-reveal-stage{height:260px}.bag-reveal-img{width:185px;height:215px}.bag-reveal-result h3{font-size:21px}}
+    `;
+    document.head.appendChild(st);
+    const ov=document.createElement('div');
+    ov.className='overlay';ov.id='bagRevealOverlay';
+    ov.innerHTML=`<div class="modal bag-reveal-modal"><div class="modal-head"><h2 id="bagRevealTitle">🎁 Mở túi thành công</h2><button class="close" onclick="closeModal('bagRevealOverlay')">×</button></div><div id="bagRevealContent"></div><button class="btn" style="width:100%;margin-top:16px" onclick="closeModal('bagRevealOverlay')">Đóng</button></div>`;
+    document.body.appendChild(ov);
+  }
+  function showBagReveal(item,price){
+    ensureBagReveal();
+    const img=currentBag?.image||'https://pub-b6c2f07575804ca98a0ecfee622b3274.r2.dev/products/508c45f1-6c41-4521-8eef-e855023db2d5.gif';
+    const rank=item.rank||'Tài khoản game';
+    $('bagRevealContent').innerHTML=`<div class="bag-reveal-stage"><div class="bag-reveal-glow"></div><img class="bag-reveal-img" src="${esc(img)}" alt="${esc(currentBag?.name||'Túi')}"><div class="bag-reveal-burst">✨🎉✨</div></div><div class="bag-reveal-result"><h3>🎉 Chúc mừng!</h3><div class="bag-result-line">Bạn đã mở: <strong>${esc(currentBag?.name||'Túi quà')}</strong></div><div class="bag-result-line">Bạn nhận được: <strong>${esc(rank)}</strong></div><div class="bag-result-line">Tài khoản: <strong>${esc(item.login)}</strong></div><div class="bag-result-line">Mật khẩu: <strong>${esc(item.pass)}</strong><button class="copy" onclick="copyText('${esc(item.login+' | '+item.pass)}')">Copy</button></div><div class="bag-result-line">Giá mở: <strong>${money(price)}</strong></div></div>`;
+    openModal('bagRevealOverlay');
+    confetti();
+  }
+  const oldOpenPlayConfirm=window.openPlayConfirm;
+  window.openPlayConfirm=function(){
+    if(!isRealBag()){
+      if(typeof oldOpenPlayConfirm==='function')oldOpenPlayConfirm();
+      return;
+    }
+    if(!currentUser()){openAuth();return}
+    const price=selectedPrice();
+    const title=document.querySelector('#playConfirmOverlay h2');
+    const icon=document.querySelector('#playConfirmOverlay .modal>div:first-child');
+    if(icon)icon.textContent='🎁';
+    if(title)title.textContent='Mở túi?';
+    $('confirmPlayText').innerHTML=`Bạn sẽ <b>mở 1 túi ${esc(currentBag.name)}</b> và nhận ngẫu nhiên 1 tài khoản trong kho.`;
+    $('confirmPlayPrice').textContent=money(price);
+    openModal('playConfirmOverlay');
+  };
+  const oldStartBag=window.startBag;
+  window.startBag=async function(){
+    if(!isRealBag()){
+      if(typeof oldStartBag==='function')return oldStartBag();
+      return;
+    }
+    const s=currentUser();
+    if(!s){openAuth();return}
+    if(isAdmin){showNotice('Admin không cần mua túi');return}
+    const price=selectedPrice();
+    $('playBtn').disabled=true;$('playBtn').textContent='🎁 Đang mở túi...';
+    closeModal('playConfirmOverlay');
+    if(getBalance(s.uid)<price){
+      showNotice('Số dư không đủ');
+      $('playBtn').disabled=false;$('playBtn').textContent='👆 Nhấn 1 túi để mở';
+      closeModal('bagOverlay');openDeposit();return;
+    }
+    let available=availableForBag(currentBag.id);
+    if(!available.length){
+      showNotice('Túi hiện đã hết kho');
+      $('playBtn').disabled=false;$('playBtn').textContent='👆 Nhấn 1 túi để mở';return;
+    }
+    let item=available[Math.floor(Math.random()*available.length)];
+    if(!claimInventory({key:item.id,val:item})){
+      available=availableForBag(currentBag.id);
+      item=available[Math.floor(Math.random()*available.length)];
+      if(!item||!claimInventory({key:item.id,val:item})){
+        showNotice('Phần thưởng vừa được nhận, hãy thử lại');
+        $('playBtn').disabled=false;$('playBtn').textContent='👆 Nhấn 1 túi để mở';return;
+      }
+    }
+    if(!deductBalance(s.uid,price)){
+      const a=getInventory(),x=a.find(z=>z.id===item.id);
+      if(x){x.status='available';x.soldTo=null;x.soldAt=null;write(STORAGE.inventory,a)}
+      showNotice('Số dư không đủ');
+      $('playBtn').disabled=false;$('playBtn').textContent='👆 Nhấn 1 túi để mở';return;
+    }
+    const now=Date.now();
+    const order={id:rid(),uid:s.uid,username:s.username,bagId:currentBag.id,bagName:currentBag.name,price,rewardInventoryId:item.id,rewardLogin:item.login,rewardPass:item.pass,rewardRank:item.rank||'',status:'completed',createdAt:now,openType:'bag'};
+    const orders=getOrders();orders.push(order);write(STORAGE.orders,orders);
+    const users=getUsers(),u=users.find(x=>x.uid===s.uid);
+    if(u){
+      u.wonAccounts=u.wonAccounts||[];
+      u.wonAccounts.unshift({orderId:order.id,bagName:order.bagName,login:item.login,pass:item.pass,rank:item.rank||'',price,createdAt:now,openType:'bag'});
+      write(STORAGE.users,users);
+    }
+    closeModal('bagOverlay');
+    showBagReveal(item,price);
+    $('playBtn').disabled=false;$('playBtn').textContent='👆 Nhấn 1 túi để mở';
+    renderBags();updateHeader();
+  };
+  // The eight visible bags remain previews only; clicking one starts the bag-opening confirmation.
+  const oldOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof oldOpenBag==='function')oldOpenBag(id);
+    if(!currentBag||!/Túi/i.test(String(currentBag.name||'')))return;
+    const grid=$('bagCategoryView')?.querySelector('.mini-bag-grid');
+    if(!grid)return;
+    grid.querySelectorAll('.mini-bag').forEach((el,i)=>{
+      el.setAttribute('aria-label','Mở túi '+(i+1));
+    });
+  };
+})();
+
 </script>
 </body>
 </html>
