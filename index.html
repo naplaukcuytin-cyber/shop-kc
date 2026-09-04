@@ -519,7 +519,17 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 <section class="container features"><div class="feature"><i>⚡</i><h3>Thuê tự động</h3><p>Nhận acc tức thì 24/7</p></div><div class="feature"><i>🛡️</i><h3>Acc bảo mật</h3><p>Chính chủ · an toàn</p></div><div class="feature"><i>💰</i><h3>Giá thuê rẻ</h3><p>Rẻ nhất thị trường</p></div><div class="feature"><i>🕐</i><h3>Hỗ trợ 24/7</h3><p>Luôn sẵn sàng</p></div></section>
 </main>
 <footer><div class="container"><img id="footerLogo" class="footer-logo" alt="SHOPCENAVN"><p class="footer-desc">Thư viện tài khoản game cho thuê — hàng nghìn acc đủ rank, nhận tức thì, bảo hành mỗi phiên.</p><div class="footer-grid"><div><h4>TÀI KHOẢN GAME</h4><a href="#bagsSection">Săn Lùng V8</a><a href="#bagsSection">Acc Freefire 99k</a><a href="#bagsSection">Acc Freefire 199k</a><a href="#bagsSection">Acc Freefire 499k</a></div><div><h4>HỖ TRỢ</h4><a href="#" onclick="openHelp();return false">Cách thuê tài khoản</a><a href="#" onclick="openDeposit();return false">Hướng dẫn nạp tiền</a><a href="#" onclick="openHelp();return false">Chính sách hoàn tiền</a><a href="#" onclick="openHelp();return false">Điều khoản dịch vụ</a></div><div><h4>CỘNG ĐỒNG</h4><a href="#" onclick="openHelp();return false">Discord</a><a href="#" onclick="openHelp();return false">Facebook</a><a href="#" onclick="openHelp();return false">Zalo OA</a><a href="#" onclick="openHelp();return false">TikTok</a></div><div><h4>TÀI KHOẢN</h4><a href="#" onclick="openAuth();return false">Đăng nhập</a><a href="#" onclick="openAuth(true);return false">Đăng ký</a><a href="#" onclick="openAccount();return false">Lịch sử</a><a href="#" onclick="logout();return false">Đăng xuất</a></div></div></div></footer>
-<button class="chat" aria-label="Hỗ trợ Telegram" onclick="openTelegramSupport()"><i class="fa-regular fa-comment-dots"></i></button><div class="notice" id="notice"></div>
+<div class="support-widget" id="customerSupportWidget">
+  <div class="support-widget-head">
+    <div class="support-avatar"><img src="https://pub-b6c2f07575804ca98a0ecfee622b3274.r2.dev/sites/c397758a-0538-4bd8-b8e5-e5153edf5986.webp" alt="Hỗ trợ"></div>
+    <div class="support-widget-title"><b>Hỗ trợ shopcenavn.com</b><span id="customerSupportStatus"><i></i> <span>Ngoài giờ · Trả lời khi vào ca</span></span></div>
+    <button type="button" class="support-widget-close" onclick="closeCustomerSupport()">×</button>
+  </div>
+  <div class="support-widget-day">HÔM NAY</div>
+  <div class="support-widget-body" id="customerSupportMessages"><div class="support-empty">Gửi tin nhắn để bắt đầu — hỗ trợ sẽ phản hồi sớm nhất.</div></div>
+  <div class="support-widget-footer"><div class="support-offline">🌙 Ngoài giờ hỗ trợ (8h–22h). Bạn cứ để lại tin nhắn — nhân viên sẽ phản hồi ngay khi vào ca.</div><div class="support-compose"><button type="button" class="support-attach">📎</button><input id="customerSupportInput" placeholder="Nhập tin nhắn..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendCustomerSupportMessage()}"><button type="button" class="support-send" onclick="sendCustomerSupportMessage()">➤</button></div></div>
+</div>
+<button class="chat" aria-label="Chăm sóc khách hàng" onclick="openCustomerSupport()"><i class="fa-regular fa-comment-dots"></i></button><div class="notice" id="notice"></div>
 
 <!-- AUTH -->
 <div class="overlay" id="authOverlay"><div class="modal" style="max-width:460px"><div class="modal-head"><h2>Tài khoản</h2><button class="close" onclick="closeModal('authOverlay')">×</button></div><div class="auth-tabs"><button class="tab active" id="loginTab" onclick="switchAuth(false)">Đăng nhập</button><button class="tab" id="registerTab" onclick="switchAuth(true)">Đăng ký</button></div><form class="login-form" onsubmit="submitAuth(event)"><input class="field" id="authEmail" type="text" autocomplete="username" placeholder="Tên đăng nhập" required><input class="field" id="authPass" type="password" placeholder="Mật khẩu" minlength="6" required><input class="field hidden" id="authName" placeholder="Tên hiển thị"><button class="btn" id="authSubmit">Đăng nhập</button></form><p id="authMsg" style="color:#969bab"></p></div></div>
@@ -540,7 +550,7 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 <div class="overlay" id="accountOverlay"><div class="modal"><div class="modal-head"><h2>Tài khoản của tôi</h2><button class="close" onclick="closeModal('accountOverlay')">×</button></div><div id="accountContent"></div></div></div>
 
 <!-- HELP -->
-<div class="overlay" id="helpOverlay"><div class="modal" style="max-width:650px"><div class="modal-head"><h2>Hỗ trợ 24/7</h2><button class="close" onclick="closeModal('helpOverlay')">×</button></div><div style="line-height:1.8;color:#b0b4c2"><div class="admin-card"><h4>📌 Cách bóc acc</h4><p>1. Đăng ký/đăng nhập → 2. Nạp tiền → 3. Chọn túi → 4. Chọn gói → 5. Bấm Chơi ngay → 6. Lật một thẻ → 7. Nhận tài khoản.</p></div><div class="admin-card"><h4>🔐 Lưu ý</h4><p>Tài khoản trúng được đánh dấu đã sử dụng và không đưa lại vào kho. Lịch sử đơn hàng được lưu theo tài khoản đăng nhập.</p></div><button class="btn" onclick="openTelegramSupport()">💬 Mở hỗ trợ Telegram</button></div></div></div>
+<div class="overlay" id="helpOverlay"><div class="modal" style="max-width:650px"><div class="modal-head"><h2>Hỗ trợ 24/7</h2><button class="close" onclick="closeModal('helpOverlay')">×</button></div><div style="line-height:1.8;color:#b0b4c2"><div class="admin-card"><h4>📌 Cách bóc acc</h4><p>1. Đăng ký/đăng nhập → 2. Nạp tiền → 3. Chọn túi → 4. Chọn gói → 5. Bấm Chơi ngay → 6. Lật một thẻ → 7. Nhận tài khoản.</p></div><div class="admin-card"><h4>🔐 Lưu ý</h4><p>Tài khoản trúng được đánh dấu đã sử dụng và không đưa lại vào kho. Lịch sử đơn hàng được lưu theo tài khoản đăng nhập.</p></div><button class="btn" onclick="openCustomerSupport()">💬 Nhắn tin hỗ trợ</button></div></div></div>
 
 <!-- ANNOUNCEMENT -->
 <div class="overlay" id="noticeOverlay"><div class="modal notice-slider"><div class="modal-head"><h2>📢 Thông báo</h2><button class="close" onclick="closeModal('noticeOverlay')">×</button></div><div class="notice-slide active" data-slide="0"><h3 class="notice-title">📣 THÔNG BÁO NẠP TIỀN</h3><div class="notice-body">Hiện shop ưu tiên <strong>nạp chuyển khoản</strong> vì cộng tiền nhanh và ổn định.<br><br>👉 Sau khi chuyển khoản, kiểm tra đúng <strong>nội dung chuyển khoản</strong> theo hướng dẫn của shop.</div></div><div class="notice-slide" data-slide="1"><h3 class="notice-title">📢 AE ƯU TIÊN NẠP 3 LOẠI THẺ NÀY</h3><div class="notice-body"><strong>THÔNG BÁO AE</strong><br><br>Hiện shop ưu tiên <strong>VinaPhone, Garena và Zing</strong> — hiện đang <span class="good">không bị chiết khấu</span>, hỗ trợ nạp nhanh và ổn định.<br><br>⚠️ <strong>Lưu ý:</strong> Viettel & Mobi có thể gặp lỗi, nạp chậm và có thể phát sinh chiết khấu.<br><br>👉 <strong>AE ưu tiên sử dụng VinaPhone, Garena, Zing</strong> để tránh ảnh hưởng quá trình nạp nhé!</div></div><div class="notice-footer"><span id="noticePage">1/2</span></div><div class="notice-controls"><button class="dot active" onclick="noticeSlide(0)"></button><button class="dot" onclick="noticeSlide(1)"></button></div></div></div>
@@ -562,6 +572,7 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
         <button data-page="orders">🧾 Đơn hàng</button>
         <button data-page="deposits">💳 Nạp tiền</button>
         <button data-page="activities">🕒 Hoạt động</button>
+        <button data-page="support">💬 Chăm sóc KH</button>
         <button data-page="settings">⚙️ Cài đặt</button>
         <button data-page="logs">📋 Nhật ký admin</button>
       </div>
@@ -623,6 +634,17 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
         <div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>User</th><th>Hoạt động</th><th>Chi tiết</th><th>Thiết bị</th></tr></thead><tbody id="activityRows"></tbody></table></div>
       </div>
 
+      <div class="admin-page" id="page-support">
+        <h3>💬 Chăm sóc khách hàng</h3>
+        <div class="support-admin-layout">
+          <div class="support-user-list" id="supportUserList"><div class="empty">Chưa có tin nhắn từ khách hàng.</div></div>
+          <div class="support-admin-chat">
+            <div class="support-admin-head"><div><b id="supportAdminCustomer">Chọn khách hàng</b><div class="mini" id="supportAdminCustomerSub">Chưa chọn cuộc trò chuyện</div></div><span class="support-admin-online"><span id="supportAdminDot" class="live-dot"></span><span id="supportAdminOnlineText">Đang online</span></span></div>
+            <div class="support-messages" id="supportAdminMessages"><div class="empty">Chọn một khách hàng để xem tin nhắn.</div></div>
+            <div class="support-compose"><input class="field" id="supportAdminInput" placeholder="Nhập tin nhắn trả lời..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminSupportMessage()}"><button class="btn" onclick="sendAdminSupportMessage()">Gửi</button></div>
+          </div>
+        </div>
+      </div>
       <div class="admin-page" id="page-settings">
         <h3>⚙️ Cài đặt website</h3><form class="admin-form" onsubmit="saveSettings(e)" id="settingsForm"><input class="field" id="setLogo" placeholder="Link logo"><input class="field" id="setNotice" placeholder="Thanh thông báo"><input class="field" id="setQr" placeholder="Link ảnh QR (để trống dùng qr_banking.png.jpg)"><textarea class="field" id="setBank" placeholder="Thông tin ngân hàng"></textarea><input class="field" id="setAdminEmails" placeholder="Email admin / admin bổ sung"><input class="field" id="setSupport" placeholder="Hotline / Zalo / liên hệ"><div class="two-col"><label class="check-row"><input type="checkbox" id="setMaintenance"> Bật bảo trì website</label><label class="check-row"><input type="checkbox" id="setRegisterOpen" checked> Cho phép đăng ký</label></div><button class="btn">Lưu cài đặt</button></form>
         <div class="admin-card"><h4>🏦 Thông tin QR mặc định</h4><p class="mini">MoMo · TRUONG VAN PHONG · PSP2621916400000092 · QR: qr_banking.png.jpg</p></div>
@@ -636,7 +658,7 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   </div>
 </div>
 
-<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><a class="side-link" href="https://t.me/HOTROSHOP" target="_blank" rel="noopener">💬 HỖ TRỢ TELEGRAM</a><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()">🚪 Đăng xuất</button></div></div></aside></div>
+<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()">🚪 Đăng xuất</button></div></div></aside></div>
 
 <script>
 /* SHOPCENAVN - Firebase Realtime Database + LocalStorage fallback */
@@ -797,7 +819,7 @@ function createDepositQr(amount){
 }
 function downloadQrImage(){const img=$('qrImage');if(!img)return;const a=document.createElement('a');a.href=img.src;a.download='qr_banking.png.jpg';a.target='_blank';a.click()}
 function createDeposit(e){e.preventDefault();const s=currentUser();if(!s)return;const amount=Number($('depAmount')?.value||0);if(amount<10000)return showNotice('Số tiền tối thiểu 10.000đ');const a=getDeposits();a.push({id:rid(),uid:s.uid,username:s.username,amount,method:$('depMethod')?.value||'Chuyển khoản',code:$('depCode')?.value.trim()||'',status:'pending',createdAt:Date.now()});write(STORAGE.deposits,a);showNotice('Đã tạo yêu cầu nạp');closeModal('depositOverlay')}
-function openTelegramSupport(){window.open('https://t.me/HOTROSHOP','_blank','noopener');} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-xmark"></i>'} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-bars"></i>'} $('menuBtn').onclick=openMenu; window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
+function openTelegramSupport(){openCustomerSupport()} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-xmark"></i>'} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-bars"></i>'} $('menuBtn').onclick=openMenu; window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
 function availableForBag(bagId){return getInventory().filter(x=>x.bagId===bagId&&x.status==='available')}
 function renderBags(){bags=read(STORAGE.bags,defaultBags);const visibleBags=bags.filter(b=>{const n=String(b.name||'').trim().toLowerCase();if(n==='maxim'||n==='acc maxim')return false;if(n==='săn lùng v8'||n==='san lung v8')return b.id==='v8-39'||b.id==='v8-79';return true});$('bagGrid').innerHTML=visibleBags.length?visibleBags.map(b=>`<article class="bag" onclick="openBag('')"><div class="bag-img-wrap"><img class="bag-img" src="" alt="" onerror="this.src=''"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3></h3><div class="price">từ </div><div class="stock" id="stock-">Đang kiểm tra kho...</div></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';visibleBags.forEach(updateStock)}
 function updateStock(b){const n=availableForBag(b.id).length;const el=$('stock-'+b.id);if(el)el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}
@@ -994,7 +1016,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
   window.loadSettings=function(){if(!ensureAdmin())return;const v=getSettings();$('setLogo').value=v.logo||logoUrl;$('setNotice').value=v.notice||'';$('setQr').value=v.qrUrl||'qr_banking.png.jpg';$('setBank').value=v.bank||'MoMo | TRUONG VAN PHONG | PSP2621916400000092';$('setAdminEmails').value='Admin nội bộ: '+ADMIN_USERNAME;$('setSupport').value=v.support||'';$('setMaintenance').checked=!!v.maintenance;$('setRegisterOpen').checked=v.registerOpen!==false;};
   window.saveSettings=function(e){e.preventDefault();if(!ensureAdmin())return;const v={logo:$('setLogo').value.trim(),notice:$('setNotice').value.trim(),qrUrl:$('setQr').value.trim()||'qr_banking.png.jpg',bank:$('setBank').value.trim()||'MoMo | TRUONG VAN PHONG | PSP2621916400000092',support:$('setSupport').value.trim(),maintenance:$('setMaintenance').checked,registerOpen:$('setRegisterOpen').checked};write(STORAGE.settings,v);$('logo').src=v.logo||logoUrl;$('footerLogo').src=v.logo||logoUrl;if(v.notice)$('ticker').textContent='🔥 '+v.notice;logAdmin('save_settings','website');showNotice('Đã lưu cài đặt');};
   const oldSwitch=switchAdminPage;
-  window.switchAdminPage=function(page){if(!ensureAdmin())return;document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));const fn={dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,deposits:loadDeposits,activities:loadActivities,settings:loadSettings,logs:loadLogs}[page]||loadDashboard;fn();};
+  window.switchAdminPage=function(page){if(!ensureAdmin())return;document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));const fn={dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,deposits:loadDeposits,activities:loadActivities,support:loadSupportAdmin,settings:loadSettings,logs:loadLogs}[page]||loadDashboard;fn();};
   window.openAdmin=function(){if(!isAdmin||currentUser()?.uid!=='admin'){openAuth();showNotice('Đăng nhập tài khoản admin trước');return}openModal('adminOverlay');loadDashboard();};
   window.refreshAdminData=function(){if(!isAdmin)return;const active=document.querySelector('.admin-page.active');if(active)switchAdminPage(active.id.replace('page-',''));};
   window.addEventListener('shop-storage-change',()=>{if(isAdmin){const el=$('adminLastSync');if(el)el.textContent='Đồng bộ '+nowText();refreshAdminData();}else updateHeader();});
@@ -1913,41 +1935,111 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
 })();
 </script>
 
-<style id="final-admin-account-isolation">
-/* Admin tuyệt đối không dùng giao diện tài khoản khách. */
+<style>
+/* ===== SUPPORT / QUICK CARD FINAL ===== */
+.quick-grid{grid-template-columns:1fr!important;gap:14px!important;margin-bottom:42px!important;}
+.quick{min-height:112px!important;height:112px!important;padding:18px 24px!important;border-radius:18px!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:18px!important;box-sizing:border-box!important;}
+.quick-icon{width:62px!important;height:62px!important;font-size:29px!important;margin:0!important;}
+.quick h3{font-size:22px!important;margin:0 0 4px!important;}
+.quick p{font-size:14px!important;margin:0!important;}
+.quick:after{animation-duration:10s!important;opacity:.38!important;}
+.chat{width:42px!important;height:42px!important;right:16px!important;bottom:18px!important;font-size:18px!important;box-shadow:0 8px 20px rgba(255,102,10,.24)!important;}
+.chat:after{inset:-5px!important;animation-duration:3.5s!important;}
+.support-widget{display:none;position:fixed;right:18px;bottom:70px;width:min(420px,calc(100vw - 28px));height:min(650px,calc(100vh - 100px));z-index:140;background:#090b12;border:1px solid #292d3a;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.5);overflow:hidden;grid-template-rows:auto 1fr auto;}
+.support-widget.open{display:grid}
+.support-widget-head{display:flex;align-items:center;gap:10px;padding:15px 16px;background:linear-gradient(110deg,#ff4d25,#ff9412);color:#fff}
+.support-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#222;flex:none;border:2px solid rgba(255,255,255,.35)}
+.support-avatar img{width:100%;height:100%;object-fit:cover}
+.support-widget-title{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}.support-widget-title b{font-size:17px}.support-widget-title span{font-size:13px;font-weight:700;opacity:.95}.support-widget-title i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#8e94a3}.support-widget-title.online i{background:#35e58a;box-shadow:0 0 8px #35e58a}.support-widget-close{border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;width:42px;height:42px;font-size:28px;cursor:pointer}
+.support-widget-day{text-align:center;color:#72788a;font-weight:800;font-size:12px;padding:13px 0 7px;background:#090b12}.support-widget-body{padding:8px 14px;overflow:auto;display:flex;flex-direction:column;gap:9px}.support-empty{color:#8e94a5;text-align:center;line-height:1.55;margin:auto 20px}.support-msg{max-width:82%;padding:10px 12px;border-radius:13px;font-size:14px;line-height:1.45;word-break:break-word}.support-msg.customer{align-self:flex-end;background:#ff6a22;color:#fff;border-bottom-right-radius:4px}.support-msg.admin{align-self:flex-start;background:#1a1e29;color:#e7e9ee;border:1px solid #303441;border-bottom-left-radius:4px}.support-msg small{display:block;opacity:.65;font-size:10px;margin-top:4px}.support-widget-footer{background:#19151a;border-top:1px solid #2c2e37}.support-offline{padding:12px 14px;color:#ffae35;font-size:13px;line-height:1.4;background:rgba(255,140,20,.09)}.support-compose{display:flex;gap:8px;padding:12px}.support-compose input,.support-compose .field{flex:1;min-width:0;background:#171a23;border:1px solid #373b48;color:#fff;border-radius:10px;padding:11px 13px;outline:none}.support-send{width:48px;border:0;border-radius:10px;background:#ff8b16;color:#fff;font-size:22px;cursor:pointer}.support-attach{width:48px;border:1px solid #363a46;background:#171a23;color:#d7d9df;border-radius:10px;font-size:20px}
+.support-admin-layout{display:grid;grid-template-columns:280px 1fr;gap:14px;min-height:560px}.support-user-list{border:1px solid #2c303b;border-radius:14px;background:#10121a;overflow:auto;padding:8px}.support-user-item{width:100%;text-align:left;border:1px solid transparent;background:#151821;color:#fff;border-radius:11px;padding:11px;margin-bottom:7px;cursor:pointer}.support-user-item.active{border-color:#ff7022;background:#211a18}.support-user-item b{display:block;font-size:14px}.support-user-item span{display:block;color:#8f95a5;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.support-admin-chat{border:1px solid #2c303b;border-radius:14px;background:#0d1017;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}.support-admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-bottom:1px solid #292d37}.support-admin-online{display:flex;align-items:center;gap:7px;color:#35e58a;font-size:12px}.support-admin-online .live-dot{width:8px;height:8px}.support-messages{padding:14px;overflow:auto;display:flex;flex-direction:column;gap:9px}.support-admin-chat .support-compose{border-top:1px solid #292d37}.support-admin-chat .support-compose .btn{min-width:80px}
+@media(max-width:760px){.quick-grid{grid-template-columns:1fr!important;gap:12px!important;margin-bottom:30px!important}.quick{height:96px!important;min-height:96px!important;padding:15px 17px!important;gap:14px!important}.quick-icon{width:54px!important;height:54px!important;font-size:25px!important}.quick h3{font-size:19px!important}.quick p{font-size:12px!important}.support-widget{right:10px;bottom:62px;width:calc(100vw - 20px);height:min(620px,calc(100vh - 82px))}.support-admin-layout{grid-template-columns:1fr;min-height:0}.support-user-list{max-height:180px}.support-admin-chat{min-height:430px}}
 </style>
-<script id="final-admin-account-isolation-js">
+<script>
 (function(){
-  const oldOpenAccount=window.openAccount;
-  window.openAccount=function(){
-    const s=typeof currentUser==='function'?currentUser():null;
-    if(s && (s.admin===true || s.uid==='admin' || window.isAdmin===true)){
-      if(typeof window.openAdmin==='function'){window.openAdmin();}
-      return;
-    }
-    if(typeof oldOpenAccount==='function')oldOpenAccount();
-    /* Khách không còn mục Lịch sử giao dịch/đơn hàng trong giao diện tài khoản. */
-    const box=document.getElementById('accountContent');
-    if(box){
-      Array.from(box.querySelectorAll('.account-tabs button')).filter(el=>/Lịch sử giao dịch/i.test(el.textContent||'')).forEach(el=>el.remove());
-    }
+  const SUPPORT_ROOT='shopcenavn/supportMessages';
+  const PRESENCE_ROOT='shopcenavn/adminPresence';
+  let supportUid=null, supportAdminSelected=null, supportBoundUid=null, adminSupportBound=false;
+  function supportEsc(v){return typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function supportTime(t){try{return new Date(t||Date.now()).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+  function supportUser(){try{return typeof currentUser==='function'?currentUser():null}catch(e){return null}}
+  function supportOnline(){
+    if(!firebaseDB||!firebaseSyncReady)return;
+    const st=$('customerSupportStatus'); if(!st)return;
+    firebaseDB.ref(PRESENCE_ROOT+'/online').on('value',snap=>{
+      const on=snap.val()===true;
+      st.classList.toggle('online',on);
+      st.innerHTML='<i></i> '+(on?'Online · Đang hỗ trợ':'Ngoài giờ · Trả lời khi vào ca');
+    });
+  }
+  function renderCustomerMessages(arr){
+    const box=$('customerSupportMessages'); if(!box)return;
+    if(!arr.length){box.innerHTML='<div class="support-empty">Gửi tin nhắn để bắt đầu — hỗ trợ sẽ phản hồi sớm nhất.</div>';return}
+    box.innerHTML=arr.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).map(m=>`<div class="support-msg ${m.from==='admin'?'admin':'customer'}">${supportEsc(m.text)}<small>${supportTime(m.createdAt)}</small></div>`).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+  function bindCustomerMessages(){
+    const s=supportUser();if(!s||!firebaseDB)return;
+    if(s.uid===supportBoundUid)return;supportBoundUid=s.uid;
+    firebaseDB.ref(SUPPORT_ROOT+'/'+s.uid).on('value',snap=>{const v=snap.val()||{};renderCustomerMessages(Object.keys(v).map(k=>v[k]));});
+  }
+  window.openCustomerSupport=function(){
+    const w=$('customerSupportWidget');if(!w)return;w.classList.add('open');
+    const s=supportUser();
+    const inp=$('customerSupportInput');
+    if(!s){$('customerSupportMessages').innerHTML='<div class="support-empty">Vui lòng đăng nhập để nhắn tin trực tiếp với admin.</div>';if(inp)inp.disabled=true;}
+    else{if(inp)inp.disabled=false;bindCustomerMessages();}
+    supportOnline();
   };
-  const oldRender=window.renderAccountTab;
-  window.renderAccountTab=function(tab){
-    const s=typeof currentUser==='function'?currentUser():null;
-    if(s && (s.admin===true || s.uid==='admin' || window.isAdmin===true)){
-      if(typeof window.openAdmin==='function')window.openAdmin();
-      return;
-    }
-    if(tab==='orders'){
-      return;
-    }
-    if(typeof oldRender==='function')oldRender(tab);
-    if(tab!=='orders'){
-      const box=document.getElementById('accountContent');
-      if(box)Array.from(box.querySelectorAll('.account-tabs button')).filter(el=>/Lịch sử giao dịch/i.test(el.textContent||'')).forEach(el=>el.remove());
-    }
+  window.closeCustomerSupport=function(){const w=$('customerSupportWidget');if(w)w.classList.remove('open');};
+  window.sendCustomerSupportMessage=function(){
+    const s=supportUser(),inp=$('customerSupportInput');const text=(inp?.value||'').trim();
+    if(!s){openAuth();return} if(!text)return;
+    if(firebaseDB&&firebaseSyncReady){firebaseDB.ref(SUPPORT_ROOT+'/'+s.uid).push({from:'customer',uid:s.uid,username:s.username||'',name:s.name||'',text,createdAt:Date.now()});if(inp)inp.value='';}
+    else showNotice('Kết nối hỗ trợ đang tạm thời chưa sẵn sàng');
   };
+  function setAdminPresence(on){
+    if(!firebaseDB||!firebaseSyncReady)return;
+    const ref=firebaseDB.ref(PRESENCE_ROOT+'/online');
+    if(on){ref.onDisconnect().set(false);ref.set(true);}
+    else ref.set(false);
+  }
+  function renderAdminSupportUsers(data){
+    const box=$('supportUserList');if(!box)return;
+    const users=getUsers();const rows=[];
+    Object.keys(data||{}).forEach(uid=>{const arr=Object.keys(data[uid]||{}).map(k=>data[uid][k]).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));if(arr.length){const last=arr[0],u=users.find(x=>x.uid===uid);rows.push({uid,last,name:u?.name||last.name||last.username||uid,username:u?.username||last.username||uid,count:arr.length});}});
+    rows.sort((a,b)=>(b.last.createdAt||0)-(a.last.createdAt||0));
+    box.innerHTML=rows.length?rows.map(r=>`<button type="button" class="support-user-item ${supportAdminSelected===r.uid?'active':''}" onclick="selectAdminSupport('${supportEsc(r.uid)}')"><b>@${supportEsc(r.username)}</b><span>${supportEsc(r.last.text||'')}</span><span>${supportTime(r.last.createdAt)} · ${r.count} tin</span></button>`).join(''):'<div class="empty">Chưa có tin nhắn từ khách hàng.</div>';
+  }
+  function bindAdminSupport(){
+    if(adminSupportBound||!firebaseDB)return;adminSupportBound=true;
+    firebaseDB.ref(SUPPORT_ROOT).on('value',snap=>{renderAdminSupportUsers(snap.val()||{});if(supportAdminSelected)renderAdminSelected(supportAdminSelected);});
+  }
+  function renderAdminSelected(uid){
+    if(!firebaseDB||!uid)return;
+    firebaseDB.ref(SUPPORT_ROOT+'/'+uid).once('value').then(snap=>{
+      const v=snap.val()||{},arr=Object.keys(v).map(k=>v[k]).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+      const u=getUsers().find(x=>x.uid===uid),name=u?.name||arr[0]?.name||'Khách hàng',username=u?.username||arr[0]?.username||uid;
+      if($('supportAdminCustomer'))$('supportAdminCustomer').textContent='@'+username;
+      if($('supportAdminCustomerSub'))$('supportAdminCustomerSub').textContent=name+' · UID '+uid;
+      const box=$('supportAdminMessages');if(!box)return;
+      box.innerHTML=arr.length?arr.map(m=>`<div class="support-msg ${m.from==='admin'?'admin':'customer'}">${supportEsc(m.text)}<small>${m.from==='admin'?'Admin':'Khách'} · ${supportTime(m.createdAt)}</small></div>`).join(''):'<div class="empty">Chưa có tin nhắn.</div>';
+      box.scrollTop=box.scrollHeight;
+    });
+  }
+  window.selectAdminSupport=function(uid){if(!ensureAdmin())return;supportAdminSelected=uid;renderAdminSelected(uid);if(firebaseDB)firebaseDB.ref(SUPPORT_ROOT).once('value').then(s=>renderAdminSupportUsers(s.val()||{}));};
+  window.sendAdminSupportMessage=function(){
+    if(!ensureAdmin())return;const inp=$('supportAdminInput'),text=(inp?.value||'').trim();if(!text||!supportAdminSelected)return showNotice('Chọn khách hàng trước');
+    if(firebaseDB&&firebaseSyncReady){firebaseDB.ref(SUPPORT_ROOT+'/'+supportAdminSelected).push({from:'admin',uid:'admin',username:ADMIN_USERNAME,name:'Hỗ trợ shopcenavn.com',text,createdAt:Date.now()});if(inp)inp.value='';}
+  };
+  window.loadSupportAdmin=function(){if(!ensureAdmin())return;setAdminPresence(true);bindAdminSupport();if(firebaseDB)firebaseDB.ref(SUPPORT_ROOT).once('value').then(s=>renderAdminSupportUsers(s.val()||{}));};
+  const oldOpenAdmin=window.openAdmin;
+  window.openAdmin=function(){const r=oldOpenAdmin?oldOpenAdmin():null;setTimeout(()=>{if(isAdmin){setAdminPresence(true);}},80);return r;};
+  const oldSwitch=window.switchAdminPage;
+  window.switchAdminPage=function(page){if(!ensureAdmin())return;document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));const fn={dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,deposits:loadDeposits,activities:loadActivities,support:loadSupportAdmin,settings:loadSettings,logs:loadLogs}[page]||loadDashboard;fn();if(isAdmin)setAdminPresence(true);};
+  window.addEventListener('beforeunload',()=>{if(isAdmin)setAdminPresence(false);});
+  document.addEventListener('visibilitychange',()=>{if(isAdmin)setAdminPresence(document.visibilityState==='visible');});
+  setTimeout(()=>{try{if(isAdmin)setAdminPresence(true);}catch(e){}},500);
 })();
 </script>
 </body>
