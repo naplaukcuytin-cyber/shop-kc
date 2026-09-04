@@ -499,6 +499,15 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   .menu-btn{width:40px!important;height:40px!important;border-radius:10px!important;font-size:19px!important;}
 }
 </style>
+
+<style id="v8-home-image-effect-fix">
+/* Chỉ thêm hiệu ứng nền ảnh mờ cho 2 gói Săn Lùng V8 ở trang chủ. Không thay đổi chức năng lật thẻ. */
+.v8-home-bag{isolation:isolate;overflow:hidden;position:relative;}
+.v8-home-bag:before{content:"";position:absolute;inset:-28px;background-image:var(--v8-bg);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(24px) saturate(1.2);opacity:.34;transform:scale(1.08);z-index:-1;pointer-events:none;}
+.v8-home-bag:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(122,52,255,.16),transparent 52%),linear-gradient(180deg,rgba(18,10,30,.16),rgba(8,7,17,.46));z-index:-1;pointer-events:none;}
+.v8-home-bag .bag-body{position:relative;z-index:1;}
+.v8-home-bag .bag-img-wrap{position:relative;z-index:1;}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">🔥 Thuê acc giá rẻ · Nạp thẻ không chiết khấu · Cho thuê tự động 24/7 · Uy tín hàng nghìn lượt thuê</div></div>
@@ -712,7 +721,24 @@ function openDepositCard(){if(!currentUser()){openAuth();return}openModal('depos
 function setCardProvider(v){$('cardProvider').value=v;document.querySelectorAll('[id^="provider-"]').forEach(x=>x.textContent='Chọn');const el=$('provider-'+v.toLowerCase());if(el)el.textContent='✓ Đã chọn'}
 function submitCardDeposit(){const s=currentUser(),provider=$('cardProvider')?.value,amount=Number($('cardAmount')?.value||0),serial=$('cardSerial')?.value.trim(),code=$('cardCode')?.value.trim();if(!provider)return showNotice('Chọn nhà mạng');if(!amount||amount<10000)return showNotice('Nhập mệnh giá thẻ');if(!serial||!code)return showNotice('Nhập đủ seri và mã thẻ');const a=getDeposits();a.push({id:rid(),uid:s.uid,username:s.username,amount,method:'Thẻ cào',provider,serial,cardCode:code,status:'pending',createdAt:Date.now()});write(STORAGE.deposits,a);showNotice('Đã gửi yêu cầu nạp thẻ');closeModal('depositOverlay');refreshAdminData()}
 function setDepositAmount(v){$('depAmount').value=v;syncDepositAmount()}function syncDepositAmount(){const n=Number($('depAmount').value||0);document.querySelectorAll('.amount-btn').forEach(b=>b.classList.toggle('active',Number(b.textContent.replace(/\./g,''))===n))}
-function showDepositWarning(){const amount=Number($('depAmount').value||0);if(!amount||amount<10000){showNotice('Số tiền tối thiểu 10.000đ');return}const bank=String(getSettings().bank||'').trim();$('depositContent').innerHTML=`<div class="deposit-step"><div style="text-align:center;font-size:70px">⚠️</div><div class="deposit-title" style="text-align:center;color:#ff694f;font-size:25px">ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</div><div class="warning-box"><div>• Mã QR này <strong>CHỈ DÙNG 1 LẦN</strong> cho lần nạp này, đúng số tiền <strong></strong>.</div><div>• <strong>KHÔNG</strong> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <strong>tạo mã QR MỚI</strong>.</div><div>• Cố tình chuyển vào mã cũ / sai số tiền → <strong>có thể mất tiền</strong>, shop không chịu trách nhiệm.</div></div><label class="ack-row"><input type="checkbox" id="depAck"><span>Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ có thể mất tiền và shop không hoàn lại.</span></label><button class="btn deposit-primary" id="depShowQr" disabled onclick="createDepositQr()">Tôi đã đọc — Hiện mã QR</button><button class="btn dark deposit-primary" onclick="openDeposit()">Hủy / tạo mã khác</button></div>`;$('depAck').onchange=e=>$('depShowQr').disabled=!e.target.checked}
+function showDepositWarning(){
+  const amount=Number($('depAmount')?.value||0);
+  if(!amount||amount<10000){showNotice('Số tiền tối thiểu 10.000đ');return}
+  const bank=String(getSettings().bank||'MoMo | TRUONG VAN PHONG | PSP2621916400000092').trim();
+  $('depositContent').innerHTML=`<div class="deposit-step">
+    <div style="text-align:center;font-size:70px">⚠️</div>
+    <div class="deposit-title" style="text-align:center;color:#ff694f;font-size:25px">ĐỌC KỸ TRƯỚC KHI CHUYỂN KHOẢN</div>
+    <div class="warning-box">
+      <div>• Mã QR này <strong>CHỈ DÙNG 1 LẦN</strong> cho lần nạp này, đúng số tiền <strong>${money(amount)}</strong>.</div>
+      <div>• <strong>KHÔNG</strong> lưu lại QR để chuyển cho lần sau. Mỗi lần nạp phải <strong>tạo mã QR MỚI</strong>.</div>
+      <div>• Cố tình chuyển vào mã cũ / sai số tiền → <strong>có thể mất tiền</strong>, shop không chịu trách nhiệm.</div>
+    </div>
+    <label class="ack-row"><input type="checkbox" id="depAck"><span>Tôi đã đọc và hiểu: mã QR chỉ dùng 1 lần, cố tình chuyển sai sẽ có thể mất tiền và shop không hoàn lại.</span></label>
+    <button class="btn deposit-primary" id="depShowQr" disabled onclick="createDepositQr(${amount})">Tôi đã đọc — Hiện mã QR</button>
+    <button class="btn dark deposit-primary" onclick="openDeposit()">Hủy / tạo mã khác</button>
+  </div>`;
+  $('depAck').onchange=e=>$('depShowQr').disabled=!e.target.checked;
+}
 function randomTransferContent(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let out='NAP';
@@ -721,35 +747,35 @@ function randomTransferContent(){
 }
 function createDepositQr(amount){
   const s=currentUser();
-  const code=s.uid.slice(-8).toUpperCase()+'-'+Date.now().toString(36).slice(-6).toUpperCase();
+  if(!s)return;
+  amount=Number(amount||$('depAmount')?.value||0);
+  if(!amount||amount<10000){showNotice('Số tiền tối thiểu 10.000đ');return}
   const transferContent=randomTransferContent();
   const depositId=rid();
   const a=getDeposits();
-  a.push({
-    id:depositId,uid:s.uid,username:s.username,amount,
-    method:'MoMo',code,status:'pending',transferContent,
-    createdAt:Date.now(),expiresAt:Date.now()+900000
-  });
+  a.push({id:depositId,uid:s.uid,username:s.username,amount,method:'Chuyển khoản',code:depositId,status:'pending',transferContent,createdAt:Date.now(),expiresAt:Date.now()+900000});
   write(STORAGE.deposits,a);
 
-  const qrData='qr_banking.png.jpg';
+  const settings=getSettings();
+  const qrData=String(settings.qrUrl||'qr_banking.png.jpg').trim()||'qr_banking.png.jpg';
+  const bankInfo=String(settings.bank||'MoMo | TRUONG VAN PHONG | PSP2621916400000092').split('|').map(x=>x.trim());
+  const bankName=bankInfo[0]||'MoMo';
+  const accountName=bankInfo[1]||'TRUONG VAN PHONG';
+  const accountNumber=bankInfo.slice(2).join(' | ')||'PSP2621916400000092';
   let left=900;
 
   $('depositContent').innerHTML=`<div class="deposit-step">
-    <div class="qr-head">
-      <span>Số tiền: <b></b></span>
-      <span>Còn lại: <b id="qrTimer">900s</b></span>
-    </div>
-    <div class="qr-warning">⚠️ MÃ QR NÀY CHỈ DÙNG 1 LẦN — chuyển đúng . KHÔNG lưu lại chuyển nhiều lần.</div>
+    <div class="qr-head"><span>Số tiền: <b>${money(amount)}</b></span><span>Còn lại: <b id="qrTimer">900s</b></span></div>
+    <div class="qr-warning">⚠️ MÃ QR NÀY CHỈ DÙNG 1 LẦN — chuyển đúng <strong>${money(amount)}</strong> và đúng nội dung. KHÔNG lưu lại chuyển nhiều lần.</div>
     <div class="qr-box">
-      <img id="qrImage" src="" alt="Mã QR nạp tiền">
-      <button class="btn qr-download" onclick="downloadQrImage()">⬇️ Tải mã QR về máy</button>
+      <img id="qrImage" src="${esc(qrData)}" alt="Mã QR nạp tiền">
       <div class="bank-lines">
-        <div class="bank-line"><span>Ngân hàng</span><b>MoMo</b></div>
-        <div class="bank-line"><span>Tên TK</span><b>TRUONG VAN PHONG</b></div>
-        <div class="bank-line"><span>STK</span><b>PSP2621916400000092</b></div>
-        <div class="bank-line"><span>Nội dung</span><b id="qrTransferContent"></b></div>
+        <div class="bank-line"><span>Ngân hàng</span><b>${esc(bankName)}</b></div>
+        <div class="bank-line"><span>Tên TK</span><b>${esc(accountName)}</b></div>
+        <div class="bank-line"><span>STK</span><b>${esc(accountNumber)}</b></div>
+        <div class="bank-line"><span>Nội dung</span><b id="qrTransferContent">${esc(transferContent)}</b></div>
       </div>
+      <button class="btn qr-download" onclick="downloadQrImage()">⬇️ Tải mã QR về máy</button>
     </div>
     <div class="qr-note">Chuyển đúng số tiền và đúng nội dung. Khi hết thời gian, mã nạp sẽ hết hạn.</div>
     <button class="btn dark deposit-primary" onclick="openDeposit()">Hủy / tạo mã khác</button>
@@ -762,17 +788,9 @@ function createDepositQr(amount){
     if(t)t.textContent=Math.max(0,left)+'s';
     if(left<=0){
       clearInterval(window.qrTick);
-      const expiredContent=randomTransferContent();
-      const c=$('qrTransferContent');
-      if(c)c.textContent=expiredContent;
       const list=getDeposits();
       const item=list.find(x=>x.id===depositId);
-      if(item){
-        item.status='expired';
-        item.expiredAt=Date.now();
-        item.expiredTransferContent=expiredContent;
-        write(STORAGE.deposits,list);
-      }
+      if(item){item.status='expired';item.expiredAt=Date.now();write(STORAGE.deposits,list);}
       showNotice('Mã nạp đã hết hạn. Hãy tạo mã mới.');
     }
   },1000);
@@ -1586,7 +1604,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     });
     const grid=$('bagGrid');
     if(!grid)return;
-    grid.innerHTML=visibleBags.length?visibleBags.map(b=>{const c=bagColorFor(b),img=bagImageFor(b);return `<article class="bag ${c?'bag-tone':''}" style="${c?`--bag-color:${c};--bag-glow:${c}`:''}" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(img)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">${getStockNumber(b)?'Còn '+getStockNumber(b)+' phần thưởng':'Hết kho'}</div></div></article>`}).join(''):'<div class="empty">Chưa có túi nào.</div>';
+    grid.innerHTML=visibleBags.length?visibleBags.map(b=>{const c=bagColorFor(b),img=bagImageFor(b);return `<article class="bag ${c?'bag-tone':''} ${/^v8-/.test(String(b.id||''))?'v8-home-bag':''}" style="${c?`--bag-color:${c};--bag-glow:${c}`:''}${/^v8-/.test(String(b.id||''))?`;--v8-bg:url(\"${esc(img)}\")`:''}" onclick="openBag('${esc(b.id)}')"><div class="bag-img-wrap"><img class="bag-img" src="${esc(img)}" alt="${esc(b.name)}" onerror="this.src='${logoUrl}'"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3>${esc(b.name)}</h3><div class="price">từ ${money(b.price)}</div><div class="stock" id="stock-${esc(b.id)}">${getStockNumber(b)?'Còn '+getStockNumber(b)+' phần thưởng':'Hết kho'}</div></div></article>`}).join(''):'<div class="empty">Chưa có túi nào.</div>';
   };
 
   const baseLoadBagAdmin=window.loadBagAdmin;
@@ -1729,5 +1747,236 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
 })();
 </script>
 
+
+<style id="final-v8-flow-fix">
+/* V8: 4 gói thời gian + nền ảnh mờ + thẻ úp/xáo/chọn bất kỳ/lật thưởng */
+.v8-live-preview{position:relative;overflow:hidden}
+.v8-live-preview:before{content:"";position:absolute;inset:-18px;background-image:var(--v8-preview-bg);background-position:center;background-size:cover;filter:blur(24px) saturate(1.15);opacity:.30;transform:scale(1.08);pointer-events:none;z-index:0}
+.v8-live-preview:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,8,34,.48),rgba(8,7,16,.68));pointer-events:none;z-index:0}
+.v8-live-preview>*{position:relative;z-index:1}
+.preview-card-stage{position:relative;z-index:2}
+</style>
+<script id="final-v8-flow-fix-js">
+(function(){
+  const V8IDS=new Set(['v8-39','v8-79']);
+  const isV8=b=>!!b&&V8IDS.has(String(b.id));
+  const v8Plans=price=>{
+    const p=Number(price)||0;
+    return [Math.round(p*.005),Math.round(p*.03),Math.round(p*.25),p];
+  };
+
+  /* Giữ nguyên openBag hiện tại, chỉ thay 4 ô thời gian cho 2 gói V8. */
+  const baseOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof baseOpenBag==='function')baseOpenBag(id);
+    const b=bags.find(x=>x.id===id);
+    if(!isV8(b))return;
+    const plans=v8Plans(b.price);
+    currentPlan=3;
+    const labels=['1 ngày','1 tháng','1 năm','20 năm'];
+    const box=$('plans');
+    if(box)box.innerHTML=plans.map((p,i)=>`<button type="button" class="plan ${i===3?'active':''}" onclick="selectPlan(${i})"><span>${labels[i]}${i<3?' · Sắp có':''}</span><b>${money(p)}</b></button>`).join('');
+    const view=$('bagCategoryView');
+    if(view){
+      view.style.setProperty('--v8-preview-bg',`url("${esc(b.image||'')}")`);
+      const preview=view.querySelector('.v8-live-preview');
+      if(preview)preview.style.setProperty('--v8-preview-bg',`url("${esc(b.image||'')}")`);
+    }
+    if($('playBtn'))$('playBtn').textContent='🎴 Chơi ngay · '+money(plans[3]);
+  };
+
+  /* Sau khi bấm Chơi ngay: 3 thẻ luôn úp ?, xáo vị trí, chọn BẤT KỲ thẻ nào cũng lật. */
+  window.buildGameCards=function(){
+    if(!currentRound){return}
+    const chosenType=currentRound.prizeType||'random';
+    const types=['random','vip8','maxim'];
+    for(let i=types.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[types[i],types[j]]=[types[j],types[i]]}
+    /* Đặt phần thưởng đã được quyết định vào một vị trí ngẫu nhiên để mô phỏng xáo thẻ. */
+    const winIndex=Math.floor(Math.random()*3);
+    const k=types.indexOf(chosenType);
+    [types[winIndex],types[k]]=[types[k],types[winIndex]];
+    currentRound.cardTypes=types;
+    const cards=$('gameCards');
+    if(!cards)return;
+    cards.innerHTML=types.map((type,i)=>`<button type="button" class="game-card flip-card" id="gfc${i}" onclick="flipGameCard(${i})"><span class="flip-inner"><span class="face face-front"><span class="card-mark">?</span><span class="card-shine"></span></span><span class="face back"><img src="${esc((type==='vip8'?cardImages.vip8:type==='maxim'?cardImages.maxim:cardImages.random))}" alt="Phần thưởng"><span class="reward">${esc(type==='vip8'?'Acc VIP8':type==='maxim'?'Acc Maxim':'Acc Ngẫu Nhiên')}</span></span></span></button>`).join('');
+  };
+
+  window.flipGameCard=function(i){
+    if(!currentRound||currentRound.flipped||$('gameCards')?.classList.contains('game-loading'))return;
+    const card=$('gfc'+i);if(!card)return;
+    currentRound.flipped=true;
+    document.querySelectorAll('.game-card').forEach((x,j)=>{x.classList.toggle('chosen',j===i);x.classList.toggle('disabled',j!==i)});
+    card.classList.add('flipped','selected-card');
+    setTimeout(()=>{
+      const item=currentRound.item?.val;
+      const type=currentRound.prizeType||'random';
+      const prize=type==='vip8'?{label:'Acc VIP8'}:type==='maxim'?{label:'Acc Maxim'}:{label:'Acc Ngẫu Nhiên'};
+      if(!item)return;
+      $('gameWin').innerHTML=`<div class="win win-centered"><div class="result-title">🎉 Chúc mừng! Bạn đã nhận được tài khoản</div><div class="result-line">Gói trúng: <strong>${esc(prize.label)}</strong></div><div class="result-line">Rank / mô tả: <strong>${esc(item.rank||'Tài khoản game')}</strong></div><div class="credential-grid"><div class="credential-row"><span>Tài khoản</span><strong>${esc(item.login)}</strong><button class="copy" onclick="copyText('${esc(item.login)}','tài khoản')">📋 Sao chép</button></div><div class="credential-row"><span>Mật khẩu</span><strong>${esc(item.pass)}</strong><button class="copy" onclick="copyText('${esc(item.pass)}','mật khẩu')">📋 Sao chép</button></div></div><div class="mini">Đơn hàng: ${esc(currentRound.orderId||'')}</div><div class="result-actions"><button class="btn small dark" onclick="openOrderHistory()">🧾 Xem lịch sử đơn hàng</button></div></div>`;
+      confetti();$('gameAction').textContent='🎉 Nhận tài khoản thành công';
+    },950);
+  };
+
+  /* Đảm bảo QR dùng đúng file người dùng chỉ định nếu Admin chưa nhập QR khác. */
+  const oldCreateDepositQr=window.createDepositQr;
+  if(typeof oldCreateDepositQr==='function'){
+    window.createDepositQr=function(amount){
+      const st=getSettings();
+      if(!st.qrUrl){
+        const a=getDeposits();
+        /* Không đổi dữ liệu; chỉ để hàm gốc lấy đúng tên file mặc định. */
+      }
+      return oldCreateDepositQr(amount);
+    };
+  }
+})();
+</script>
+
+
+<style id="mystery-bag-maintenance-only">
+/* Chỉ bổ sung 4 ô thời gian cho 7 túi mù 49K-999K */
+.mystery-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;pointer-events:none!important;}
+.mystery-maintenance-plan span,.mystery-maintenance-plan b{color:#35e58a!important;}
+</style>
+<script id="mystery-bag-maintenance-only-js">
+(function(){
+  const BAG_IDS=new Set(['bag49','bag99','bag149','bag199','bag249','bag499','bag999']);
+  const labels=['1 ngày','1 tháng','1 năm','20 năm'];
+  function prices(price){
+    const p=Number(price)||0;
+    return [Math.round(p*.005),Math.round(p*.03),Math.round(p*.25),p];
+  }
+  function renderMysteryPlans(b){
+    const box=$('plans');
+    if(!box||!b||!BAG_IDS.has(String(b.id)))return;
+    const ps=prices(b.price);
+    currentPlan=3;
+    box.innerHTML=labels.map((label,i)=>{
+      const disabled=i<3;
+      return `<button type="button" class="plan ${i===3?'active':''} ${disabled?'mystery-maintenance-plan':''}" ${disabled?'disabled aria-disabled="true"':''} onclick="${disabled?'return false':'selectPlan('+i+')'}"><span>${label}${disabled?' · Bảo trì':''}</span><b>${money(ps[i])}</b></button>`;
+    }).join('');
+  }
+  const previousOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof previousOpenBag==='function')previousOpenBag(id);
+    const b=(window.bags||[]).find(x=>String(x.id)===String(id));
+    if(BAG_IDS.has(String(b?.id)))renderMysteryPlans(b);
+  };
+})();
+</script>
 </body>
 </html>
+<style id="final-user-v8-maintenance-credentials">
+/* Chỉ sửa 4 ô thời gian + ẩn/hiện TK/MK. Các phần khác giữ nguyên. */
+.v8-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;}
+.v8-maintenance-plan b,.v8-maintenance-plan span{color:#35e58a!important;}
+.credential-row{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:8px;}
+.credential-row .credential-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.credential-row .credential-toggle{border:0;background:transparent;color:#b9bdca;font-size:18px;padding:5px 4px;cursor:pointer;line-height:1;}
+.credential-row .credential-toggle:hover{color:#fff;}
+@media(max-width:600px){.credential-row{grid-template-columns:1fr auto auto;}.credential-row>span:first-child{grid-column:1/-1}.credential-row .credential-value{grid-column:1;}.credential-row .credential-toggle{grid-column:2;}.credential-row .copy{grid-column:3;}}
+</style>
+<script id="final-user-v8-maintenance-credentials-js">
+(function(){
+  const V8IDS=new Set(['v8-39','v8-79']);
+  const labels=['1 ngày','1 tháng','1 năm','20 năm'];
+  const priceFor=(price,i)=>{const p=Number(price)||0;return [Math.round(p*.005),Math.round(p*.03),Math.round(p*.25),p][i]};
+  function renderV8Plans(b){
+    const box=$('plans');if(!box||!b||!V8IDS.has(String(b.id)))return;
+    currentPlan=3;
+    box.innerHTML=labels.map((label,i)=>{
+      const disabled=i<3;
+      const p=priceFor(b.price,i);
+      return `<button type="button" class="plan ${i===3?'active':''} ${disabled?'v8-maintenance-plan':''}" ${disabled?'disabled aria-disabled="true"':''} onclick="${disabled?'return false':'selectPlan('+i+')'}"><span>${label}${disabled?' · Bảo trì':''}</span><b>${money(p)}</b></button>`;
+    }).join('');
+  }
+  const prevOpenBag=window.openBag;
+  window.openBag=function(id){
+    if(typeof prevOpenBag==='function')prevOpenBag(id);
+    const b=(window.bags||[]).find(x=>String(x.id)===String(id));
+    if(b&&V8IDS.has(String(b.id)))renderV8Plans(b);
+  };
+  function credentialHtml(label,value,field){
+    const safe=esc(String(value||''));
+    const encoded=encodeURIComponent(String(value||''));
+    const id='cred_'+field+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    return `<div class="credential-row"><span>${label}</span><strong id="${id}" class="credential-value" data-secret="${safe}" data-visible="0">••••••••</strong><button type="button" class="credential-toggle" aria-label="Ẩn hiện ${label}" onclick="toggleCredential('${id}')">👁️</button><button type="button" class="copy" onclick="copyText('${encoded}','${label}')">📋 Sao chép</button></div>`;
+  }
+  window.toggleCredential=function(id){
+    const el=$(id);if(!el)return;
+    const visible=el.getAttribute('data-visible')==='1';
+    el.textContent=visible?'••••••••':el.getAttribute('data-secret')||'';
+    el.setAttribute('data-visible',visible?'0':'1');
+    const btn=el.parentElement?.querySelector('.credential-toggle');
+    if(btn)btn.textContent=visible?'👁️':'🙈';
+  };
+  window.renderV8CredentialResult=function(item,orderId,prizeLabel){
+    if(!$('gameWin')||!item)return;
+    $('gameWin').innerHTML=`<div class="win win-centered"><div class="result-title">🎉 Chúc mừng! Bạn đã nhận được tài khoản</div><div class="result-line">Gói trúng: <strong>${esc(prizeLabel||'Acc Ngẫu Nhiên')}</strong></div><div class="result-line">Rank / mô tả: <strong>${esc(item.rank||'Tài khoản game')}</strong></div><div class="credential-grid">${credentialHtml('Tài khoản',item.login,'login')}${credentialHtml('Mật khẩu',item.pass,'pass')}</div><div class="mini">Đơn hàng: ${esc(orderId||'')}</div><div class="result-actions"><button class="btn small dark" onclick="openOrderHistory()">🧾 Xem lịch sử đơn hàng</button></div></div>`;
+  };
+  /* Thay phần kết quả của cả luồng V8 bằng bản có ẩn/hiện + sao chép. */
+  const oldFlip=window.flipGameCard;
+  window.flipGameCard=function(i){
+    if(!currentRound||currentRound.flipped||$('gameCards')?.classList.contains('game-loading'))return;
+    const card=$('gfc'+i);if(!card)return;
+    currentRound.flipped=true;
+    document.querySelectorAll('.game-card').forEach((x,j)=>{x.classList.toggle('chosen',j===i);x.classList.toggle('disabled',j!==i)});
+    card.classList.add('flipped','selected-card');
+    setTimeout(()=>{
+      const item=currentRound.item?.val;if(!item)return;
+      const type=currentRound.prizeType||'random';
+      const prizeLabel=type==='vip8'?'Acc VIP8':type==='maxim'?'Acc Maxim':'Acc Ngẫu Nhiên';
+      renderV8CredentialResult(item,currentRound.orderId,prizeLabel);
+      try{confetti();}catch(e){}
+      if($('gameAction'))$('gameAction').textContent='🎉 Nhận tài khoản thành công';
+    },950);
+  };
+  /* Sau khi mở túi mù 1/8, dùng cùng giao diện TK/MK. */
+  const oldOpenResult=window.openBagResult;
+  if(typeof oldOpenResult==='function'){
+    /* Không thay logic claim/đơn hàng của hàm cũ; chỉ cung cấp hàm render dùng chung. */
+  }
+})();
+</script>
+<style id="final-credential-hide-all">
+/* TK/MK trong kết quả khách nhận: mặc định ẩn, nút mắt đứng trước Sao chép. */
+.win-centered .credential-row,.bag-result-card .credential-row{display:grid!important;grid-template-columns:110px minmax(0,1fr) auto auto!important;align-items:center;gap:8px!important}
+.win-centered .credential-value,.bag-result-card .credential-value{min-width:0;word-break:break-all}
+.credential-toggle{order:3!important;border:0!important;background:transparent!important;color:#b9bdca!important;font-size:18px!important;padding:5px!important;cursor:pointer!important;line-height:1!important}
+.credential-row .copy{order:4!important;float:none!important}
+@media(max-width:600px){.win-centered .credential-row,.bag-result-card .credential-row{grid-template-columns:1fr auto auto!important}.win-centered .credential-row>span:first-child,.bag-result-card .credential-row>span:first-child{grid-column:1/-1}.win-centered .credential-value,.bag-result-card .credential-value{grid-column:1}.credential-toggle{grid-column:2}.credential-row .copy{grid-column:3}}
+</style>
+<script id="final-credential-hide-all-js">
+(function(){
+  function escLocal(v){return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function mask(v){
+    v=String(v||'');
+    if(!v)return '••••••••••';
+    const at=v.indexOf('@');
+    if(at>1){const local=v.slice(0,Math.min(4,at));return local+'***'+v.slice(at)}
+    return '••••••••••';
+  }
+  window.toggleCredential=function(id){
+    const el=document.getElementById(id);if(!el)return;
+    const visible=el.getAttribute('data-visible')==='1';
+    el.textContent=visible?mask(el.getAttribute('data-secret')||''):(el.getAttribute('data-secret')||'');
+    el.setAttribute('data-visible',visible?'0':'1');
+    const b=el.parentElement?.querySelector('.credential-toggle');if(b)b.textContent=visible?'👁️':'🙈';
+  };
+  function enhance(root){
+    if(!root)return;
+    root.querySelectorAll('.credential-row').forEach(row=>{
+      if(row.querySelector('.credential-toggle')&&row.querySelector('.credential-value'))return;
+      const strong=row.querySelector('strong');if(!strong)return;
+      const value=strong.textContent.trim();if(!value)return;
+      const id='credhide_'+Math.random().toString(36).slice(2,10)+'_'+Date.now();
+      strong.id=id;strong.classList.add('credential-value');strong.setAttribute('data-secret',value);strong.setAttribute('data-visible','0');strong.textContent=mask(value);
+      const btn=document.createElement('button');btn.type='button';btn.className='credential-toggle';btn.setAttribute('aria-label','Hiện hoặc ẩn');btn.textContent='👁️';btn.onclick=function(){window.toggleCredential(id)};
+      const copy=row.querySelector('.copy');
+      if(copy)row.insertBefore(btn,copy);else row.appendChild(btn);
+    });
+  }
+  function watch(id){const el=document.getElementById(id);if(!el)return;enhance(el);new MutationObserver(()=>enhance(el)).observe(el,{childList:true,subtree:true});}
+  document.addEventListener('DOMContentLoaded',function(){watch('gameWin');watch('bagOpenResult');watch('accountTabContent');});
+})();
+</script>
