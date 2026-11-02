@@ -1307,7 +1307,35 @@ input,select,textarea{
   }
 }
 </style>
-  
+ 
+<style id="FIX-10-TUI-5-COT-DESKTOP">
+/* CHỈ TỐI ƯU CÁC Ô TÚI THƯỜNG TRÊN MÁY TÍNH */
+@media (min-width: 761px) {
+  .cards {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 12px auto !important;
+    justify-content: stretch !important;
+  }
+
+  .flip-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 165px !important;
+    margin: 0 !important;
+  }
+
+  .flip-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+}
+</style>
+ 
  
 </style>
 </head>
