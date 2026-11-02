@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<style>
+<style>  
 :root{--bg:#080a10;--bg2:#0d0f16;--panel:#11131c;--panel2:#171923;--line:#272a35;--line2:#343744;--text:#f7f7fa;--muted:#9297a8;--muted2:#727789;--green:#35e58a;--green2:#16b968;--orange:#ff5726;--orange2:#ff9c10;--purple:#7b3cff;--red:#ff425c;--blue:#438cff;--radius:18px;--shadow:0 25px 80px rgba(0,0,0,.38)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(89,27,81,.16),transparent 32%),var(--bg);color:var(--text);font-family:Lexend,Arial,sans-serif;overflow-x:hidden}body.modal-open{overflow:hidden}
 button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.6}a{color:inherit;text-decoration:none}.hidden{display:none!important}.container{width:min(1180px,calc(100% - 44px));margin:auto}
@@ -507,6 +507,441 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
 .v8-home-bag:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(122,52,255,.16),transparent 52%),linear-gradient(180deg,rgba(18,10,30,.16),rgba(8,7,17,.46));z-index:-1;pointer-events:none;}
 .v8-home-bag .bag-body{position:relative;z-index:1;}
 .v8-home-bag .bag-img-wrap{position:relative;z-index:1;}
+/* ===== RESPONSIVE UPGRADE SHOPCENAVN ===== */
+
+/* Màn hình máy tính */
+.container{
+  width:min(1440px,calc(100% - 64px));
+}
+
+.header{
+  height:105px;
+}
+
+.logo{
+  width:min(340px,35vw);
+  height:75px;
+}
+
+.desktop-nav{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.desktop-nav a{
+  padding:12px 17px;
+  border-radius:10px;
+  color:#ddd;
+  font-weight:700;
+  transition:.2s;
+}
+
+.desktop-nav a:hover{
+  background:#242630;
+  color:#ff9b25;
+}
+
+.hero{
+  padding:45px 0 30px;
+}
+
+.hero-box{
+  min-height:420px;
+  display:flex;
+  align-items:center;
+}
+
+.bag-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
+}
+
+.bag-body{
+  padding:22px;
+}
+
+.bag h3{
+  font-size:21px;
+}
+
+.price{
+  font-size:22px;
+}
+
+.features{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.quick-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.footer-grid{
+  grid-template-columns:1.5fr 1fr 1fr 1fr;
+}
+
+.modal{
+  width:min(1100px,95%);
+  padding:30px;
+}
+
+.stats{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+/* Tablet */
+@media(max-width:1000px){
+  .container{
+    width:calc(100% - 36px);
+  }
+
+  .bag-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .features{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .footer-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .hero-box{
+    padding:40px;
+  }
+}
+
+/* Điện thoại */
+@media(max-width:760px){
+  html,body{
+    width:100%;
+    overflow-x:hidden;
+  }
+
+  .container{
+    width:calc(100% - 24px);
+  }
+
+  .topbar{
+    height:36px;
+    font-size:12px;
+  }
+
+  .header{
+    height:76px;
+  }
+
+  .header-inner{
+    gap:10px;
+  }
+
+  .logo{
+    width:min(220px,65vw);
+    height:55px;
+  }
+
+  .menu-btn{
+    width:48px;
+    height:48px;
+    font-size:21px;
+    border-radius:12px;
+  }
+
+  .desktop-nav{
+    display:none;
+  }
+
+  .account-bar{
+    gap:5px;
+    margin-right:0;
+  }
+
+  .balance,.user-chip{
+    padding:7px 9px;
+    font-size:11px;
+  }
+
+  .hero{
+    padding:20px 0;
+  }
+
+  .hero-box{
+    min-height:300px;
+    padding:25px 20px;
+    border-radius:15px;
+  }
+
+  .hero-badge{
+    padding:9px 13px;
+    font-size:11px;
+    letter-spacing:1px;
+  }
+
+  .hero h1{
+    font-size:34px;
+    margin:23px 0 12px;
+    letter-spacing:-1px;
+  }
+
+  .hero p{
+    font-size:14px;
+    line-height:1.6;
+  }
+
+  .actions{
+    gap:9px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    padding:13px 16px;
+    font-size:13px;
+  }
+
+  .quick-grid{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:35px;
+  }
+
+  .quick{
+    min-height:105px;
+    padding:13px;
+    gap:10px;
+    border-radius:13px;
+  }
+
+  .quick-icon{
+    width:43px;
+    height:43px;
+    font-size:22px;
+    border-radius:10px;
+  }
+
+  .quick h3{
+    font-size:14px;
+  }
+
+  .quick p{
+    font-size:11px;
+  }
+
+  .section-head{
+    gap:12px;
+    margin:25px 0 17px;
+  }
+
+  .section-icon{
+    width:48px;
+    height:48px;
+    font-size:22px;
+  }
+
+  .section-link{
+    font-size:15px;
+  }
+
+  .bag-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
+  }
+
+  .bag{
+    border-radius:12px;
+  }
+
+  .bag-img{
+    aspect-ratio:1.2;
+  }
+
+  .bag-body{
+    padding:12px;
+  }
+
+  .bag h3{
+    font-size:14px;
+    line-height:1.4;
+    margin-bottom:8px;
+  }
+
+  .price{
+    font-size:16px;
+  }
+
+  .stock{
+    font-size:10px;
+  }
+
+  .bag-open{
+    margin-top:10px;
+  }
+
+  .features{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin:40px 0;
+  }
+
+  .feature{
+    min-height:145px;
+    padding:15px 9px;
+  }
+
+  .feature i{
+    font-size:29px;
+    margin-bottom:12px;
+  }
+
+  .feature h3{
+    font-size:15px;
+  }
+
+  .feature p{
+    font-size:11px;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+  }
+
+  footer{
+    padding:35px 0 100px;
+  }
+
+  .footer-logo{
+    width:220px;
+    height:50px;
+  }
+
+  .footer-desc{
+    font-size:13px;
+  }
+
+  .chat{
+    width:55px;
+    height:55px;
+    right:14px;
+    bottom:15px;
+    font-size:23px;
+  }
+
+  .overlay{
+    padding:8px;
+    align-items:center;
+  }
+
+  .modal{
+    width:100%;
+    max-height:94vh;
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .modal h2{
+    font-size:20px;
+  }
+
+  .bag-modal{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .cards{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+
+  .flip-card{
+    height:175px;
+  }
+
+  .deposit-methods{
+    grid-template-columns:1fr;
+  }
+
+  .amount-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .two-col{
+    grid-template-columns:1fr;
+  }
+
+  .notice-title{
+    font-size:22px;
+  }
+
+  .notice-body{
+    padding:15px;
+    font-size:14px;
+  }
+
+  .admin-nav{
+    gap:6px;
+  }
+
+  .admin-nav button{
+    font-size:12px;
+    padding:9px 11px;
+  }
+}
+
+/* Điện thoại nhỏ */
+@media(max-width:380px){
+  .container{
+    width:calc(100% - 18px);
+  }
+
+  .hero h1{
+    font-size:29px;
+  }
+
+  .bag-grid{
+    gap:8px;
+  }
+
+  .bag-body{
+    padding:9px;
+  }
+
+  .bag h3{
+    font-size:12px;
+  }
+
+  .price{
+    font-size:14px;
+  }
+
+  .quick{
+    padding:9px;
+  }
+
+  .quick h3{
+    font-size:12px;
+  }
+}
+
+/* Tránh tràn nội dung */
+img,video,iframe{
+  max-width:100%;
+}
+
+input,select,textarea{
+  max-width:100%;
+}
+
+.table-wrap{
+  max-width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
 </style>
 </head>
 <body>
