@@ -1031,6 +1031,69 @@ input,select,textarea{
     overflow-x: hidden !important;
   }
 }
+
+/* ===== MENU TRƯỢT GỌN CHO MÁY TÍNH ===== */
+@media (min-width: 761px) {
+
+  .side-menu {
+    z-index: 150 !important;
+  }
+
+  .side-panel {
+    left: auto !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 390px !important;
+    max-width: 90vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    padding: 30px !important;
+    background: linear-gradient(160deg,#171923,#0d0f16) !important;
+    border: 1px solid #343744 !important;
+    border-radius: 20px 0 0 20px !important;
+    box-shadow: -20px 0 65px rgba(0,0,0,.45) !important;
+    transform: translateX(100%) !important;
+    opacity: 1 !important;
+    overflow-y: auto !important;
+  }
+
+  .side-menu.open .side-panel {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+  }
+
+  .side-panel .side-links {
+    gap: 12px !important;
+    margin-top: 22px !important;
+  }
+
+  .side-panel .side-link {
+    display: block !important;
+    padding: 17px 19px !important;
+    border: 1px solid #303340 !important;
+    border-radius: 12px !important;
+    background: #191c27 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    transition: .2s ease !important;
+  }
+
+  .side-panel .side-link:hover {
+    background: #292331 !important;
+    border-color: #ff8a24 !important;
+    transform: translateX(4px) !important;
+  }
+
+  .side-panel .side-user {
+    border-radius: 14px !important;
+    padding: 20px !important;
+  }
+
+  .side-panel .side-divider {
+    margin: 22px 0 !important;
+  }
+}
+  
  
 </style>
 </head>
