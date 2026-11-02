@@ -1093,6 +1093,87 @@ input,select,textarea{
     margin: 22px 0 !important;
   }
 }
+
+/* ===== TOI UU TAT CA GOI ACC TREN MAY TINH ===== */
+
+@media (min-width: 1001px) {
+
+  /* Khung danh mục có chứa danh sách gói */
+  .modal-content:has(.cards) {
+    width: min(1450px, 96vw) !important;
+    max-width: 1450px !important;
+    max-height: 94vh !important;
+    padding: 28px !important;
+    overflow-y: auto !important;
+    margin: 2vh auto !important;
+  }
+
+  /* Danh sách toàn bộ gói */
+  .cards {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+
+  /* Từng gói acc */
+  .flip-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 270px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+  }
+
+  .flip-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Tiêu đề danh mục */
+  .modal-content:has(.cards) h2 {
+    font-size: 30px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Chọn thời gian thuê */
+  .modal-content:has(.cards) .amount-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+/* Màn hình máy tính nhỏ */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .modal-content:has(.cards) {
+    width: 96vw !important;
+    max-width: 96vw !important;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .flip-card {
+    height: 230px !important;
+  }
+}
+
+/* Điện thoại giữ giao diện riêng */
+@media (max-width: 760px) {
+  .modal-content:has(.cards) {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
   
  
 </style>
