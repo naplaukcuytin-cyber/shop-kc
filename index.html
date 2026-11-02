@@ -1174,6 +1174,62 @@ input,select,textarea{
   }
 }
 
+/* ===== SUA DANH SACH 10 GOI ACC MAY TINH ===== */
+
+@media screen and (min-width: 1001px) {
+
+  /* Mở rộng cửa sổ danh mục */
+  .modal {
+    width: 96vw !important;
+    max-width: 1500px !important;
+    max-height: 94vh !important;
+    padding: 28px !important;
+    overflow-y: auto !important;
+  }
+
+  /* Danh sách các gói */
+  .modal .cards,
+  .bag-modal .cards {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 15px 0 !important;
+  }
+
+  /* Kích thước từng gói */
+  .modal .cards .flip-card,
+  .bag-modal .cards .flip-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 205px !important;
+    margin: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .modal .cards .flip-card img,
+  .bag-modal .cards .flip-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Thu gọn khoảng cách */
+  .modal .bag-modal {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+}
+
+/* Máy tính màn hình vừa */
+@media screen and (min-width: 761px) and (max-width: 1000px) {
+  .modal .cards,
+  .bag-modal .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
   
  
 </style>
