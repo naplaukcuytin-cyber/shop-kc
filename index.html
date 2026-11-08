@@ -1272,41 +1272,7 @@ input,select,textarea{
     object-fit: cover !important;
   }
 }
-<style id="desktop-5-bag-layout">
-/* Máy tính: 5 túi trên một hàng, 10 túi thành 2 hàng */
-@media (min-width: 761px) {
-  .category-modal {
-    width: min(1450px, 96vw) !important;
-    max-width: 1450px !important;
-  }
 
-  .mini-bag-grid {
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    width: 100% !important;
-  }
-
-  .mini-bag {
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-
-  .mini-bag img {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
-  }
-}
-
-/* Điện thoại giữ 2 cột */
-@media (max-width: 760px) {
-  .mini-bag-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-</style>
   
  
 </style>
