@@ -1468,3 +1468,509 @@ const ADMIN_USERNAME='phong23112007';
 const ADMIN_PASSWORD='Muathu12345';
 const STORAGE={users:'shopcenavn_users_v3',inventory:'shopcenavn_inventory_v3',orders:'shopcenavn_orders_v3',deposits:'shopcenavn_deposits_v3',settings:'shopcenavn_settings_v3',bags:'shopcenavn_bags_v3',logs:'shopcenavn_admin_logs_v3',session:'shopcenavn_session_v3'};
 const firebaseConfig={apiKey:'AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs',authDomain:'shop-kc.firebaseapp.com',projectId:'shop-kc',storageBucket:'shop-kc.firebasestorage.app',messagingSenderId:'1073242689799',appId:'1:10
+appId: "1:1073242689799:web:5a8b7c6d5e4f3a2b1c" // Thay thế bằng appId thực tế của bạn nếu cần
+};
+
+// Khởi tạo Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+// --- STATE QUẢN LÝ TÀI KHOẢN & DỮ LIỆU ---
+let currentUser = null;
+let bagsData = [];
+let inventoryData = [];
+let selectedBag = null;
+let selectedPlan = null;
+let currentPrize = null;
+let activeAdminPage = 'dashboard';
+
+// --- HÀM KHỞI TẠO NỀN TẢNG & EVENT LISTENERS ---
+document.addEventListener('DOMContentLoaded', () => {
+  loadSession();
+  initFirebaseListeners();
+  setupMenuResponsive();
+});
+
+function loadSession() {
+  const saved = localStorage.getItem(STORAGE.session);
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      updateUI();
+    } catch (e) {
+      currentUser = null;
+    }
+  }
+}
+
+function saveSession(user) {
+  currentUser = user;
+  if (user) {
+    localStorage.setItem(STORAGE.session, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(STORAGE.session);
+  }
+  updateUI();
+}
+
+function updateUI() {
+  const accountBar = document.getElementById('accountBar');
+  const balanceEl = document.getElementById('balance');
+  const userChip = document.getElementById('userChip');
+  const sideGuest = document.getElementById('sideGuest');
+  const sideMember = document.getElementById('sideMember');
+  const sideBalance = document.getElementById('sideBalance');
+  const sideMemberName = document.getElementById('sideMemberName');
+  const sideAdmin = document.getElementById('sideAdmin');
+
+  if (currentUser) {
+    accountBar.classList.add('show');
+    balanceEl.textContent = (currentUser.balance || 0).toLocaleString('vi-VN') + 'đ';
+    userChip.textContent = currentUser.username || 'Thành viên';
+    
+    sideGuest.classList.add('hidden');
+    sideMember.classList.remove('hidden');
+    sideBalance.textContent = (currentUser.balance || 0).toLocaleString('vi-VN') + 'đ';
+    sideMemberName.textContent = currentUser.username;
+
+    if (currentUser.role === 'admin' || currentUser.username === ADMIN_USERNAME) {
+      sideAdmin.classList.remove('hidden');
+    } else {
+      sideAdmin.classList.add('hidden');
+    }
+  } else {
+    accountBar.classList.remove('show');
+    sideGuest.classList.remove('hidden');
+    sideMember.classList.add('hidden');
+  }
+}
+
+// --- ĐỒNG BỘ REALTIME FIREBASE ---
+function initFirebaseListeners() {
+  // Lắng nghe danh mục Túi mù
+  db.ref('bags').on('value', snapshot => {
+    const data = snapshot.val();
+    bagsData = data ? Object.values(data) : getFallbackBags();
+    renderBags();
+  });
+
+  // Lắng nghe Kho nick
+  db.ref('inventory').on('value', snapshot => {
+    const data = snapshot.val();
+    inventoryData = data ? Object.values(data) : [];
+    if (activeAdminPage === 'inventory') renderAdminInventory();
+  });
+
+  // Lắng nghe dữ liệu User khi đăng nhập
+  db.ref('users').on('value', snapshot => {
+    const users = snapshot.val();
+    if (currentUser && users && users[currentUser.uid]) {
+      currentUser = users[currentUser.uid];
+      saveSession(currentUser);
+    }
+    if (document.getElementById('adminOverlay').classList.contains('show')) {
+      renderAdminDashboard();
+    }
+  });
+}
+
+// --- DỮ LIỆU TÚI MẶC ĐỊNH (FALLBACK) ---
+function getFallbackBags() {
+  return [
+    {
+      id: 'v8',
+      name: 'Săn Lùng V8',
+      price: 99000,
+      image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80',
+      desc: 'Kho nick V8 ngẫu nhiên cực khủng, có cơ hội trúng acc VIP full trang phục.',
+      plans: [99000, 199000, 499000],
+      stock: 50,
+      probRandom: 50,
+      probVip8: 30,
+      probMaxim: 20
+    },
+    {
+      id: 'ff99k',
+      name: 'Acc Free Fire 99k',
+      price: 99000,
+      image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80',
+      desc: 'Tài khoản tầm trung phù hợp leo rank, đủ súng vip.',
+      plans: [99000, 149000],
+      stock: 25,
+      probRandom: 60,
+      probVip8: 25,
+      probMaxim: 15
+    }
+  ];
+}
+
+// --- HIỂN THỊ DANH SÁCH TÚI TRÊN TRANG CHỦ ---
+function renderBags() {
+  const grid = document.getElementById('bagGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = bagsData.map(bag => `
+    <div class="bag ${bag.id === 'v8' ? 'v8-home-bag' : ''}">
+      <div class="bag-img-wrap">
+        <img class="bag-img" src="${bag.image}" alt="${bag.name}">
+      </div>
+      <div class="bag-body">
+        <h3>${bag.name}</h3>
+        <div class="price">Từ ${bag.price.toLocaleString('vi-VN')}đ</div>
+        <div class="stock">Còn lại: ${bag.stock || 0} acc</div>
+        <button class="btn bag-open" onclick="openBagModal('${bag.id}')">Xem túi & Thuê</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// --- DI CHUYỂN & MODALS ---
+function scrollToBags() {
+  document.getElementById('bagsSection').scrollIntoView({ behavior: 'smooth' });
+}
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('show');
+  document.body.classList.add('modal-open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+  if (!document.querySelector('.overlay.show')) {
+    document.body.classList.remove('modal-open');
+  }
+}
+
+// --- BÓC TÚI MÙ & GAME LẬT THẺ ---
+function openBagModal(bagId) {
+  selectedBag = bagsData.find(b => b.id === bagId) || bagsData[0];
+  document.getElementById('bagTitle').textContent = selectedBag.name;
+  document.getElementById('bagDesc').textContent = selectedBag.desc;
+  document.getElementById('bagStock').textContent = `Tồn kho: ${selectedBag.stock || 0} tài khoản`;
+  
+  // Render thời gian/gói thuê
+  const plansContainer = document.getElementById('plans');
+  selectedPlan = selectedBag.plans ? selectedBag.plans[0] : selectedBag.price;
+  
+  plansContainer.innerHTML = (selectedBag.plans || [selectedBag.price]).map((p, idx) => `
+    <div class="plan ${idx === 0 ? 'active' : ''}" onclick="selectPlan(this, ${p})">
+      <span>Gói ${idx + 1}</span>
+      <b>${p.toLocaleString('vi-VN')}đ</b>
+    </div>
+  `).join('');
+
+  openModal('bagOverlay');
+}
+
+function selectPlan(el, price) {
+  document.querySelectorAll('.plan').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  selectedPlan = price;
+}
+
+function openPlayConfirm() {
+  if (!currentUser) {
+    showNotice('Vui lòng đăng nhập để trải nghiệm!');
+    openAuth(false);
+    return;
+  }
+  closeModal('bagOverlay');
+  document.getElementById('confirmPlayPrice').textContent = selectedPlan.toLocaleString('vi-VN') + 'đ';
+  openModal('playConfirmOverlay');
+}
+
+function startBag() {
+  if ((currentUser.balance || 0) < selectedPlan) {
+    closeModal('playConfirmOverlay');
+    showNotice('Số dư không đủ. Vui lòng nạp thêm tiền!');
+    openDeposit();
+    return;
+  }
+
+  // Trừ tiền user
+  currentUser.balance -= selectedPlan;
+  db.ref('users/' + currentUser.uid).update({ balance: currentUser.balance });
+
+  closeModal('playConfirmOverlay');
+  setupFlipGame();
+  openModal('gameOverlay');
+}
+
+function setupFlipGame() {
+  const container = document.getElementById('gameCards');
+  document.getElementById('gameSubtitle').textContent = '🔀 Đang xáo thẻ...';
+  document.getElementById('gameWin').innerHTML = '';
+  
+  container.className = 'game-cards game-loading';
+  container.innerHTML = [1, 2, 3].map(i => `
+    <div class="game-card" onclick="flipCard(this, ${i})">
+      <div class="flip-inner">
+        <div class="face face-front"></div>
+        <div class="face back">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80" alt="Card">
+          <div class="reward">Đang mở...</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  setTimeout(() => {
+    container.classList.remove('game-loading');
+    document.getElementById('gameSubtitle').textContent = '🎯 Hãy chọn 1 lá bài may mắn!';
+  }, 1800);
+}
+
+function flipCard(cardEl, index) {
+  if (cardEl.classList.contains('flipped') || document.querySelector('.game-card.flipped')) return;
+  
+  cardEl.classList.add('flipped', 'selected-card');
+  document.querySelectorAll('.game-card:not(.selected-card)').forEach(c => c.classList.add('disabled'));
+
+  // Giả lập nhận acc ngẫu nhiên từ kho
+  const mockAcc = {
+    user: 'AccVIP_' + Math.floor(100000 + Math.random() * 900000),
+    pass: 'ShopCenaPass' + Math.floor(1000 + Math.random() * 9000),
+    rank: 'Huyền Thoại 50★'
+  };
+
+  setTimeout(() => {
+    document.getElementById('gameWin').innerHTML = `
+      <div class="win win-centered">
+        <div class="result-title">🎉 CHÚC MỪNG BẠN TRÚNG ACC!</div>
+        <div class="credential-grid">
+          <div class="credential-row">
+            <span>Tài khoản:</span>
+            <strong>${mockAcc.user}</strong>
+            <button class="copy" onclick="copyText('${mockAcc.user}')">Coppy</button>
+          </div>
+          <div class="credential-row">
+            <span>Mật khẩu:</span>
+            <strong>${mockAcc.pass}</strong>
+            <button class="copy" onclick="copyText('${mockAcc.pass}')">Coppy</button>
+          </div>
+          <div class="credential-row">
+            <span>Thông tin:</span>
+            <strong>${mockAcc.rank}</strong>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn green" onclick="closeModal('gameOverlay')">Xác nhận & Xong</button>
+        </div>
+      </div>
+    `;
+  }, 900);
+}
+
+// --- THÔNG BÁO & TIỆN ÍCH ---
+function showNotice(msg) {
+  const el = document.getElementById('notice');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showNotice('Đã sao chép vào bộ nhớ tạm!');
+  });
+}
+
+// --- XỬ LÝ AUTHENTICATION ---
+function openAuth(isRegister = false) {
+  switchAuth(isRegister);
+  openModal('authOverlay');
+}
+
+function switchAuth(isRegister) {
+  const loginTab = document.getElementById('loginTab');
+  const registerTab = document.getElementById('registerTab');
+  const authName = document.getElementById('authName');
+  const authSubmit = document.getElementById('authSubmit');
+
+  if (isRegister) {
+    loginTab.classList.remove('active');
+    registerTab.classList.add('active');
+    authName.classList.remove('hidden');
+    authSubmit.textContent = 'Đăng ký ngay';
+  } else {
+    registerTab.classList.remove('active');
+    loginTab.classList.add('active');
+    authName.classList.add('hidden');
+    authSubmit.textContent = 'Đăng nhập';
+  }
+}
+
+function submitAuth(e) {
+  e.preventDefault();
+  const username = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPass').value;
+  const isRegister = document.getElementById('registerTab').classList.contains('active');
+
+  if (isRegister) {
+    const name = document.getElementById('authName').value || username;
+    const uid = 'usr_' + Date.now();
+    const newUser = {
+      uid: uid,
+      username: username,
+      name: name,
+      pass: pass,
+      balance: 0,
+      role: username === ADMIN_USERNAME ? 'admin' : 'user',
+      joinedAt: new Date().toLocaleDateString('vi-VN')
+    };
+
+    db.ref('users/' + uid).set(newUser, err => {
+      if (!err) {
+        saveSession(newUser);
+        closeModal('authOverlay');
+        showNotice('Đăng ký tài khoản thành công!');
+      }
+    });
+  } else {
+    // Đăng nhập Admin cố định hoặc User Firebase
+    if (username === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+      const adminUser = { uid: 'admin_root', username: ADMIN_USERNAME, role: 'admin', balance: 99999999 };
+      saveSession(adminUser);
+      closeModal('authOverlay');
+      showNotice('Xin chào Quản trị viên!');
+      return;
+    }
+
+    db.ref('users').orderByChild('username').equalTo(username).once('value', snapshot => {
+      const users = snapshot.val();
+      if (users) {
+        const found = Object.values(users).find(u => u.pass === pass);
+        if (found) {
+          saveSession(found);
+          closeModal('authOverlay');
+          showNotice('Đăng nhập thành công!');
+        } else {
+          document.getElementById('authMsg').textContent = 'Mật khẩu không chính xác!';
+        }
+      } else {
+        document.getElementById('authMsg').textContent = 'Tài khoản không tồn tại!';
+      }
+    });
+  }
+}
+
+function logout() {
+  saveSession(null);
+  showNotice('Đã đăng xuất tài khoản.');
+}
+
+// --- GIAO DIỆN NẠP TIỀN & CHĂM SÓC KHÁCH HÀNG ---
+function openDeposit() {
+  openDepositMethod('bank');
+}
+
+function openDepositMethod(type) {
+  if (!currentUser) {
+    showNotice('Vui lòng đăng nhập trước khi nạp!');
+    openAuth(false);
+    return;
+  }
+
+  const container = document.getElementById('depositContent');
+  if (type === 'bank') {
+    container.innerHTML = `
+      <div class="deposit-step">
+        <div class="deposit-title">Nạp tiền chuyển khoản ngân hàng (Auto 24/7)</div>
+        <div class="qr-box">
+          <img src="qr_banking.png.jpg" alt="QR Banking" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=MoMo-0987654321'">
+        </div>
+        <div class="bank-lines">
+          <div class="bank-line"><span>Ngân hàng / Ví:</span> <b>MoMo / Bank</b></div>
+          <div class="bank-line"><span>Chủ tài khoản:</span> <b>TRUONG VAN PHONG</b></div>
+          <div class="bank-line"><span>Nội dung CK:</span> <b style="color:#ff6b1c">NAP ${currentUser.username}</b></div>
+        </div>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="deposit-step">
+        <div class="deposit-title">Nạp thẻ cào tự động</div>
+        <select class="field"><option>Viettel</option><option>VinaPhone</option><option>MobiFone</option></select>
+        <input class="field" placeholder="Số Seri">
+        <input class="field" placeholder="Mã thẻ">
+        <button class="btn" onclick="showNotice('Hệ thống đang xử lý thẻ cào...')">Gửi thẻ ngay</button>
+      </div>
+    `;
+  }
+  openModal('depositOverlay');
+}
+
+function openCustomerSupport() {
+  const widget = document.getElementById('customerSupportWidget');
+  widget.style.display = widget.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function closeCustomerSupport() {
+  document.getElementById('customerSupportWidget').style.display = 'none';
+}
+
+function sendCustomerSupportMessage() {
+  const input = document.getElementById('customerSupportInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const msgContainer = document.getElementById('customerSupportMessages');
+  msgContainer.innerHTML += `<div style="text-align:right;margin:8px 0;color:#ff9b25"><b>Bạn:</b> ${text}</div>`;
+  input.value = '';
+  msgContainer.scrollTop = msgContainer.scrollHeight;
+}
+
+// --- QUẢN TRỊ ADMIN ---
+function openAdmin() {
+  if (!currentUser || currentUser.role !== 'admin') {
+    showNotice('Quyền truy cập bị từ chối!');
+    return;
+  }
+  openModal('adminOverlay');
+  setupAdminEvents();
+  renderAdminDashboard();
+}
+
+function setupAdminEvents() {
+  document.querySelectorAll('.admin-nav button').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const pageId = btn.getAttribute('data-page');
+      activeAdminPage = pageId;
+      document.getElementById('page-' + pageId).classList.add('active');
+    };
+  });
+}
+
+function renderAdminDashboard() {
+  db.ref().once('value', snapshot => {
+    const data = snapshot.val() || {};
+    const users = data.users ? Object.values(data.users) : [];
+    
+    document.getElementById('sUsers').textContent = users.length;
+    document.getElementById('sRevenue').textContent = '0đ';
+    document.getElementById('adminLastSync').textContent = new Date().toLocaleTimeString('vi-VN');
+  });
+}
+
+function setupMenuResponsive() {
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('sideMenu');
+  if (btn && menu) {
+    btn.onclick = () => menu.classList.toggle('open');
+  }
+}
+
+function closeMenu() {
+  document.getElementById('sideMenu').classList.remove('open');
+}
+</script>
+</body>
+</html>
