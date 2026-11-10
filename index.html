@@ -340,6 +340,60 @@ footer{border-top:1px solid #252730;padding:70px 0 130px}.footer-logo{width:390p
   #adminOverlay .table td{grid-template-columns:78px minmax(0,1fr);font-size:11px;}
   #adminOverlay .admin-nav button{font-size:11px;}
 }
+
+/* ===== ADMIN DASHBOARD REDESIGN (reference-inspired) ===== */
+#adminOverlay{padding:0!important;background:rgba(4,5,12,.92)!important;backdrop-filter:blur(12px)}
+#adminOverlay>.modal{width:min(1600px,100%)!important;height:100dvh!important;max-height:100dvh!important;border:1px solid #29244a!important;border-radius:0!important;padding:18px 22px!important;background:radial-gradient(ellipse at 18% 0%,rgba(104,32,190,.18),transparent 35%),linear-gradient(145deg,#090a14,#101020 58%,#0b0d18)!important;overflow:auto}
+#adminOverlay .modal-head{padding:4px 0 15px;border-bottom:1px solid #28233f;margin-bottom:14px}
+#adminOverlay .modal-head h2{font-size:23px!important;letter-spacing:.2px}
+#adminApp{display:grid;grid-template-columns:218px minmax(0,1fr);gap:14px 18px;align-items:start}
+#adminApp>.admin-status-card{grid-column:1/-1;grid-row:1;margin:0;padding:12px 16px;background:rgba(19,17,37,.88);border:1px solid #38305c;border-radius:15px}
+#adminApp>.admin-status-card h4{color:#f4edff;font-size:16px}
+#adminApp>.admin-status-card p{margin:0}
+#adminApp>.admin-nav{grid-column:1;grid-row:2/ span 12;position:sticky;top:10px;display:flex;flex-direction:column;gap:7px;padding:10px;border:1px solid #332a55;border-radius:16px;background:linear-gradient(180deg,rgba(27,20,49,.96),rgba(14,15,30,.96));overflow:visible}
+#adminOverlay .admin-nav button{width:100%;text-align:left;padding:12px 13px;border:1px solid transparent;border-radius:10px;background:transparent;color:#c4bfd7;font-size:13px;transition:.18s}
+#adminOverlay .admin-nav button:hover{background:#211a39;color:#fff;border-color:#403269}
+#adminOverlay .admin-nav button.active{background:linear-gradient(100deg,#7d20ee,#a322ec);border-color:#b45cff;color:#fff;box-shadow:0 5px 22px rgba(142,37,255,.28);font-weight:800}
+#adminApp>.admin-page{grid-column:2;grid-row:2;min-width:0}
+#adminOverlay .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#adminOverlay .stat{position:relative;min-width:0;padding:17px 18px;border-radius:14px;background:linear-gradient(145deg,#17172a,#101321);border:1px solid #383052;box-shadow:0 10px 28px rgba(0,0,0,.16)}
+#adminOverlay .stat small{color:#a9a2bd;font-size:12px}
+#adminOverlay .stat b{font-size:25px;color:#f7f4ff;overflow-wrap:anywhere}
+#adminOverlay .stat-sub{color:#49df98}
+#adminOverlay .admin-card{border-color:#332c50;background:rgba(18,19,34,.92);border-radius:15px}
+#adminOverlay .admin-card h4{color:#eee8ff}
+#adminOverlay .field{background:#0c0e1b;border-color:#34304b}
+#adminOverlay .table th{color:#aaa3bd}
+#adminOverlay .table td{border-color:#29283c}
+#adminOverlay .pill.ok{background:#103a2b;color:#5cf0a1}
+#adminOverlay .btn{box-shadow:0 6px 18px rgba(123,47,255,.12)}
+#adminOverlay .admin-page h3{color:#f4edff}
+#adminOverlay #page-dashboard .stats{margin-bottom:14px}
+#adminOverlay #page-dashboard .admin-card{margin-top:13px}
+#adminOverlay #page-users .admin-card{margin-top:18px}
+#adminOverlay #userRows td{vertical-align:middle}
+#adminOverlay .uid-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid #3d345d;border-radius:9px;background:#100f20;color:#cbbaff;font-weight:800;white-space:nowrap}
+#adminOverlay .uid-chip .copy{float:none;padding:5px 7px;border-color:#4a3b70;background:#211936;color:#e9dcff}
+#adminOverlay .customer-name{font-weight:800;color:#f7f4ff}
+#adminOverlay .customer-handle{display:block;color:#9690a9;font-size:11px;margin-top:3px}
+#adminOverlay .join-date{color:#c0bbce;font-size:12px;white-space:nowrap}
+#adminOverlay .wallet-history{display:grid;gap:8px;margin-top:12px}
+#adminOverlay .wallet-history-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #302b46;border-radius:10px;background:#0e101d}
+#adminOverlay .wallet-history-item small{display:block;color:#9993aa;margin-top:4px}
+@media(max-width:760px){
+ #adminOverlay{padding:0!important}
+ #adminOverlay>.modal{height:100dvh!important;max-height:100dvh!important;padding:10px!important;border-radius:0!important}
+ #adminApp{display:flex;flex-direction:column;gap:10px}
+ #adminApp>.admin-status-card{width:100%;order:0}
+ #adminApp>.admin-nav{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;order:1;padding:7px;gap:6px}
+ #adminOverlay .admin-nav button{text-align:center;padding:10px 5px;font-size:11px}
+ #adminApp>.admin-page{width:100%;order:2}
+ #adminOverlay .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #adminOverlay .stat{padding:13px}
+ #adminOverlay .stat b{font-size:21px}
+ #adminOverlay .table{min-width:900px}
+}
+
 </style>
 <style id="prize-probability-style">
 .admin-prize-settings{margin-top:4px;padding:15px;border:1px solid #303340;border-radius:14px;background:#12141d}.admin-prize-title{font-weight:800;font-size:16px;margin-bottom:11px}.admin-prize-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.admin-prize-grid label{display:grid;gap:6px;color:#c9cdd8;font-size:13px;font-weight:700}.admin-prize-grid .field{margin:0}.admin-prize-note{margin-top:9px;color:#858b9e;font-size:12px;line-height:1.45}
@@ -1398,6 +1452,7 @@ input,select,textarea{
           <button class="btn small dark" onclick="switchAdminPage('activities')">🕒 Xem hoạt động</button>
           <button class="btn small danger" onclick="exportAdminData()">⬇️ Xuất dữ liệu</button>
         </div></div>
+        <div class="admin-card admin-status-card"><div><h4>📈 Tổng quan doanh thu & khách hàng</h4><p class="mini">Theo dõi biến động tài khoản, đơn hàng và số dư từ dữ liệu thực tế của shop.</p></div><div class="admin-live"><span class="live-dot"></span><b>Hệ thống đang hoạt động</b></div></div>
         <div class="admin-card"><h4>🔴 Hoạt động mới nhất</h4><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>User</th><th>Hoạt động</th><th>Chi tiết</th><th>IP/thiết bị</th></tr></thead><tbody id="dashboardActivityRows"></tbody></table></div></div>
         <div class="admin-card"><h4>🧾 Đơn hàng mới nhất</h4><div class="table-wrap"><table class="table"><thead><tr><th>Thời gian</th><th>Khách</th><th>Túi</th><th>Giá</th><th>TK game</th><th>MK</th><th></th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
       </div>
@@ -1417,7 +1472,7 @@ input,select,textarea{
 
       <div class="admin-page" id="page-users">
         <h3>👥 Người dùng & số dư</h3><div class="admin-toolbar"><input class="field" id="userSearch" placeholder="Tìm username / tên / UID" oninput="filterUsers()" style="max-width:420px"><button class="btn dark small" onclick="loadUsers()">Làm mới</button></div>
-        <div class="table-wrap"><table class="table"><thead><tr><th>User</th><th>Tên</th><th>UID</th><th>Số dư</th><th>Acc trúng</th><th>Giao dịch</th><th>Tham gia</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Khách hàng</th><th>ID tài khoản</th><th>Số dư</th><th>Acc trúng</th><th>Giao dịch</th><th>Tham gia</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table></div>
         <div class="admin-card"><h4>💰 Cộng / trừ tiền trực tiếp</h4><p class="mini">Chọn tài khoản, nhập số tiền và xác nhận. Giao dịch sẽ cập nhật số dư và lịch sử của khách.</p><div class="admin-form"><select class="field" id="walletTarget"><option value="">-- Chọn người dùng --</option></select><div class="two-col"><input class="field" id="walletAmount" type="number" min="1" step="1" placeholder="Số tiền (VNĐ)"><select class="field" id="walletType"><option value="credit">🟢 Cộng tiền</option><option value="debit">🔴 Trừ tiền</option></select></div><input class="field" id="walletReason" placeholder="Lý do giao dịch (ví dụ: Tri ân khách hàng)"><textarea class="field" id="walletCustomerNotice" rows="3" placeholder="Thông báo gửi riêng cho khách khi cộng tiền (ví dụ: Shop gửi tặng bạn 20.000đ nhân dịp tri ân ❤️). Chỉ hiện khi chọn Cộng tiền."></textarea><p class="mini">Thông báo này sẽ bật lên ở tài khoản khách sau khi được cộng tiền. Khi trừ tiền sẽ không gửi thông báo bật lên.</p><button type="button" class="btn green" onclick="adminWalletAdjust()">Xác nhận cập nhật số dư</button></div></div>
       </div>
 
@@ -1512,7 +1567,12 @@ let bags=[],currentBag=null,currentPlan=0,isRegister=false,isAdmin=false,current
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('vi-VN').format(Number(n||0))+'đ';
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const uid=()=> 'u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);
+const uid=()=>{
+  const used=new Set((typeof getUsers==='function'?getUsers():[]).map(u=>String(u.uid)));
+  let id='';
+  do{id=String(Math.floor(10000000+Math.random()*90000000));}while(used.has(id));
+  return id;
+};
 const rid=()=> 'id_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);
 function read(key,fallback){return readLocal(key,fallback)}
 function write(key,v){
@@ -1806,9 +1866,40 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
   window.addInventory=function(e){
     e.preventDefault();if(!ensureAdmin())return;const login=$('invLogin').value.trim(),pass=$('invPass').value;const a=getInventory();if(a.some(x=>x.login===login&&x.status==='available')){showNotice('TK này đang tồn tại trong kho');return}a.push({id:rid(),bagId:$('invBag').value,login,pass,rank:$('invRank').value.trim(),cardImage:$('invCardImage')?.value.trim()||'',note:$('invNote').value.trim(),status:'available',createdAt:Date.now()});write(STORAGE.inventory,a);logAdmin('add_inventory',login);logActivity('admin_inventory','Admin thêm acc '+login);e.target.reset();showNotice('Đã thêm acc vào kho');loadInventory();renderBags();};
   window.loadUsers=function(){if(!ensureAdmin())return;usersCache=getUsers().map(v=>({key:v.uid,v}));renderUsers(usersCache)};
-  window.renderUsers=function(arr){$('userRows').innerHTML=arr.map(x=>{const u=x.v;const orders=getOrders().filter(o=>o.uid===u.uid);return `<tr><td><b>${esc(u.username)}</b></td><td>${esc(u.name||'')}</td><td class="mini">${esc(u.uid)}</td><td><b id="ub-${esc(x.key)}">${money(u.balance)}</b></td><td>${u.wonAccounts?.length||0}</td><td>${orders.length}</td><td>${esc(new Date(u.createdAt||Date.now()).toLocaleString('vi-VN'))}</td><td><button class="btn green small" onclick="adjustUser('${esc(x.key)}',1)">+ tiền</button> <button class="btn danger small" onclick="adjustUser('${esc(x.key)}',-1)">- tiền</button> <button class="btn dark small" onclick="viewUserDetail('${esc(x.key)}')">Chi tiết</button></td></tr>`}).join('')||'<tr><td colspan="8" class="empty">Chưa có user</td></tr>';};
+  window.renderUsers=function(arr){
+    const rows=arr.map(x=>{
+      const u=x.v,orders=getOrders().filter(o=>o.uid===u.uid),displayName=u.name||u.username||'Khách hàng';
+      const joined=new Date(u.createdAt||Date.now()).toLocaleDateString('vi-VN');
+      const uidText=String(u.uid||'');
+      return `<tr>
+        <td><span class="customer-name">${esc(displayName)}</span><span class="customer-handle">@${esc(u.username||'')}</span></td>
+        <td><span class="uid-chip">ID: ${esc(uidText)} <button class="copy" title="Sao chép ID" onclick="copyValue('${encodeURIComponent(uidText)}','ID khách hàng')">⧉</button></span></td>
+        <td><b id="ub-${esc(x.key)}">${money(u.balance)}</b></td>
+        <td>${u.wonAccounts?.length||0}</td><td>${orders.length}</td>
+        <td><span class="join-date">Tham gia: ${esc(joined)}</span></td>
+        <td><button class="btn green small" onclick="adjustUser('${esc(x.key)}',1)">+ tiền</button> <button class="btn danger small" onclick="adjustUser('${esc(x.key)}',-1)">- tiền</button> <button class="btn dark small" onclick="viewUserDetail('${esc(x.key)}')">Chi tiết</button></td>
+      </tr>`;
+    });
+    $('userRows').innerHTML=rows.join('')||'<tr><td colspan="7" class="empty">Chưa có user</td></tr>';
+  };
   window.viewUserDetail=function(id){if(!ensureAdmin())return;const u=getUsers().find(x=>x.uid===id);if(!u)return;const o=getOrders().filter(x=>x.uid===id).slice().reverse();const a=getActivities().filter(x=>x.uid===id).slice().reverse();alert(`USER: ${u.username}\nUID: ${u.uid}\nSố dư: ${money(u.balance)}\nAcc trúng: ${u.wonAccounts?.length||0}\nGiao dịch: ${o.length}\nHoạt động ghi nhận: ${a.length}`);};
-  window.adjustUser=function(id,m){if(!ensureAdmin())return;const u=getUsers().find(x=>x.uid===id);if(!u)return;const n=prompt('Nhập số tiền cần '+(m>0?'cộng':'trừ'));if(n===null)return;const amount=Number(n);if(!Number.isFinite(amount)||amount<=0)return;const old=Number(u.balance||0),next=Math.max(0,old+m*amount);u.balance=next;u.transactionHistory=u.transactionHistory||[];u.transactionHistory.unshift({id:rid(),type:m>0?'admin_credit':'admin_debit',amount,balanceBefore:old,balanceAfter:next,createdAt:Date.now(),admin:ADMIN_USERNAME});write(STORAGE.users,getUsers());logAdmin(m>0?'credit_balance':'debit_balance',`${u.username} ${amount} → ${next}`);logActivity('balance',`${m>0?'Cộng':'Trừ'} ${money(amount)} cho ${u.username}`);showNotice('Đã cập nhật số dư');loadUsers();refreshAuthUI();};
+  window.adjustUser=async function(id,m){
+    if(!ensureAdmin())return;
+    const u=getUsers().find(x=>x.uid===id);if(!u)return;
+    const n=prompt('Nhập số tiền cần '+(m>0?'cộng':'trừ'));if(n===null)return;
+    const amount=Number(n);if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return}
+    const reason=prompt('Nhập lý do '+(m>0?'cộng':'trừ')+' tiền (sẽ lưu trong lịch sử):','Admin điều chỉnh số dư');
+    if(reason===null)return;
+    const cleanReason=reason.trim()||'Admin điều chỉnh số dư';
+    const before=Number(u.balance||0),after=before+m*amount;
+    if(after<0){showNotice('Số dư khách không đủ để trừ');return}
+    u.balance=after;u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+    u.transactionHistory.unshift({id:rid(),type:m>0?'admin_credit':'admin_debit',amount,balanceBefore:before,balanceAfter:after,reason:cleanReason,createdAt:Date.now(),admin:ADMIN_USERNAME});
+    write(STORAGE.users,getUsers());
+    logAdmin(m>0?'credit_balance':'debit_balance',`${u.username} · ${money(amount)} · ${cleanReason}`);
+    if(typeof logActivity==='function')logActivity('balance',`${m>0?'Cộng':'Trừ'} ${money(amount)} cho ${u.username}: ${cleanReason}`);
+    showNotice('Đã cập nhật số dư và lưu lý do giao dịch');loadUsers();refreshAuthUI();
+  }
   window.loadOrders=function(){if(!ensureAdmin())return;const f=$('orderFilter')?.value||'all',q=($('orderSearch')?.value||'').toLowerCase().trim();const a=getOrders().slice().reverse().filter(x=>(f==='all'||x.status===f)&&(!q||JSON.stringify(x).toLowerCase().includes(q)));$('orderRows').innerHTML=a.map(x=>`<tr><td class="mini">${esc(x.id)}</td><td>${esc(x.username||x.uid)}</td><td>${esc(x.bagName)}</td><td><b>${money(x.price)}</b></td><td><b>${esc(x.rewardLogin||'')}</b></td><td><b>${esc(x.rewardPass||'')}</b></td><td>${esc(x.rewardRank||'')}</td><td>${esc(new Date(x.createdAt||Date.now()).toLocaleString('vi-VN'))}</td><td><button class="btn dark small" onclick="copyOrderField('${esc(x.id)}','login')">Copy TK</button> <button class="btn dark small" onclick="copyOrderField('${esc(x.id)}','pass')">Copy MK</button></td></tr>`).join('')||'<tr><td colspan="9" class="empty">Không có đơn</td></tr>';};
   window.loadDeposits=function(){if(!ensureAdmin())return;const f=$('depositFilter')?.value||'all';const a=getDeposits().slice().reverse().filter(x=>f==='all'||x.status===f);$('depositRows').innerHTML=a.map(x=>`<tr><td><b>${esc(x.username||x.uid)}</b></td><td><b>${money(x.amount)}</b></td><td>${esc(x.method)}</td><td>${esc(x.transferContent||'-')}</td><td>${esc(x.serial||'-')}</td><td>${esc(x.cardCode||'-')}</td><td><span class="pill ${x.status==='approved'?'ok':x.status==='rejected'||x.status==='expired'?'bad':'warn'}">${esc(x.status)}</span></td><td>${esc(new Date(x.createdAt||Date.now()).toLocaleString('vi-VN'))}</td><td>${x.status==='pending'?`<button class="btn green small" onclick="approveDeposit('${esc(x.id)}')">Duyệt</button> <button class="btn danger small" onclick="rejectDeposit('${esc(x.id)}')">Từ chối</button>`:''}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">Không có yêu cầu</td></tr>';};
   const oldApprove=approveDeposit;
@@ -3154,6 +3245,19 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     showNotice(`${type==='credit'?'Đã cộng':'Đã trừ'} ${money(amount)} cho ${username}`);
   };
 
+  // Fill the admin wallet selector and show customer display names with numeric IDs.
+  const baseLoadUsersForWallet=window.loadUsers;
+  window.loadUsers=function(){
+    if(!ensureAdmin())return;
+    usersCache=getUsers().map(v=>({key:v.uid,v}));
+    renderUsers(usersCache);
+    const select=$('walletTarget');
+    if(select){
+      const selected=select.value;
+      select.innerHTML='<option value="">-- Chọn người dùng --</option>'+usersCache.map(x=>`<option value="${esc(x.key)}">${esc(x.v.name||x.v.username)} (@${esc(x.v.username)}) · ID ${esc(x.v.uid)} · ${money(x.v.balance)}</option>`).join('');
+      if(usersCache.some(x=>String(x.key)===String(selected)))select.value=selected;
+    }
+  };
   const previousRenderAccountTab=window.renderAccountTab;
   window.renderAccountTab=function(tab){
     if(previousRenderAccountTab)previousRenderAccountTab(tab);
