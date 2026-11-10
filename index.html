@@ -2844,6 +2844,268 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   setTimeout(()=>{try{if(isAdmin)setAdminPresence(true);}catch(e){}},500);
 })();
 </script>
+
+
+<script id="shopcenavn-auth-balance-fix-2026">
+(function () {
+  'use strict';
+
+  const USERS_REF = 'shopcenavn/users';
+  const asUsers = value => Array.isArray(value)
+    ? value.filter(Boolean)
+    : (value && typeof value === 'object' ? Object.values(value).filter(Boolean) : []);
+
+  // Keep the existing UI compatible even if old Firebase data was stored as an object.
+  window.getUsers = function () {
+    const raw = readLocal(STORAGE.users, []);
+    return asUsers(raw);
+  };
+
+  function saveUsersLocal(users) {
+    writeLocal(STORAGE.users, asUsers(users));
+  }
+
+  async function readUsersFromFirebase() {
+    if (!(firebaseDB && firebaseSyncReady)) return null;
+    const snap = await firebaseDB.ref(USERS_REF).once('value');
+    return asUsers(snap.val());
+  }
+
+  async function transactUsers(mutator) {
+    if (!(firebaseDB && firebaseSyncReady)) {
+      const local = getUsers();
+      const result = mutator(local);
+      if (result === undefined) return { committed: false, users: local };
+      saveUsersLocal(local);
+      return { committed: true, users: local, result };
+    }
+
+    const ref = firebaseDB.ref(USERS_REF);
+    let callbackResult;
+    const tx = await ref.transaction(current => {
+      const users = asUsers(current);
+      callbackResult = mutator(users);
+      if (callbackResult === undefined) return; // abort
+      return users;
+    });
+    if (!tx.committed) return { committed: false, users: asUsers(tx.snapshot.val()) };
+    const users = asUsers(tx.snapshot.val());
+    saveUsersLocal(users);
+    return { committed: true, users, result: callbackResult };
+  }
+
+  // Registration and login read the authoritative user list only after Firebase responds.
+  window.submitAuth = async function (event) {
+    if (event && event.preventDefault) event.preventDefault();
+
+    const login = normalizeLogin($('authEmail')?.value);
+    const pass = String($('authPass')?.value || '');
+    const message = $('authMsg');
+    if (message) message.textContent = '';
+
+    if (!login) { if (message) message.textContent = 'Nhập tên đăng nhập'; return; }
+    if (!/^[a-z0-9._-]{3,32}$/.test(login)) {
+      if (message) message.textContent = 'Tên đăng nhập 3–32 ký tự, chỉ dùng chữ, số, . _ -';
+      return;
+    }
+    if (pass.length < 6) { if (message) message.textContent = 'Mật khẩu tối thiểu 6 ký tự'; return; }
+
+    if (login === ADMIN_USERNAME) {
+      if (isRegister) { if (message) message.textContent = 'Tên đăng nhập này đã được hệ thống quản trị sử dụng'; return; }
+      if (pass !== ADMIN_PASSWORD) { if (message) message.textContent = 'Sai tên đăng nhập hoặc mật khẩu'; return; }
+      const session = { uid: 'admin', username: ADMIN_USERNAME, name: 'Quản trị viên', admin: true, createdAt: Date.now() };
+      write(STORAGE.session, session);
+      isAdmin = true; refreshAuthUI(session); closeModal('authOverlay');
+      if (typeof logActivity === 'function') logActivity('login', 'admin_login', session);
+      showNotice('Đăng nhập admin thành công');
+      return;
+    }
+
+    const submit = $('authSubmit');
+    if (submit) { submit.disabled = true; submit.textContent = 'Đang kiểm tra...'; }
+
+    try {
+      let users;
+      if (firebaseDB && firebaseSyncReady) {
+        // A read here prevents login from checking an empty/stale LocalStorage copy.
+        users = await readUsersFromFirebase();
+        if (!users) users = [];
+      } else {
+        users = getUsers();
+      }
+
+      if (isRegister) {
+        if (firebaseDB && firebaseSyncReady) {
+          const settingsSnap = await firebaseDB.ref('shopcenavn/settings').once('value');
+          const settings = settingsSnap.val() || {};
+          if (settings.registerOpen === false) {
+            if (message) message.textContent = 'Shop đang tạm khóa đăng ký';
+            return;
+          }
+        } else if (getSettings().registerOpen === false) {
+          if (message) message.textContent = 'Shop đang tạm khóa đăng ký';
+          return;
+        }
+
+        const newUser = {
+          uid: uid(),
+          username: login,
+          name: String($('authName')?.value || login).trim() || login,
+          password: pass,
+          balance: 0,
+          createdAt: Date.now(),
+          wonAccounts: [],
+          transactionHistory: [],
+          depositCredits: []
+        };
+
+        if (firebaseDB && firebaseSyncReady) {
+          const result = await transactUsers(list => {
+            if (list.some(user => normalizeLogin(user.username) === login)) return undefined;
+            list.push(newUser);
+            return newUser;
+          });
+          if (!result.committed) {
+            if (message) message.textContent = 'Tên đăng nhập đã tồn tại hoặc Firebase không cho phép lưu tài khoản';
+            return;
+          }
+        } else {
+          if (users.some(user => normalizeLogin(user.username) === login)) {
+            if (message) message.textContent = 'Tên đăng nhập đã tồn tại';
+            return;
+          }
+          users.push(newUser);
+          saveUsersLocal(users);
+        }
+
+        const session = { uid: newUser.uid, username: newUser.username, name: newUser.name, admin: false, createdAt: newUser.createdAt };
+        write(STORAGE.session, session);
+        isAdmin = false; refreshAuthUI(session); closeModal('authOverlay');
+        if (typeof logActivity === 'function') logActivity('register', 'Tạo tài khoản mới', session);
+        showNotice('Đăng ký thành công');
+      } else {
+        // Use the fresh Firebase result, not the potentially stale browser cache.
+        const user = users.find(item => normalizeLogin(item.username) === login && String(item.password || '') === pass);
+        if (!user) {
+          if (message) message.textContent = 'Sai tên đăng nhập hoặc mật khẩu';
+          if (typeof logActivity === 'function') logActivity('login_failed', 'username=' + login);
+          return;
+        }
+        const session = { uid: user.uid, username: user.username, name: user.name || user.username, admin: false, createdAt: user.createdAt || Date.now() };
+        write(STORAGE.session, session);
+        isAdmin = false; refreshAuthUI(session); closeModal('authOverlay');
+        if (typeof logActivity === 'function') logActivity('login', 'Đăng nhập thành công', session);
+        showNotice('Đăng nhập thành công');
+      }
+    } catch (error) {
+      console.error('Authentication/Firebase error:', error);
+      if (message) message.textContent = (firebaseDB && firebaseSyncReady)
+        ? 'Không kết nối/lưu được Firebase. Kiểm tra Database Rules và kết nối mạng.'
+        : 'Không thể xử lý tài khoản. Vui lòng thử lại.';
+    } finally {
+      if (submit) { submit.disabled = false; submit.textContent = isRegister ? 'Đăng ký' : 'Đăng nhập'; }
+    }
+  };
+
+  // Atomic balance updates prevent stale whole-list writes from overwriting another update.
+  window.adjustUser = async function (id, direction) {
+    if (!ensureAdmin()) return;
+    const raw = prompt('Nhập số tiền cần ' + (direction > 0 ? 'cộng' : 'trừ'));
+    if (raw === null) return;
+    const amount = Number(raw);
+    if (!Number.isFinite(amount) || amount <= 0) { showNotice('Số tiền không hợp lệ'); return; }
+
+    try {
+      const now = Date.now();
+      const tx = await transactUsers(users => {
+        const user = users.find(item => item.uid === id);
+        if (!user) return undefined;
+        const before = Number(user.balance || 0);
+        const after = Math.max(0, before + (direction > 0 ? amount : -amount));
+        if (direction < 0 && before < amount) return { insufficient: true };
+        user.balance = after;
+        user.transactionHistory = Array.isArray(user.transactionHistory) ? user.transactionHistory : [];
+        user.transactionHistory.unshift({
+          id: rid(), type: direction > 0 ? 'admin_credit' : 'admin_debit',
+          amount, balanceBefore: before, balanceAfter: after, createdAt: now, admin: ADMIN_USERNAME
+        });
+        return { username: user.username, before, after };
+      });
+
+      if (!tx.committed) {
+        showNotice('Không tìm thấy khách hoặc Firebase không lưu được thay đổi');
+        return;
+      }
+      if (tx.result?.insufficient) { showNotice('Số dư khách không đủ để trừ'); return; }
+
+      logAdmin(direction > 0 ? 'credit_balance' : 'debit_balance',
+        `${tx.result.username} ${amount} → ${tx.result.after}`);
+      if (typeof logActivity === 'function') {
+        logActivity('balance', `${direction > 0 ? 'Cộng' : 'Trừ'} ${money(amount)} cho ${tx.result.username}`);
+      }
+      showNotice('Đã cập nhật số dư thành công: ' + money(tx.result.after));
+      loadUsers();
+      if (currentUser()?.uid === id) refreshAuthUI();
+    } catch (error) {
+      console.error('Balance update failed:', error);
+      showNotice('Cập nhật thất bại. Kiểm tra Firebase Database Rules/kết nối mạng.');
+    }
+  };
+
+  // Deposit approval is idempotent: retrying an approval cannot credit the same deposit twice.
+  window.approveDeposit = async function (depositId) {
+    if (!ensureAdmin()) return;
+    const deposits = getDeposits();
+    const deposit = deposits.find(item => item.id === depositId);
+    if (!deposit || deposit.status !== 'pending') return;
+
+    const amount = Number(deposit.amount || 0);
+    if (!Number.isFinite(amount) || amount <= 0) { showNotice('Số tiền nạp không hợp lệ'); return; }
+
+    try {
+      const now = Date.now();
+      const tx = await transactUsers(users => {
+        const user = users.find(item => item.uid === deposit.uid);
+        if (!user) return undefined;
+        user.depositCredits = Array.isArray(user.depositCredits) ? user.depositCredits : [];
+        user.transactionHistory = Array.isArray(user.transactionHistory) ? user.transactionHistory : [];
+
+        if (!user.depositCredits.includes(depositId)) {
+          const before = Number(user.balance || 0);
+          user.balance = before + amount;
+          user.depositCredits.push(depositId);
+          user.transactionHistory.unshift({
+            id: rid(), type: 'deposit', depositId, amount,
+            balanceBefore: before, balanceAfter: user.balance,
+            createdAt: now, admin: ADMIN_USERNAME
+          });
+        }
+        return { username: user.username, balance: Number(user.balance || 0) };
+      });
+
+      if (!tx.committed) { showNotice('Không tìm thấy khách hoặc không lưu được số dư'); return; }
+
+      const latest = getDeposits();
+      const current = latest.find(item => item.id === depositId);
+      if (current && current.status === 'pending') {
+        current.status = 'approved';
+        current.approvedAt = now;
+        current.approvedBy = ADMIN_USERNAME;
+        current.creditedAmount = amount;
+        write(STORAGE.deposits, latest);
+      }
+      logAdmin('approve_deposit', depositId + ' +' + amount + ' → ' + (tx.result.username || deposit.uid));
+      if (typeof logActivity === 'function') logActivity('admin_deposit', 'Admin duyệt nạp ' + depositId + ' +' + money(amount));
+      showNotice('Đã duyệt và cộng ' + money(amount) + ' cho khách');
+      loadDeposits(); loadDashboard(); updateHeader();
+    } catch (error) {
+      console.error('Deposit approval failed:', error);
+      showNotice('Duyệt nạp thất bại. Kiểm tra Firebase Rules/kết nối mạng.');
+    }
+  };
+})();
+</script>
+
 </body>
 
 <style id="final-force-mystery-plans-v3">
