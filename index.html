@@ -2920,6 +2920,8 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     saveUsersLocal(users);
     return { committed: true, users, result: callbackResult };
   }
+  // Public bridge used by the admin balance/gift tools.
+  window.transactUsers = transactUsers;
 
   // Registration and login read the authoritative user list only after Firebase responds.
   window.submitAuth = async function (event) {
@@ -3488,188 +3490,303 @@ html,body{
 </script>
 
 
-<script id="shopcenavn-admin-gift-and-numeric-uid">
-(function(){
-  const $id = id => document.getElementById(id);
-  const digits = () => String(Date.now()) + String(Math.floor(Math.random()*1000000)).padStart(6,'0');
-  const safeText = v => String(v == null ? '' : v);
-  let migrationRunning = false;
 
+<script id="shopcenavn-admin-gift-numeric-fix-v2">
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const usersPath = 'shopcenavn/users';
+  let busy = false;
+  const numericId = () => String(Date.now()) + String(Math.floor(Math.random()*1000000)).padStart(6,'0');
+  const asArray = v => Array.isArray(v) ? v.filter(Boolean) : (v && typeof v==='object' ? Object.values(v).filter(Boolean) : []);
+  const escText = v => String(v == null ? '' : v);
+
+  function getUsersNow(){ return asArray(typeof getUsers==='function' ? getUsers() : []); }
+  function notify(text){ if(typeof showNotice==='function')showNotice(text); else alert(text); }
+
+  // The option value remains the exact stored UID; only the visible text is presentation.
   function fillGiftUsers(){
-    const select=$id('giftUserSelect');
-    if(!select || typeof getUsers!=='function') return;
-    const old=select.value;
-    const users=getUsers();
-    select.innerHTML='<option value="">-- Chọn người dùng --</option>'+users.map(u=>
-      '<option value="'+safeText(u.uid).replace(/[^0-9]/g,'')+'">'+
-      safeText(u.username)+' · '+safeText(u.name||'')+' · '+(typeof money==='function'?money(u.balance):u.balance||0)+
-      '</option>').join('');
-    if(old && Array.from(select.options).some(o=>o.value===old)) select.value=old;
+    const sel=$('giftUserSelect'); if(!sel)return;
+    const previous=sel.value;
+    const users=getUsersNow();
+    sel.innerHTML='<option value="">-- Chọn người dùng --</option>'+users.map(u=>{
+      const id=escText(u.uid);
+      const visibleId=/^\d+$/.test(id)?id:'ID chưa chuyển đổi';
+      return '<option value="'+id.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'">'+
+        escText(u.username)+' · ID '+visibleId+' · '+(typeof money==='function'?money(u.balance):escText(u.balance))+'</option>';
+    }).join('');
+    if(previous && Array.from(sel.options).some(o=>o.value===previous))sel.value=previous;
+  }
+
+  function appendNotice(user, item){
+    user.balanceNotifications=Array.isArray(user.balanceNotifications)?user.balanceNotifications:[];
+    user.balanceNotifications.unshift(item);
+    if(user.balanceNotifications.length>30)user.balanceNotifications.length=30;
   }
 
   window.submitAdminGift=async function(event){
-    event.preventDefault();
-    if(typeof ensureAdmin==='function' && !ensureAdmin()) return;
-    const uid=$id('giftUserSelect')?.value;
-    const amount=Number($id('giftAmount')?.value);
-    const direction=Number($id('giftDirection')?.value||1);
-    const reason=($id('giftReason')?.value||'').trim();
-    const message=($id('giftMessage')?.value||'').trim();
-    if(!uid){showNotice('Vui lòng chọn khách hàng');return;}
-    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
-    if(!reason){showNotice('Vui lòng nhập lý do giao dịch');return;}
+    if(event)event.preventDefault();
+    if(typeof ensureAdmin==='function'&&!ensureAdmin())return;
+    if(busy)return;
+    const selected=$('giftUserSelect')?.value;
+    const amount=Number($('giftAmount')?.value);
+    const direction=Number($('giftDirection')?.value||1);
+    const reason=String($('giftReason')?.value||'').trim();
+    const message=String($('giftMessage')?.value||'').trim();
+    if(!selected){notify('Vui lòng chọn khách hàng');return;}
+    if(!Number.isSafeInteger(amount)||amount<=0){notify('Số tiền không hợp lệ');return;}
+    if(!reason){notify('Vui lòng nhập lý do giao dịch');return;}
+    if(!window.transactUsers){notify('Chức năng lưu giao dịch chưa sẵn sàng. Tải lại website.');return;}
+    busy=true;
+    const submit=$('adminGiftForm')?.querySelector('button[type="submit"]');
+    if(submit){submit.disabled=true;submit.textContent='Đang xử lý...';}
     try{
       const now=Date.now();
-      const tx=await transactUsers(users=>{
-        const user=users.find(u=>String(u.uid)===String(uid));
+      const result=await window.transactUsers(list=>{
+        const user=list.find(u=>String(u.uid)===String(selected));
         if(!user)return undefined;
         const before=Number(user.balance||0);
-        if(direction<0 && before<amount)return {insufficient:true};
+        if(direction<0&&before<amount)return {insufficient:true};
         const after=before+(direction>0?amount:-amount);
         user.balance=after;
         user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
         user.transactionHistory.unshift({
-          id:rid(),type:direction>0?'admin_credit':'admin_debit',amount,
-          balanceBefore:before,balanceAfter:after,reason,createdAt:now,admin:ADMIN_USERNAME
+          id:typeof rid==='function'?rid():numericId(),
+          type:direction>0?'admin_credit':'admin_debit',
+          amount,balanceBefore:before,balanceAfter:after,
+          reason,createdAt:now,admin:typeof ADMIN_USERNAME!=='undefined'?ADMIN_USERNAME:'admin'
         });
-        if(direction>0 && message){
-          user.giftNotifications=Array.isArray(user.giftNotifications)?user.giftNotifications:[];
-          user.giftNotifications.unshift({id:rid(),title:'🎁 Quà tri ân từ SHOPCENAVN',message,amount,reason,createdAt:now,read:false});
-        }
-        return {username:user.username,after};
+        appendNotice(user,{
+          id:numericId(),type:direction>0?'credit':'debit',
+          title:direction>0?'🎉 Chúc mừng! Bạn vừa được cộng tiền':'⚠️ Thông báo điều chỉnh số dư',
+          amount,reason,
+          message:message || (direction>0?'Shop gửi tặng bạn một món quà tri ân.':('Số dư của bạn đã được điều chỉnh. Lý do: '+reason)),
+          createdAt:now,read:false
+        });
+        return {username:user.username,uid:user.uid,before,after};
       });
-      if(!tx.committed){showNotice('Không tìm thấy khách hoặc không lưu được dữ liệu');return;}
-      if(tx.result?.insufficient){showNotice('Số dư khách không đủ để trừ');return;}
-      if(typeof logAdmin==='function')logAdmin(direction>0?'credit_balance':'debit_balance',tx.result.username+' '+amount+' '+reason);
-      if(typeof logActivity==='function')logActivity('balance',(direction>0?'Cộng ':'Trừ ')+money(amount)+' cho '+tx.result.username+' · '+reason);
-      showNotice('Đã cập nhật số dư: '+money(tx.result.after)+(direction>0&&message?' · Đã gửi quà tri ân':''));
-      $id('adminGiftForm')?.reset();
+      if(!result||!result.committed){notify('Không tìm thấy khách hàng hoặc dữ liệu chưa được lưu. Hãy tải lại danh sách khách.');return;}
+      if(result.result?.insufficient){notify('Số dư khách không đủ để trừ');return;}
+      if(typeof logAdmin==='function')logAdmin(direction>0?'credit_balance':'debit_balance',
+        result.result.username+' '+(direction>0?'+':'-')+amount+' · '+reason);
+      if(typeof logActivity==='function')logActivity('balance',
+        (direction>0?'Cộng ':'Trừ ')+(typeof money==='function'?money(amount):amount)+' cho '+result.result.username+' · '+reason);
+      notify(direction>0?'🎉 Đã cộng tiền và gửi thông báo thành công!':'⚠️ Đã trừ tiền và gửi cảnh báo thành công!');
+      $('adminGiftForm')?.reset();
       fillGiftUsers();
       if(typeof loadUsers==='function')loadUsers();
       if(typeof updateHeader==='function')updateHeader();
-    }catch(err){console.error(err);showNotice('Giao dịch thất bại. Kiểm tra kết nối Firebase.');}
+    }catch(err){
+      console.error('Admin credit/debit failed:',err);
+      notify('Không lưu được giao dịch: '+(err?.message||'Lỗi Firebase/Database Rules'));
+    }finally{
+      busy=false;
+      if(submit){submit.disabled=false;submit.textContent='🎁 Xác nhận giao dịch & gửi quà';}
+    }
   };
 
-  window.loadGiftAdmin=function(){fillGiftUsers();};
+  function remapDeep(value,map){
+    if(Array.isArray(value))return value.map(v=>remapDeep(v,map));
+    if(!value||typeof value!=='object')return value;
+    const out={};
+    Object.keys(value).forEach(k=>{
+      const v=value[k];
+      if(['uid','useruid','customeruid','userid','soldto','owneruid','approvedbyuid'].includes(k.toLowerCase()) && v!=null){
+        out[k]=map[String(v)]||v;
+      }else{
+        out[k]=remapDeep(v,map);
+      }
+    });
+    return out;
+  }
+  function remapKeyedObject(obj,map){
+    if(!obj||typeof obj!=='object'||Array.isArray(obj))return obj;
+    const out={};
+    Object.keys(obj).forEach(k=>{
+      const nk=map[k]||k;
+      out[nk]=remapDeep(obj[k],map);
+    });
+    return out;
+  }
 
   window.normalizeAllUserIds=async function(){
     if(typeof ensureAdmin==='function'&&!ensureAdmin())return;
-    if(migrationRunning)return;
-    if(!confirm('Xác nhận đổi UID của toàn bộ người dùng sang dạng chỉ có chữ số? Các dữ liệu liên quan sẽ được cập nhật.'))return;
-    migrationRunning=true;
-    const status=$id('uidMigrationStatus');
-    if(status)status.textContent='Đang chuẩn hóa ID...';
+    if(busy)return;
+    const status=$('uidMigrationStatus');
+    busy=true;
+    if(status)status.textContent='Đang kiểm tra và chuẩn hóa UID...';
     try{
-      const users=typeof getUsers==='function'?getUsers():[];
+      let root={};
+      if(firebaseDB&&firebaseSyncReady){
+        const snap=await firebaseDB.ref('shopcenavn').once('value');
+        root=snap.val()||{};
+      }
+      const sourceUsers=asArray((firebaseDB&&firebaseSyncReady)?root.users:getUsersNow());
       const map={};
-      const used=new Set(users.map(u=>String(u.uid||'')).filter(x=>/^\d+$/.test(x)));
-      users.forEach(u=>{
+      const used=new Set(sourceUsers.map(u=>String(u.uid||'')).filter(id=>/^\d+$/.test(id)));
+      sourceUsers.forEach(u=>{
         const old=String(u.uid||'');
+        if(!old)throw new Error('Phát hiện tài khoản không có UID; dừng để tránh mất liên kết.');
         if(/^\d+$/.test(old)){map[old]=old;return;}
         let next;
-        do{next=digits();}while(used.has(next));
-        used.add(next);map[old]=next;u.uid=next;
+        do{next=numericId();}while(used.has(next));
+        used.add(next);map[old]=next;
+        u.previousUids=Array.isArray(u.previousUids)?u.previousUids:[];
+        if(!u.previousUids.includes(old))u.previousUids.push(old);
+        u.uid=next;
       });
-      const replaceUid=x=>map[String(x)]||x;
-      const session=typeof getSession==='function'?getSession():null;
-      if(session && map[String(session.uid)]){session.uid=map[String(session.uid)];write(STORAGE.session,session);}
-      const updateArray=(key,fn)=>{
-        const arr=readLocal(STORAGE[key],[]);
-        if(Array.isArray(arr)){fn(arr);write(STORAGE[key],arr);}
-      };
-      // Commit user records first, then update every stored foreign-key reference.
-      if(firebaseDB&&firebaseSyncReady){
-        await firebaseDB.ref('shopcenavn/users').set(users);
+      const changed=Object.keys(map).filter(old=>old!==map[old]).length;
+      if(!changed){
+        if(status)status.textContent='Tất cả ID người dùng đã là số.';
+        fillGiftUsers();return;
       }
-      write(STORAGE.users,users);
-      updateArray('orders',arr=>arr.forEach(x=>{if(x&&x.uid)x.uid=replaceUid(x.uid);}));
-      updateArray('deposits',arr=>arr.forEach(x=>{if(x&&x.uid)x.uid=replaceUid(x.uid);}));
-      updateArray('logs',arr=>arr.forEach(x=>{if(x&&x.uid)x.uid=replaceUid(x.uid);}));
-      try{
-        const activityKey='shopcenavn_activities_v4';
-        const activity=JSON.parse(localStorage.getItem(activityKey)||'[]');
-        if(Array.isArray(activity)){activity.forEach(x=>{if(x&&x.uid)x.uid=replaceUid(x.uid);});localStorage.setItem(activityKey,JSON.stringify(activity));}
-      }catch(e){}
-      // Re-key support conversations so customers keep their existing message history.
+
+      // Update related Firebase branches together in one multi-location write.
+      const updates={users:sourceUsers};
+      ['orders','deposits','inventory','logs','activities'].forEach(key=>{
+        if(root[key]!==undefined)updates[key]=remapDeep(root[key],map);
+      });
+      if(root.supportMessages!==undefined)updates.supportMessages=remapKeyedObject(root.supportMessages,map);
       if(firebaseDB&&firebaseSyncReady){
-        const ref=firebaseDB.ref('shopcenavn/supportMessages');
-        const snap=await ref.once('value');
-        const data=snap.val()||{};
-        let changed=false;
-        Object.keys(map).forEach(old=>{
-          if(old!==map[old] && data[old]){
-            data[map[old]]=data[old];
-            Object.keys(data[map[old]]||{}).forEach(k=>{const msg=data[map[old]][k];if(msg&&msg.uid)msg.uid=replaceUid(msg.uid);});
-            delete data[old];changed=true;
-          }
-        });
-        if(changed)await ref.set(data);
+        await firebaseDB.ref('shopcenavn').update(updates);
       }
-      if(status)status.textContent='Đã chuẩn hóa '+Object.keys(map).filter(k=>k!==map[k]).length+' UID. Các ID mới chỉ gồm chữ số.';
-      if(typeof loadUsers==='function')loadUsers();
-      if(typeof loadDashboard==='function')loadDashboard();
+
+      // Mirror all updated branches locally so the current browser and account modal use new IDs.
+      const storageMap={users:'users',orders:'orders',deposits:'deposits',inventory:'inventory',logs:'logs',activities:'activities'};
+      Object.keys(storageMap).forEach(key=>{
+        const localKey=STORAGE[key];
+        if(!localKey)return;
+        const value=(updates[key]!==undefined)?updates[key]:remapDeep(readLocal(localKey,[]),map);
+        localStorage.setItem(localKey,JSON.stringify(value));
+      });
+      const session=getSession&&getSession();
+      if(session&&map[String(session.uid)]){
+        session.uid=map[String(session.uid)];
+        localStorage.setItem(STORAGE.session,JSON.stringify(session));
+      }
+      // Keep a selected support thread pointing to its newly-keyed path.
+      if(typeof window.supportAdminSelected!=='undefined' && map[String(window.supportAdminSelected)]){
+        window.supportAdminSelected=map[String(window.supportAdminSelected)];
+      }
+      window.dispatchEvent(new Event('shop-storage-change'));
+      if(status)status.textContent='Đã đổi '+changed+' ID sang dạng chỉ có chữ số và cập nhật dữ liệu liên quan.';
       fillGiftUsers();
-      showNotice('Đã đổi ID người dùng sang dạng số');
+      if(typeof loadUsers==='function')loadUsers();
+      if(typeof updateHeader==='function')updateHeader();
+      notify('Đã chuẩn hóa '+changed+' ID người dùng thành số.');
     }catch(err){
-      console.error('UID migration failed',err);
-      if(status)status.textContent='Không thể hoàn tất. Kiểm tra Firebase Rules/kết nối rồi thử lại.';
-      showNotice('Chuẩn hóa UID thất bại');
-    }finally{migrationRunning=false;}
+      console.error('UID migration failed:',err);
+      if(status)status.textContent='Không thể chuyển ID: '+(err?.message||'Lỗi kết nối hoặc quyền Firebase');
+      notify('Chuyển ID thất bại: '+(err?.message||'Kiểm tra Firebase Rules'));
+    }finally{busy=false;}
   };
 
-  // Add the new admin page to the existing navigation without changing other pages.
-  const oldSwitch=window.switchAdminPage;
-  window.switchAdminPage=function(page){
-    if(page!=='gift'){if(typeof oldSwitch==='function')return oldSwitch(page);return;}
-    if(typeof ensureAdmin==='function'&&!ensureAdmin())return;
-    document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-    document.querySelectorAll('.admin-page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));
-    fillGiftUsers();
-  };
-
-  function showGiftNotifications(user){
-    if(!user || !Array.isArray(user.giftNotifications))return;
-    const pending=user.giftNotifications.filter(n=>n&&!n.read);
-    if(!pending.length)return;
-    const n=pending[0];
+  // Customer-facing modal with distinct celebration and deduction warning states.
+  function showBalanceNotification(user){
+    const list=Array.isArray(user?.balanceNotifications)?user.balanceNotifications:[];
+    const item=list.find(x=>x&&!x.read);
+    if(!item||document.getElementById('balanceNoticeOverlay'))return;
+    const positive=item.type==='credit';
     const overlay=document.createElement('div');
-    overlay.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:18px';
+    overlay.id='balanceNoticeOverlay';
+    overlay.style.cssText='position:fixed;inset:0;z-index:100000;background:rgba(3,5,12,.84);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(7px)';
     const card=document.createElement('div');
-    card.style.cssText='width:min(520px,100%);background:linear-gradient(145deg,#241735,#11131c);border:1px solid #8053a8;border-radius:20px;padding:24px;color:#fff;box-shadow:0 25px 80px #000';
-    const title=document.createElement('h2');title.textContent=n.title||'🎁 Quà tri ân từ SHOPCENAVN';
-    const body=document.createElement('p');body.textContent=n.message||'Shop gửi tặng bạn một món quà tri ân.';
-    body.style.cssText='white-space:pre-wrap;line-height:1.7;color:#e4d9f2';
-    const amount=document.createElement('b');amount.textContent=n.amount?'Bạn được tặng '+(typeof money==='function'?money(n.amount):n.amount+'đ'):'';
-    amount.style.cssText='display:block;color:#53e99b;margin:14px 0';
-    const btn=document.createElement('button');btn.className='btn green';btn.textContent='❤️ Cảm ơn shop';
-    btn.style.width='100%';
+    card.style.cssText='position:relative;overflow:hidden;width:min(500px,100%);padding:28px 22px 22px;border-radius:24px;text-align:center;color:#fff;background:'+(positive?'linear-gradient(145deg,#172d28,#171523)':'linear-gradient(145deg,#3b1b25,#171523)')+';border:1px solid '+(positive?'#25d68a':'#f06475')+';box-shadow:0 22px 80px rgba(0,0,0,.55);animation:balancePop .45s cubic-bezier(.2,.9,.25,1.2)';
+    const style=document.createElement('style');
+    style.textContent='@keyframes balancePop{0%{opacity:0;transform:translateY(24px) scale(.82)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes balanceFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(5deg)}}@keyframes balanceShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}@keyframes balanceConfetti{to{transform:translate(var(--dx),100vh) rotate(720deg);opacity:0}}';
+    const icon=document.createElement('div');
+    icon.textContent=positive?'🎉':'⚠️';
+    icon.style.cssText='font-size:66px;margin:0 auto 12px;animation:'+(positive?'balanceFloat 1.8s ease-in-out infinite':'balanceShake .55s ease-in-out 1');
+    const title=document.createElement('h2');title.textContent=item.title||(positive?'Chúc mừng!':'Cảnh báo số dư');
+    title.style.cssText='font-size:24px;line-height:1.25;margin:0 0 12px';
+    const amount=document.createElement('div');amount.textContent=(positive?'+':'−')+(typeof money==='function'?money(item.amount):Number(item.amount||0).toLocaleString('vi-VN')+'đ');
+    amount.style.cssText='font-size:clamp(30px,8vw,42px);font-weight:900;color:'+(positive?'#35e69a':'#ff7181')+';margin:12px 0';
+    const message=document.createElement('p');message.textContent=item.message||item.reason||'';
+    message.style.cssText='white-space:pre-wrap;line-height:1.65;color:#e5e7ef;font-size:16px;margin:12px 0';
+    const reason=document.createElement('p');reason.textContent='Lý do: '+(item.reason||'Điều chỉnh số dư');
+    reason.style.cssText='color:#aeb4c5;font-size:13px;margin:12px 0 20px';
+    const btn=document.createElement('button');btn.className='btn '+(positive?'green':'danger');btn.textContent=positive?'🎁 Tuyệt vời, cảm ơn shop!':'Đã hiểu';
+    btn.style.cssText='width:100%;min-height:50px';
     btn.onclick=async()=>{
       try{
-        await transactUsers(list=>{
-          const u=list.find(x=>String(x.uid)===String(user.uid));
-          if(!u)return undefined;
-          u.giftNotifications=(u.giftNotifications||[]).map(x=>x.id===n.id?{...x,read:true,readAt:Date.now()}:x);
-          return true;
-        });
-      }catch(e){console.warn(e);}
-      overlay.remove();
+        if(window.transactUsers){
+          await window.transactUsers(users=>{
+            const u=users.find(x=>String(x.uid)===String(user.uid));
+            if(!u)return undefined;
+            u.balanceNotifications=(u.balanceNotifications||[]).map(n=>n.id===item.id?{...n,read:true,readAt:Date.now()}:n);
+            return true;
+          });
+        }
+      }catch(err){console.warn('Could not mark balance notification read:',err);}
+      overlay.remove();style.remove();
     };
-    card.append(title,body,amount,btn);overlay.append(card);document.body.append(overlay);
+    card.append(icon,title,amount,message,reason,btn);
+    overlay.append(style,card);
+    document.body.append(overlay);
+    if(positive){
+      for(let i=0;i<26;i++){
+        const piece=document.createElement('i');
+        piece.style.cssText='position:fixed;top:-12px;left:'+(Math.random()*100)+'vw;width:7px;height:12px;border-radius:2px;background:hsl('+(Math.random()*150+90)+',85%,60%);z-index:100001;pointer-events:none;animation:balanceConfetti '+(1.4+Math.random()*1.6)+'s ease-out forwards;--dx:'+(Math.random()*180-90)+'px';
+        document.body.append(piece);setTimeout(()=>piece.remove(),3200);
+      }
+    }
   }
 
-  // Hook the successful customer login path so the gift appears on the next sign-in.
-  const originalSubmit=window.submitAuth;
-  if(typeof originalSubmit==='function'){
+  function showPendingForCurrentUser(){
+    const session=typeof currentUser==='function'?currentUser():null;
+    if(!session||session.admin)return;
+    const user=getUsersNow().find(u=>String(u.uid)===String(session.uid));
+    if(user)setTimeout(()=>showBalanceNotification(user),450);
+  }
+
+  // Hook account opening as well as login; this covers users already logged in when the admin sends.
+  const oldOpenAccount=window.openAccount;
+  if(typeof oldOpenAccount==='function'){
+    window.openAccount=function(){oldOpenAccount.apply(this,arguments);showPendingForCurrentUser();};
+  }
+  const oldSubmit=window.submitAuth;
+  if(typeof oldSubmit==='function'){
     window.submitAuth=async function(event){
       const before=typeof getSession==='function'?getSession():null;
-      await originalSubmit.call(this,event);
+      const result=await oldSubmit.apply(this,arguments);
       const after=typeof getSession==='function'?getSession():null;
-      if(after&&!after.admin&&(!before||before.uid!==after.uid)){
-        const fresh=(typeof getUsers==='function'?getUsers():[]).find(u=>String(u.uid)===String(after.uid));
-        if(fresh)setTimeout(()=>showGiftNotifications(fresh),350);
+      if(after&&!after.admin&&(!before||String(before.uid)!==String(after.uid)))showPendingForCurrentUser();
+      return result;
+    };
+  }
+
+  // Entering the gift page automatically migrates legacy IDs once; the button remains for manual retry.
+  const previousSwitch=window.switchAdminPage;
+  window.switchAdminPage=function(page){
+    if(typeof previousSwitch==='function')previousSwitch.apply(this,arguments);
+    if(page==='gift'){
+      fillGiftUsers();
+      const users=getUsersNow();
+      if(users.some(u=>!/^\d+$/.test(String(u.uid||'')))){
+        const status=$('uidMigrationStatus');
+        if(status)status.textContent='Đang tự động chuyển các ID cũ sang dạng số...';
+        window.normalizeAllUserIds();
       }
+    }
+  };
+
+  // Existing customer sessions on other devices can still resolve through their legacy UID.
+  const originalGetSession=window.getSession;
+  if(typeof originalGetSession==='function'){
+    window.getSession=function(){
+      const session=originalGetSession.apply(this,arguments);
+      if(session&&!session.admin){
+        const user=getUsersNow().find(u=>String(u.uid)===String(session.uid) ||
+          (Array.isArray(u.previousUids)&&u.previousUids.includes(String(session.uid))));
+        if(user && String(session.uid)!==String(user.uid)){
+          session.uid=String(user.uid);
+          try{localStorage.setItem(STORAGE.session,JSON.stringify(session));}catch(e){}
+        }
+      }
+      return session;
     };
   }
   document.addEventListener('DOMContentLoaded',fillGiftUsers);
+  setTimeout(fillGiftUsers,500);
 })();
 </script>
