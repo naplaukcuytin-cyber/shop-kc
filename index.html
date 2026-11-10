@@ -1423,7 +1423,54 @@ body{background:radial-gradient(ellipse at 12% 0%,rgba(116,43,255,.17),transpare
  #adminApp .table-wrap{overflow-x:auto}#adminApp .admin-form{gap:9px}
 }
 @media(max-width:370px){.hero-art{right:-35px;opacity:.32}.hero-copy h1{font-size:30px}.quick-v2 b{font-size:9px}.balance-action{font-size:9px}}
-</style></head>
+</style>
+<style id="shopcenavn-visual-upgrade-v2">
+/* Nâng cấp riêng khu nạp tiền, quản trị và ảnh game */
+:root{--neon:#b72cff;--neon2:#6e35ff;--cyan:#18d9ff;--panel:#111326}
+#depositOverlay .modal{background:radial-gradient(circle at 90% 0%,#42206d 0,transparent 38%),linear-gradient(145deg,#17142b,#090b18)!important;border:1px solid #a83cff!important;box-shadow:0 0 45px #8a25ff35,0 25px 90px #000!important}
+#depositOverlay .modal-head{padding:8px 0 18px;border-bottom:1px solid #7134a966;margin-bottom:18px}
+#depositOverlay .modal-head h2{font-weight:950;letter-spacing:1.5px;background:linear-gradient(90deg,#fff,#e5aaff,#9d72ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#depositContent .amount-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+#depositContent .amount-btn{border:1px solid #7141a8!important;border-radius:14px!important;background:linear-gradient(145deg,#21183d,#11182d)!important;color:#fff!important;box-shadow:inset 0 1px #ffffff12;transition:.2s}
+#depositContent .amount-btn:hover,#depositContent .amount-btn.active{border-color:#e34dff!important;background:linear-gradient(135deg,#6c19a9,#3421a5)!important;box-shadow:0 0 20px #a52cff55}
+#depositContent input,#depositContent select,#depositContent textarea{border:1px solid #513778!important;background:#0b1020!important;border-radius:12px!important;color:#fff!important}
+#depositContent button:not(.close){border-radius:12px}
+#adminOverlay .modal{background:radial-gradient(ellipse at 5% 0%,#38105e 0,transparent 34%),linear-gradient(145deg,#101225,#080a14)!important;border:1px solid #7535b8!important;box-shadow:0 0 55px #862aff30,0 25px 90px #000!important}
+#adminOverlay .modal-head{padding:10px 0 18px;border-bottom:1px solid #7134a966;margin-bottom:18px}
+#adminOverlay .modal-head h2{font-weight:950;letter-spacing:.4px;background:linear-gradient(90deg,#fff,#dca0ff,#9c7aff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#adminApp .admin-card,#adminApp .stat,#adminApp .admin-status-card{background:linear-gradient(145deg,#191a35,#101225)!important;border:1px solid #56318a!important;border-radius:16px!important;box-shadow:0 8px 25px #0004,inset 0 1px #ffffff0c}
+#adminApp .admin-nav button{border:1px solid #39265b!important;border-radius:11px!important;background:#15152a!important;color:#d8c9ef!important;transition:.2s}
+#adminApp .admin-nav button.active,#adminApp .admin-nav button:hover{background:linear-gradient(120deg,#8b20d6,#4524b8)!important;border-color:#d05bff!important;color:#fff!important;box-shadow:0 0 16px #a52cff55}
+#adminApp input,#adminApp select,#adminApp textarea{background:#0b1020!important;border:1px solid #4b3670!important;color:#fff!important;border-radius:10px!important}
+#adminApp .btn,#adminApp button.primary{background:linear-gradient(120deg,#8e24d6,#4930c7)!important;border:1px solid #b65aff!important;color:#fff!important;border-radius:11px!important}
+#adminApp .table-wrap{border:1px solid #382657;border-radius:14px;overflow:hidden}
+#adminApp table th{background:#21183c!important;color:#e8c9ff!important}
+#adminApp table td{background:#111326!important;border-color:#2b2440!important}
+.game-grid-v2{gap:14px}
+.game-tile{position:relative;overflow:hidden;min-height:190px;border-radius:19px!important;border:1px solid #8f42ff!important;background:#111!important;box-shadow:0 8px 28px #0008,0 0 18px #812dff22;isolation:isolate}
+.game-tile:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;transition:transform .45s}
+.game-tile:hover:before{transform:scale(1.08)}
+.game-freefire:before{background-image:radial-gradient(circle at 75% 20%,#ffb33c99,transparent 25%),linear-gradient(135deg,#301052,#9b2b43 50%,#10152f)}
+.game-lienquan:before{background-image:radial-gradient(circle at 70% 20%,#ffd36b99,transparent 24%),linear-gradient(135deg,#27164c,#a36a32 52%,#10172e)}
+.game-genshin:before{background-image:radial-gradient(circle at 72% 20%,#8deaff99,transparent 25%),linear-gradient(135deg,#12365b,#a6c8e8 52%,#3c276e)}
+.game-roblox:before{background-image:radial-gradient(circle at 72% 20%,#ffffff99,transparent 24%),linear-gradient(135deg,#102d69,#217ad1 52%,#111a39)}
+.game-art{height:128px!important;display:flex!important;align-items:center;justify-content:center;flex-direction:column;gap:5px;text-shadow:0 3px 12px #000;font-weight:1000;letter-spacing:1px}
+.game-art i{font-size:42px!important;color:#fff!important;filter:drop-shadow(0 0 12px #fff8)}
+.game-art b{font-size:25px!important;line-height:1.0!important;color:#fff!important}
+.game-tile-foot{background:linear-gradient(0deg,#080817 0%,#080817e8 78%,transparent)!important}
+.game-tile-foot b{color:#fff!important}
+.game-tile-foot small{color:#d8c8ff!important}
+@media(max-width:600px){
+ #depositOverlay .modal,#adminOverlay .modal{padding:13px!important}
+ #depositContent .amount-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .game-grid-v2{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px}
+ .game-tile{min-height:158px}
+ .game-art{height:100px!important}
+ .game-art i{font-size:34px!important}.game-art b{font-size:21px!important}
+}
+</style>
+
+</head>
 <body>
 <div class="topbar"><div class="ticker" id="ticker">✦ SHOPCENAVN · GAME MARKET · TÚI MÙ MAY MẮN · KHO ACC CẬP NHẬT MỖI NGÀY ✦</div></div>
 <header class="header"><div class="container header-inner"><img id="logo" class="logo" alt="SHOPCENAVN"><div class="account-bar" id="accountBar"><button class="balance balance-action" type="button" onclick="openDeposit()"><i class="fa-solid fa-coins"></i> <span id="balance">0đ</span> <i class="fa-solid fa-plus"></i></button><button class="user-chip" id="userChip" type="button" onclick="openAccount()">Tài khoản</button></div><button class="menu-btn" id="menuBtn" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button></div></header>
@@ -3450,6 +3497,38 @@ setTimeout(()=>{try{bags=allBags();renderBags();}catch(e){console.error(e)}},300
 #gameOverlay .win{border:1px solid #6e4c9f;border-radius:16px;background:#14112a;padding:18px;color:#fff}
 @media(max-width:650px){.bag-open-preview{padding:10px;gap:10px}.bag-open-art{width:75px;height:70px}.bag-open-preview p{font-size:10px}}
 </style>
+
+<script id="shopcenavn-game-bag-render-fix">
+(function(){
+  const moneyVN = n => (Number(n)||0).toLocaleString('vi-VN')+'đ';
+  window.renderBags = function(){
+    try{
+      window.bags = (typeof read==='function' ? read(STORAGE.bags,defaultBags) : (window.bags||[]));
+      const source = Array.isArray(window.bags)?window.bags:[];
+      const visible = source.filter(b=>{
+        const n=String(b.name||'').trim().toLowerCase();
+        if(n==='maxim'||n==='acc maxim') return false;
+        if(n==='săn lùng v8'||n==='san lung v8') return b.id==='v8-39'||b.id==='v8-79';
+        return true;
+      });
+      const grid=document.getElementById('bagGrid');
+      if(!grid)return;
+      grid.innerHTML=visible.length?visible.map((b,i)=>{
+        const id=String(b.id||'').replace(/[^a-zA-Z0-9_-]/g,'');
+        const img=String(b.image||b.img||'');
+        const price=Number(b.price)||0;
+        const game=String(b.game||b.category||'').trim();
+        return `<article class="bag" data-bag-id="${id}" onclick="openBag('${id.replace(/'/g,'')}')">
+          <div class="bag-img-wrap"><img class="bag-img" src="${img.replace(/"/g,'&quot;')}" alt="${String(b.name||'Túi mù').replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.opacity='.25'"><div class="gift-tag">🎁</div>${game?`<span class="bag-game-tag">${game}</span>`:''}</div>
+          <div class="bag-body"><h3>${String(b.name||'Túi mù')}</h3><div class="price">${moneyVN(price)}</div><div class="stock" id="stock-${id}">Đang kiểm tra kho...</div></div>
+        </article>`;
+      }).join(''):'<div class="empty">Chưa có túi nào.</div>';
+      visible.forEach(b=>{if(typeof updateStock==='function')updateStock(b)});
+    }catch(e){console.error('renderBags:',e)}
+  };
+})();
+</script>
+
 </body>
 
 <style id="final-force-mystery-plans-v3">
