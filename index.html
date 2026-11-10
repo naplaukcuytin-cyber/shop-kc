@@ -1418,7 +1418,7 @@ input,select,textarea{
       <div class="admin-page" id="page-users">
         <h3>👥 Người dùng & số dư</h3><div class="admin-toolbar"><input class="field" id="userSearch" placeholder="Tìm username / tên / UID" oninput="filterUsers()" style="max-width:420px"><button class="btn dark small" onclick="loadUsers()">Làm mới</button></div>
         <div class="table-wrap"><table class="table"><thead><tr><th>User</th><th>Tên</th><th>UID</th><th>Số dư</th><th>Acc trúng</th><th>Giao dịch</th><th>Tham gia</th><th>Thao tác</th></tr></thead><tbody id="userRows"></tbody></table></div>
-        <div class="admin-card"><h4>💰 Cộng / trừ tiền trực tiếp</h4><p class="mini">Chọn tài khoản, nhập số tiền và xác nhận. Giao dịch sẽ cập nhật số dư và lịch sử của khách.</p><div class="admin-form"><select class="field" id="walletTarget"><option value="">-- Chọn người dùng --</option></select><div class="two-col"><input class="field" id="walletAmount" type="number" min="1" step="1" placeholder="Số tiền (VNĐ)"><select class="field" id="walletType"><option value="credit">🟢 Cộng tiền</option><option value="debit">🔴 Trừ tiền</option></select></div><input class="field" id="walletReason" placeholder="Lý do (ví dụ: Tri ân khách hàng)"><button type="button" class="btn green" onclick="adminWalletAdjust()">Xác nhận cập nhật số dư</button></div></div>
+        <div class="admin-card"><h4>💰 Cộng / trừ tiền trực tiếp</h4><p class="mini">Chọn tài khoản, nhập số tiền và xác nhận. Giao dịch sẽ cập nhật số dư và lịch sử của khách.</p><div class="admin-form"><select class="field" id="walletTarget"><option value="">-- Chọn người dùng --</option></select><div class="two-col"><input class="field" id="walletAmount" type="number" min="1" step="1" placeholder="Số tiền (VNĐ)"><select class="field" id="walletType"><option value="credit">🟢 Cộng tiền</option><option value="debit">🔴 Trừ tiền</option></select></div><input class="field" id="walletReason" placeholder="Lý do giao dịch (ví dụ: Tri ân khách hàng)"><textarea class="field" id="walletCustomerNotice" rows="3" placeholder="Thông báo gửi riêng cho khách khi cộng tiền (ví dụ: Shop gửi tặng bạn 20.000đ nhân dịp tri ân ❤️). Chỉ hiện khi chọn Cộng tiền."></textarea><p class="mini">Thông báo này sẽ bật lên ở tài khoản khách sau khi được cộng tiền. Khi trừ tiền sẽ không gửi thông báo bật lên.</p><button type="button" class="btn green" onclick="adminWalletAdjust()">Xác nhận cập nhật số dư</button></div></div>
       </div>
 
       <div class="admin-page" id="page-orders">
@@ -1449,7 +1449,7 @@ input,select,textarea{
       </div>
       <div class="admin-page" id="page-settings">
         <h3>⚙️ Cài đặt website</h3><form class="admin-form" onsubmit="saveSettings(e)" id="settingsForm"><input class="field" id="setLogo" placeholder="Link logo"><input class="field" id="setNotice" placeholder="Thanh thông báo"><input class="field" id="setQr" placeholder="Link ảnh QR (để trống dùng qr_banking.png.jpg)"><textarea class="field" id="setBank" placeholder="Thông tin ngân hàng"></textarea><input class="field" id="setAdminEmails" placeholder="Email admin / admin bổ sung"><input class="field" id="setSupport" placeholder="Hotline / Zalo / liên hệ"><div class="two-col"><label class="check-row"><input type="checkbox" id="setMaintenance"> Bật bảo trì website</label><label class="check-row"><input type="checkbox" id="setRegisterOpen" checked> Cho phép đăng ký</label></div><button class="btn">Lưu cài đặt</button></form>
-        <div class="admin-card"><h4>📢 Cài đặt thông báo bật lên cho khách</h4><p class="mini">Nội dung này sẽ hiện khi khách vào website. Có thể vuốt hoặc bấm mũi tên để chuyển qua lại giữa các thông báo.</p><div class="admin-form"><input class="field" id="adminAnnTitle1" placeholder="Tiêu đề thông báo 1"><textarea class="field" id="adminAnnBody1" placeholder="Nội dung thông báo 1"></textarea><input class="field" id="adminAnnTitle2" placeholder="Tiêu đề thông báo 2 (có thể để trống)"><textarea class="field" id="adminAnnBody2" placeholder="Nội dung thông báo 2 (có thể để trống)"></textarea><button type="button" class="btn green" onclick="saveAdminAnnouncements()">Lưu nội dung thông báo</button></div></div>
+
         <div class="admin-card"><h4>🏦 Thông tin QR mặc định</h4><p class="mini">MoMo · TRUONG VAN PHONG · PSP2621916400000092 · QR: qr_banking.png.jpg</p></div>
         <div class="admin-card"><h4>🔐 Bảo mật</h4><p class="mini">Admin đăng nhập nội bộ trong HTML. Firebase dùng để đồng bộ dữ liệu. Để hệ thống production an toàn tuyệt đối cần Firebase Security Rules/Cloud Functions; không nên lưu mật khẩu khách dạng text trên client.</p></div>
       </div>
@@ -3112,24 +3112,6 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
 (function(){
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const defaults=[{title:'📣 THÔNG BÁO NẠP TIỀN',body:'Shop ưu tiên nạp chuyển khoản để cộng tiền nhanh và ổn định. Vui lòng kiểm tra đúng nội dung chuyển khoản theo hướng dẫn.'},{title:'🎁 TRI ÂN KHÁCH HÀNG',body:'Cảm ơn bạn đã đồng hành cùng SHOPCENAVN. Chúc bạn may mắn và có những trải nghiệm thật vui!'}];
-  const announcements=()=>{const a=getSettings().announcements;return Array.isArray(a)&&a.length?a:defaults;};
-  function fillAnnouncementSettings(){
-    if(!$('adminAnnTitle1'))return;
-    const a=announcements();
-    [0,1].forEach((i)=>{const n=i+1;$('adminAnnTitle'+n).value=a[i]?.title||'';$('adminAnnBody'+n).value=a[i]?.body||'';});
-  }
-  const previousLoadSettings=window.loadSettings;
-  window.loadSettings=function(){if(previousLoadSettings)previousLoadSettings();fillAnnouncementSettings();};
-  window.saveAdminAnnouncements=function(){
-    if(!ensureAdmin())return;
-    const settings=getSettings();
-    settings.announcements=[1,2].map(n=>({title:$('adminAnnTitle'+n).value.trim(),body:$('adminAnnBody'+n).value.trim()})).filter(a=>a.title||a.body);
-    write(STORAGE.settings,settings);
-    logAdmin('save_announcements','Cập nhật thông báo bật lên');
-    showNotice('Đã lưu nội dung thông báo');
-  };
-
   function fillWalletUsers(){
     const select=$('walletTarget');if(!select)return;
     const keep=select.value;
@@ -3138,9 +3120,12 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   }
   const previousLoadUsers=window.loadUsers;
   window.loadUsers=function(){if(previousLoadUsers)previousLoadUsers();fillWalletUsers();};
+
   window.adminWalletAdjust=async function(){
     if(!ensureAdmin())return;
-    const id=$('walletTarget').value,amount=Number($('walletAmount').value),type=$('walletType').value,reason=$('walletReason').value.trim()||'Admin điều chỉnh số dư';
+    const id=$('walletTarget').value,amount=Number($('walletAmount').value),type=$('walletType').value;
+    const reason=$('walletReason').value.trim()||'Admin điều chỉnh số dư';
+    const customerNotice=type==='credit'?$('walletCustomerNotice').value.trim():'';
     if(!id)return showNotice('Vui lòng chọn người dùng');
     if(!Number.isSafeInteger(amount)||amount<=0)return showNotice('Nhập số tiền hợp lệ');
     let committed=false,username='';
@@ -3150,27 +3135,21 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
       const after=type==='credit'?before+amount:before-amount;
       u.balance=after;username=u.username||id;
       u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
-      u.transactionHistory.unshift({id:'admin_'+Date.now(),type:type==='credit'?'admin_credit':'admin_debit',amount,balanceBefore:before,balanceAfter:after,reason,createdAt:Date.now(),admin:ADMIN_USERNAME});
+      u.transactionHistory.unshift({id:'admin_'+Date.now(),type:type==='credit'?'admin_credit':'admin_debit',amount,balanceBefore:before,balanceAfter:after,reason,customerNotice,createdAt:Date.now(),admin:ADMIN_USERNAME});
       return true;
     };
     try{
       if(firebaseDB&&firebaseSyncReady){
         const ref=firebaseDB.ref('shopcenavn/users');
-        const tx=await ref.transaction(raw=>{
-          const users=Array.isArray(raw)?raw:(raw&&typeof raw==='object'?Object.values(raw):[]);
-          if(!mutate(users))return;
-          return users;
-        });
+        const tx=await ref.transaction(raw=>{const users=Array.isArray(raw)?raw:(raw&&typeof raw==='object'?Object.values(raw):[]);if(!mutate(users))return;return users;});
         committed=!!tx.committed;
         if(committed)writeLocal(STORAGE.users,Array.isArray(tx.snapshot.val())?tx.snapshot.val():Object.values(tx.snapshot.val()||{}));
-      }else{
-        const users=getUsers();committed=mutate(users);if(committed)write(STORAGE.users,users);
-      }
+      }else{const users=getUsers();committed=mutate(users);if(committed)write(STORAGE.users,users);}
     }catch(err){console.error(err);return showNotice('Lỗi cập nhật số dư, vui lòng thử lại');}
     if(!committed)return showNotice(type==='debit'?'Số dư không đủ hoặc không tìm thấy user':'Không tìm thấy người dùng');
     logAdmin(type==='credit'?'credit_balance':'debit_balance',`${username} · ${money(amount)} · ${reason}`);
     if(typeof logActivity==='function')logActivity('balance',`${type==='credit'?'Cộng':'Trừ'} ${money(amount)} cho ${username}: ${reason}`);
-    $('walletAmount').value='';$('walletReason').value='';
+    $('walletAmount').value='';$('walletReason').value='';$('walletCustomerNotice').value='';
     loadUsers();refreshAuthUI();
     showNotice(`${type==='credit'?'Đã cộng':'Đã trừ'} ${money(amount)} cho ${username}`);
   };
@@ -3183,41 +3162,47 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     const box=$('accountTabContent');if(!box||!user)return;
     const history=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
     const rows=history.slice(0,30).map(item=>{
-      const negative=['admin_debit','purchase','debit'].includes(item.type);
-      const positive=['admin_credit','deposit','credit'].includes(item.type);
-      const color=negative?'#ff5268':'#35e58a';
-      const label=negative?'Trừ tiền':positive?'Cộng tiền':(item.type||'Giao dịch');
-      const sign=negative?'−':'+';
-      return `<div class="wallet-history-row" style="display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #292c36"><div><b>${label}</b><div class="mini">${new Date(item.createdAt||Date.now()).toLocaleString('vi-VN')} · ${esc(item.reason||'')}</div></div><b style="color:${color};white-space:nowrap">${sign}${money(item.amount)}</b></div>`;
+      const negative=['admin_debit','purchase','debit'].includes(item.type),positive=['admin_credit','deposit','credit'].includes(item.type);
+      const color=negative?'#ff5268':'#35e58a',label=negative?'Trừ tiền':positive?'Cộng tiền':(item.type||'Giao dịch'),sign=negative?'−':'+';
+      return `<div style="display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #292c36"><div><b>${label}</b><div class="mini">${new Date(item.createdAt||Date.now()).toLocaleString('vi-VN')} · ${esc(item.reason||'')}</div></div><b style="color:${color};white-space:nowrap">${sign}${money(item.amount)}</b></div>`;
     }).join('');
     box.innerHTML=`<div class="admin-card"><h3>Số dư hiện tại</h3><div style="font-size:34px;font-weight:800;color:#35e58a">${money(user.balance)}</div><button class="btn" onclick="closeModal('accountOverlay');openDeposit()">💳 Nạp tiền</button></div><div class="admin-card"><h4>📒 Lịch sử biến động số dư</h4>${rows||'<div class="empty">Chưa có giao dịch số dư.</div>'}</div>`;
   };
 
-  let slide=0,touchStart=0;
-  function drawAnnouncement(){
-    const wrap=document.querySelector('#noticeOverlay .notice-slider');if(!wrap)return;
-    const list=announcements().filter(a=>a.title||a.body);
-    const data=list.length?list:defaults;
-    slide=Math.max(0,Math.min(slide,data.length-1));
-    wrap.querySelectorAll('.notice-slide,.notice-footer,.notice-controls').forEach(el=>el.style.display='none');
-    let panel=wrap.querySelector('.notice-dynamic-panel');if(panel)panel.remove();
-    panel=document.createElement('div');panel.className='notice-dynamic-panel';
-    panel.innerHTML=`<h3 class="notice-title">${esc(data[slide].title||'📢 THÔNG BÁO')}</h3><div class="notice-body">${esc(data[slide].body||'').replace(/\n/g,'<br>')}</div><div class="notice-footer">${slide+1}/${data.length}</div><div class="notice-controls"><button class="btn dark small" data-prev ${slide===0?'disabled':''}>‹ Trước</button><button class="btn dark small" data-next ${slide===data.length-1?'disabled':''}>Tiếp ›</button></div><div class="notice-controls"><button class="btn green small" data-ok>✓ Đã xem</button><button class="btn danger small" data-x>× Đóng</button></div>`;
-    wrap.appendChild(panel);
-    panel.querySelector('[data-prev]').onclick=()=>{slide--;drawAnnouncement();};
-    panel.querySelector('[data-next]').onclick=()=>{slide++;drawAnnouncement();};
-    panel.querySelector('[data-ok]').onclick=()=>{sessionStorage.setItem('shop_notice_seen','1');closeModal('noticeOverlay');};
-    panel.querySelector('[data-x]').onclick=()=>closeModal('noticeOverlay');
-    panel.ontouchstart=e=>{touchStart=e.changedTouches[0].clientX;};
-    panel.ontouchend=e=>{const dx=e.changedTouches[0].clientX-touchStart;if(Math.abs(dx)>45){slide=Math.max(0,Math.min(data.length-1,slide+(dx<0?1:-1)));drawAnnouncement();}};
+  function showCreditNotice(){
+    const session=currentUser();if(!session||session.admin)return;
+    const user=getUsers().find(u=>u.uid===session.uid);if(!user)return;
+    const history=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
+    const item=history.find(x=>x.type==='admin_credit'&&String(x.customerNotice||'').trim());if(!item)return;
+    const key='shopcenavn_credit_notice_'+session.uid+'_'+item.id;
+    if(localStorage.getItem(key)==='1')return;
+    const modal=$('noticeOverlay');if(!modal)return;
+    const panel=modal.querySelector('.notice-slider');
+    panel.innerHTML=`<div class="credit-notice-card"><button class="credit-notice-close" aria-label="Đóng thông báo">×</button><div class="credit-notice-icon">🎁</div><div class="credit-notice-kicker">SHOPCENAVN · QUÀ TẶNG DÀNH RIÊNG CHO BẠN</div><h2 class="credit-notice-title">${esc(item.reason||'Bạn vừa được cộng tiền!')}</h2><div class="credit-notice-amount">+${money(item.amount)}</div><div class="credit-notice-message">${esc(item.customerNotice).replace(/\n/g,'<br>')}</div><div class="credit-notice-thanks">Cảm ơn bạn đã đồng hành cùng shop ❤️</div></div>`;
+    const close=()=>{localStorage.setItem(key,'1');closeModal('noticeOverlay');};
+    panel.querySelector('.credit-notice-close').onclick=close;
+    openModal('noticeOverlay');
   }
-  window.maybeShowAnnouncement=function(){
-    if(sessionStorage.getItem('shop_notice_seen')==='1')return;
-    slide=0;drawAnnouncement();openModal('noticeOverlay');sessionStorage.setItem('shop_notice_seen','1');
-  };
-  window.noticeSlide=function(i){slide=Number(i)||0;drawAnnouncement();};
+  window.maybeShowAnnouncement=showCreditNotice;
+  const oldRefresh=window.refreshAuthUI;
+  window.refreshAuthUI=function(){if(oldRefresh)oldRefresh();setTimeout(showCreditNotice,250);};
+  setTimeout(showCreditNotice,1200);
 })();
 </script>
+
+
+<style id="credit-notice-polish">
+#noticeOverlay .notice-slider{width:min(520px,calc(100vw - 30px));padding:0!important;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:26px;background:#111522;box-shadow:0 24px 80px rgba(0,0,0,.48)}
+#noticeOverlay .modal-head{display:none!important}
+.credit-notice-card{position:relative;text-align:center;padding:34px 28px 30px;background:radial-gradient(circle at 50% 0%,rgba(52,211,153,.18),transparent 48%),linear-gradient(145deg,#171e2d,#10131e);color:#fff}
+.credit-notice-close{position:absolute;right:15px;top:14px;width:36px;height:36px;border:1px solid rgba(255,255,255,.15);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:25px;line-height:1;cursor:pointer}
+.credit-notice-icon{width:68px;height:68px;margin:0 auto 17px;border-radius:22px;display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#1caa72,#55e0a4);box-shadow:0 10px 30px rgba(37,211,135,.25)}
+.credit-notice-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:#71e4b1;margin-bottom:10px}
+.credit-notice-title{font-size:23px;line-height:1.3;font-weight:900;margin:0 20px 14px;color:#fff}
+.credit-notice-amount{font-size:clamp(30px,8vw,42px);font-weight:950;letter-spacing:-1px;color:#55e0a4;margin:8px 0 18px;text-shadow:0 5px 25px rgba(53,229,138,.18)}
+.credit-notice-message{padding:17px 18px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);font-size:15px;line-height:1.75;color:#e8edf5;overflow-wrap:anywhere}
+.credit-notice-thanks{font-size:12px;color:#9ba8b8;margin-top:18px}
+</style>
 
 </body>
 
