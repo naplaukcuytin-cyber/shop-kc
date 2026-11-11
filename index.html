@@ -1340,7 +1340,7 @@ input,select,textarea{
     <div class="shop-game-price-label">Chọn gói nạp</div>
     <div class="shop-game-prices" id="shopGamePrices"></div>
     <div class="shop-game-pay-row"><div><small>Số tiền thanh toán</small><strong id="shopGameTotal">Chưa chọn gói</strong></div><button type="button" id="shopGamePayBtn" onclick="shopSubmitGameOrder()">Nạp ngay <i class="fa-solid fa-arrow-right"></i></button></div>
-    <p class="shop-game-note">Đơn nạp sẽ được lưu vào hệ thống để Admin xử lý. Kiểm tra kỹ UID trước khi xác nhận.</p>
+    <p class="shop-game-note">KC / Quân Huy sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️ sau khi đặt đơn.</p>
     <div class="shop-game-feedback" id="shopGameFeedback" role="status" aria-live="polite"></div>
   </div>
 </section>
@@ -1402,6 +1402,7 @@ input,select,textarea{
         <button data-page="users">👥 Người dùng</button>
         <button data-page="gift">🎁 Cộng / trừ & quà tri ân</button>
         <button data-page="orders">🧾 Đơn hàng</button>
+        <button data-page="game-topups">💎 Nạp KC / Quân Huy</button>
         <button data-page="deposits">💳 Nạp tiền</button>
         <button data-page="activities">🕒 Hoạt động</button>
         <button data-page="support">💬 Chăm sóc KH</button>
@@ -1469,6 +1470,23 @@ input,select,textarea{
       <div class="admin-page" id="page-orders">
         <h3>🧾 Đơn hàng / lịch sử mở túi</h3><div class="admin-toolbar"><select class="field" id="orderFilter" onchange="loadOrders()" style="max-width:220px"><option value="all">Tất cả</option><option value="completed">Hoàn thành</option><option value="failed">Lỗi</option></select><input class="field" id="orderSearch" placeholder="Tìm user / mã đơn / TK game" oninput="loadOrders()" style="max-width:300px"><button class="btn dark small" onclick="loadOrders()">Làm mới</button></div>
         <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>User</th><th>Túi</th><th>Giá</th><th>TK game</th><th>MK</th><th>Rank</th><th>Thời gian</th><th>Thao tác</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+      </div>
+
+
+      <div class="admin-page" id="page-game-topups">
+        <h3>💎 Quản lý đơn nạp KC / Quân Huy</h3>
+        <p class="mini">Theo dõi UID, gói đã mua và xử lý đơn nạp game. Khi đã nạp xong, bấm Hoàn tất để khách nhận thông báo.</p>
+        <div class="admin-toolbar">
+          <select class="field" id="gameTopupFilter" onchange="loadGameTopups()" style="max-width:220px">
+            <option value="all">Tất cả trạng thái</option><option value="processing">Chờ xử lý</option><option value="completed">Đã nạp</option><option value="rejected">Đã hoàn tiền</option>
+          </select>
+          <input class="field" id="gameTopupSearch" placeholder="Tìm UID / username / mã đơn" oninput="loadGameTopups()" style="max-width:300px">
+          <button class="btn dark small" onclick="loadGameTopups()">Làm mới</button>
+        </div>
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th>Mã đơn / Thời gian</th><th>Khách</th><th>Game / UID</th><th>Gói</th><th>Tiền</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody id="gameTopupRows"></tbody>
+        </table></div>
       </div>
 
       <div class="admin-page" id="page-deposits">
@@ -1691,7 +1709,7 @@ function openAccount(){const s=currentUser();if(!s){openAuth();return}const orde
 function renderAccountTab(tab){const s=currentUser();if(!s)return;const u=s.admin?null:getUsers().find(x=>x.uid===s.uid);const c=$('accountTabContent');if(!c)return;const orders=getOrders().filter(x=>x.uid===s.uid),deps=getDeposits().filter(x=>x.uid===s.uid),won=u?.wonAccounts||[];if(tab==='balance')c.innerHTML=`<div class="admin-card"><h3>Số dư hiện tại</h3><div style="font-size:34px;font-weight:800;color:#35e58a"></div><button class="btn" onclick="closeModal('accountOverlay');openDeposit()">💳 Nạp tiền</button></div>`;else if(tab==='rental')c.innerHTML='<div class="empty">Hiện không có tài khoản đang thuê.</div>';else if(tab==='accounts')c.innerHTML=won.length?won.map(x=>`<div class="admin-card" style="margin:10px 0"><b></b><div>Tài khoản: <strong></strong></div><div>Mật khẩu: <strong></strong></div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có acc đã nhận.</div>';else if(tab==='orders')c.innerHTML=orders.length?orders.slice().reverse().map(x=>`<div class="admin-card" style="margin:10px 0"><b></b> · <div>Kết quả: </div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>';else if(tab==='deposits')c.innerHTML=deps.length?deps.slice().reverse().map(x=>`<div class="admin-card" style="margin:10px 0"><b></b> · <div>Trạng thái: <span class="pill x.status==='rejected'?'bad':'warn'"></span></div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có lịch sử nạp.</div>';else c.innerHTML=`<div class="admin-card"><div>Tên đăng nhập: <b>@</b></div><div>UID: <b></b></div><div>Ngày tham gia: </div></div>`}
 function openAdmin(){if(!isAdmin||currentUser()?.uid!=='admin'){openAuth();showNotice('Đăng nhập tài khoản admin trước');return}openModal('adminOverlay');loadDashboard()}
 function ensureAdmin(){if(!isAdmin||currentUser()?.uid!=='admin'){showNotice('Tài khoản không có quyền admin');return false}return true}
-function switchAdminPage(page){if(!ensureAdmin())return;document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));({dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,deposits:loadDeposits,settings:loadSettings,logs:loadLogs}[page]||loadDashboard)()}
+function switchAdminPage(page){if(!ensureAdmin())return;document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page));({dashboard:loadDashboard,bags:loadBagAdmin,inventory:loadInventory,users:loadUsers,orders:loadOrders,'game-topups':loadGameTopups,deposits:loadDeposits,settings:loadSettings,logs:loadLogs}[page]||loadDashboard)()}
 document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>switchAdminPage(b.dataset.page));
 function logAdmin(action,detail){if(!ensureAdmin())return;const a=getLogs();a.push({uid:'admin',username:ADMIN_USERNAME,action,detail:detail||'',createdAt:Date.now()});write(STORAGE.logs,a)}
 function loadDashboard(){if(!ensureAdmin())return;const us=getUsers(),os=getOrders(),inv=getInventory();const rev=os.filter(x=>x.status==='completed').reduce((n,x)=>n+Number(x.price||0),0),stock=inv.filter(x=>x.status==='available').length;$('sUsers').textContent=us.length;$('sOrders').textContent=os.length;$('sRevenue').textContent=money(rev);$('sStock').textContent=stock;$('recentOrders').innerHTML=os.slice().reverse().slice(0,30).map(x=>`<tr><td></td><td></td><td></td><td></td><td></td><td><span class="pill 'bad'"></span></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Chưa có đơn hàng</td></tr>'}
@@ -3431,11 +3449,11 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 @media(max-width:420px){.shop-home-shortcuts{gap:8px;margin-top:14px}.shop-shortcut{padding:11px 9px;gap:8px;border-radius:14px}.shop-shortcut-icon{width:35px;height:35px;font-size:21px}.shop-shortcut small{font-size:9px}.shop-game-topup{padding:13px;border-radius:17px}.shop-game-cards{gap:6px}.shop-game-card{padding:7px 3px 8px}.shop-game-art{height:45px}.shop-game-art-img{height:58px}.shop-game-name{font-size:9px}.shop-game-card small{font-size:8px}.shop-game-prices{gap:6px}.shop-game-price{padding:9px 3px}.shop-game-price b{font-size:11px}.shop-game-price small{font-size:10px}}
 </style>
 
-<script id="shopcenavn-inline-game-topup-v1-js">
+<script id="shopcenavn-inline-game-topup-v2-js">
 (function(){
   'use strict';
   const GAME_DATA={
-    'Free Fire':{unit:'Kim Cương (KC)',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},
+    'Free Fire':{unit:'KC',rates:[{p:25000,v:'2.125'},{p:50000,v:'4.250'},{p:100000,v:'8.500'},{p:200000,v:'17.250'},{p:500000,v:'45.000'}]},
     'Liên Quân Mobile':{unit:'Quân Huy',rates:[{p:25000,v:'2.100'},{p:50000,v:'4.200'},{p:100000,v:'8.550'},{p:200000,v:'17.700'},{p:500000,v:'45.000'}]},
     'FC Mobile VN':{unit:'FC Point',rates:[{p:25000,v:'1.875'},{p:50000,v:'3.750'},{p:100000,v:'7.800'},{p:200000,v:'16.500'},{p:500000,v:'42.000'}]},
     'Delta Force':{unit:'KNB',rates:[{p:25000,v:'2.250'},{p:50000,v:'4.500'},{p:100000,v:'9.000'},{p:200000,v:'18.750'},{p:500000,v:'48.000'}]}
@@ -3443,53 +3461,253 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
   let selectedGame='Free Fire',selectedRate=null,busy=false;
   const el=id=>document.getElementById(id);
   const fmt=n=>new Intl.NumberFormat('vi-VN').format(Number(n)||0)+'đ';
+  const safeText=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function session(){return typeof currentUser==='function'?currentUser():null;}
-  function updateWallet(){const s=session(),u=s&&typeof getUsers==='function'?getUsers().find(x=>String(x.uid)===String(s.uid)):null;const b=Number(u&&u.balance||0);if(el('shopGameWallet'))el('shopGameWallet').textContent='Ví: '+fmt(b);}
-  function renderRates(){const c=GAME_DATA[selectedGame];if(!c)return;selectedRate=null;el('shopGameSelectedTitle').textContent='Nạp '+selectedGame;el('shopGameUnit').textContent='Đơn vị: '+c.unit;el('shopGameTotal').textContent='Chưa chọn gói';el('shopGamePrices').innerHTML=c.rates.map((r,i)=>'<button type="button" class="shop-game-price" data-rate="'+i+'"><b>'+r.v+' '+(selectedGame==='Free Fire'?'KC':c.unit)+'</b><small>'+fmt(r.p)+'</small></button>').join('');el('shopGamePrices').querySelectorAll('[data-rate]').forEach(btn=>btn.addEventListener('click',()=>{selectedRate=c.rates[Number(btn.dataset.rate)];el('shopGamePrices').querySelectorAll('.shop-game-price').forEach(x=>x.classList.toggle('selected',x===btn));el('shopGameTotal').textContent=fmt(selectedRate.p);}));}
-  window.shopSelectGame=function(name){if(!GAME_DATA[name])return;selectedGame=name;document.querySelectorAll('.shop-game-card').forEach(b=>b.classList.toggle('selected',b.dataset.game===name));renderRates();if(el('shopGameFeedback'))el('shopGameFeedback').textContent='';};
-  window.shopOpenGamePanel=function(){const panel=el('shopGameTopup');if(!panel)return;panel.style.display='block';renderRates();panel.scrollIntoView({behavior:'smooth',block:'start'});};
   function normalizeUsers(value){return Array.isArray(value)?value.filter(Boolean):(value&&typeof value==='object'?Object.values(value).filter(Boolean):[]);}
-  async function debitWallet(uid,username,amount,orderId){
-    if(typeof firebaseDB==='undefined'||!firebaseDB||typeof firebaseSyncReady==='undefined'||!firebaseSyncReady)throw new Error('Chưa kết nối Firebase. Vui lòng tải lại trang rồi thử lại.');
-    const ref=firebaseDB.ref('shopcenavn/users');let newBalance=null,found=false,insufficient=false;
+  function renderRates(){
+    const c=GAME_DATA[selectedGame];if(!c)return;
+    selectedRate=null;
+    el('shopGameSelectedTitle').textContent='Nạp '+selectedGame;
+    el('shopGameUnit').textContent='Đơn vị: '+c.unit;
+    el('shopGameTotal').textContent='Chưa chọn gói';
+    el('shopGamePrices').innerHTML=c.rates.map((r,i)=>'<button type="button" class="shop-game-price" data-rate="'+i+'"><b>'+safeText(r.v)+' '+safeText(c.unit)+'</b><small>'+fmt(r.p)+'</small></button>').join('');
+    el('shopGamePrices').querySelectorAll('[data-rate]').forEach(btn=>btn.addEventListener('click',()=>{
+      const rateIndex=Number(btn.dataset.rate),rate=c.rates[rateIndex];
+      if(!rate)return;
+      selectedRate={p:Number(rate.p),v:String(rate.v),unit:c.unit,game:selectedGame};
+      el('shopGamePrices').querySelectorAll('.shop-game-price').forEach(x=>x.classList.toggle('selected',x===btn));
+      el('shopGameTotal').textContent=fmt(rate.p);
+    }));
+  }
+  window.shopSelectGame=function(name){
+    if(!GAME_DATA[name])return;
+    selectedGame=name;selectedRate=null;
+    document.querySelectorAll('.shop-game-card').forEach(b=>b.classList.toggle('selected',b.dataset.game===name));
+    renderRates();if(el('shopGameFeedback'))el('shopGameFeedback').textContent='';
+  };
+  window.shopOpenGamePanel=function(){
+    const panel=el('shopGameTopup');if(!panel)return;
+    panel.style.display='block';renderRates();panel.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  async function debitWallet(uid,username,amount,orderId,game,unit,label){
+    if(typeof firebaseDB==='undefined'||!firebaseDB||typeof firebaseSyncReady==='undefined'||!firebaseSyncReady)
+      throw new Error('Chưa kết nối Firebase. Vui lòng tải lại trang rồi thử lại.');
+    const ref=firebaseDB.ref('shopcenavn/users');let insufficient=false;
     const tx=await ref.transaction(current=>{
       if(Array.isArray(current)){
-        const users=current.map(x=>x&&typeof x==='object'?{...x}:x);const u=users.find(x=>x&&String(x.uid)===String(uid));if(!u)return;const before=Number(u.balance||0);if(before<amount){insufficient=true;return;}u.balance=before-amount;u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];u.transactionHistory.push({id:orderId,type:'game_topup',amount:-amount,game:selectedGame,createdAt:Date.now(),note:'Đặt đơn nạp '+selectedGame});newBalance=u.balance;found=true;return users;
+        const users=current.map(x=>x&&typeof x==='object'?{...x}:x);
+        const u=users.find(x=>x&&String(x.uid)===String(uid));
+        if(!u)return;
+        const before=Number(u.balance||0);if(before<amount){insufficient=true;return;}
+        u.balance=before-amount;
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+        if(!u.transactionHistory.some(t=>t&&t.id===orderId))
+          u.transactionHistory.unshift({id:orderId,type:'game_topup',amount:-amount,balanceBefore:before,balanceAfter:u.balance,game,createdAt:Date.now(),note:'Đặt đơn nạp '+game});
+        u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'info',title:'Đã tiếp nhận đơn nạp '+game,amount:0,reason:'Đơn nạp game',message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
+        return users;
       }
       if(current&&typeof current==='object'){
-        const users={...current};const key=Object.keys(users).find(k=>users[k]&&String(users[k].uid)===String(uid));if(!key)return;const u={...users[key]},before=Number(u.balance||0);if(before<amount){insufficient=true;return;}u.balance=before-amount;u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];u.transactionHistory.push({id:orderId,type:'game_topup',amount:-amount,game:selectedGame,createdAt:Date.now(),note:'Đặt đơn nạp '+selectedGame});users[key]=u;newBalance=u.balance;found=true;return users;
+        const users={...current},key=Object.keys(users).find(k=>users[k]&&String(users[k].uid)===String(uid));
+        if(!key)return;
+        const u={...users[key]},before=Number(u.balance||0);if(before<amount){insufficient=true;return;}
+        u.balance=before-amount;
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+        if(!u.transactionHistory.some(t=>t&&t.id===orderId))
+          u.transactionHistory.unshift({id:orderId,type:'game_topup',amount:-amount,balanceBefore:before,balanceAfter:u.balance,game,createdAt:Date.now(),note:'Đặt đơn nạp '+game});
+        u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'info',title:'Đã tiếp nhận đơn nạp '+game,amount:0,reason:'Đơn nạp game',message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
+        users[key]=u;return users;
       }
       return;
     });
-    if(!tx.committed){if(insufficient)throw new Error('Số dư ví không đủ cho gói này. Mày có thể nạp tiền vào ví rồi quay lại đặt đơn.');if(!found)throw new Error('Không tìm thấy tài khoản. Vui lòng đăng xuất rồi đăng nhập lại.');throw new Error('Không thể trừ tiền. Kiểm tra kết nối hoặc quyền Firebase.');}
-    const users=normalizeUsers(tx.snapshot.val());if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.users,users);if(typeof updateHeader==='function')updateHeader();updateWallet();return newBalance;
+    if(!tx.committed){
+      if(insufficient)throw new Error('Số dư ví không đủ cho gói này. Vui lòng nạp thêm tiền vào ví.');
+      throw new Error('Không tìm thấy tài khoản hoặc Firebase từ chối giao dịch. Hãy đăng xuất, đăng nhập lại rồi thử.');
+    }
+    const committedUsers=normalizeUsers(tx.snapshot.val()),committedUser=committedUsers.find(x=>String(x.uid)===String(uid));
+    if(!committedUser)throw new Error('Không xác minh được số dư sau giao dịch.');
+    if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.users,committedUsers);
+    if(typeof updateHeader==='function')updateHeader();
+    return Number(committedUser.balance||0);
   }
   async function saveGameOrder(order){
     const ref=firebaseDB.ref('shopcenavn/orders');
-    const tx=await ref.transaction(current=>{let rows=Array.isArray(current)?current.filter(Boolean):(current&&typeof current==='object'?Object.values(current).filter(Boolean):[]);if(rows.some(x=>x&&x.id===order.id))return;rows.push(order);return rows;});
-    if(!tx.committed)throw new Error('Không lưu được đơn nạp vào danh sách đơn hàng.');
-    if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.orders,Array.isArray(tx.snapshot.val())?tx.snapshot.val():normalizeUsers(tx.snapshot.val()));
+    const tx=await ref.transaction(current=>{
+      const rows=Array.isArray(current)?current.filter(Boolean):(current&&typeof current==='object'?Object.values(current).filter(Boolean):[]);
+      if(rows.some(x=>x&&String(x.id)===String(order.id)))return;
+      rows.push(order);return rows;
+    });
+    if(!tx.committed)throw new Error('Không lưu được đơn nạp vào hệ thống. Vui lòng liên hệ shop để kiểm tra.');
+    const saved=Array.isArray(tx.snapshot.val())?tx.snapshot.val():normalizeUsers(tx.snapshot.val());
+    if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.orders,saved);
   }
   window.shopSubmitGameOrder=async function(){
-    if(busy)return;const s=session();if(!s){if(typeof openAuth==='function')openAuth();return;}if(s.admin){el('shopGameFeedback').textContent='Tài khoản quản trị không thể đặt đơn nạp game.';return;}
-    const playerId=String(el('shopGamePlayerId').value||'').trim();if(!playerId){el('shopGameFeedback').textContent='Vui lòng nhập ID nhân vật / UID game.';el('shopGamePlayerId').focus();return;}if(!selectedRate){el('shopGameFeedback').textContent='Vui lòng chọn gói nạp.';return;}
-    const amount=Number(selectedRate.p);if(!Number.isSafeInteger(amount)||amount<=0)return;
-    busy=true;const btn=el('shopGamePayBtn');btn.disabled=true;btn.innerHTML='Đang xử lý...';el('shopGameFeedback').textContent='Đang xác nhận số dư và tạo đơn...';
-    const orderId=typeof rid==='function'?rid():'game_'+Date.now();let debited=false;
+    if(busy)return;
+    const s=session();
+    if(!s){if(typeof openAuth==='function')openAuth();return;}
+    if(s.admin){el('shopGameFeedback').textContent='Tài khoản quản trị không thể đặt đơn nạp game.';return;}
+    const playerId=String(el('shopGamePlayerId').value||'').trim();
+    if(!playerId){el('shopGameFeedback').textContent='Vui lòng nhập ID nhân vật / UID game.';el('shopGamePlayerId').focus();return;}
+    if(!selectedRate||!Number.isFinite(Number(selectedRate.p))){el('shopGameFeedback').textContent='Vui lòng chọn gói nạp.';return;}
+    // Chụp cố định gói/game trước khi chờ Firebase để tránh selectedRate bị reset giữa giao dịch.
+    const rate={p:Number(selectedRate.p),v:String(selectedRate.v),unit:String(selectedRate.unit),game:String(selectedRate.game)};
+    const game=rate.game,amount=rate.p,label=rate.v+' '+rate.unit;
+    if(!Number.isSafeInteger(amount)||amount<=0){el('shopGameFeedback').textContent='Gói nạp không hợp lệ.';return;}
+    busy=true;const btn=el('shopGamePayBtn');btn.disabled=true;btn.textContent='Đang xử lý...';
+    el('shopGameFeedback').textContent='Đang xác nhận số dư và tạo đơn...';
+    const orderId=typeof rid==='function'?rid():'game_'+Date.now();
+    let debited=false,orderSaved=false;
     try{
-      const newBalance=await debitWallet(s.uid,s.username,amount,orderId);debited=true;
-      const order={id:orderId,uid:s.uid,username:s.username||'',bagName:'Nạp game · '+selectedGame,rewardLogin:'UID: '+playerId,rewardPass:'',price:amount,status:'processing',type:'game_topup',package:'Nạp Game',game:selectedGame,gameUID:playerId,label:selectedRate.v+' '+GAME_DATA[selectedGame].unit,createdAt:Date.now(),time:new Date().toLocaleString('vi-VN')};
-      await saveGameOrder(order);
-      if(typeof logActivity==='function')logActivity('game_topup','Đặt đơn '+selectedGame+' · UID '+playerId+' · '+fmt(amount),s);
-      el('shopGameFeedback').textContent='Đã tạo đơn thành công. Đã trừ '+fmt(amount)+'; số dư còn '+fmt(newBalance)+'. Đơn đang chờ shop xử lý.';el('shopGamePlayerId').value='';selectedRate=null;renderRates();if(typeof showNotice==='function')showNotice('Đã tạo đơn nạp '+selectedGame);updateWallet();
-      if(typeof loadOrders==='function'&&typeof isAdmin!=='undefined'&&isAdmin)loadOrders();
+      const newBalance=await debitWallet(s.uid,s.username,amount,orderId,game,rate.unit,label);debited=true;
+      const now=Date.now();
+      const order={id:orderId,uid:s.uid,username:s.username||'',name:s.name||s.username||'',bagName:'Nạp game · '+game,rewardLogin:'UID: '+playerId,rewardPass:'',price:amount,status:'processing',type:'game_topup',package:'Nạp Game',game,gameUID:playerId,label,unit:rate.unit,createdAt:now,time:new Date(now).toLocaleString('vi-VN'),deliveryMessage:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.'};
+      await saveGameOrder(order);orderSaved=true;
+      try{if(typeof logActivity==='function')logActivity('game_topup','Đặt đơn '+game+' · UID '+playerId+' · '+fmt(amount),s);}catch(logErr){console.warn('Không ghi được activity log:',logErr);}
+      el('shopGameFeedback').textContent='Đặt đơn thành công! '+label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.';
+      el('shopGamePlayerId').value='';selectedRate=null;renderRates();
+      if(typeof showNotice==='function')showNotice('Đã tiếp nhận đơn nạp '+game);
+      if(typeof updateWallet==='function')updateWallet();
     }catch(err){
       console.error('Shop game top-up error:',err);
-      if(debited){try{await firebaseDB.ref('shopcenavn/users').transaction(current=>{if(Array.isArray(current)){const a=current.map(x=>x&&typeof x==='object'?{...x}:x),u=a.find(x=>x&&String(x.uid)===String(s.uid));if(!u)return;u.balance=Number(u.balance||0)+amount;return a;}if(current&&typeof current==='object'){const a={...current},k=Object.keys(a).find(k=>a[k]&&String(a[k].uid)===String(s.uid));if(!k)return; a[k]={...a[k],balance:Number(a[k].balance||0)+amount};return a;}return;});if(typeof updateHeader==='function')updateHeader();updateWallet();}catch(refundErr){console.error('Refund failed:',refundErr);}}
-      el('shopGameFeedback').textContent=err&&err.message?err.message:'Không thể tạo đơn. Tiền sẽ không bị trừ nếu giao dịch thất bại.';
-    }finally{busy=false;btn.disabled=false;btn.innerHTML='Nạp ngay <i class="fa-solid fa-arrow-right"></i>';}
+      if(debited&&!orderSaved){
+        try{
+          const ref=firebaseDB.ref('shopcenavn/users');
+          await ref.transaction(current=>{
+            if(Array.isArray(current)){
+              const a=current.map(x=>x&&typeof x==='object'?{...x}:x),u=a.find(x=>x&&String(x.uid)===String(s.uid));
+              if(!u)return;
+              u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+              if(u.transactionHistory.some(t=>t&&t.id==='refund_'+orderId))return;
+              const before=Number(u.balance||0);u.balance=before+amount;
+              u.transactionHistory.unshift({id:'refund_'+orderId,type:'game_topup_refund',amount,balanceBefore:before,balanceAfter:u.balance,createdAt:Date.now(),note:'Hoàn tiền do tạo đơn nạp game thất bại'});
+              return a;
+            }
+            if(current&&typeof current==='object'){
+              const a={...current},key=Object.keys(a).find(k=>a[k]&&String(a[k].uid)===String(s.uid));if(!key)return;
+              const u={...a[key]};u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+              if(u.transactionHistory.some(t=>t&&t.id==='refund_'+orderId))return;
+              const before=Number(u.balance||0);u.balance=before+amount;
+              u.transactionHistory.unshift({id:'refund_'+orderId,type:'game_topup_refund',amount,balanceBefore:before,balanceAfter:u.balance,createdAt:Date.now(),note:'Hoàn tiền do tạo đơn nạp game thất bại'});
+              a[key]=u;return a;
+            }
+            return;
+          });
+          if(typeof updateHeader==='function')updateHeader();
+        }catch(refundErr){console.error('Hoàn tiền tự động thất bại, cần admin kiểm tra:',refundErr);}
+      }
+      el('shopGameFeedback').textContent=err&&err.message?err.message:'Không thể tạo đơn nạp. Vui lòng thử lại hoặc liên hệ shop.';
+    }finally{
+      busy=false;btn.disabled=false;btn.innerHTML='Nạp ngay <i class="fa-solid fa-arrow-right"></i>';
+    }
   };
-  function init(){renderRates();updateWallet();window.addEventListener('shop-storage-change',updateWallet);document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateWallet();});}
+
+  // Các hàm quản trị dùng cùng node shopcenavn/orders với hệ thống đơn hàng hiện có.
+  function rowsFrom(value){return Array.isArray(value)?value.filter(Boolean):(value&&typeof value==='object'?Object.values(value).filter(Boolean):[]);}
+  function writeOrderLocal(rows){if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.orders,rows);}
+  async function changeGameOrder(orderId,action){
+    if(typeof ensureAdmin==='function'&&!ensureAdmin())return;
+    const ref=firebaseDB.ref('shopcenavn/orders');
+    let selected=null;
+    const tx=await ref.transaction(current=>{
+      const rows=rowsFrom(current).map(x=>({...x}));
+      const idx=rows.findIndex(x=>String(x.id)===String(orderId)&&x.type==='game_topup');
+      if(idx<0)return;
+      selected=rows[idx];
+      if(action==='complete'){
+        if(selected.status==='completed')return;
+        rows[idx]={...selected,status:'completed',completedAt:Date.now(),completedBy:(typeof ADMIN_USERNAME!=='undefined'?ADMIN_USERNAME:'admin'),deliveryMessage:'Đơn nạp đã hoàn tất. Vui lòng kiểm tra hòm thư trong game.'};
+      }else if(action==='refund'){
+        if(selected.status==='rejected'||selected.refunded)return;
+        rows[idx]={...selected,status:'refunding',refundStartedAt:Date.now()};
+      }
+      return rows;
+    });
+    if(!tx.committed)throw new Error('Không cập nhật được đơn. Có thể đơn đã được xử lý trước đó.');
+    let rows=rowsFrom(tx.snapshot.val());
+    const order=rows.find(x=>String(x.id)===String(orderId));
+    if(action==='complete' && order){
+      const noticeId='game_done_'+order.id;
+      const userRef=firebaseDB.ref('shopcenavn/users');
+      const noticeTx=await userRef.transaction(current=>{
+        const addNotice=u=>{
+          u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+          if(!u.giftNotifications.some(n=>n&&n.id===noticeId)){
+            u.giftNotifications.unshift({id:noticeId,kind:'success',title:'Nạp game thành công',amount:0,reason:'Đơn nạp game đã hoàn tất',message:'Shop đã xử lý xong đơn '+(order.game||'nạp game')+' · '+(order.label||'')+'. Vui lòng kiểm tra hòm thư trong game ✉️.',createdAt:Date.now(),read:false});
+          }
+        };
+        if(Array.isArray(current)){
+          const a=current.map(x=>x&&typeof x==='object'?{...x}:x),u=a.find(x=>x&&String(x.uid)===String(order.uid));
+          if(!u)return;addNotice(u);return a;
+        }
+        if(current&&typeof current==='object'){
+          const a={...current},key=Object.keys(a).find(k=>a[k]&&String(a[k].uid)===String(order.uid));
+          if(!key)return;const u={...a[key]};addNotice(u);a[key]=u;return a;
+        }
+        return;
+      });
+      if(!noticeTx.committed)throw new Error('Đơn đã đánh dấu hoàn tất nhưng chưa gửi được thông báo cho khách. Hãy tải lại và kiểm tra.');
+    }
+    if(action==='refund'){
+      if(!order||order.status!=='refunding')throw new Error('Đơn không ở trạng thái có thể hoàn tiền.');
+      const uid=order.uid,amount=Number(order.price||0),refundId='game_refund_'+order.id;
+      const userRef=firebaseDB.ref('shopcenavn/users');let refunded=false;
+      const utx=await userRef.transaction(current=>{
+        if(Array.isArray(current)){
+          const a=current.map(x=>x&&typeof x==='object'?{...x}:x),u=a.find(x=>x&&String(x.uid)===String(uid));if(!u)return;
+          u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+          if(u.transactionHistory.some(t=>t&&t.id===refundId)){refunded=true;return;}
+          const before=Number(u.balance||0);u.balance=before+amount;
+          u.transactionHistory.unshift({id:refundId,type:'game_topup_refund',amount,balanceBefore:before,balanceAfter:u.balance,createdAt:Date.now(),note:'Hoàn tiền đơn nạp game '+order.id});
+          u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+          u.giftNotifications.unshift({id:refundId,kind:'credit',title:'Hoàn tiền đơn nạp game',amount,balanceAfter:u.balance,reason:'Đơn nạp bị từ chối',message:'Shop đã hoàn '+fmt(amount)+' vào ví của bạn do đơn nạp game không thể thực hiện.',createdAt:Date.now(),read:false});
+          return a;
+        }
+        if(current&&typeof current==='object'){
+          const a={...current},key=Object.keys(a).find(k=>a[k]&&String(a[k].uid)===String(uid));if(!key)return;
+          const u={...a[key]};u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+          if(u.transactionHistory.some(t=>t&&t.id===refundId)){refunded=true;return;}
+          const before=Number(u.balance||0);u.balance=before+amount;
+          u.transactionHistory.unshift({id:refundId,type:'game_topup_refund',amount,balanceBefore:before,balanceAfter:u.balance,createdAt:Date.now(),note:'Hoàn tiền đơn nạp game '+order.id});
+          u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+          u.giftNotifications.unshift({id:refundId,kind:'credit',title:'Hoàn tiền đơn nạp game',amount,balanceAfter:u.balance,reason:'Đơn nạp bị từ chối',message:'Shop đã hoàn '+fmt(amount)+' vào ví của bạn do đơn nạp game không thể thực hiện.',createdAt:Date.now(),read:false});
+          a[key]=u;return a;
+        }
+        return;
+      });
+      if(!utx.committed&&!refunded)throw new Error('Chưa hoàn được tiền. Đơn đang ở trạng thái cần kiểm tra, không bấm hoàn lại liên tục.');
+      const finalTx=await ref.transaction(current=>{
+        const a=rowsFrom(current).map(x=>({...x})),i=a.findIndex(x=>String(x.id)===String(orderId));
+        if(i<0)return;
+        if(a[i].status==='rejected'&&a[i].refunded)return;
+        a[i]={...a[i],status:'rejected',refunded:true,refundedAt:Date.now(),refundedBy:(typeof ADMIN_USERNAME!=='undefined'?ADMIN_USERNAME:'admin')};return a;
+      });
+      if(!finalTx.committed)throw new Error('Đã hoàn tiền nhưng chưa cập nhật trạng thái đơn. Hãy tải lại danh sách để kiểm tra.');
+      rows=rowsFrom(finalTx.snapshot.val());
+    }
+    writeOrderLocal(rows);
+    if(typeof logAdmin==='function')logAdmin(action==='complete'?'complete_game_topup':'refund_game_topup',orderId);
+    if(typeof showNotice==='function')showNotice(action==='complete'?'Đã đánh dấu đơn nạp hoàn tất':'Đã hoàn tiền đơn nạp game');
+    if(typeof updateHeader==='function')updateHeader();
+    if(typeof loadGameTopups==='function')loadGameTopups();
+  }
+  window.completeGameTopup=function(id){changeGameOrder(id,'complete').catch(e=>{console.error(e);if(typeof showNotice==='function')showNotice(e.message||'Không thể cập nhật đơn');});};
+  window.refundGameTopup=function(id){if(!confirm('Từ chối đơn này và hoàn tiền vào ví khách?'))return;changeGameOrder(id,'refund').catch(e=>{console.error(e);if(typeof showNotice==='function')showNotice(e.message||'Không thể hoàn tiền');});};
+  window.loadGameTopups=function(){
+    if(typeof ensureAdmin==='function'&&!ensureAdmin())return;
+    const body=el('gameTopupRows');if(!body)return;
+    const filter=el('gameTopupFilter')?.value||'all',q=(el('gameTopupSearch')?.value||'').trim().toLowerCase();
+    const orders=rowsFrom(typeof getOrders==='function'?getOrders():[]).filter(x=>x&&x.type==='game_topup').reverse()
+      .filter(x=>filter==='all'||x.status===filter)
+      .filter(x=>!q||[x.id,x.username,x.uid,x.game,x.gameUID].some(v=>String(v||'').toLowerCase().includes(q)));
+    body.innerHTML=orders.map(o=>{
+      const status=o.status==='completed'?'Đã nạp':o.status==='rejected'?'Đã hoàn tiền':o.status==='refunding'?'Đang hoàn tiền':'Chờ xử lý';
+      const pill=o.status==='completed'?'ok':o.status==='rejected'?'bad':'warn';
+      const actions=o.status==='processing'?`<button class="btn green small" onclick="completeGameTopup('${safeText(o.id)}')">Đã nạp xong</button> <button class="btn danger small" onclick="refundGameTopup('${safeText(o.id)}')">Từ chối & hoàn tiền</button>`:'<span class="mini">Không còn thao tác</span>';
+      return `<tr><td>${safeText(o.id)}<br><small>${new Date(o.createdAt||Date.now()).toLocaleString('vi-VN')}</small></td><td>${safeText(o.username||o.name||o.uid)}</td><td><b>${safeText(o.game||'')}</b><br>UID: <b>${safeText(o.gameUID||String(o.rewardLogin||'').replace(/^UID:\\s*/i,''))}</b></td><td>${safeText(o.label||'')}</td><td>${fmt(o.price)}</td><td><span class="pill ${pill}">${status}</span></td><td>${actions}</td></tr>`;
+    }).join('')||'<tr><td colspan="7" class="empty">Chưa có đơn nạp game.</td></tr>';
+  };
+  function init(){renderRates();window.addEventListener('shop-storage-change',()=>{});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
