@@ -1705,7 +1705,7 @@ function buildGameCards(){const actual={img:currentRound?.item?.val?.cardImage||
 function flipGameCard(i){if(!currentRound||currentRound.flipped||$('gameCards').classList.contains('game-loading'))return;const card=$('gfc'+i);if(!card)return;currentRound.flipped=true;document.querySelectorAll('.game-card').forEach((x,j)=>{x.classList.toggle('chosen',j===i);x.classList.toggle('disabled',j!==i)});card.classList.add('flipped','selected-card');setTimeout(()=>{$('gameWin').innerHTML=`<div class="win"><div class="result-title">🎉 Chúc mừng!</div><div class="result-line">Bạn nhận được: <strong></strong></div><div class="result-line">Tài khoản: <strong></strong></div><div class="result-line">Mật khẩu: <strong></strong><button class="copy" onclick="copyText('')">Copy</button></div></div>`;confetti();$('gameAction').textContent='🎉 Nhận tài khoản thành công'},950)}
 function copyText(t,label='nội dung'){const text=String(t??'');try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).catch(()=>{})}else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');ta.remove()}}catch(e){}showNotice('Đã sao chép '+label)}function confetti(){for(let i=0;i<42;i++){const el=document.createElement('i');el.className='confetti';el.style.left=(45+Math.random()*10)+'%';el.style.top='15%';el.style.setProperty('--dx',(Math.random()*520-260)+'px');el.style.transform=`rotate(deg)`;el.style.background=`hsl( 90% 60%)`;document.body.appendChild(el);setTimeout(()=>el.remove(),1900)}}
 function loadAll(){bags=read(STORAGE.bags,defaultBags);renderBags()}
-function openAccount(){const s=currentUser();if(!s){openAuth();return}const orders=getOrders().filter(x=>x.uid===s.uid);const u=s.admin?null:getUsers().find(x=>x.uid===s.uid);const balance=s.admin?0:Number(u?.balance||0);const won=s.admin?[]:(u?.wonAccounts||[]);$('accountContent').innerHTML=`<div class="account-profile" style="margin-bottom:18px"><div><div class="mini">Tên tài khoản</div><h3 style="margin:5px 0">@</h3><div class="mini">ID: </div><div class="mini">Tham gia: </div></div></div><div class="stats"><div class="stat"><span>Số dư</span><b></b></div><div class="stat"><span>Đang thuê</span><b>0</b></div><div class="stat"><span>Acc đã nhận</span><b></b></div><div class="stat"><span>Giao dịch</span><b></b></div></div><div class="account-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0"><button class="btn small" onclick="renderAccountTab('balance')">Số dư</button><button class="btn dark small" onclick="renderAccountTab('rental')">Đang thuê</button><button class="btn dark small" onclick="renderAccountTab('accounts')">Acc</button><button class="btn dark small" onclick="renderAccountTab('orders')">Lịch sử giao dịch</button><button class="btn dark small" onclick="renderAccountTab('deposits')">Lịch sử nạp thẻ</button><button class="btn dark small" onclick="renderAccountTab('info')">Thông tin tài khoản</button></div><div id="accountTabContent"></div>`;openModal('accountOverlay');renderAccountTab('balance')}
+function openAccount(){const s=currentUser();if(!s){openAuth();return}const orders=getOrders().filter(x=>x.uid===s.uid);const u=s.admin?null:getUsers().find(x=>x.uid===s.uid);const balance=s.admin?0:Number(u?.balance||0);const won=s.admin?[]:(u?.wonAccounts||[]);$('accountContent').innerHTML=`<div class="account-profile" style="margin-bottom:18px"><div><div class="mini">Tên tài khoản</div><h3 style="margin:5px 0">@</h3><div class="mini">ID: </div><div class="mini">Tham gia: </div></div></div><div class="stats"><div class="stat"><span>Số dư</span><b></b></div><div class="stat"><span>Đang thuê</span><b>0</b></div><div class="stat"><span>Acc đã nhận</span><b></b></div><div class="stat"><span>Giao dịch</span><b></b></div></div><div class="account-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0"><button class="btn small" onclick="renderAccountTab('balance')">Số dư</button><button class="btn dark small" onclick="renderAccountTab('rental')">Đang thuê</button><button class="btn dark small" onclick="renderAccountTab('accounts')">Acc</button><button class="btn dark small" onclick="renderAccountTab('orders')">Lịch sử túi mù / giao dịch</button><button class="btn dark small" onclick="renderAccountTab('game-topups')">Lịch sử nạp KC / Quân Huy</button><button class="btn dark small" onclick="renderAccountTab('deposits')">Lịch sử nạp thẻ</button><button class="btn dark small" onclick="renderAccountTab('info')">Thông tin tài khoản</button></div><div id="accountTabContent"></div>`;openModal('accountOverlay');renderAccountTab('balance')}
 function renderAccountTab(tab){const s=currentUser();if(!s)return;const u=s.admin?null:getUsers().find(x=>x.uid===s.uid);const c=$('accountTabContent');if(!c)return;const orders=getOrders().filter(x=>x.uid===s.uid),deps=getDeposits().filter(x=>x.uid===s.uid),won=u?.wonAccounts||[];if(tab==='balance')c.innerHTML=`<div class="admin-card"><h3>Số dư hiện tại</h3><div style="font-size:34px;font-weight:800;color:#35e58a"></div><button class="btn" onclick="closeModal('accountOverlay');openDeposit()">💳 Nạp tiền</button></div>`;else if(tab==='rental')c.innerHTML='<div class="empty">Hiện không có tài khoản đang thuê.</div>';else if(tab==='accounts')c.innerHTML=won.length?won.map(x=>`<div class="admin-card" style="margin:10px 0"><b></b><div>Tài khoản: <strong></strong></div><div>Mật khẩu: <strong></strong></div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có acc đã nhận.</div>';else if(tab==='orders')c.innerHTML=orders.length?orders.slice().reverse().map(x=>`<div class="admin-card" style="margin:10px 0"><b></b> · <div>Kết quả: </div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>';else if(tab==='deposits')c.innerHTML=deps.length?deps.slice().reverse().map(x=>`<div class="admin-card" style="margin:10px 0"><b></b> · <div>Trạng thái: <span class="pill x.status==='rejected'?'bad':'warn'"></span></div><div class="mini"></div></div>`).join(''):'<div class="empty">Chưa có lịch sử nạp.</div>';else c.innerHTML=`<div class="admin-card"><div>Tên đăng nhập: <b>@</b></div><div>UID: <b></b></div><div>Ngày tham gia: </div></div>`}
 function openAdmin(){if(!isAdmin||currentUser()?.uid!=='admin'){openAuth();showNotice('Đăng nhập tài khoản admin trước');return}openModal('adminOverlay');loadDashboard()}
 function ensureAdmin(){if(!isAdmin||currentUser()?.uid!=='admin'){showNotice('Tài khoản không có quyền admin');return false}return true}
@@ -1842,19 +1842,20 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
   window.openAccount=function(){
     const s=currentUser();if(!s){openAuth();return}
     if(s.admin){openAdmin();return}
-    const orders=getOrders().filter(x=>x.uid===s.uid);const u=getUsers().find(x=>x.uid===s.uid);const balance=Number(u?.balance||0);const won=u?.wonAccounts||[];
+    const orders=getOrders().filter(x=>x.uid===s.uid&&x.type!=='game_topup');const u=getUsers().find(x=>x.uid===s.uid);const balance=Number(u?.balance||0);const won=u?.wonAccounts||[];
     logActivity('account','Mở trang tài khoản');
     $('accountContent').innerHTML=`<div class="account-profile" style="margin-bottom:18px"><div><div class="mini">Tên tài khoản</div><h3 style="margin:5px 0">@${esc(s.username)}</h3><div class="mini">ID: ${esc(s.uid)}</div><div class="mini">Tham gia: ${new Date(u?.createdAt||s.createdAt||Date.now()).toLocaleDateString('vi-VN')}</div></div></div><div class="stats"><div class="stat"><span>Số dư</span><b>${money(balance)}</b></div><div class="stat"><span>Đang thuê</span><b>0</b></div><div class="stat"><span>Acc đã nhận</span><b>${won.length}</b></div><div class="stat"><span>Giao dịch</span><b>${orders.length}</b></div></div><div class="account-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:20px 0"><button class="btn small" onclick="renderAccountTab('balance')">Số dư</button><button class="btn dark small" onclick="renderAccountTab('rental')">Đang thuê</button><button class="btn dark small" onclick="renderAccountTab('accounts')">🏆 Lịch sử trúng acc</button><button class="btn dark small" onclick="renderAccountTab('orders')">Lịch sử giao dịch</button><button class="btn dark small" onclick="renderAccountTab('deposits')">Lịch sử nạp tiền</button><button class="btn dark small" onclick="renderAccountTab('info')">Thông tin tài khoản</button></div><div id="accountTabContent"></div>`;
     openModal('accountOverlay');renderAccountTab('balance');
   };
   window.renderAccountTab=function(tab){
-    const s=currentUser();if(!s||s.admin)return;const u=getUsers().find(x=>x.uid===s.uid);const c=$('accountTabContent');if(!c)return;const orders=getOrders().filter(x=>x.uid===s.uid).slice().reverse(),deps=getDeposits().filter(x=>x.uid===s.uid).slice().reverse(),won=(u?.wonAccounts||[]).slice();
+    const s=currentUser();if(!s||s.admin)return;const u=getUsers().find(x=>x.uid===s.uid);const c=$('accountTabContent');if(!c)return;const allUserOrders=getOrders().filter(x=>x.uid===s.uid).slice().reverse(),orders=allUserOrders.filter(x=>x.type!=='game_topup'),gameTopups=allUserOrders.filter(x=>x.type==='game_topup'),deps=getDeposits().filter(x=>x.uid===s.uid).slice().reverse(),won=(u?.wonAccounts||[]).slice();
     if(tab==='balance')c.innerHTML=`<div class="admin-card"><h3>Số dư hiện tại</h3><div style="font-size:34px;font-weight:800;color:#35e58a">${money(u?.balance||0)}</div><button class="btn" onclick="closeModal('accountOverlay');openDeposit()">💳 Nạp tiền</button></div>`;
     else if(tab==='rental')c.innerHTML='<div class="empty">Hiện không có tài khoản đang thuê.</div>';
     else if(tab==='accounts'){
       logActivity('account','Mở lịch sử trúng acc');
       c.innerHTML=won.length?won.slice().reverse().map(x=>{const oid=x.orderId||'';return `<div class="admin-card won-account-card"><div class="won-head"><b>🏆 ${esc(x.rank||'Tài khoản game')}</b><span class="mini">${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</span></div><div class="credential-row"><span>Tài khoản game</span><strong>${esc(x.login)}</strong><button class="copy" onclick="copyWonField('${esc(oid)}','login')">📋 Sao chép</button></div><div class="credential-row"><span>Mật khẩu</span><strong>${esc(x.pass)}</strong><button class="copy" onclick="copyWonField('${esc(oid)}','pass')">📋 Sao chép</button></div><div class="mini">Đơn: ${esc(oid)} · ${money(x.price)}</div></div>`}).join(''):'<div class="empty">Chưa có acc đã nhận.</div>';
     }else if(tab==='orders')c.innerHTML=orders.length?orders.map(x=>`<div class="admin-card"><div class="won-head"><b>${esc(x.bagName)}</b><span>${money(x.price)}</span></div><div class="mini">Đơn: ${esc(x.id)}</div><div class="credential-row"><span>TK game</span><strong>${esc(x.rewardLogin||'')}</strong><button class="copy" onclick="copyOrderField('${esc(x.id)}','login')">Copy</button></div><div class="credential-row"><span>MK</span><strong>${esc(x.rewardPass||'')}</strong><button class="copy" onclick="copyOrderField('${esc(x.id)}','pass')">Copy</button></div><div class="mini">${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>';
+    else if(tab==='game-topups')c.innerHTML=gameTopups.length?gameTopups.map(x=>`<div class="admin-card"><div class="won-head"><b>💎 ${esc(x.game||'Nạp game')}</b><span>${money(x.price)}</span></div><div>Gói: <b>${esc(x.label||'')}</b></div><div>UID game: <b>${esc(x.gameUID||String(x.rewardLogin||'').replace(/^UID:\\s*/i,''))}</b></div><div>Trạng thái: <span class="pill ${x.status==='completed'?'ok':x.status==='rejected'?'bad':'warn'}">${x.status==='completed'?'Đã nạp':x.status==='rejected'?'Đã hoàn tiền':'Đang xử lý'}</span></div><div class="mini">Mã đơn: ${esc(x.id)} · ${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có đơn nạp KC / Quân Huy.</div>';
     else if(tab==='deposits')c.innerHTML=deps.length?deps.map(x=>`<div class="admin-card"><b>${money(x.amount)}</b> · ${esc(x.method)}<div>Nội dung: <strong>${esc(x.transferContent||'-')}</strong></div><div>Trạng thái: <span class="pill ${x.status==='approved'?'ok':x.status==='rejected'?'bad':'warn'}">${esc(x.status)}</span></div><div class="mini">${new Date(x.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có lịch sử nạp.</div>';
     else c.innerHTML=`<div class="admin-card"><div>Tên đăng nhập: <b>@${esc(s.username)}</b></div><div>UID: <b>${esc(s.uid)}</b></div><div>Ngày tham gia: ${new Date(u?.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`;
   };
@@ -3212,17 +3213,25 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
   function showMoneyAlert(data){
     if(!data||!data.id||alertShown.has(data.id))return;
     alertShown.add(data.id);
+    const isGameOrder=String(data.kind||'').startsWith('game_topup');
+    const isGameDone=data.kind==='game_topup_completed';
     const credit=data.kind==='credit';
     const wrap=document.createElement('div');wrap.className='money-alert-overlay';
-    const panel=document.createElement('div');panel.className='money-alert-panel '+(credit?'credit':'debit');
-    const heading=document.createElement('h2');heading.textContent=credit?'🎉 CHÚC MỪNG! BẠN ĐƯỢC TẶNG TIỀN':'⚠️ THÔNG BÁO TRỪ TIỀN';
-    const amount=document.createElement('div');amount.className='money-alert-amount';amount.textContent=(credit?'+':'−')+money(data.amount);
-    const msg=document.createElement('p');msg.className='money-alert-message';msg.textContent=data.message||data.reason||(credit?'Shop gửi tặng bạn một món quà tri ân.':'Tài khoản của bạn vừa phát sinh giao dịch trừ tiền.');
-    const reason=document.createElement('p');reason.className='money-alert-reason';reason.textContent='Lý do: '+(data.reason||'Giao dịch từ quản trị viên');
-    const balance=document.createElement('p');balance.className='money-alert-balance';balance.textContent='Số dư hiện tại: '+money(data.balanceAfter);
-    const btn=document.createElement('button');btn.className='btn '+(credit?'green':'danger');btn.textContent=credit?'🎁 Cảm ơn shop':'Đã hiểu';
+    const panel=document.createElement('div');panel.className='money-alert-panel '+((credit||isGameOrder)?'credit':'debit');
+    const heading=document.createElement('h2');
+    heading.textContent=isGameDone?'✅ NẠP GAME THÀNH CÔNG':isGameOrder?'✅ ĐẶT ĐƠN NẠP THÀNH CÔNG':credit?'🎉 CHÚC MỪNG! BẠN ĐƯỢC TẶNG TIỀN':'⚠️ THÔNG BÁO TRỪ TIỀN';
+    const amount=document.createElement('div');amount.className='money-alert-amount';
+    amount.textContent=isGameOrder?(data.packageLabel||data.gameLabel||'Đơn nạp game'):(credit?'+':'−')+money(data.amount);
+    const msg=document.createElement('p');msg.className='money-alert-message';
+    msg.textContent=data.message||data.reason||(credit?'Shop gửi tặng bạn một món quà tri ân.':'Tài khoản của bạn vừa phát sinh giao dịch trừ tiền.');
+    const btn=document.createElement('button');btn.className='btn '+((credit||isGameOrder)?'green':'danger');btn.textContent=isGameOrder?'Đã hiểu':credit?'🎁 Cảm ơn shop':'Đã hiểu';
     btn.onclick=()=>{wrap.remove();markAlertRead(data.id);};
-    panel.append(heading,amount,msg,reason,balance,btn);wrap.append(panel);document.body.append(wrap);
+    if(isGameOrder){panel.append(heading,amount,msg,btn);}else{
+      const reason=document.createElement('p');reason.className='money-alert-reason';reason.textContent='Lý do: '+(data.reason||'Giao dịch từ quản trị viên');
+      const balance=document.createElement('p');balance.className='money-alert-balance';balance.textContent='Số dư hiện tại: '+money(data.balanceAfter);
+      panel.append(heading,amount,msg,reason,balance,btn);
+    }
+    wrap.append(panel);document.body.append(wrap);
     if(credit)launchMoneyConfetti();
   }
   function launchMoneyConfetti(){
@@ -3490,6 +3499,8 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
     panel.style.display='block';renderRates();panel.scrollIntoView({behavior:'smooth',block:'start'});
   };
   async function debitWallet(uid,username,amount,orderId,game,unit,label){
+    if(!uid||!Number.isSafeInteger(Number(amount))||Number(amount)<=0)
+      throw new Error('Thông tin tài khoản hoặc số tiền thanh toán không hợp lệ.');
     if(typeof firebaseDB==='undefined'||!firebaseDB||typeof firebaseSyncReady==='undefined'||!firebaseSyncReady)
       throw new Error('Chưa kết nối Firebase. Vui lòng tải lại trang rồi thử lại.');
     const ref=firebaseDB.ref('shopcenavn/users');let insufficient=false;
@@ -3498,13 +3509,13 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
         const users=current.map(x=>x&&typeof x==='object'?{...x}:x);
         const u=users.find(x=>x&&String(x.uid)===String(uid));
         if(!u)return;
-        const before=Number(u.balance||0);if(before<amount){insufficient=true;return;}
+        const before=Number(u.balance);if(!Number.isFinite(before)||before<amount){insufficient=true;return;}
         u.balance=before-amount;
         u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
         if(!u.transactionHistory.some(t=>t&&t.id===orderId))
           u.transactionHistory.unshift({id:orderId,type:'game_topup',amount:-amount,balanceBefore:before,balanceAfter:u.balance,game,createdAt:Date.now(),note:'Đặt đơn nạp '+game});
         u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
-        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'info',title:'Đã tiếp nhận đơn nạp '+game,amount:0,reason:'Đơn nạp game',message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
+        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'game_topup_order',title:'Đặt đơn nạp thành công',amount:amount,packageLabel:label+' · '+game,message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
         return users;
       }
       if(current&&typeof current==='object'){
@@ -3516,7 +3527,7 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
         if(!u.transactionHistory.some(t=>t&&t.id===orderId))
           u.transactionHistory.unshift({id:orderId,type:'game_topup',amount:-amount,balanceBefore:before,balanceAfter:u.balance,game,createdAt:Date.now(),note:'Đặt đơn nạp '+game});
         u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
-        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'info',title:'Đã tiếp nhận đơn nạp '+game,amount:0,reason:'Đơn nạp game',message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
+        u.giftNotifications.unshift({id:'notice_'+orderId,kind:'game_topup_order',title:'Đặt đơn nạp thành công',amount:amount,packageLabel:label+' · '+game,message:label+' sẽ được nạp trong vòng 24 giờ. Vui lòng kiểm tra hòm thư ✉️.',createdAt:Date.now(),read:false});
         users[key]=u;return users;
       }
       return;
@@ -3526,7 +3537,9 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
       throw new Error('Không tìm thấy tài khoản hoặc Firebase từ chối giao dịch. Hãy đăng xuất, đăng nhập lại rồi thử.');
     }
     const committedUsers=normalizeUsers(tx.snapshot.val()),committedUser=committedUsers.find(x=>String(x.uid)===String(uid));
-    if(!committedUser)throw new Error('Không xác minh được số dư sau giao dịch.');
+    if(!committedUser)throw new Error('Không xác minh được tài khoản sau giao dịch.');
+    const savedHistory=Array.isArray(committedUser.transactionHistory)?committedUser.transactionHistory:[];
+    if(!savedHistory.some(t=>t&&String(t.id)===String(orderId)))throw new Error('Firebase chưa xác nhận khoản trừ tiền. Đơn nạp chưa được tạo.');
     if(typeof writeLocal==='function'&&typeof STORAGE!=='undefined')writeLocal(STORAGE.users,committedUsers);
     if(typeof updateHeader==='function')updateHeader();
     return Number(committedUser.balance||0);
@@ -3633,7 +3646,7 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
         const addNotice=u=>{
           u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
           if(!u.giftNotifications.some(n=>n&&n.id===noticeId)){
-            u.giftNotifications.unshift({id:noticeId,kind:'success',title:'Nạp game thành công',amount:0,reason:'Đơn nạp game đã hoàn tất',message:'Shop đã xử lý xong đơn '+(order.game||'nạp game')+' · '+(order.label||'')+'. Vui lòng kiểm tra hòm thư trong game ✉️.',createdAt:Date.now(),read:false});
+            u.giftNotifications.unshift({id:noticeId,kind:'game_topup_completed',title:'Nạp game thành công',amount:Number(order.price||0),packageLabel:(order.label||'')+' · '+(order.game||'nạp game'),message:'Shop đã nạp xong '+(order.label||'')+' vào UID '+(order.gameUID||'')+'. Vui lòng kiểm tra hòm thư trong game ✉️.',createdAt:Date.now(),read:false});
           }
         };
         if(Array.isArray(current)){
@@ -3709,6 +3722,43 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
   };
   function init(){renderRates();window.addEventListener('shop-storage-change',()=>{});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<script id="shopcenavn-game-history-final-override">
+(function(){
+  const moneyText=n=>new Intl.NumberFormat('vi-VN').format(Number(n||0))+'đ';
+  const safe=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const previousOpen=window.openAccount;
+  window.openAccount=function(){
+    if(typeof previousOpen==='function')previousOpen.apply(this,arguments);
+    const tabs=document.querySelector('#accountContent .account-tabs');
+    if(!tabs||tabs.querySelector('[data-game-history-tab]'))return;
+    const ordersButton=Array.from(tabs.querySelectorAll('button')).find(b=>/Lịch sử giao dịch/.test(b.textContent));
+    if(ordersButton)ordersButton.textContent='Lịch sử túi mù / giao dịch';
+    const b=document.createElement('button');
+    b.type='button';b.className='btn dark small';b.dataset.gameHistoryTab='1';
+    b.textContent='💎 Lịch sử nạp KC / Quân Huy';
+    b.addEventListener('click',()=>window.renderAccountTab('game-topups'));
+    tabs.appendChild(b);
+  };
+  const previousRender=window.renderAccountTab;
+  window.renderAccountTab=function(tab){
+    if(typeof previousRender==='function')previousRender.apply(this,arguments);
+    if(tab!=='orders'&&tab!=='game-topups')return;
+    const user=typeof currentUser==='function'?currentUser():null;
+    if(!user||user.admin)return;
+    const all=(typeof getOrders==='function'?getOrders():[]).filter(o=>o&&String(o.uid)===String(user.uid));
+    const root=document.getElementById('accountTabContent');if(!root)return;
+    if(tab==='orders'){
+      const rows=all.filter(o=>o.type!=='game_topup').slice().reverse();
+      root.innerHTML=rows.length?rows.map(o=>`<div class="admin-card"><div class="won-head"><b>${safe(o.bagName||'Đơn hàng')}</b><span>${moneyText(o.price)}</span></div><div class="mini">Mã đơn: ${safe(o.id)}</div><div>Tài khoản: <b>${safe(o.rewardLogin||'-')}</b></div><div class="mini">${new Date(o.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có lịch sử túi mù / giao dịch.</div>';
+    }else{
+      const rows=all.filter(o=>o.type==='game_topup').slice().reverse();
+      root.innerHTML=rows.length?rows.map(o=>`<div class="admin-card"><div class="won-head"><b>💎 ${safe(o.game||'Nạp game')}</b><span>${moneyText(o.price)}</span></div><div>Gói nạp: <b>${safe(o.label||'')}</b></div><div>UID game: <b>${safe(o.gameUID||'')}</b></div><div>Trạng thái: <span class="pill ${o.status==='completed'?'ok':o.status==='rejected'?'bad':'warn'}">${o.status==='completed'?'Đã nạp':o.status==='rejected'?'Đã hoàn tiền':'Đang xử lý'}</span></div><div class="mini">Mã đơn: ${safe(o.id)} · ${new Date(o.createdAt||Date.now()).toLocaleString('vi-VN')}</div></div>`).join(''):'<div class="empty">Chưa có đơn nạp KC / Quân Huy.</div>';
+    }
+  };
 })();
 </script>
 
