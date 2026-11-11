@@ -1867,7 +1867,13 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
           saveInventoryLocal(result.snapshot.val()||[]);
           return chosen;
         }
-      }catch(e){ console.warn('Firebase inventory transaction failed',e); }
+      }catch(e){
+        console.warn('Firebase inventory transaction failed',e);
+        // Firebase đã bật nhưng không reserve được: tuyệt đối không bán từ bản local cũ.
+        return null;
+      }
+      // Transaction không commit nghĩa là Firebase không còn acc khả dụng.
+      return null;
     }
     const arr=getInventory();
     const available=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
@@ -1900,7 +1906,13 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     if(!deductBalance(s.uid,price)){
       const restore={...item,status:'available',soldTo:null,soldAt:null};
       if(firebaseSyncReady&&firebaseDB){
-        try{ await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{const arr=Array.isArray(cur)?cur:[];return arr.some(x=>x&&x.id===restore.id)?arr:arr.concat(restore)}); }catch(e){}
+        try{
+          const tx=await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
+            const arr=Array.isArray(cur)?cur:[];
+            return arr.some(x=>x&&x.id===restore.id)?arr:arr.concat(restore);
+          });
+          if(!tx.committed)return;
+        }catch(e){console.warn('Không thể hoàn kho Firebase:',e);return;}
       }
       const local=getInventory();
       if(!local.some(x=>x.id===restore.id))saveInventoryLocal(local.concat(restore));
@@ -2272,7 +2284,11 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
         });
         if(tr.committed&&picked){writeLocal(STORAGE.inventory,tr.snapshot.val()||[]);return picked;}
         return null;
-      }catch(e){console.warn('bag reserve transaction failed',e)}
+      }catch(e){
+        console.warn('bag reserve transaction failed',e);
+        // Không fallback sang kho local khi Firebase đang là nguồn dữ liệu chính.
+        return null;
+      }
     }
     const arr=getInventory();
     const pool=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
@@ -2286,7 +2302,14 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     if(!item)return;
     const restored={...item,status:'available',soldTo:null,soldAt:null};
     if(firebaseSyncReady&&firebaseDB){
-      try{await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{const arr=Array.isArray(cur)?cur:[];if(arr.some(x=>x&&x.id===restored.id))return;return arr.concat(restored)})}catch(e){}
+      try{
+        const tx=await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
+          const arr=Array.isArray(cur)?cur:[];
+          if(arr.some(x=>x&&x.id===restored.id))return arr;
+          return arr.concat(restored);
+        });
+        if(!tx.committed)return;
+      }catch(e){console.warn('Không thể hoàn acc về kho Firebase:',e);return;}
     }
     const arr=getInventory();if(!arr.some(x=>x&&x.id===restored.id))write(STORAGE.inventory,arr.concat(restored));
   }
@@ -3386,7 +3409,7 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 </style>
 
 <style id="shopcenavn-hide-customer-id-only">#accountContent .account-profile .mini:nth-of-type(2){display:none!important;}</style>
-</body>
+
 
 <style id="final-force-mystery-plans-v3">
 .bag-maintenance-plan{cursor:not-allowed!important;opacity:.78!important;pointer-events:none!important;}
@@ -3476,7 +3499,7 @@ html,body{
   }
 }
 </style>
-</html>
+
 <style id="final-user-v8-maintenance-credentials">
 /* Chỉ sửa 4 ô thời gian + ẩn/hiện TK/MK. Các phần khác giữ nguyên. */
 .v8-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;}
@@ -3739,3 +3762,5 @@ html,body{
   }
 })();
 </script>
+</body>
+</html>
