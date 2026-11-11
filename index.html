@@ -3383,6 +3383,146 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 </style>
 
 <style id="shopcenavn-hide-customer-id-only">#accountContent .account-profile .mini:nth-of-type(2){display:none!important;}</style>
+<script id="shopcenavn-verified-money-fix-20261111">
+(function(){
+  if(window.__SHOPCENAVN_MONEY_FIX_20261111__) return;
+  window.__SHOPCENAVN_MONEY_FIX_20261111__=true;
+  const usersRef=()=>firebase.database().ref('shopcenavn/users');
+  const asList=raw=>Array.isArray(raw)?raw.filter(Boolean):(raw&&typeof raw==='object'?Object.values(raw).filter(Boolean):[]);
+  function locate(raw,uid,username){
+    if(Array.isArray(raw)){
+      const i=raw.findIndex(u=>u&&((uid&&String(u.uid)===String(uid))||(username&&normalizeLogin(u.username)===normalizeLogin(username))));
+      return i<0?null:{user:raw[i],key:i};
+    }
+    if(raw&&typeof raw==='object'){
+      const key=Object.keys(raw).find(k=>{const u=raw[k];return u&&((uid&&String(u.uid)===String(uid))||(username&&normalizeLogin(u.username)===normalizeLogin(username)));});
+      return key===undefined?null:{user:raw[key],key};
+    }
+    return null;
+  }
+  async function mutateUser(uid,username,mutator){
+    if(!window.firebase||!firebase.apps||!firebase.apps.length) throw new Error('Firebase chưa khởi tạo');
+    const ref=usersRef();
+    let outcome=null;
+    const tx=await ref.transaction(raw=>{
+      const found=locate(raw,uid,username);
+      if(!found){outcome={missing:true};return;}
+      const result=mutator(found.user);
+      if(result===false){outcome={aborted:true};return;}
+      outcome={...result,uid:found.user.uid,username:found.user.username};
+      return raw; // preserve the original array/object structure and every existing UID
+    });
+    if(!tx.committed){
+      if(outcome?.missing) throw new Error('Không tìm thấy khách trong shopcenavn/users');
+      if(outcome?.aborted) return {...outcome,committed:false};
+      throw new Error('Firebase từ chối hoặc không lưu được giao dịch');
+    }
+    // Read from the server again; never trust only the local cache or transaction callback.
+    const verifySnap=await ref.once('value');
+    const verifiedRaw=verifySnap.val();
+    const verified=locate(verifiedRaw,uid,username);
+    if(!verified) throw new Error('Đã ghi nhưng không đọc lại được tài khoản khách');
+    const check=outcome&&typeof outcome.verify==='function'?outcome.verify(verified.user):true;
+    if(!check) throw new Error('Firebase chưa xác nhận số dư mới khi đọc lại');
+    writeLocal(STORAGE.users,asList(verifiedRaw));
+    return {...outcome,user:verified.user,committed:true};
+  }
+  async function setDepositApproved(id,amount){
+    const ref=firebase.database().ref('shopcenavn/deposits');
+    const tx=await ref.transaction(raw=>{
+      if(Array.isArray(raw)){
+        const i=raw.findIndex(x=>x&&String(x.id)===String(id));
+        if(i<0)return;
+        if(raw[i].status==='approved')return raw;
+        if(raw[i].status!=='pending')return;
+        raw[i]={...raw[i],status:'approved',approvedAt:Date.now(),approvedBy:ADMIN_USERNAME,creditedAmount:amount};
+        return raw;
+      }
+      if(raw&&typeof raw==='object'){
+        const key=Object.keys(raw).find(k=>raw[k]&&String(raw[k].id)===String(id));
+        if(key===undefined)return;
+        if(raw[key].status==='approved')return raw;
+        if(raw[key].status!=='pending')return;
+        raw[key]={...raw[key],status:'approved',approvedAt:Date.now(),approvedBy:ADMIN_USERNAME,creditedAmount:amount};
+        return raw;
+      }
+    });
+    if(!tx.committed) throw new Error('Không lưu được trạng thái đơn nạp lên Firebase');
+    const snap=await ref.once('value'),list=asList(snap.val()),item=list.find(x=>String(x.id)===String(id));
+    if(!item||item.status!=='approved')throw new Error('Firebase chưa xác nhận đơn nạp đã duyệt');
+    writeLocal(STORAGE.deposits,list);
+  }
+  window.adjustUser=async function(id,direction){
+    if(!ensureAdmin())return;
+    const raw=prompt('Nhập số tiền cần '+(direction>0?'cộng':'trừ'));
+    if(raw===null)return;
+    const amount=Number(raw);
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
+    try{
+      const tx=await mutateUser(id,null,u=>{
+        const before=Number(u.balance||0);
+        if(direction<0&&before<amount)return false;
+        const after=Math.max(0,before+(direction>0?amount:-amount));u.balance=after;
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+        u.transactionHistory.unshift({id:rid(),type:direction>0?'admin_credit':'admin_debit',amount,balanceBefore:before,balanceAfter:after,createdAt:Date.now(),admin:ADMIN_USERNAME});
+        return {before,after,verify:v=>Number(v.balance||0)===after};
+      });
+      if(tx.aborted){showNotice('Số dư khách không đủ để trừ');return;}
+      logAdmin(direction>0?'credit_balance':'debit_balance',`${tx.username}: ${tx.before} → ${tx.after}`);
+      showNotice('Đã lưu lên Firebase. Số dư mới: '+money(tx.after));loadUsers();
+    }catch(e){console.error(e);showNotice('CHƯA CỘNG TIỀN: '+(e.message||'Lỗi Firebase'));}
+  };
+  window.submitGiftBalance=async function(e){
+    if(e&&e.preventDefault)e.preventDefault();if(!ensureAdmin())return;
+    const sel=$('giftBalanceUser'),uid=sel?.value,username=sel?.selectedOptions?.[0]?.dataset?.username||'';
+    const amount=Number($('giftBalanceAmount')?.value),kind=$('giftBalanceDirection')?.value||'credit';
+    const reason=($('giftBalanceReason')?.value||'').trim(),message=($('giftBalanceMessage')?.value||'').trim();
+    if(!uid){showNotice('Vui lòng chọn khách hàng');return;}
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
+    if(!reason){showNotice('Vui lòng nhập lý do giao dịch');return;}
+    try{
+      const noteId=rid();
+      const tx=await mutateUser(uid,username,u=>{
+        const before=Number(u.balance||0);if(kind==='debit'&&before<amount)return false;
+        const after=before+(kind==='credit'?amount:-amount);u.balance=after;
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+        u.transactionHistory.unshift({id:noteId,type:kind==='credit'?'admin_credit':'admin_debit',amount,balanceBefore:before,balanceAfter:after,reason,createdAt:Date.now(),admin:ADMIN_USERNAME});
+        u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+        u.giftNotifications.unshift({id:noteId,kind,amount,balanceAfter:after,reason,message:message||(kind==='debit'?'Shop đã trừ tiền từ số dư tài khoản của bạn.':''),title:kind==='credit'?'Quà tri ân từ SHOPCENAVN':'Thông báo trừ tiền',createdAt:Date.now(),read:false});
+        return {before,after,verify:v=>Number(v.balance||0)===after};
+      });
+      if(tx.aborted){showNotice('Số dư khách không đủ để trừ');return;}
+      logAdmin(kind==='credit'?'credit_balance':'debit_balance',`${tx.username}: ${tx.before} → ${tx.after} · ${reason}`);
+      showNotice('Đã lưu lên Firebase. Số dư mới: '+money(tx.after));$('giftBalanceForm')?.reset();populateGiftUsers();loadUsers();
+    }catch(err){console.error(err);showNotice('CHƯA THỰC HIỆN: '+(err.message||'Lỗi Firebase'));}
+  };
+  window.approveDeposit=async function(id){
+    if(!ensureAdmin())return;
+    const dep=getDeposits().find(x=>String(x.id)===String(id));
+    if(!dep||dep.status!=='pending'){showNotice('Đơn không còn ở trạng thái chờ duyệt');return;}
+    const amount=Number(dep.amount||0);
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền nạp không hợp lệ');return;}
+    try{
+      const noteId=rid();
+      const tx=await mutateUser(dep.uid,dep.username,u=>{
+        u.depositCredits=Array.isArray(u.depositCredits)?u.depositCredits:[];
+        if(u.depositCredits.includes(String(id)))return {already:true,after:Number(u.balance||0),verify:v=>Array.isArray(v.depositCredits)&&v.depositCredits.includes(String(id))};
+        const before=Number(u.balance||0),after=before+amount;u.balance=after;u.depositCredits.push(String(id));
+        u.transactionHistory=Array.isArray(u.transactionHistory)?u.transactionHistory:[];
+        u.transactionHistory.unshift({id:noteId,type:'deposit',depositId:String(id),amount,balanceBefore:before,balanceAfter:after,createdAt:Date.now(),admin:ADMIN_USERNAME});
+        u.giftNotifications=Array.isArray(u.giftNotifications)?u.giftNotifications:[];
+        u.giftNotifications.unshift({id:noteId,kind:'credit',title:'🎉 Nạp tiền thành công',amount,balanceAfter:after,reason:'Duyệt yêu cầu nạp tiền',message:'Yêu cầu nạp '+money(amount)+' của bạn đã được duyệt và cộng vào số dư thành công.',createdAt:Date.now(),read:false});
+        return {before,after,verify:v=>Number(v.balance||0)===after&&Array.isArray(v.depositCredits)&&v.depositCredits.includes(String(id))};
+      });
+      await setDepositApproved(id,amount);
+      logAdmin('approve_deposit',`${id} +${amount} → ${tx.username||dep.username||dep.uid}`);
+      showNotice(tx.already?'Đơn này đã được cộng trước đó; không cộng trùng.':'Đã xác nhận Firebase lưu số dư khách: '+money(tx.after));
+      loadDeposits();loadDashboard();
+    }catch(err){console.error('Final money fix:',err);showNotice('CHƯA XÁC NHẬN CỘNG TIỀN: '+(err.message||'Lỗi Firebase'));}
+  };
+})();
+
+</script>
 </body>
 
 <style id="final-force-mystery-plans-v3">
