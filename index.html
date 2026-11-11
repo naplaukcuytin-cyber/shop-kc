@@ -1316,7 +1316,7 @@ input,select,textarea{
 <header class="header"><div class="container header-inner"><img id="logo" class="logo" alt="SHOPCENAVN"><div class="account-bar" id="accountBar"><span class="balance" id="balance">0đ</span><span class="user-chip" id="userChip">Khách</span></div><button class="menu-btn" id="menuBtn" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button></div></header>
 <main>
 <section class="hero"><div class="container"><div class="hero-box"><div class="hero-content"><div class="hero-badge">⚡ SHOPCENAVN.COM</div><h1>BÓC ACC XỊN <span>NẠP KHÔNG CHIẾT KHẤU</span></h1><p>Free Fire · kho nick cập nhật mỗi ngày. Bóc tự động, nhận acc tức thì.</p><div class="actions"><button class="btn" onclick="scrollToBags()">⚡ BÓC NGAY</button><button class="btn secondary" onclick="openDeposit()">Nạp tiền</button></div></div></div></div></section>
-<section class="container quick-grid"><button class="quick" type="button" onclick="openDepositMethod('bank')"><div class="quick-icon">🏦</div><div><h3>Nạp chuyển khoản</h3><p>Tự động cộng tiền · 24/7</p></div></button><button class="quick" type="button" onclick="openDepositMethod('card')"><div class="quick-icon">💳</div><div><h3>Nạp thẻ cào</h3><p>Viettel · Mobi · Vina</p></div></button></section>
+<section class="container quick-grid"><button class="quick" type="button" onclick="openDepositMethod('bank')"><div class="quick-icon"><i class="fa-solid fa-bolt"></i></div><div><h3>Nạp Tiền Nhanh</h3><p>Thanh toán đa dạng</p></div><i class="fa-solid fa-chevron-right quick-arrow"></i></button><button class="quick" type="button" onclick="scrollToBags()"><div class="quick-icon"><i class="fa-solid fa-gift"></i></div><div><h3>Túi Mù May Mắn</h3><p>Trúng Acc Xịn</p></div><i class="fa-solid fa-chevron-right quick-arrow"></i></button></section>
 <section class="container" id="bagsSection"><div class="section-head"><div class="section-icon">🎮</div><div class="section-line"></div><a class="section-link" href="#bagsSection">Xem tất cả →</a></div><div class="bag-grid" id="bagGrid"></div></section>
 <section class="container features"><div class="feature"><i>⚡</i><h3>Thuê tự động</h3><p>Nhận acc tức thì 24/7</p></div><div class="feature"><i>🛡️</i><h3>Acc bảo mật</h3><p>Chính chủ · an toàn</p></div><div class="feature"><i>💰</i><h3>Giá thuê rẻ</h3><p>Rẻ nhất thị trường</p></div><div class="feature"><i>🕐</i><h3>Hỗ trợ 24/7</h3><p>Luôn sẵn sàng</p></div></section>
 </main>
@@ -1476,7 +1476,14 @@ input,select,textarea{
   </div>
 </div>
 
-<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
+<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">📜 ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
+<nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Điều hướng chính">
+  <button type="button" class="bottom-nav-item active" data-nav="home" onclick="bottomNavigate('home',this)"><i class="fa-solid fa-house"></i><span>Trang chủ</span></button>
+  <button type="button" class="bottom-nav-item" data-nav="mystery" onclick="bottomNavigate('mystery',this)"><i class="fa-solid fa-bag-shopping"></i><span>Túi Mù</span></button>
+  <button type="button" class="bottom-nav-item" data-nav="shop" onclick="bottomNavigate('shop',this)"><i class="fa-solid fa-store"></i><span>Cửa Hàng</span></button>
+  <button type="button" class="bottom-nav-item" data-nav="deposit" onclick="bottomNavigate('deposit',this)"><i class="fa-solid fa-wallet"></i><span>Nạp Tiền</span></button>
+  <button type="button" class="bottom-nav-item" data-nav="activity" onclick="bottomNavigate('activity',this)"><i class="fa-regular fa-star"></i><span>Hoạt Động</span></button>
+</nav>
 
 <script>
 /* SHOPCENAVN - Firebase Realtime Database + LocalStorage fallback */
@@ -1637,7 +1644,7 @@ function createDepositQr(amount){
 }
 function downloadQrImage(){const img=$('qrImage');if(!img)return;const a=document.createElement('a');a.href=img.src;a.download='qr_banking.png.jpg';a.target='_blank';a.click()}
 function createDeposit(e){e.preventDefault();const s=currentUser();if(!s)return;const amount=Number($('depAmount')?.value||0);if(amount<10000)return showNotice('Số tiền tối thiểu 10.000đ');const a=getDeposits();a.push({id:rid(),uid:s.uid,username:s.username,amount,method:$('depMethod')?.value||'Chuyển khoản',code:$('depCode')?.value.trim()||'',status:'pending',createdAt:Date.now()});write(STORAGE.deposits,a);showNotice('Đã tạo yêu cầu nạp');closeModal('depositOverlay')}
-function openTelegramSupport(){openCustomerSupport()} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-xmark"></i>'} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-bars"></i>'} $('menuBtn').onclick=openMenu; window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
+function openTelegramSupport(){openCustomerSupport()} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b){b.innerHTML='<i class="fa-solid fa-xmark"></i>';b.setAttribute('aria-label','Đóng menu')}} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b){b.innerHTML='<i class="fa-solid fa-bars"></i>';b.setAttribute('aria-label','Mở menu')}} $('menuBtn').onclick=()=>{$('sideMenu')?.classList.contains('open')?closeMenu():openMenu()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});function bottomNavigate(where,el){document.querySelectorAll('.bottom-nav-item').forEach(x=>x.classList.toggle('active',x===el));if(where==='home')scrollToTop();else if(where==='deposit')openDeposit();else if(where==='activity')openOrderHistory();else scrollToBags();} window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
 function availableForBag(bagId){return getInventory().filter(x=>x.bagId===bagId&&x.status==='available')}
 function renderBags(){bags=read(STORAGE.bags,defaultBags);const visibleBags=bags.filter(b=>{const n=String(b.name||'').trim().toLowerCase();if(n==='maxim'||n==='acc maxim')return false;if(n==='săn lùng v8'||n==='san lung v8')return b.id==='v8-39'||b.id==='v8-79';return true});$('bagGrid').innerHTML=visibleBags.length?visibleBags.map(b=>`<article class="bag" onclick="openBag('')"><div class="bag-img-wrap"><img class="bag-img" src="" alt="" onerror="this.src=''"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3></h3><div class="price">từ </div><div class="stock" id="stock-">Đang kiểm tra kho...</div></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';visibleBags.forEach(updateStock)}
 function updateStock(b){const n=availableForBag(b.id).length;const el=$('stock-'+b.id);if(el)el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}
@@ -1867,13 +1874,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
           saveInventoryLocal(result.snapshot.val()||[]);
           return chosen;
         }
-      }catch(e){
-        console.warn('Firebase inventory transaction failed',e);
-        // Firebase đã bật nhưng không reserve được: tuyệt đối không bán từ bản local cũ.
-        return null;
-      }
-      // Transaction không commit nghĩa là Firebase không còn acc khả dụng.
-      return null;
+      }catch(e){ console.warn('Firebase inventory transaction failed',e); }
     }
     const arr=getInventory();
     const available=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
@@ -1906,13 +1907,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     if(!deductBalance(s.uid,price)){
       const restore={...item,status:'available',soldTo:null,soldAt:null};
       if(firebaseSyncReady&&firebaseDB){
-        try{
-          const tx=await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
-            const arr=Array.isArray(cur)?cur:[];
-            return arr.some(x=>x&&x.id===restore.id)?arr:arr.concat(restore);
-          });
-          if(!tx.committed)return;
-        }catch(e){console.warn('Không thể hoàn kho Firebase:',e);return;}
+        try{ await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{const arr=Array.isArray(cur)?cur:[];return arr.some(x=>x&&x.id===restore.id)?arr:arr.concat(restore)}); }catch(e){}
       }
       const local=getInventory();
       if(!local.some(x=>x.id===restore.id))saveInventoryLocal(local.concat(restore));
@@ -2284,11 +2279,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
         });
         if(tr.committed&&picked){writeLocal(STORAGE.inventory,tr.snapshot.val()||[]);return picked;}
         return null;
-      }catch(e){
-        console.warn('bag reserve transaction failed',e);
-        // Không fallback sang kho local khi Firebase đang là nguồn dữ liệu chính.
-        return null;
-      }
+      }catch(e){console.warn('bag reserve transaction failed',e)}
     }
     const arr=getInventory();
     const pool=arr.filter(x=>x&&x.bagId===bagId&&x.status==='available');
@@ -2302,14 +2293,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelecto
     if(!item)return;
     const restored={...item,status:'available',soldTo:null,soldAt:null};
     if(firebaseSyncReady&&firebaseDB){
-      try{
-        const tx=await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{
-          const arr=Array.isArray(cur)?cur:[];
-          if(arr.some(x=>x&&x.id===restored.id))return arr;
-          return arr.concat(restored);
-        });
-        if(!tx.committed)return;
-      }catch(e){console.warn('Không thể hoàn acc về kho Firebase:',e);return;}
+      try{await firebaseDB.ref('shopcenavn/'+FB_MAP.inventory).transaction(cur=>{const arr=Array.isArray(cur)?cur:[];if(arr.some(x=>x&&x.id===restored.id))return;return arr.concat(restored)})}catch(e){}
     }
     const arr=getInventory();if(!arr.some(x=>x&&x.id===restored.id))write(STORAGE.inventory,arr.concat(restored));
   }
@@ -3046,6 +3030,50 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     }
   };
 
+  // Atomic balance updates prevent stale whole-list writes from overwriting another update.
+  window.adjustUser = async function (id, direction) {
+    if (!ensureAdmin()) return;
+    const raw = prompt('Nhập số tiền cần ' + (direction > 0 ? 'cộng' : 'trừ'));
+    if (raw === null) return;
+    const amount = Number(raw);
+    if (!Number.isFinite(amount) || amount <= 0) { showNotice('Số tiền không hợp lệ'); return; }
+
+    try {
+      const now = Date.now();
+      const tx = await transactUsers(users => {
+        const user = users.find(item => item.uid === id);
+        if (!user) return undefined;
+        const before = Number(user.balance || 0);
+        const after = Math.max(0, before + (direction > 0 ? amount : -amount));
+        if (direction < 0 && before < amount) return { insufficient: true };
+        user.balance = after;
+        user.transactionHistory = Array.isArray(user.transactionHistory) ? user.transactionHistory : [];
+        user.transactionHistory.unshift({
+          id: rid(), type: direction > 0 ? 'admin_credit' : 'admin_debit',
+          amount, balanceBefore: before, balanceAfter: after, createdAt: now, admin: ADMIN_USERNAME
+        });
+        return { username: user.username, before, after };
+      });
+
+      if (!tx.committed) {
+        showNotice('Không tìm thấy khách hoặc Firebase không lưu được thay đổi');
+        return;
+      }
+      if (tx.result?.insufficient) { showNotice('Số dư khách không đủ để trừ'); return; }
+
+      logAdmin(direction > 0 ? 'credit_balance' : 'debit_balance',
+        `${tx.result.username} ${amount} → ${tx.result.after}`);
+      if (typeof logActivity === 'function') {
+        logActivity('balance', `${direction > 0 ? 'Cộng' : 'Trừ'} ${money(amount)} cho ${tx.result.username}`);
+      }
+      showNotice('Đã cập nhật số dư thành công: ' + money(tx.result.after));
+      loadUsers();
+      if (currentUser()?.uid === id) refreshAuthUI();
+    } catch (error) {
+      console.error('Balance update failed:', error);
+      showNotice('Cập nhật thất bại. Kiểm tra Firebase Database Rules/kết nối mạng.');
+    }
+  };
 
   // Deposit approval is idempotent: retrying an approval cannot credit the same deposit twice.
   window.approveDeposit = async function (depositId) {
@@ -3718,5 +3746,36 @@ html,body{
   }
 })();
 </script>
+
+<style id="mobile-bottom-navigation-and-compact-quick">
+/* Hai thẻ thao tác nhanh gọn như mẫu */
+.quick-grid{gap:14px;margin-bottom:34px}
+.quick{min-height:104px;padding:17px 22px;gap:15px;border-radius:18px}
+.quick-icon{width:58px;height:58px;font-size:29px;border-radius:14px}
+.quick h3{font-size:20px;margin:0 0 5px}
+.quick p{font-size:14px}
+.quick-arrow{margin-left:auto;font-size:22px;position:relative;z-index:2;color:#fff}
+.quick:nth-child(1){border-color:#20b99c;background:linear-gradient(110deg,#064c3e,#082b3a)}
+.quick:nth-child(2){border-color:#9635df;background:linear-gradient(110deg,#32105c,#210d3c)}
+.quick:nth-child(1) .quick-icon{color:#52f5c3}
+.quick:nth-child(2) .quick-icon{color:#e2a4ff}
+.mobile-bottom-nav{display:none}
+@media(max-width:760px){
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px auto 28px!important}
+  .quick{height:102px!important;min-height:102px!important;padding:12px 11px!important;gap:9px!important;display:flex!important;align-items:center!important;border-radius:16px!important}
+  .quick-icon{width:43px!important;height:48px!important;min-width:43px!important;margin:0!important;font-size:25px!important;background:transparent!important}
+  .quick h3{font-size:14px!important;line-height:1.3!important;margin:0 0 4px!important}
+  .quick p{font-size:11px!important;line-height:1.35!important}
+  .quick-arrow{font-size:15px!important;margin-left:auto!important}
+  .mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:85;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:calc(66px + env(safe-area-inset-bottom));padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(10,9,19,.97);border-top:1px solid #30243f;box-shadow:0 -8px 24px rgba(0,0,0,.35);backdrop-filter:blur(18px)}
+  .bottom-nav-item{border:0;background:transparent;color:#b7a9ce;display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px;padding:3px 0;position:relative}
+  .bottom-nav-item i{font-size:22px;line-height:1}
+  .bottom-nav-item span{white-space:nowrap}
+  .bottom-nav-item.active{color:#c16aff}
+  .bottom-nav-item.active:after{content:"";position:absolute;left:12%;right:12%;bottom:-7px;height:3px;border-radius:3px;background:#a83cff;box-shadow:0 0 12px #963cff}
+  .chat{bottom:calc(82px + env(safe-area-inset-bottom))!important}
+}
+</style>
 </body>
 </html>
