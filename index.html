@@ -3777,5 +3777,88 @@ html,body{
   .chat{bottom:calc(82px + env(safe-area-inset-bottom))!important}
 }
 </style>
+
+<style id="shopcenavn-compact-admin-fixes">
+/* Thu gọn hai thẻ thao tác nhanh */
+.quick-grid{gap:12px;margin-bottom:30px}
+.quick{min-height:92px;padding:14px 18px;gap:12px}
+.quick-icon{width:50px;height:50px;font-size:26px}
+.quick h3{font-size:18px;line-height:1.25}
+.quick p{font-size:13px}
+@media(max-width:760px){
+  .quick-grid{gap:8px!important;margin:12px auto 24px!important}
+  .quick{height:82px!important;min-height:82px!important;padding:9px 8px!important;gap:6px!important}
+  .quick-icon{width:36px!important;height:40px!important;min-width:36px!important;font-size:22px!important}
+  .quick h3{font-size:12px!important;line-height:1.2!important}
+  .quick p{font-size:10px!important;line-height:1.2!important}
+  .quick-arrow{font-size:13px!important}
+  #adminOverlay .modal-head{display:flex!important;align-items:center!important;justify-content:space-between!important;padding-right:2px!important;z-index:100!important}
+  #adminOverlay .modal-head h2{flex:1!important;min-width:0!important;padding-right:8px!important}
+  #adminOverlay .modal-head>.close{position:relative!important;z-index:120!important;flex:0 0 46px!important;width:46px!important;height:46px!important;margin-left:auto!important;display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}
+}
+</style>
+<script id="shopcenavn-final-balance-handler-fix">
+(function(){
+  // Final admin balance handler: update the authoritative Firebase user list atomically,
+  // with a local-only fallback when Firebase is unavailable.
+  window.adjustUser = async function(id, direction){
+    if(!ensureAdmin()) return;
+    const raw=prompt('Nhập số tiền cần '+(direction>0?'cộng':'trừ'));
+    if(raw===null) return;
+    const amount=Number(raw);
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
+    const now=Date.now();
+    try{
+      let outcome=null;
+      if(firebaseDB&&firebaseSyncReady){
+        const ref=firebaseDB.ref('shopcenavn/users');
+        const tx=await ref.transaction(function(current){
+          const users=Array.isArray(current)?current.filter(Boolean):(current&&typeof current==='object'?Object.values(current).filter(Boolean):[]);
+          const user=users.find(function(u){return String(u.uid)===String(id);});
+          if(!user){outcome={missing:true};return;}
+          const before=Number(user.balance||0);
+          if(direction<0&&before<amount){outcome={insufficient:true};return;}
+          const after=before+(direction>0?amount:-amount);
+          user.balance=after;
+          user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
+          user.transactionHistory.unshift({id:rid(),type:direction>0?'admin_credit':'admin_debit',amount:amount,balanceBefore:before,balanceAfter:after,createdAt:now,admin:ADMIN_USERNAME});
+          outcome={username:user.username,before:before,after:after,uid:user.uid};
+          return users;
+        });
+        if(!tx.committed){
+          if(outcome&&outcome.insufficient){showNotice('Số dư khách không đủ để trừ');return;}
+          if(outcome&&outcome.missing){showNotice('Không tìm thấy khách hàng trong Firebase');return;}
+          showNotice('Firebase chưa lưu được số dư. Kiểm tra quyền ghi dữ liệu.');return;
+        }
+        const saved=tx.snapshot.val();
+        writeLocal(STORAGE.users,Array.isArray(saved)?saved:Object.values(saved||{}));
+      }else{
+        const users=getUsers();
+        const user=users.find(function(u){return String(u.uid)===String(id);});
+        if(!user){showNotice('Không tìm thấy tài khoản khách');return;}
+        const before=Number(user.balance||0);
+        if(direction<0&&before<amount){showNotice('Số dư khách không đủ để trừ');return;}
+        const after=before+(direction>0?amount:-amount);
+        user.balance=after;
+        user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
+        user.transactionHistory.unshift({id:rid(),type:direction>0?'admin_credit':'admin_debit',amount:amount,balanceBefore:before,balanceAfter:after,createdAt:now,admin:ADMIN_USERNAME});
+        writeLocal(STORAGE.users,users);
+        outcome={username:user.username,before:before,after:after,uid:user.uid};
+      }
+      if(!outcome||outcome.missing){showNotice('Không tìm thấy khách hàng');return;}
+      logAdmin(direction>0?'credit_balance':'debit_balance',outcome.username+' '+amount+' → '+outcome.after);
+      if(typeof logActivity==='function')logActivity('balance',(direction>0?'Cộng ':'Trừ ')+money(amount)+' cho '+outcome.username);
+      showNotice('Đã '+(direction>0?'cộng ':'trừ ')+money(amount)+' thành công');
+      if(typeof loadUsers==='function')loadUsers();
+      if(currentUser()&&String(currentUser().uid)===String(id))refreshAuthUI();
+      updateHeader();
+    }catch(err){
+      console.error('Admin balance update failed:',err);
+      showNotice('Cập nhật số dư thất bại: '+(err&&err.message?err.message:'kiểm tra Firebase'));
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
