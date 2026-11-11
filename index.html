@@ -1316,7 +1316,7 @@ input,select,textarea{
 <header class="header"><div class="container header-inner"><img id="logo" class="logo" alt="SHOPCENAVN"><div class="account-bar" id="accountBar"><span class="balance" id="balance">0đ</span><span class="user-chip" id="userChip">Khách</span></div><button class="menu-btn" id="menuBtn" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button></div></header>
 <main>
 <section class="hero"><div class="container"><div class="hero-box"><div class="hero-content"><div class="hero-badge">⚡ SHOPCENAVN.COM</div><h1>BÓC ACC XỊN <span>NẠP KHÔNG CHIẾT KHẤU</span></h1><p>Free Fire · kho nick cập nhật mỗi ngày. Bóc tự động, nhận acc tức thì.</p><div class="actions"><button class="btn" onclick="scrollToBags()">⚡ BÓC NGAY</button><button class="btn secondary" onclick="openDeposit()">Nạp tiền</button></div></div></div></div></section>
-<section class="container quick-grid"><button class="quick" type="button" onclick="openDepositMethod('bank')"><div class="quick-icon"><i class="fa-solid fa-bolt"></i></div><div><h3>Nạp Tiền Nhanh</h3><p>Thanh toán đa dạng</p></div><i class="fa-solid fa-chevron-right quick-arrow"></i></button><button class="quick" type="button" onclick="scrollToBags()"><div class="quick-icon"><i class="fa-solid fa-gift"></i></div><div><h3>Túi Mù May Mắn</h3><p>Trúng Acc Xịn</p></div><i class="fa-solid fa-chevron-right quick-arrow"></i></button></section>
+<section class="container quick-grid"><button class="quick" type="button" onclick="openDepositMethod('bank')"><div class="quick-icon">🏦</div><div><h3>Nạp chuyển khoản</h3><p>Tự động cộng tiền · 24/7</p></div></button><button class="quick" type="button" onclick="openDepositMethod('card')"><div class="quick-icon">💳</div><div><h3>Nạp thẻ cào</h3><p>Viettel · Mobi · Vina</p></div></button></section>
 <section class="container" id="bagsSection"><div class="section-head"><div class="section-icon">🎮</div><div class="section-line"></div><a class="section-link" href="#bagsSection">Xem tất cả →</a></div><div class="bag-grid" id="bagGrid"></div></section>
 <section class="container features"><div class="feature"><i>⚡</i><h3>Thuê tự động</h3><p>Nhận acc tức thì 24/7</p></div><div class="feature"><i>🛡️</i><h3>Acc bảo mật</h3><p>Chính chủ · an toàn</p></div><div class="feature"><i>💰</i><h3>Giá thuê rẻ</h3><p>Rẻ nhất thị trường</p></div><div class="feature"><i>🕐</i><h3>Hỗ trợ 24/7</h3><p>Luôn sẵn sàng</p></div></section>
 </main>
@@ -1476,14 +1476,7 @@ input,select,textarea{
   </div>
 </div>
 
-<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">📜 ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
-<nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Điều hướng chính">
-  <button type="button" class="bottom-nav-item active" data-nav="home" onclick="bottomNavigate('home',this)"><i class="fa-solid fa-house"></i><span>Trang chủ</span></button>
-  <button type="button" class="bottom-nav-item" data-nav="mystery" onclick="bottomNavigate('mystery',this)"><i class="fa-solid fa-bag-shopping"></i><span>Túi Mù</span></button>
-  <button type="button" class="bottom-nav-item" data-nav="shop" onclick="bottomNavigate('shop',this)"><i class="fa-solid fa-store"></i><span>Cửa Hàng</span></button>
-  <button type="button" class="bottom-nav-item" data-nav="deposit" onclick="bottomNavigate('deposit',this)"><i class="fa-solid fa-wallet"></i><span>Nạp Tiền</span></button>
-  <button type="button" class="bottom-nav-item" data-nav="activity" onclick="bottomNavigate('activity',this)"><i class="fa-regular fa-star"></i><span>Hoạt Động</span></button>
-</nav>
+<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
 
 <script>
 /* SHOPCENAVN - Firebase Realtime Database + LocalStorage fallback */
@@ -1644,7 +1637,7 @@ function createDepositQr(amount){
 }
 function downloadQrImage(){const img=$('qrImage');if(!img)return;const a=document.createElement('a');a.href=img.src;a.download='qr_banking.png.jpg';a.target='_blank';a.click()}
 function createDeposit(e){e.preventDefault();const s=currentUser();if(!s)return;const amount=Number($('depAmount')?.value||0);if(amount<10000)return showNotice('Số tiền tối thiểu 10.000đ');const a=getDeposits();a.push({id:rid(),uid:s.uid,username:s.username,amount,method:$('depMethod')?.value||'Chuyển khoản',code:$('depCode')?.value.trim()||'',status:'pending',createdAt:Date.now()});write(STORAGE.deposits,a);showNotice('Đã tạo yêu cầu nạp');closeModal('depositOverlay')}
-function openTelegramSupport(){openCustomerSupport()} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b){b.innerHTML='<i class="fa-solid fa-xmark"></i>';b.setAttribute('aria-label','Đóng menu')}} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b){b.innerHTML='<i class="fa-solid fa-bars"></i>';b.setAttribute('aria-label','Mở menu')}} $('menuBtn').onclick=()=>{$('sideMenu')?.classList.contains('open')?closeMenu():openMenu()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});function bottomNavigate(where,el){document.querySelectorAll('.bottom-nav-item').forEach(x=>x.classList.toggle('active',x===el));if(where==='home')scrollToTop();else if(where==='deposit')openDeposit();else if(where==='activity')openOrderHistory();else scrollToBags();} window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
+function openTelegramSupport(){openCustomerSupport()} function openHelp(){openModal('helpOverlay')} function syncMenuHeaderPosition(){const h=document.querySelector('.header');if(h){document.documentElement.style.setProperty('--shop-header-bottom',Math.max(0,Math.round(h.getBoundingClientRect().bottom))+'px')}} function openMenu(){syncMenuHeaderPosition();$('sideMenu').classList.add('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-xmark"></i>'} function closeMenu(){$('sideMenu').classList.remove('open');const b=$('menuBtn');if(b)b.innerHTML='<i class="fa-solid fa-bars"></i>'} $('menuBtn').onclick=openMenu; window.addEventListener('scroll',()=>{if($('sideMenu')?.classList.contains('open'))syncMenuHeaderPosition()},{passive:true}); window.addEventListener('resize',syncMenuHeaderPosition);
 function availableForBag(bagId){return getInventory().filter(x=>x.bagId===bagId&&x.status==='available')}
 function renderBags(){bags=read(STORAGE.bags,defaultBags);const visibleBags=bags.filter(b=>{const n=String(b.name||'').trim().toLowerCase();if(n==='maxim'||n==='acc maxim')return false;if(n==='săn lùng v8'||n==='san lung v8')return b.id==='v8-39'||b.id==='v8-79';return true});$('bagGrid').innerHTML=visibleBags.length?visibleBags.map(b=>`<article class="bag" onclick="openBag('')"><div class="bag-img-wrap"><img class="bag-img" src="" alt="" onerror="this.src=''"><div class="gift-tag">🎁</div></div><div class="bag-body"><h3></h3><div class="price">từ </div><div class="stock" id="stock-">Đang kiểm tra kho...</div></div></article>`).join(''):'<div class="empty">Chưa có túi nào.</div>';visibleBags.forEach(updateStock)}
 function updateStock(b){const n=availableForBag(b.id).length;const el=$('stock-'+b.id);if(el)el.textContent=n?'Còn '+n+' phần thưởng':'Hết kho'}
@@ -3394,6 +3387,122 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 
 <style id="shopcenavn-hide-customer-id-only">#accountContent .account-profile .mini:nth-of-type(2){display:none!important;}</style>
 
+<style id="shopcenavn-balance-and-compact-fix">
+/* Hai ô thao tác nhanh: gọn, thấp và nằm cạnh nhau */
+.quick-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:14px!important;margin-bottom:14px!important}
+.quick-grid .quick{display:grid!important;grid-template-columns:38px minmax(0,1fr) 14px!important;align-items:center!important;gap:9px!important;min-height:72px!important;height:72px!important;padding:9px 12px!important;border-radius:15px!important;overflow:hidden!important}
+.quick-grid .quick .quick-icon{display:grid!important;place-items:center!important;width:38px!important;height:38px!important;min-width:38px!important;margin:0!important;font-size:20px!important}
+.quick-grid .quick h3{font-size:clamp(12px,3.2vw,16px)!important;line-height:1.2!important;margin:0 0 3px!important;white-space:normal!important}
+.quick-grid .quick p{font-size:11px!important;line-height:1.25!important;margin:0!important}
+.quick-grid .quick .quick-arrow{font-size:13px!important;margin:0!important}
+@media(max-width:420px){.quick-grid{gap:8px!important}.quick-grid .quick{height:66px!important;min-height:66px!important;padding:8px!important;grid-template-columns:32px minmax(0,1fr) 11px!important;gap:7px!important}.quick-grid .quick .quick-icon{width:32px!important;height:32px!important;min-width:32px!important;font-size:17px!important}.quick-grid .quick h3{font-size:12px!important}.quick-grid .quick p{font-size:10px!important}.quick-grid .quick .quick-arrow{font-size:11px!important}}
+/* Nút đóng Admin luôn nổi trên tiêu đề và vùng cuộn */
+#adminOverlay .modal{position:relative!important}
+#adminOverlay .modal-head{position:sticky!important;top:-12px!important;z-index:1000!important;min-height:48px!important;padding-right:2px!important}
+#adminOverlay .modal-head .close{position:relative!important;z-index:1002!important;display:grid!important;place-items:center!important;flex:0 0 45px!important;min-width:45px!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;margin-left:auto!important}
+</style>
+<script id="shopcenavn-unified-balance-fix">
+(function(){
+  'use strict';
+  const usersPath='shopcenavn/users';
+  const listOf=value=>Array.isArray(value)?value.filter(Boolean):(value&&typeof value==='object'?Object.values(value).filter(Boolean):[]);
+  function findUser(list,uid,username){
+    return list.find(u=>String(u.uid||'')===String(uid||'') || (username && typeof normalizeLogin==='function' && normalizeLogin(u.username)===normalizeLogin(username)));
+  }
+  async function changeBalance({uid,username,amount,kind,reason,message,historyType}){
+    const now=Date.now(),noticeId=typeof rid==='function'?rid():('txn_'+now);
+    const mutate=user=>{
+      const before=Number(user.balance||0);
+      if(!Number.isFinite(before)||before<0)return {error:'invalid'};
+      if(kind==='debit'&&before<amount)return {error:'insufficient'};
+      const after=before+(kind==='credit'?amount:-amount);
+      if(!Number.isSafeInteger(after)||after<0)return {error:'invalid'};
+      user.balance=after;
+      user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
+      user.transactionHistory.unshift({id:noticeId,type:historyType||(kind==='credit'?'admin_credit':'admin_debit'),amount,balanceBefore:before,balanceAfter:after,reason:reason||'',createdAt:now,admin:typeof ADMIN_USERNAME!=='undefined'?ADMIN_USERNAME:'admin'});
+      if(reason||message){
+        user.giftNotifications=Array.isArray(user.giftNotifications)?user.giftNotifications:[];
+        user.giftNotifications.unshift({id:noticeId,kind,amount,balanceAfter:after,reason:reason||'',message:message||(kind==='debit'?'Shop đã trừ tiền từ số dư tài khoản của bạn.':''),title:kind==='credit'?'Quà tri ân từ SHOPCENAVN':'Thông báo trừ tiền',createdAt:now,read:false});
+      }
+      return {username:user.username||username||'khách hàng',before,after,uid:user.uid};
+    };
+    if(typeof firebaseDB!=='undefined'&&firebaseDB&&typeof firebaseSyncReady!=='undefined'&&firebaseSyncReady){
+      let outcome;
+      const tx=await firebaseDB.ref(usersPath).transaction(current=>{
+        const users=listOf(current),user=findUser(users,uid,username);
+        if(!user){outcome={error:'missing'};return;}
+        outcome=mutate(user);
+        if(outcome.error)return;
+        return users;
+      });
+      if(!tx.committed)return outcome||{error:'not_saved'};
+      const saved=listOf(tx.snapshot&&tx.snapshot.val());
+      writeLocal(STORAGE.users,saved);
+      const actual=findUser(saved,uid,username);
+      return {ok:true,...(outcome||{}),uid:actual?.uid||uid};
+    }
+    const users=listOf(readLocal(STORAGE.users,[])),user=findUser(users,uid,username);
+    if(!user)return {error:'missing'};
+    const outcome=mutate(user);
+    if(outcome.error)return outcome;
+    writeLocal(STORAGE.users,users);
+    return {ok:true,...outcome};
+  }
+  function reportError(result){
+    if(result?.error==='insufficient')showNotice('Số dư khách không đủ để trừ');
+    else if(result?.error==='missing')showNotice('Không tìm thấy khách hàng. Hãy tải lại danh sách khách.');
+    else if(result?.error==='invalid')showNotice('Số dư hoặc số tiền giao dịch không hợp lệ');
+    else showNotice('Không lưu được giao dịch. Kiểm tra kết nối và quyền ghi Firebase.');
+  }
+  window.adjustUser=async function(id,direction){
+    if(!ensureAdmin())return;
+    const raw=prompt('Nhập số tiền cần '+(Number(direction)>0?'cộng':'trừ'));
+    if(raw===null)return;
+    const amount=Number(String(raw).replace(/[,.\s]/g,''));
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
+    try{
+      const result=await changeBalance({uid:id,amount,kind:Number(direction)>0?'credit':'debit'});
+      if(!result.ok){reportError(result);return;}
+      if(typeof logAdmin==='function')logAdmin(Number(direction)>0?'credit_balance':'debit_balance',result.username+' '+amount+' → '+result.after);
+      if(typeof logActivity==='function')logActivity('balance',(Number(direction)>0?'Cộng ':'Trừ ')+money(amount)+' cho '+result.username);
+      showNotice('Đã cập nhật số dư: '+money(result.after));
+      if(typeof loadUsers==='function')loadUsers();
+      if(currentUser()?.uid===id)refreshAuthUI();
+    }catch(error){console.error('adjustUser failed',error);showNotice('Cập nhật số dư thất bại: '+(error?.message||'lỗi Firebase'));}
+  };
+  window.submitGiftBalance=async function(event){
+    if(event?.preventDefault)event.preventDefault();
+    if(!ensureAdmin())return;
+    const form=$('giftBalanceForm'),submit=form?.querySelector('[type="submit"]');
+    const select=$('giftBalanceUser'),uid=select?.value||'';
+    const username=select?.selectedOptions?.[0]?.dataset?.username||'';
+    const amount=Number($('giftBalanceAmount')?.value);
+    const kind=$('giftBalanceDirection')?.value==='debit'?'debit':'credit';
+    const reason=String($('giftBalanceReason')?.value||'').trim();
+    const message=String($('giftBalanceMessage')?.value||'').trim();
+    if(!uid){showNotice('Vui lòng chọn khách hàng');return;}
+    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
+    if(!reason){showNotice('Vui lòng nhập lý do giao dịch');return;}
+    if(submit){submit.disabled=true;submit.textContent='Đang cập nhật...';}
+    try{
+      const result=await changeBalance({uid,username,amount,kind,reason,message});
+      if(!result.ok){reportError(result);return;}
+      if(typeof logAdmin==='function')logAdmin(kind==='credit'?'credit_balance':'debit_balance',result.username+' '+amount+' '+reason);
+      if(typeof logActivity==='function')logActivity('balance',(kind==='credit'?'Cộng ':'Trừ ')+money(amount)+' cho '+result.username+' · '+reason);
+      showNotice((kind==='credit'?'Đã cộng ':'Đã trừ ')+money(amount)+' thành công');
+      form?.reset();
+      if(typeof populateGiftUsers==='function')populateGiftUsers();
+      if(typeof loadUsers==='function')loadUsers();
+      if(typeof updateHeader==='function')updateHeader();
+      if(currentUser()?.uid===result.uid)refreshAuthUI();
+      if(typeof window.showShopGiftAlerts==='function')setTimeout(window.showShopGiftAlerts,250);
+    }catch(error){console.error('submitGiftBalance failed',error);showNotice('Giao dịch thất bại: '+(error?.message||'kiểm tra Firebase/quyền ghi'));}
+    finally{if(submit){submit.disabled=false;submit.textContent='🎁 Xác nhận giao dịch';}}
+  };
+})();
+</script>
+
+</body>
 
 <style id="final-force-mystery-plans-v3">
 .bag-maintenance-plan{cursor:not-allowed!important;opacity:.78!important;pointer-events:none!important;}
@@ -3483,7 +3592,7 @@ html,body{
   }
 }
 </style>
-
+</html>
 <style id="final-user-v8-maintenance-credentials">
 /* Chỉ sửa 4 ô thời gian + ẩn/hiện TK/MK. Các phần khác giữ nguyên. */
 .v8-maintenance-plan{cursor:not-allowed!important;opacity:.72!important;}
@@ -3746,119 +3855,3 @@ html,body{
   }
 })();
 </script>
-
-<style id="mobile-bottom-navigation-and-compact-quick">
-/* Hai thẻ thao tác nhanh gọn như mẫu */
-.quick-grid{gap:14px;margin-bottom:34px}
-.quick{min-height:104px;padding:17px 22px;gap:15px;border-radius:18px}
-.quick-icon{width:58px;height:58px;font-size:29px;border-radius:14px}
-.quick h3{font-size:20px;margin:0 0 5px}
-.quick p{font-size:14px}
-.quick-arrow{margin-left:auto;font-size:22px;position:relative;z-index:2;color:#fff}
-.quick:nth-child(1){border-color:#20b99c;background:linear-gradient(110deg,#064c3e,#082b3a)}
-.quick:nth-child(2){border-color:#9635df;background:linear-gradient(110deg,#32105c,#210d3c)}
-.quick:nth-child(1) .quick-icon{color:#52f5c3}
-.quick:nth-child(2) .quick-icon{color:#e2a4ff}
-.mobile-bottom-nav{display:none}
-@media(max-width:760px){
-  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
-  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px auto 28px!important}
-  .quick{height:102px!important;min-height:102px!important;padding:12px 11px!important;gap:9px!important;display:flex!important;align-items:center!important;border-radius:16px!important}
-  .quick-icon{width:43px!important;height:48px!important;min-width:43px!important;margin:0!important;font-size:25px!important;background:transparent!important}
-  .quick h3{font-size:14px!important;line-height:1.3!important;margin:0 0 4px!important}
-  .quick p{font-size:11px!important;line-height:1.35!important}
-  .quick-arrow{font-size:15px!important;margin-left:auto!important}
-  .mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:85;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:calc(66px + env(safe-area-inset-bottom));padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(10,9,19,.97);border-top:1px solid #30243f;box-shadow:0 -8px 24px rgba(0,0,0,.35);backdrop-filter:blur(18px)}
-  .bottom-nav-item{border:0;background:transparent;color:#b7a9ce;display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px;padding:3px 0;position:relative}
-  .bottom-nav-item i{font-size:22px;line-height:1}
-  .bottom-nav-item span{white-space:nowrap}
-  .bottom-nav-item.active{color:#c16aff}
-  .bottom-nav-item.active:after{content:"";position:absolute;left:12%;right:12%;bottom:-7px;height:3px;border-radius:3px;background:#a83cff;box-shadow:0 0 12px #963cff}
-  .chat{bottom:calc(82px + env(safe-area-inset-bottom))!important}
-}
-</style>
-
-<style id="shopcenavn-compact-admin-fixes">
-/* Thu gọn hai thẻ thao tác nhanh */
-.quick-grid{gap:12px;margin-bottom:30px}
-.quick{min-height:92px;padding:14px 18px;gap:12px}
-.quick-icon{width:50px;height:50px;font-size:26px}
-.quick h3{font-size:18px;line-height:1.25}
-.quick p{font-size:13px}
-@media(max-width:760px){
-  .quick-grid{gap:8px!important;margin:12px auto 24px!important}
-  .quick{height:82px!important;min-height:82px!important;padding:9px 8px!important;gap:6px!important}
-  .quick-icon{width:36px!important;height:40px!important;min-width:36px!important;font-size:22px!important}
-  .quick h3{font-size:12px!important;line-height:1.2!important}
-  .quick p{font-size:10px!important;line-height:1.2!important}
-  .quick-arrow{font-size:13px!important}
-  #adminOverlay .modal-head{display:flex!important;align-items:center!important;justify-content:space-between!important;padding-right:2px!important;z-index:100!important}
-  #adminOverlay .modal-head h2{flex:1!important;min-width:0!important;padding-right:8px!important}
-  #adminOverlay .modal-head>.close{position:relative!important;z-index:120!important;flex:0 0 46px!important;width:46px!important;height:46px!important;margin-left:auto!important;display:grid!important;place-items:center!important;visibility:visible!important;opacity:1!important}
-}
-</style>
-<script id="shopcenavn-final-balance-handler-fix">
-(function(){
-  // Final admin balance handler: update the authoritative Firebase user list atomically,
-  // with a local-only fallback when Firebase is unavailable.
-  window.adjustUser = async function(id, direction){
-    if(!ensureAdmin()) return;
-    const raw=prompt('Nhập số tiền cần '+(direction>0?'cộng':'trừ'));
-    if(raw===null) return;
-    const amount=Number(raw);
-    if(!Number.isSafeInteger(amount)||amount<=0){showNotice('Số tiền không hợp lệ');return;}
-    const now=Date.now();
-    try{
-      let outcome=null;
-      if(firebaseDB&&firebaseSyncReady){
-        const ref=firebaseDB.ref('shopcenavn/users');
-        const tx=await ref.transaction(function(current){
-          const users=Array.isArray(current)?current.filter(Boolean):(current&&typeof current==='object'?Object.values(current).filter(Boolean):[]);
-          const user=users.find(function(u){return String(u.uid)===String(id);});
-          if(!user){outcome={missing:true};return;}
-          const before=Number(user.balance||0);
-          if(direction<0&&before<amount){outcome={insufficient:true};return;}
-          const after=before+(direction>0?amount:-amount);
-          user.balance=after;
-          user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
-          user.transactionHistory.unshift({id:rid(),type:direction>0?'admin_credit':'admin_debit',amount:amount,balanceBefore:before,balanceAfter:after,createdAt:now,admin:ADMIN_USERNAME});
-          outcome={username:user.username,before:before,after:after,uid:user.uid};
-          return users;
-        });
-        if(!tx.committed){
-          if(outcome&&outcome.insufficient){showNotice('Số dư khách không đủ để trừ');return;}
-          if(outcome&&outcome.missing){showNotice('Không tìm thấy khách hàng trong Firebase');return;}
-          showNotice('Firebase chưa lưu được số dư. Kiểm tra quyền ghi dữ liệu.');return;
-        }
-        const saved=tx.snapshot.val();
-        writeLocal(STORAGE.users,Array.isArray(saved)?saved:Object.values(saved||{}));
-      }else{
-        const users=getUsers();
-        const user=users.find(function(u){return String(u.uid)===String(id);});
-        if(!user){showNotice('Không tìm thấy tài khoản khách');return;}
-        const before=Number(user.balance||0);
-        if(direction<0&&before<amount){showNotice('Số dư khách không đủ để trừ');return;}
-        const after=before+(direction>0?amount:-amount);
-        user.balance=after;
-        user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
-        user.transactionHistory.unshift({id:rid(),type:direction>0?'admin_credit':'admin_debit',amount:amount,balanceBefore:before,balanceAfter:after,createdAt:now,admin:ADMIN_USERNAME});
-        writeLocal(STORAGE.users,users);
-        outcome={username:user.username,before:before,after:after,uid:user.uid};
-      }
-      if(!outcome||outcome.missing){showNotice('Không tìm thấy khách hàng');return;}
-      logAdmin(direction>0?'credit_balance':'debit_balance',outcome.username+' '+amount+' → '+outcome.after);
-      if(typeof logActivity==='function')logActivity('balance',(direction>0?'Cộng ':'Trừ ')+money(amount)+' cho '+outcome.username);
-      showNotice('Đã '+(direction>0?'cộng ':'trừ ')+money(amount)+' thành công');
-      if(typeof loadUsers==='function')loadUsers();
-      if(currentUser()&&String(currentUser().uid)===String(id))refreshAuthUI();
-      updateHeader();
-    }catch(err){
-      console.error('Admin balance update failed:',err);
-      showNotice('Cập nhật số dư thất bại: '+(err&&err.message?err.message:'kiểm tra Firebase'));
-    }
-  };
-})();
-</script>
-
-</body>
-</html>
