@@ -3046,50 +3046,6 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     }
   };
 
-  // Atomic balance updates prevent stale whole-list writes from overwriting another update.
-  window.adjustUser = async function (id, direction) {
-    if (!ensureAdmin()) return;
-    const raw = prompt('Nhập số tiền cần ' + (direction > 0 ? 'cộng' : 'trừ'));
-    if (raw === null) return;
-    const amount = Number(raw);
-    if (!Number.isFinite(amount) || amount <= 0) { showNotice('Số tiền không hợp lệ'); return; }
-
-    try {
-      const now = Date.now();
-      const tx = await transactUsers(users => {
-        const user = users.find(item => item.uid === id);
-        if (!user) return undefined;
-        const before = Number(user.balance || 0);
-        const after = Math.max(0, before + (direction > 0 ? amount : -amount));
-        if (direction < 0 && before < amount) return { insufficient: true };
-        user.balance = after;
-        user.transactionHistory = Array.isArray(user.transactionHistory) ? user.transactionHistory : [];
-        user.transactionHistory.unshift({
-          id: rid(), type: direction > 0 ? 'admin_credit' : 'admin_debit',
-          amount, balanceBefore: before, balanceAfter: after, createdAt: now, admin: ADMIN_USERNAME
-        });
-        return { username: user.username, before, after };
-      });
-
-      if (!tx.committed) {
-        showNotice('Không tìm thấy khách hoặc Firebase không lưu được thay đổi');
-        return;
-      }
-      if (tx.result?.insufficient) { showNotice('Số dư khách không đủ để trừ'); return; }
-
-      logAdmin(direction > 0 ? 'credit_balance' : 'debit_balance',
-        `${tx.result.username} ${amount} → ${tx.result.after}`);
-      if (typeof logActivity === 'function') {
-        logActivity('balance', `${direction > 0 ? 'Cộng' : 'Trừ'} ${money(amount)} cho ${tx.result.username}`);
-      }
-      showNotice('Đã cập nhật số dư thành công: ' + money(tx.result.after));
-      loadUsers();
-      if (currentUser()?.uid === id) refreshAuthUI();
-    } catch (error) {
-      console.error('Balance update failed:', error);
-      showNotice('Cập nhật thất bại. Kiểm tra Firebase Database Rules/kết nối mạng.');
-    }
-  };
 
   // Deposit approval is idempotent: retrying an approval cannot credit the same deposit twice.
   window.approveDeposit = async function (depositId) {
