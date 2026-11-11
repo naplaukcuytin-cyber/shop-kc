@@ -2887,8 +2887,9 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     return asUsers(snap.val());
   }
 
-  async function transactUsers(mutator) {
+  async function transactUsers(mutator, requireFirebase = false) {
     if (!(firebaseDB && firebaseSyncReady)) {
+      if (requireFirebase) throw new Error('Firebase chưa kết nối. Giao dịch tiền bị chặn để tránh chỉ lưu tạm trên máy admin.');
       const local = getUsers();
       const result = mutator(local);
       if (result === undefined) return { committed: false, users: local };
@@ -3046,7 +3047,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
           amount, balanceBefore: before, balanceAfter: after, createdAt: now, admin: ADMIN_USERNAME
         });
         return { username: user.username, before, after };
-      });
+      }, true);
 
       if (!tx.committed) {
         showNotice('Không tìm thấy khách hoặc Firebase không lưu được thay đổi');
@@ -3097,7 +3098,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
           });
         }
         return { username: user.username, balance: Number(user.balance || 0) };
-      });
+      }, true);
 
       if (!tx.committed) { showNotice('Không tìm thấy khách hoặc không lưu được số dư'); return; }
 
@@ -3212,6 +3213,9 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     if(!reason){showNotice('Vui lòng nhập lý do giao dịch');return;}
     try{
       const now=Date.now(),notificationId=rid();let result;
+      if(!(firebaseDB&&firebaseSyncReady)){
+        showNotice('Firebase chưa kết nối. Chưa thực hiện giao dịch tiền; hãy tải lại trang và thử lại.');return;
+      }
       if(firebaseDB&&firebaseSyncReady){
         const ref=firebaseDB.ref('shopcenavn/users');
         const tx=await ref.transaction(current=>{
@@ -3325,6 +3329,9 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
     const now=Date.now(),notificationId=rid();
     try{
       let result;
+      if(!(firebaseDB&&firebaseSyncReady)){
+        showNotice('Firebase chưa kết nối. Đơn chưa được cộng tiền; hãy tải lại trang và thử lại.');return;
+      }
       if(firebaseDB&&firebaseSyncReady){
         const ref=firebaseDB.ref('shopcenavn/users');
         const tx=await ref.transaction(current=>{
@@ -3344,17 +3351,7 @@ try{const a=read(STORAGE.bags,defaultBags);if(Array.isArray(a)){let c=false;a.fo
         if(!tx.committed){showNotice(result?.missing?'Không tìm thấy khách trong Firebase':'Firebase chưa lưu được số dư. Kiểm tra quyền ghi dữ liệu.');return;}
         const raw=tx.snapshot.val();writeLocal(STORAGE.users,Array.isArray(raw)?raw:Object.values(raw||{}));
       }else{
-        const users=getUsers(),user=users.find(u=>String(u.uid)===String(deposit.uid)||(deposit.username&&normalizeLogin(u.username)===normalizeLogin(deposit.username)));
-        if(!user){showNotice('Không tìm thấy tài khoản khách');return;}
-        user.depositCredits=Array.isArray(user.depositCredits)?user.depositCredits:[];
-        if(!user.depositCredits.includes(depositId)){
-          const before=Number(user.balance||0);user.balance=before+amount;user.depositCredits.push(depositId);
-          user.transactionHistory=Array.isArray(user.transactionHistory)?user.transactionHistory:[];
-          user.transactionHistory.unshift({id:notificationId,type:'deposit',depositId,amount,balanceBefore:before,balanceAfter:user.balance,createdAt:now,admin:ADMIN_USERNAME});
-          user.giftNotifications=Array.isArray(user.giftNotifications)?user.giftNotifications:[];
-          user.giftNotifications.unshift({id:notificationId,kind:'credit',title:'🎉 Nạp tiền thành công',amount,balanceAfter:user.balance,reason:'Duyệt yêu cầu nạp tiền',message:'Yêu cầu nạp '+money(amount)+' của bạn đã được duyệt và cộng vào số dư thành công.',createdAt:now,read:false});
-        }
-        writeLocal(STORAGE.users,users);result={username:user.username};
+        throw new Error('Firebase chưa kết nối; không thể xác nhận cộng tiền.');
       }
       const latest=getDeposits(),item=latest.find(x=>String(x.id)===String(depositId));
       if(item&&item.status==='pending'){item.status='approved';item.approvedAt=now;item.approvedBy=ADMIN_USERNAME;item.creditedAmount=amount;write(STORAGE.deposits,latest);}
