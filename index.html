@@ -3762,6 +3762,163 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 })();
 </script>
 
+
+
+<!-- SHOPCENAVN UI FIX: single close button, compact dark menu, quick-chat prompts -->
+<style id="shopcenavn-ui-fix-2026-11">
+/* Restore the original compact, right-side dark menu. */
+.side-backdrop{background:rgba(0,0,0,.65)!important}
+.side-panel{
+  position:absolute!important;top:0!important;right:0!important;left:auto!important;
+  width:min(370px,88vw)!important;height:100dvh!important;max-height:100dvh!important;
+  padding:25px!important;overflow-y:auto!important;
+  background:#11131c!important;color:#f4f4f6!important;
+  border:0!important;border-left:1px solid #30333e!important;border-radius:0!important;
+  box-shadow:-18px 0 45px rgba(0,0,0,.35)!important;
+  transform:translateX(100%)!important;
+}
+.side-menu.open .side-panel{transform:translateX(0)!important}
+.side-panel .modal-head{margin:0 0 10px!important;min-height:0!important}
+.side-panel .modal-head .close{display:none!important}
+.side-panel .side-links{display:grid!important;gap:8px!important;margin-top:18px!important}
+.side-panel .side-link{
+  display:block!important;width:100%!important;text-align:left!important;
+  padding:15px!important;border:1px solid #292c37!important;border-radius:12px!important;
+  background:#171923!important;color:#f1f1f5!important;font-size:16px!important;
+  box-shadow:none!important;
+}
+.side-panel .side-link:hover{background:#20232e!important;color:#fff!important;border-color:#3a3e4b!important}
+.side-panel .side-divider{height:1px!important;background:#2a2d37!important;margin:18px 0 14px!important}
+.side-panel .side-user-card{padding:16px!important;border-radius:14px!important;background:#171923!important;border:1px solid #303340!important;margin-bottom:8px!important;color:#f4f4f6!important}
+.side-panel .side-user-card .mini,.side-panel .side-member-name{color:#aeb2c0!important}
+.side-panel .side-user-card b{color:#9b75ec!important}
+.side-panel .side-login{background:#2a2c34!important;color:#f4f4f6!important}
+.side-panel .side-register{background:#7843d7!important;color:#fff!important}
+@media(max-width:760px){
+  .side-panel{top:0!important;right:0!important;left:auto!important;width:min(370px,88vw)!important;height:100dvh!important;max-height:100dvh!important;padding:22px!important;border-radius:0!important;transform:translateX(100%)!important}
+  .side-menu.open .side-panel{transform:translateX(0)!important}
+}
+</style>
+<script id="shopcenavn-ui-fix-2026-11-js">
+(function(){
+  const widget=document.getElementById('customerSupportWidget');
+  if(!widget)return;
+  const welcome=widget.querySelector('.support-welcome');
+  const input=document.getElementById('customerSupportInput');
+  if(!welcome||!input)return;
+
+  /* Quick actions are chat prompts only: never navigate to deposit, accounts or services. */
+  const prompts=[
+    ['deposit','Tôi muốn hỏi về cách nạp tiền vào tài khoản.'],
+    ['accounts','Tôi muốn hỏi thông tin về tài khoản game đang bán.'],
+    ['services','Tôi muốn hỏi về các dịch vụ game của shop.']
+  ];
+  prompts.forEach(([key,message])=>{
+    const button=welcome.querySelector('[data-action="'+key+'"]');
+    if(!button)return;
+    button.onclick=function(){
+      input.value=message;
+      input.focus();
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+    };
+  });
+  const prompt=welcome.querySelector('.support-chat-prompt');
+  if(prompt)prompt.onclick=function(){input.focus();input.scrollIntoView({behavior:'smooth',block:'center'});};
+})();
+</script>
+
+
+<style id="shopcenavn-header-compact-dark-final">
+/* Final mobile header correction: restore original dark bar and compact wallet/menu controls. */
+@media (max-width: 760px) {
+  header.header,
+  header.header.shop-header-pinned {
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    padding: 0 !important;
+    background: rgba(9,10,16,.97) !important;
+    background-color: #090a10 !important;
+    border-bottom: 1px solid #20232d !important;
+    color: #f4f4f6 !important;
+    box-sizing: border-box !important;
+  }
+  .header-inner {
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .header .logo {
+    width: min(190px, 43vw) !important;
+    height: 28px !important;
+    max-height: 28px !important;
+    object-fit: contain !important;
+  }
+  .header .account-bar,
+  .header .account-bar.show {
+    height: 38px !important;
+    min-height: 38px !important;
+    margin: 0 0 0 auto !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    align-items: center !important;
+  }
+  .header .account-bar .balance {
+    height: 36px !important;
+    min-height: 36px !important;
+    min-width: 58px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 9px !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    background: #0d3022 !important;
+    border: 1px solid #1b6444 !important;
+    color: #4cf09a !important;
+  }
+  .header .menu-btn {
+    order: 3 !important;
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #343743 !important;
+    border-radius: 10px !important;
+    background: #191b24 !important;
+    color: #f4f4f6 !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.04) !important;
+  }
+  .header .header-register {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 12px !important;
+    border-radius: 9px !important;
+    font-size: 13px !important;
+  }
+}
+@media (max-width: 390px) {
+  .header-inner { gap: 6px !important; }
+  .header .logo { width: min(165px, 40vw) !important; }
+  .header .account-bar .balance { min-width: 54px !important; padding: 0 7px !important; }
+}
+</style>
+
 </body>
 
 <style id="final-force-mystery-plans-v3">
@@ -4222,12 +4379,6 @@ html,body{
 .support-bottom-nav i{font-size:22px}
 @media(max-width:600px){.support-widget{right:10px!important;bottom:14px!important;width:calc(100vw - 20px)!important;height:min(820px,calc(100dvh - 104px))!important}.support-welcome{padding:19px 17px 15px}.support-welcome h2{font-size:26px}.support-welcome p{font-size:15px}.support-quick-actions button{font-size:14px;padding:13px 0}}
 
-/* One persistent close control stays above every overlay, menu and chat panel. */
-#shopGlobalClose{position:fixed!important;top:calc(env(safe-area-inset-top,0px) + 12px)!important;right:14px!important;width:52px!important;height:52px!important;border:1px solid #dedbe7!important;border-radius:15px!important;background:#f5f3f8!important;color:#292735!important;font-size:30px!important;line-height:1!important;display:none;align-items:center;justify-content:center;z-index:2147483647!important;box-shadow:0 4px 16px rgba(30,20,45,.16)!important;pointer-events:auto!important;touch-action:manipulation!important}
-#shopGlobalClose.visible{display:flex!important}
-#shopGlobalClose:active{transform:scale(.96)}
-@media(max-width:600px){#shopGlobalClose{width:48px!important;height:48px!important;right:12px!important}}
-
 .header-register{display:inline-flex;align-items:center;justify-content:center;order:2;flex:none;border:0;border-radius:13px;background:var(--ui-purple);color:#fff;padding:14px 20px;font-size:16px;font-weight:700;box-shadow:none}
 @media(max-width:600px){.header-register{padding:12px 15px;font-size:14px}}
 </style>
@@ -4291,21 +4442,8 @@ html,body{
     const add=(label,fn)=>{const b=document.createElement('button');b.type='button';b.className='side-link';b.textContent=label;b.addEventListener('click',()=>{window.closeMenu?.();fn()});return b};
     if(anchors[1]){anchors[1].after(add('Nạp tiền',()=>window.openDeposit?.()));anchors[1].nextElementSibling.after(add('Nạp thẻ',()=>window.openDepositCard?.()));}
   }
-
-  /* Add an always-available close button. It closes the top-most active surface. */
-  const close=document.createElement('button');close.type='button';close.id='shopGlobalClose';close.setAttribute('aria-label','Đóng cửa sổ đang mở');close.textContent='×';document.body.appendChild(close);
-  close.addEventListener('click',function(){
-    const menu=$id('sideMenu'),widget=$id('customerSupportWidget');
-    if(menu?.classList.contains('open')){if(typeof window.closeMenu==='function')window.closeMenu();return;}
-    const overlays=[...document.querySelectorAll('.overlay.show')];
-    if(overlays.length){const top=overlays.sort((a,b)=>Number(getComputedStyle(a).zIndex||100)-Number(getComputedStyle(b).zIndex||100)).at(-1);if(top&&typeof window.closeModal==='function'){window.closeModal(top.id);return}}
-    if(widget?.classList.contains('open')&&typeof window.closeCustomerSupport==='function')window.closeCustomerSupport();
-  });
-  function syncClose(){const active=!!document.querySelector('.overlay.show,.side-menu.open,.support-widget.open');close.classList.toggle('visible',active)}
-  new MutationObserver(syncClose).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-  syncClose();
-
-  /* Support welcome and shortcut links; the existing realtime message channel remains intact. */
+  /* Use each existing panel's own close button; do not add a duplicate floating X. */
+/* Support welcome and shortcut links; the existing realtime message channel remains intact. */
   function setupSupport(){
     const widget=$id('customerSupportWidget');if(!widget||widget.dataset.uiRefresh)return;widget.dataset.uiRefresh='1';
     const head=widget.querySelector('.support-widget-head');if(!head)return;
@@ -4349,3 +4487,46 @@ html,body{
   }
 })();
 </script>
+
+
+<style id="shopcenavn-menu-size-dark-correction">
+/* Remove duplicate global X; keep the original close controls only. */
+#shopGlobalClose{display:none!important}
+.side-panel .modal-head .close,
+.overlay .modal-head .close,
+.support-widget-close{display:flex!important;visibility:visible!important;pointer-events:auto!important}
+/* Restore compact hamburger button size and dark original appearance. */
+.menu-btn{
+  width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;
+  padding:0!important;border:1px solid #343743!important;border-radius:10px!important;
+  background:#191b24!important;color:#f4f4f6!important;font-size:20px!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.04)!important;
+}
+@media(max-width:420px){
+  .menu-btn{width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;font-size:20px!important}
+}
+/* Return the opened menu to its original dark theme and compact drawer. */
+.side-panel{
+  position:absolute!important;left:auto!important;right:0!important;top:0!important;
+  width:min(370px,88vw)!important;height:100dvh!important;max-height:100dvh!important;
+  padding:22px!important;background:#11131c!important;color:#f4f4f6!important;
+  border:0!important;border-left:1px solid #30333e!important;border-radius:0!important;
+  box-shadow:-18px 0 45px rgba(0,0,0,.35)!important;
+  transform:translateX(100%)!important;overflow-y:auto!important;
+}
+.side-menu.open .side-panel{transform:translateX(0)!important}
+.side-panel .modal-head{display:flex!important;justify-content:flex-end!important;margin:0 0 10px!important}
+.side-panel .modal-head .close{display:flex!important;background:#191b24!important;border:1px solid #343743!important;color:#f4f4f6!important;width:40px!important;height:40px!important;border-radius:10px!important}
+.side-panel .side-links{display:grid!important;gap:8px!important;margin-top:12px!important}
+.side-panel .side-link{
+  display:block!important;width:100%!important;text-align:left!important;padding:14px 15px!important;
+  border:1px solid #292c37!important;border-radius:12px!important;background:#171923!important;
+  color:#f1f1f5!important;font-size:16px!important;font-weight:600!important;
+}
+.side-panel .side-link:hover{background:#20232e!important;color:#fff!important;border-color:#3a3e4b!important}
+.side-panel .side-divider{background:#2a2d37!important}
+.side-panel .side-user-card{background:#171923!important;color:#f4f4f6!important;border:1px solid #303340!important;border-radius:14px!important}
+@media(max-width:760px){
+  .side-panel{top:0!important;left:auto!important;right:0!important;width:min(370px,88vw)!important;height:100dvh!important;max-height:100dvh!important;padding:18px!important;border-radius:0!important}
+}
+</style>
