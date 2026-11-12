@@ -3927,10 +3927,18 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
 #customerSupportWidget{isolation:isolate!important}
 #customerSupportWidget .support-widget-head{position:relative!important;z-index:20!important;min-height:62px!important;padding-top:max(10px,env(safe-area-inset-top,0px))!important}
 #customerSupportWidget .support-widget-close{position:relative!important;z-index:100150!important;display:flex!important;flex:0 0 42px!important;width:42px!important;min-width:42px!important;height:42px!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;touch-action:manipulation!important}
-#customerSupportWidget.chat-mode .support-welcome,#customerSupportWidget.chat-mode .support-bottom-nav{display:none!important}
+/* Welcome screen hides the small bottom chat box; chat mode shows full chat box and hides welcome/bottom-nav */
+#customerSupportWidget:not(.chat-mode) .support-widget-day,
+#customerSupportWidget:not(.chat-mode) .support-widget-body,
+#customerSupportWidget:not(.chat-mode) .support-widget-footer{display:none!important}
+#customerSupportWidget:not(.chat-mode){grid-template-rows:auto minmax(0,1fr) auto!important}
+#customerSupportWidget:not(.chat-mode) .support-welcome{overflow-y:auto!important;min-height:0!important}
+#customerSupportWidget.chat-mode .support-welcome,
+#customerSupportWidget.chat-mode .support-bottom-nav{display:none!important}
 #customerSupportWidget.chat-mode{grid-template-rows:auto auto minmax(0,1fr) auto!important}
+#customerSupportWidget.chat-mode .support-widget-day{display:block!important;flex:none!important}
 #customerSupportWidget.chat-mode .support-widget-body{display:flex!important;min-height:0!important;overflow-y:auto!important}
-#customerSupportWidget .support-widget-day{flex:none!important}
+#customerSupportWidget.chat-mode .support-widget-footer{display:block!important}
 @media(max-width:760px){
 .overlay{padding:max(8px,env(safe-area-inset-top,0px)) 8px max(8px,env(safe-area-inset-bottom,0px))!important}
 .overlay .modal{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 16px)!important}
@@ -3957,25 +3965,61 @@ header.header.shop-header-pinned{position:fixed!important;top:0!important;left:0
   const body=byId('customerSupportMessages');
   if(body)body.scrollTop=body.scrollHeight;
  }
+ function showWelcome(){
+  widget.classList.remove('chat-mode');
+ }
  const messages={
   deposit:'Tôi cần hướng dẫn nạp tiền.',
   accounts:'Tôi muốn hỏi về tài khoản game bán sẵn.',
   services:'Tôi muốn được tư vấn về dịch vụ game.'
  };
- Object.keys(messages).forEach(key=>{
-  const button=widget.querySelector('.support-welcome [data-action="'+key+'"]');
-  if(!button||button.dataset.realChatBound==='1')return;
-  button.dataset.realChatBound='1';
-  button.addEventListener('click',function(e){
-   e.preventDefault();e.stopImmediatePropagation();enterChat(messages[key]);
-  },true);
- });
- const prompt=widget.querySelector('.support-welcome .support-chat-prompt');
- if(prompt&&prompt.dataset.realChatBound!=='1'){
-  prompt.dataset.realChatBound='1';
-  prompt.addEventListener('click',function(e){
-   e.preventDefault();e.stopImmediatePropagation();enterChat('');
-  },true);
+ function bindWelcomeEvents(){
+  const welcome=widget.querySelector('.support-welcome');
+  if(!welcome)return;
+  Object.keys(messages).forEach(key=>{
+   const button=welcome.querySelector('[data-action="'+key+'"]');
+   if(!button||button.dataset.realChatBound==='1')return;
+   button.dataset.realChatBound='1';
+   button.addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();enterChat(messages[key]);
+   },true);
+  });
+  const prompt=welcome.querySelector('.support-chat-prompt');
+  if(prompt&&prompt.dataset.realChatBound!=='1'){
+   prompt.dataset.realChatBound='1';
+   prompt.addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();enterChat('');
+   },true);
+  }
+  const navBtns=widget.querySelectorAll('.support-bottom-nav button');
+  if(navBtns[1]&&navBtns[1].dataset.realChatBound!=='1'){
+   navBtns[1].dataset.realChatBound='1';
+   navBtns[1].addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();enterChat('');
+   },true);
+  }
+ }
+ bindWelcomeEvents();
+ new MutationObserver(bindWelcomeEvents).observe(widget,{childList:true,subtree:true});
+
+ if(typeof window.openCustomerSupport==='function'&&!window.openCustomerSupport.__welcomeFirst){
+  const origOpen=window.openCustomerSupport;
+  const wrappedOpen=function(){
+   showWelcome();
+   return origOpen.apply(this,arguments);
+  };
+  wrappedOpen.__welcomeFirst=true;
+  window.openCustomerSupport=wrappedOpen;
+ }
+ if(typeof window.openSupportFromMenu==='function'&&!window.openSupportFromMenu.__chatDirect){
+  const origMenuSupport=window.openSupportFromMenu;
+  const wrappedMenuSupport=function(){
+   const res=origMenuSupport.apply(this,arguments);
+   widget.classList.add('chat-mode');
+   return res;
+  };
+  wrappedMenuSupport.__chatDirect=true;
+  window.openSupportFromMenu=wrappedMenuSupport;
  }
  function liftClose(){
   document.querySelectorAll('.overlay .modal-head .close,.side-panel .modal-head .close,#customerSupportWidget .support-widget-close').forEach(el=>{
