@@ -4115,3 +4115,237 @@ html,body{
   }
 })();
 </script>
+
+
+<!-- SHOPCENAVN UI REFRESH: auth, menu, wallet, support, always-visible close control -->
+<style id="shopcenavn-ui-refresh-2026">
+:root{--ui-purple:#7843d7;--ui-purple-dark:#6234b8;--ui-light:#f4f3f8;--ui-ink:#292735;--ui-muted:#777483}
+/* Light header and wallet beside the hamburger */
+.header{background:rgba(245,244,249,.97)!important;border-bottom:1px solid #dedce6!important;color:var(--ui-ink)!important}
+.header .logo{object-fit:contain}
+.header-inner{gap:12px!important}
+.account-bar.show{display:flex!important;order:2!important;margin-left:auto!important;margin-right:0!important;gap:7px!important}
+.account-bar .balance{display:inline-flex!important;align-items:center;gap:8px;background:#eee8fa!important;border:1px solid #cdb9f3!important;color:var(--ui-purple)!important;border-radius:13px!important;padding:11px 13px!important;font-size:15px!important;font-weight:700!important;white-space:nowrap}
+.account-bar .balance:before{content:'\f555';font-family:'Font Awesome 6 Free';font-weight:900;font-size:17px}
+.account-bar .user-chip{display:none!important}
+.menu-btn{order:3!important;width:62px!important;height:62px!important;flex:none!important;border:1px solid #dedbe7!important;border-radius:15px!important;background:#f5f4f8!important;color:#292735!important;box-shadow:none!important}
+@media(max-width:760px){.header{height:100px!important}.logo{width:min(270px,44vw)!important;height:55px!important}.menu-btn{width:58px!important;height:58px!important;font-size:24px!important}.account-bar.show{display:flex!important}.account-bar .balance{padding:9px 10px!important;font-size:13px!important}}
+@media(max-width:390px){.header-inner{gap:7px!important}.logo{width:39vw!important}.menu-btn{width:50px!important;height:50px!important}.account-bar .balance{font-size:12px!important;padding:8px!important}}
+
+/* Auth screens: pale background, purple actions, clear labels and links */
+#authOverlay{background:rgba(29,25,39,.42)!important;backdrop-filter:blur(7px)!important}
+#authOverlay .modal{width:min(560px,100%)!important;max-height:94dvh!important;overflow:auto!important;padding:30px!important;border:1px solid #e1deea!important;border-radius:24px!important;background:linear-gradient(180deg,#fff 0%,#f5f3f9 100%)!important;color:var(--ui-ink)!important;box-shadow:0 24px 80px rgba(35,24,55,.2)!important}
+#authOverlay .modal-head{margin-bottom:14px!important}
+#authOverlay .modal-head h2{font-size:32px!important;color:var(--ui-ink)!important}
+#authOverlay .modal-head .close{background:#efedf4!important;border:1px solid #dedbe7!important;color:#302d3b!important}
+#authOverlay .auth-tabs{display:none!important}
+#authIntro{color:#777483!important;font-size:16px!important;line-height:1.65!important;margin:0 0 14px!important}
+#authSwitchLink{border:0!important;background:none!important;padding:0!important;margin:0 0 22px!important;color:var(--ui-purple)!important;font-size:16px!important;text-align:left!important;font-weight:600!important}
+#authOverlay .login-form{gap:10px!important}
+.auth-field-group{display:grid;gap:8px;margin:0 0 8px}
+.auth-field-group label{font-size:16px;font-weight:600;color:#302d3b}
+#authOverlay .field{height:58px!important;padding:14px 16px!important;background:#fff!important;border:1px solid #dedbe7!important;border-radius:13px!important;color:#292735!important;box-shadow:0 2px 8px rgba(33,25,48,.06)!important}
+#authOverlay .field::placeholder{color:#a09baa!important}
+#authOverlay .field:focus{border-color:#9d78e5!important;box-shadow:0 0 0 3px rgba(120,67,215,.12)!important}
+.auth-password-wrap{position:relative;display:flex;align-items:center}
+.auth-password-wrap .field{padding-right:54px!important}
+.auth-eye{position:absolute;right:10px;width:40px;height:40px;border:0;background:transparent;color:#777483;font-size:18px}
+#authSubmit{width:100%!important;margin-top:8px!important;background:var(--ui-purple)!important;border-radius:13px!important;box-shadow:none!important;padding:16px!important;font-size:17px!important}
+#authMsg{color:#b43d4b!important;min-height:18px}
+#authFinePrint{color:#777483;text-align:center;line-height:1.6;font-size:13px;margin:28px 0 0}
+#authFinePrint a{color:var(--ui-purple)}
+@media(max-width:600px){#authOverlay{padding:12px!important}#authOverlay .modal{padding:22px 18px!important;border-radius:20px!important}#authOverlay .modal-head h2{font-size:29px!important}#authIntro{font-size:15px!important}#authOverlay .field{height:54px!important}}
+
+/* Menu follows the supplied light layout; text remains black */
+.side-menu{z-index:100000!important}
+.side-backdrop{background:rgba(30,26,40,.15)!important}
+.side-panel{background:#f4f3f8!important;color:#292735!important;border:0!important;border-top:1px solid #dedbe7!important;border-bottom:1px solid #dedbe7!important;box-shadow:0 18px 45px rgba(31,24,43,.12)!important}
+.side-panel .modal-head{display:flex!important;justify-content:flex-end!important;margin-bottom:10px!important}
+.side-panel .modal-head h2{display:none!important}
+.side-panel .modal-head .close{background:#eceaf1!important;border:1px solid #dedbe7!important;color:#292735!important}
+.side-panel .side-links{display:grid!important;gap:0!important;margin-top:0!important}
+.side-panel .side-link{display:block!important;width:100%!important;text-align:left!important;padding:18px 0!important;border:0!important;border-radius:0!important;border-bottom:1px solid #e0dde7!important;background:transparent!important;color:#292735!important;font-size:17px!important;font-weight:500!important;box-shadow:none!important;transform:none!important}
+.side-panel .side-link:hover{background:transparent!important;border-color:#e0dde7!important;color:var(--ui-purple)!important}
+.side-panel .side-divider{height:1px!important;background:#dedbe7!important;margin:14px 0!important}
+.side-panel .side-user-card{background:transparent!important;border:0!important;border-bottom:1px solid #dedbe7!important;border-radius:0!important;margin:0!important;padding:12px 0 18px!important;color:#292735!important}
+.side-panel .side-user-card .mini,.side-panel .side-member-name{color:#777483!important}
+.side-panel .side-user-card b{color:var(--ui-purple)!important}
+.side-panel .side-register{background:var(--ui-purple)!important;color:white!important;border-radius:12px!important;padding:14px!important;text-align:center!important}
+.side-panel .side-login{background:#fff!important;border:1px solid #dedbe7!important;border-radius:12px!important;padding:14px!important;text-align:center!important}
+@media(max-width:760px){.side-panel{left:0!important;right:0!important;top:var(--shop-header-bottom,100px)!important;width:100%!important;height:auto!important;max-height:calc(100dvh - var(--shop-header-bottom,100px))!important;padding:12px 34px 24px!important;border-radius:0 0 20px 20px!important;transform:translateY(-12px)!important;overflow-y:auto!important}.side-menu.open .side-panel{transform:translateY(0)!important}.side-panel .side-link{font-size:16px!important;padding:17px 0!important}}
+
+/* Existing 8-bag selection section: purple presentation and subtle motion only */
+#bagCategoryView .bag-choice-stage{background:linear-gradient(155deg,#7541bd,#6138a8)!important;border:0!important;border-radius:0!important;padding:26px 18px 30px!important;margin:16px 0 0!important;color:#fff!important;box-shadow:inset 0 0 50px rgba(255,255,255,.06)!important}
+#bagCategoryView .bag-choice-title{color:#fff!important;font-size:28px!important}
+#bagCategoryView .bag-choice-sub{color:#eee5ff!important}
+#bagCategoryView .mini-bag-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;max-width:760px!important}
+#bagCategoryView .mini-bag{background:#2d1d48!important;border:2px solid rgba(255,255,255,.22)!important;border-radius:18px!important;padding:7px!important;box-shadow:0 8px 22px rgba(24,8,46,.25)!important;animation:bagFloatUi 3.8s ease-in-out infinite}
+#bagCategoryView .mini-bag:nth-child(2n){animation-delay:.35s}
+#bagCategoryView .mini-bag:after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:14px;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.2) 48%,transparent 68%);transform:translateX(-130%);transition:transform .7s ease}
+#bagCategoryView .mini-bag:hover:after,#bagCategoryView .mini-bag.selected:after{transform:translateX(130%)}
+#bagCategoryView .mini-bag img{aspect-ratio:1/1.02!important;border-radius:12px!important}
+#bagCategoryView .mini-bag-num{background:var(--ui-purple)!important;border:2px solid rgba(255,255,255,.7)!important;color:#fff!important}
+#bagCategoryView .mini-bag-open{background:#fff!important;color:var(--ui-purple)!important;box-shadow:0 8px 22px rgba(20,8,40,.3)!important}
+#bagCategoryView .mini-bag.selected{border-color:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.2),0 12px 35px rgba(20,8,40,.35)!important}
+#bagCategoryView .bag-choice-hint{background:rgba(39,20,67,.5)!important;border-color:rgba(255,255,255,.25)!important;color:#fff!important}
+#bagCategoryView .bag-choice-hint b{color:#fff!important}
+@keyframes bagFloatUi{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){#bagCategoryView .mini-bag{animation:none!important}#bagCategoryView .mini-bag:after{display:none!important}}
+
+/* Customer chat welcome panel based on the supplied screenshot */
+.chat{background:var(--ui-purple)!important;color:#fff!important;box-shadow:0 12px 35px rgba(120,67,215,.3)!important;z-index:100001!important}
+.chat:after{border-color:rgba(120,67,215,.28)!important}
+.support-widget{right:18px!important;bottom:24px!important;width:min(440px,calc(100vw - 28px))!important;height:min(780px,calc(100dvh - 116px))!important;z-index:100002!important;background:#292633!important;border:1px solid #4b4657!important;border-radius:22px!important;grid-template-rows:auto auto auto 1fr auto auto!important;box-shadow:0 25px 70px rgba(28,20,43,.3)!important}
+.support-widget-head{background:var(--ui-purple)!important;padding:14px 16px!important}
+.support-widget-day{background:#292633!important;color:#b8b3c1!important}
+.support-widget-body{background:#292633!important;min-height:90px}
+.support-widget-footer{background:#292633!important;border-top:1px solid #484252!important}
+.support-offline{background:rgba(255,255,255,.05)!important;color:#c7c2d0!important}
+.support-compose input,.support-compose .field{background:#211f2a!important;border-color:#514b5e!important;color:#fff!important}
+.support-send{background:var(--ui-purple)!important}
+.support-welcome{background:linear-gradient(160deg,#7843d7 0%,#6e3cc6 100%);padding:22px 22px 18px;color:#fff}
+.support-welcome h2{font-size:29px;line-height:1.2;margin:0 0 10px;color:#fff}
+.support-welcome p{font-size:16px;line-height:1.55;color:#eee7fb;margin:0 0 16px}
+.support-welcome-status{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.13);font-weight:700;margin-bottom:16px}
+.support-welcome-status i{width:10px;height:10px;border-radius:50%;background:#00bd85;display:inline-block}
+.support-quick-actions{background:#292633;border:1px solid #4b4657;border-radius:15px;padding:4px 17px;box-shadow:0 8px 25px rgba(15,10,25,.15)}
+.support-quick-actions button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 0;border:0;border-bottom:1px solid #4a4554;background:transparent;color:#f6f3fa;text-align:left;font-size:15px}
+.support-quick-actions button:last-child{border-bottom:0}
+.support-quick-actions button i{color:#c3a5ff}
+.support-chat-prompt{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:15px 16px;border:1px solid #4b4657;border-radius:15px;background:#292633;color:#fff;text-align:left;width:100%}
+.support-chat-prompt b{display:block;margin-bottom:5px;font-size:16px}
+.support-chat-prompt small{color:#aaa5b3;line-height:1.4;font-size:13px}
+.support-chat-prompt i{color:#9a68ef;font-size:22px}
+.support-bottom-nav{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #484252;background:#292633}
+.support-bottom-nav button{border:0;background:transparent;color:#a9a4b2;padding:11px 8px 12px;display:grid;gap:4px;justify-items:center;font-size:13px}
+.support-bottom-nav button.active{color:#a16cf3}
+.support-bottom-nav i{font-size:22px}
+@media(max-width:600px){.support-widget{right:10px!important;bottom:14px!important;width:calc(100vw - 20px)!important;height:min(820px,calc(100dvh - 104px))!important}.support-welcome{padding:19px 17px 15px}.support-welcome h2{font-size:26px}.support-welcome p{font-size:15px}.support-quick-actions button{font-size:14px;padding:13px 0}}
+
+/* One persistent close control stays above every overlay, menu and chat panel. */
+#shopGlobalClose{position:fixed!important;top:calc(env(safe-area-inset-top,0px) + 12px)!important;right:14px!important;width:52px!important;height:52px!important;border:1px solid #dedbe7!important;border-radius:15px!important;background:#f5f3f8!important;color:#292735!important;font-size:30px!important;line-height:1!important;display:none;align-items:center;justify-content:center;z-index:2147483647!important;box-shadow:0 4px 16px rgba(30,20,45,.16)!important;pointer-events:auto!important;touch-action:manipulation!important}
+#shopGlobalClose.visible{display:flex!important}
+#shopGlobalClose:active{transform:scale(.96)}
+@media(max-width:600px){#shopGlobalClose{width:48px!important;height:48px!important;right:12px!important}}
+
+.header-register{display:inline-flex;align-items:center;justify-content:center;order:2;flex:none;border:0;border-radius:13px;background:var(--ui-purple);color:#fff;padding:14px 20px;font-size:16px;font-weight:700;box-shadow:none}
+@media(max-width:600px){.header-register{padding:12px 15px;font-size:14px}}
+</style>
+<script id="shopcenavn-ui-refresh-2026-js">
+(function(){
+  const $id=id=>document.getElementById(id);
+  let authRegState=false;
+  /* Auth markup is enhanced without changing the existing submitAuth/Firebase logic. */
+  function setupAuth(){
+    const modal=$id('authOverlay');if(!modal||modal.dataset.uiRefresh)return;modal.dataset.uiRefresh='1';
+    const head=modal.querySelector('.modal-head');
+    if(head){const title=head.querySelector('h2');if(title)title.id='authHeading';}
+    const tabs=modal.querySelector('.auth-tabs');
+    const intro=document.createElement('p');intro.id='authIntro';intro.textContent='Đăng nhập để xem trang chủ ở trạng thái đã đăng nhập.';
+    const switcher=document.createElement('button');switcher.type='button';switcher.id='authSwitchLink';switcher.onclick=()=>window.switchAuth(!authRegState);
+    if(tabs)tabs.insertAdjacentElement('afterend',intro);else head.insertAdjacentElement('afterend',intro);
+    intro.insertAdjacentElement('afterend',switcher);
+    const form=modal.querySelector('.login-form');
+    const specs=[['authEmail','Tên đăng nhập'],['authPass','Mật khẩu'],['authName','Tên hiển thị']];
+    specs.forEach(([id,label])=>{const input=$id(id);if(!input||input.parentElement.classList.contains('auth-field-group'))return;const group=document.createElement('div');group.className='auth-field-group';const l=document.createElement('label');l.htmlFor=id;l.textContent=label;input.parentNode.insertBefore(group,input);group.appendChild(l);group.appendChild(input);});
+    const pass=$id('authPass');if(pass){const group=pass.parentElement,wrap=document.createElement('div');wrap.className='auth-password-wrap';group.insertBefore(wrap,pass);wrap.appendChild(pass);const eye=document.createElement('button');eye.type='button';eye.className='auth-eye';eye.setAttribute('aria-label','Hiện hoặc ẩn mật khẩu');eye.innerHTML='<i class="fa-regular fa-eye"></i>';eye.onclick=()=>{pass.type=pass.type==='password'?'text':'password';eye.innerHTML=pass.type==='password'?'<i class="fa-regular fa-eye"></i>':'<i class="fa-regular fa-eye-slash"></i>'};wrap.appendChild(eye);}
+    const fine=document.createElement('p');fine.id='authFinePrint';fine.innerHTML='Bằng việc tiếp tục, bạn đồng ý với <a href="#" onclick="openHelp();return false">Điều khoản sử dụng</a> và <a href="#" onclick="openHelp();return false">Chính sách bảo mật</a>.';form.insertAdjacentElement('afterend',fine);
+    if(tabs)tabs.setAttribute('aria-hidden','true');
+  }
+  function syncAuth(reg){
+    authRegState=!!reg;
+    const modal=$id('authOverlay');if(!modal)return;
+    const title=$id('authHeading'),intro=$id('authIntro'),switcher=$id('authSwitchLink'),submit=$id('authSubmit'),name=$id('authName'),email=$id('authEmail');
+    if(title)title.textContent=reg?'Tạo tài khoản':'Đăng nhập';
+    if(intro)intro.textContent=reg?'Đăng ký để tạo tài khoản và sử dụng các dịch vụ của shop.':'Đăng nhập để xem trang chủ ở trạng thái đã đăng nhập.';
+    if(switcher)switcher.textContent=reg?'Đã có tài khoản? Đăng nhập':'Chưa có tài khoản? Đăng ký';
+    if(submit)submit.textContent=reg?'Tạo tài khoản':'Đăng nhập';
+    if(name){const group=name.closest('.auth-field-group');if(group)group.style.display=reg?'grid':'none';name.placeholder='Tên hiển thị (không bắt buộc)'}
+    if(email){email.placeholder='Nhập tên đăng nhập';email.autocomplete='username'}
+  }
+  setupAuth();
+  if(typeof window.switchAuth==='function'){
+    const oldSwitch=window.switchAuth;
+    window.switchAuth=function(reg){const r=oldSwitch.apply(this,arguments);syncAuth(!!reg);return r};
+  }
+  if(typeof window.openAuth==='function'){
+    const oldOpenAuth=window.openAuth;
+    window.openAuth=function(reg){const r=oldOpenAuth.apply(this,arguments);setupAuth();syncAuth(!!reg);return r};
+  }
+  syncAuth(false);
+
+  /* Guest registration shortcut and the four main menu destinations. */
+  const headerInner=document.querySelector('.header-inner'),menuBtn=$id('menuBtn');
+  if(headerInner&&menuBtn&&!$id('headerRegister')){
+    const regBtn=document.createElement('button');regBtn.type='button';regBtn.id='headerRegister';regBtn.className='header-register';regBtn.textContent='Đăng ký';regBtn.onclick=()=>window.openAuth?.(true);menuBtn.insertAdjacentElement('beforebegin',regBtn);
+    const refreshReg=()=>{regBtn.style.display=window.currentUser?.()?'none':'inline-flex'};
+    refreshReg();document.addEventListener('click',()=>setTimeout(refreshReg,0));
+    const originalRefresh=window.refreshAuthUI;if(typeof originalRefresh==='function')window.refreshAuthUI=function(){const r=originalRefresh.apply(this,arguments);refreshReg();return r};
+  }
+  const links=document.querySelector('.side-links');
+  if(links&&!links.dataset.uiRefresh){
+    links.dataset.uiRefresh='1';
+    const anchors=links.querySelectorAll(':scope > a.side-link');
+    if(anchors[0]){anchors[0].textContent='Tài khoản game';anchors[0].onclick=e=>{e.preventDefault();window.closeMenu?.();window.scrollToBags?.();return false}}
+    if(anchors[1])anchors[1].textContent='Túi mù';
+    const add=(label,fn)=>{const b=document.createElement('button');b.type='button';b.className='side-link';b.textContent=label;b.addEventListener('click',()=>{window.closeMenu?.();fn()});return b};
+    if(anchors[1]){anchors[1].after(add('Nạp tiền',()=>window.openDeposit?.()));anchors[1].nextElementSibling.after(add('Nạp thẻ',()=>window.openDepositCard?.()));}
+  }
+
+  /* Add an always-available close button. It closes the top-most active surface. */
+  const close=document.createElement('button');close.type='button';close.id='shopGlobalClose';close.setAttribute('aria-label','Đóng cửa sổ đang mở');close.textContent='×';document.body.appendChild(close);
+  close.addEventListener('click',function(){
+    const menu=$id('sideMenu'),widget=$id('customerSupportWidget');
+    if(menu?.classList.contains('open')){if(typeof window.closeMenu==='function')window.closeMenu();return;}
+    const overlays=[...document.querySelectorAll('.overlay.show')];
+    if(overlays.length){const top=overlays.sort((a,b)=>Number(getComputedStyle(a).zIndex||100)-Number(getComputedStyle(b).zIndex||100)).at(-1);if(top&&typeof window.closeModal==='function'){window.closeModal(top.id);return}}
+    if(widget?.classList.contains('open')&&typeof window.closeCustomerSupport==='function')window.closeCustomerSupport();
+  });
+  function syncClose(){const active=!!document.querySelector('.overlay.show,.side-menu.open,.support-widget.open');close.classList.toggle('visible',active)}
+  new MutationObserver(syncClose).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  syncClose();
+
+  /* Support welcome and shortcut links; the existing realtime message channel remains intact. */
+  function setupSupport(){
+    const widget=$id('customerSupportWidget');if(!widget||widget.dataset.uiRefresh)return;widget.dataset.uiRefresh='1';
+    const head=widget.querySelector('.support-widget-head');if(!head)return;
+    const welcome=document.createElement('section');welcome.className='support-welcome';welcome.innerHTML='<h2>Xin chào! 👋</h2><p>Đội ngũ hỗ trợ luôn sẵn sàng — bạn cần giúp gì?</p><div class="support-welcome-status"><i></i> Đang trực tuyến</div><div class="support-quick-actions"><button type="button" data-action="deposit">Hướng dẫn nạp tiền <i class="fa-solid fa-chevron-right"></i></button><button type="button" data-action="accounts">Tài khoản game bán sẵn <i class="fa-solid fa-chevron-right"></i></button><button type="button" data-action="services">Dịch vụ game <i class="fa-solid fa-chevron-right"></i></button></div><button type="button" class="support-chat-prompt"><span><b>Chat với chúng tôi</b><small>Có thắc mắc? Nhắn ngay, chúng tôi trả lời trong vài phút</small></span><i class="fa-regular fa-paper-plane"></i></button>';
+    head.insertAdjacentElement('afterend',welcome);
+    welcome.querySelector('[data-action="deposit"]').onclick=()=>{window.closeCustomerSupport();window.openDeposit?.()};
+    welcome.querySelector('[data-action="accounts"]').onclick=()=>{window.closeCustomerSupport();window.scrollToBags?.()};
+    welcome.querySelector('[data-action="services"]').onclick=()=>{window.closeCustomerSupport();window.shopOpenGamePanel?.();document.getElementById('shopGameTopup')?.scrollIntoView({behavior:'smooth',block:'start'})};
+    welcome.querySelector('.support-chat-prompt').onclick=()=>{document.getElementById('customerSupportInput')?.focus();document.getElementById('customerSupportMessages')?.scrollIntoView({behavior:'smooth',block:'end'})};
+    const footer=widget.querySelector('.support-widget-footer');if(footer){const nav=document.createElement('div');nav.className='support-bottom-nav';nav.innerHTML='<button type="button" class="active"><i class="fa-solid fa-house"></i><span>Trang chủ</span></button><button type="button"><i class="fa-regular fa-message"></i><span>Chat</span></button>';nav.children[0].onclick=()=>{window.closeCustomerSupport();window.scrollTo({top:0,behavior:'smooth'})};nav.children[1].onclick=()=>document.getElementById('customerSupportInput')?.focus();footer.insertAdjacentElement('afterend',nav);}
+  }
+  setupSupport();
+  const bagView=$id('bagCategoryView');
+  if(bagView){
+    const addBagInstruction=()=>{const sub=bagView.querySelector('.bag-choice-sub');if(sub&&!bagView.querySelector('.bag-choice-instruction')){const note=document.createElement('div');note.className='bag-choice-instruction';note.textContent='Bấm “Mở túi” rồi chọn một túi';note.style.cssText='text-align:center;color:#fff;font-weight:800;font-size:16px;margin:-8px 0 18px';sub.insertAdjacentElement('afterend',note)}};
+    new MutationObserver(addBagInstruction).observe(bagView,{childList:true,subtree:true});addBagInstruction();
+  }
+  if(typeof window.openCustomerSupport==='function'){
+    const oldSupport=window.openCustomerSupport;
+    window.openCustomerSupport=function(){setupSupport();const r=oldSupport.apply(this,arguments);syncClose();return r};
+  }
+  if(typeof window.closeCustomerSupport==='function'){
+    const oldCloseSupport=window.closeCustomerSupport;
+    window.closeCustomerSupport=function(){const r=oldCloseSupport.apply(this,arguments);syncClose();return r};
+  }
+  if(typeof window.openMenu==='function'){
+    const oldOpenMenu=window.openMenu;
+    window.openMenu=function(){const r=oldOpenMenu.apply(this,arguments);syncClose();return r};
+  }
+  if(typeof window.closeMenu==='function'){
+    const oldCloseMenu=window.closeMenu;
+    window.closeMenu=function(){const r=oldCloseMenu.apply(this,arguments);syncClose();return r};
+  }
+  if(typeof window.openModal==='function'){
+    const oldOpenModal=window.openModal;
+    window.openModal=function(id){const r=oldOpenModal.apply(this,arguments);syncClose();return r};
+  }
+  if(typeof window.closeModal==='function'){
+    const oldCloseModal=window.closeModal;
+    window.closeModal=function(id){const r=oldCloseModal.apply(this,arguments);syncClose();return r};
+  }
+})();
+</script>
