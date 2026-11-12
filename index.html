@@ -1523,7 +1523,7 @@ input,select,textarea{
   </div>
 </div>
 
-<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><button class="side-link" onclick="closeMenu();openCustomerSupport()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
+<div class="side-menu" id="sideMenu"><div class="side-backdrop" onclick="closeMenu()"></div><aside class="side-panel"><div class="modal-head"><h2>Menu</h2><button class="close" onclick="closeMenu()">×</button></div><div class="side-links"><a class="side-link" href="#" onclick="closeMenu();scrollToTop();return false">TRANG CHỦ</a><a class="side-link" href="#" onclick="closeMenu();scrollToBags();return false">DANH MỤC</a><button class="side-link" onclick="closeMenu();openOrderHistory()">🧾 LỊCH SỬ ĐƠN HÀNG</button><button class="side-link" onclick="closeMenu();openSupportFromMenu()">💬 CHĂM SÓC KHÁCH HÀNG</button><a class="side-link" href="#" onclick="closeMenu();openHelp();return false">ĐIỀU KHOẢN</a><div class="side-divider"></div><div id="sideGuest"><button class="side-link side-login" onclick="closeMenu();openAuth(false)">Đăng nhập</button><button class="side-link side-register" onclick="closeMenu();openAuth(true)">Đăng ký</button></div><div id="sideMember" class="hidden"><div class="side-user-card"><div class="mini">Số dư</div><b id="sideBalance">0đ</b><div id="sideMemberName" class="side-member-name">Thành viên</div></div><button class="side-link" onclick="closeMenu();openDeposit()">💳 Nạp tiền</button><button class="side-link" onclick="closeMenu();openAccount()">👤 Tài khoản</button><button class="side-link" onclick="closeMenu();openAccount()">🎮 Acc đang thuê</button><button class="side-link hidden" id="sideAdmin" onclick="closeMenu();openAdmin()">⚙️ Quản trị</button><button class="side-link" onclick="closeMenu();logout()"> Đăng xuất</button></div></div></aside></div>
 
 <script>
 /* SHOPCENAVN - Firebase Realtime Database + LocalStorage fallback */
@@ -4433,15 +4433,7 @@ html,body{
     refreshReg();document.addEventListener('click',()=>setTimeout(refreshReg,0));
     const originalRefresh=window.refreshAuthUI;if(typeof originalRefresh==='function')window.refreshAuthUI=function(){const r=originalRefresh.apply(this,arguments);refreshReg();return r};
   }
-  const links=document.querySelector('.side-links');
-  if(links&&!links.dataset.uiRefresh){
-    links.dataset.uiRefresh='1';
-    const anchors=links.querySelectorAll(':scope > a.side-link');
-    if(anchors[0]){anchors[0].textContent='Tài khoản game';anchors[0].onclick=e=>{e.preventDefault();window.closeMenu?.();window.scrollToBags?.();return false}}
-    if(anchors[1])anchors[1].textContent='Túi mù';
-    const add=(label,fn)=>{const b=document.createElement('button');b.type='button';b.className='side-link';b.textContent=label;b.addEventListener('click',()=>{window.closeMenu?.();fn()});return b};
-    if(anchors[1]){anchors[1].after(add('Nạp tiền',()=>window.openDeposit?.()));anchors[1].nextElementSibling.after(add('Nạp thẻ',()=>window.openDepositCard?.()));}
-  }
+  /* Keep the original menu links; do not inject duplicate navigation items. */
   /* Use each existing panel's own close button; do not add a duplicate floating X. */
 /* Support welcome and shortcut links; the existing realtime message channel remains intact. */
   function setupSupport(){
@@ -4449,10 +4441,20 @@ html,body{
     const head=widget.querySelector('.support-widget-head');if(!head)return;
     const welcome=document.createElement('section');welcome.className='support-welcome';welcome.innerHTML='<h2>Xin chào! 👋</h2><p>Đội ngũ hỗ trợ luôn sẵn sàng — bạn cần giúp gì?</p><div class="support-welcome-status"><i></i> Đang trực tuyến</div><div class="support-quick-actions"><button type="button" data-action="deposit">Hướng dẫn nạp tiền <i class="fa-solid fa-chevron-right"></i></button><button type="button" data-action="accounts">Tài khoản game bán sẵn <i class="fa-solid fa-chevron-right"></i></button><button type="button" data-action="services">Dịch vụ game <i class="fa-solid fa-chevron-right"></i></button></div><button type="button" class="support-chat-prompt"><span><b>Chat với chúng tôi</b><small>Có thắc mắc? Nhắn ngay, chúng tôi trả lời trong vài phút</small></span><i class="fa-regular fa-paper-plane"></i></button>';
     head.insertAdjacentElement('afterend',welcome);
-    welcome.querySelector('[data-action="deposit"]').onclick=()=>{window.closeCustomerSupport();window.openDeposit?.()};
-    welcome.querySelector('[data-action="accounts"]').onclick=()=>{window.closeCustomerSupport();window.scrollToBags?.()};
-    welcome.querySelector('[data-action="services"]').onclick=()=>{window.closeCustomerSupport();window.shopOpenGamePanel?.();document.getElementById('shopGameTopup')?.scrollIntoView({behavior:'smooth',block:'start'})};
-    welcome.querySelector('.support-chat-prompt').onclick=()=>{document.getElementById('customerSupportInput')?.focus();document.getElementById('customerSupportMessages')?.scrollIntoView({behavior:'smooth',block:'end'})};
+        const sendQuickMessage=(message)=>{
+      const input=$id('customerSupportInput');
+      if(!input)return;
+      input.value=message;
+      if(typeof window.sendCustomerSupportMessage==='function')window.sendCustomerSupportMessage();
+      $id('customerSupportMessages')?.scrollIntoView({behavior:'smooth',block:'end'});
+    };
+    welcome.querySelector('[data-action="deposit"]').onclick=()=>sendQuickMessage('Tôi cần hướng dẫn nạp tiền.');
+    welcome.querySelector('[data-action="accounts"]').onclick=()=>sendQuickMessage('Tôi muốn hỏi về tài khoản game bán sẵn.');
+    welcome.querySelector('[data-action="services"]').onclick=()=>sendQuickMessage('Tôi muốn được tư vấn về dịch vụ game.');
+    welcome.querySelector('.support-chat-prompt').onclick=()=>{
+      $id('customerSupportMessages')?.scrollIntoView({behavior:'smooth',block:'end'});
+      $id('customerSupportInput')?.focus();
+    };
     const footer=widget.querySelector('.support-widget-footer');if(footer){const nav=document.createElement('div');nav.className='support-bottom-nav';nav.innerHTML='<button type="button" class="active"><i class="fa-solid fa-house"></i><span>Trang chủ</span></button><button type="button"><i class="fa-regular fa-message"></i><span>Chat</span></button>';nav.children[0].onclick=()=>{window.closeCustomerSupport();window.scrollTo({top:0,behavior:'smooth'})};nav.children[1].onclick=()=>document.getElementById('customerSupportInput')?.focus();footer.insertAdjacentElement('afterend',nav);}
   }
   setupSupport();
@@ -4461,29 +4463,37 @@ html,body{
     const addBagInstruction=()=>{const sub=bagView.querySelector('.bag-choice-sub');if(sub&&!bagView.querySelector('.bag-choice-instruction')){const note=document.createElement('div');note.className='bag-choice-instruction';note.textContent='Bấm “Mở túi” rồi chọn một túi';note.style.cssText='text-align:center;color:#fff;font-weight:800;font-size:16px;margin:-8px 0 18px';sub.insertAdjacentElement('afterend',note)}};
     new MutationObserver(addBagInstruction).observe(bagView,{childList:true,subtree:true});addBagInstruction();
   }
+  function syncCloseSafe(){
+    document.querySelectorAll('.modal-head .close,.support-widget-close').forEach(btn=>{
+      btn.style.setProperty('position','relative','important');
+      btn.style.setProperty('z-index','100100','important');
+      btn.style.setProperty('pointer-events','auto','important');
+      btn.style.setProperty('visibility','visible','important');
+    });
+  }
   if(typeof window.openCustomerSupport==='function'){
     const oldSupport=window.openCustomerSupport;
-    window.openCustomerSupport=function(){setupSupport();const r=oldSupport.apply(this,arguments);syncClose();return r};
+    window.openCustomerSupport=function(){setupSupport();const r=oldSupport.apply(this,arguments);syncCloseSafe();return r};
   }
   if(typeof window.closeCustomerSupport==='function'){
     const oldCloseSupport=window.closeCustomerSupport;
-    window.closeCustomerSupport=function(){const r=oldCloseSupport.apply(this,arguments);syncClose();return r};
+    window.closeCustomerSupport=function(){const r=oldCloseSupport.apply(this,arguments);syncCloseSafe();return r};
   }
   if(typeof window.openMenu==='function'){
     const oldOpenMenu=window.openMenu;
-    window.openMenu=function(){const r=oldOpenMenu.apply(this,arguments);syncClose();return r};
+    window.openMenu=function(){const r=oldOpenMenu.apply(this,arguments);syncCloseSafe();return r};
   }
   if(typeof window.closeMenu==='function'){
     const oldCloseMenu=window.closeMenu;
-    window.closeMenu=function(){const r=oldCloseMenu.apply(this,arguments);syncClose();return r};
+    window.closeMenu=function(){const r=oldCloseMenu.apply(this,arguments);syncCloseSafe();return r};
   }
   if(typeof window.openModal==='function'){
     const oldOpenModal=window.openModal;
-    window.openModal=function(id){const r=oldOpenModal.apply(this,arguments);syncClose();return r};
+    window.openModal=function(id){const r=oldOpenModal.apply(this,arguments);syncCloseSafe();return r};
   }
   if(typeof window.closeModal==='function'){
     const oldCloseModal=window.closeModal;
-    window.closeModal=function(id){const r=oldCloseModal.apply(this,arguments);syncClose();return r};
+    window.closeModal=function(id){const r=oldCloseModal.apply(this,arguments);syncCloseSafe();return r};
   }
 })();
 </script>
@@ -4530,3 +4540,60 @@ html,body{
   .side-panel{top:0!important;left:auto!important;right:0!important;width:min(370px,88vw)!important;height:100dvh!important;max-height:100dvh!important;padding:18px!important;border-radius:0!important}
 }
 </style>
+
+
+<style id="shopcenavn-final-stability">
+/* Compact dark header; wallet stays beside the hamburger on small screens. */
+.header{height:64px!important;min-height:64px!important;background:#090b12!important;border-bottom:1px solid #242735!important}
+.header-inner{height:64px!important;min-height:64px!important;display:flex!important;align-items:center!important;gap:10px!important;padding-top:0!important;padding-bottom:0!important}
+.logo{max-height:42px!important;width:auto!important;max-width:min(42vw,220px)!important;object-fit:contain!important}
+.menu-btn{width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;flex:0 0 40px!important}
+.account-bar.show{display:flex!important;align-items:center!important;gap:7px!important;margin:0 0 0 auto!important;order:2!important}
+.account-bar .balance{padding:8px 10px!important;font-size:13px!important;white-space:nowrap!important}
+.account-bar .user-chip{display:none!important}
+#menuBtn{order:3!important}
+.header-register{order:2!important;padding:9px 11px!important;font-size:13px!important;white-space:nowrap!important}
+@media(max-width:600px){.header,.header-inner{height:60px!important;min-height:60px!important}.logo{max-width:34vw!important;max-height:36px!important}.header-register{padding:8px 9px!important;font-size:12px!important}.account-bar .balance{padding:7px 8px!important;font-size:12px!important}}
+/* Customers never see admin navigation. Existing authenticated admin toggle remains authoritative. */
+#sideAdmin.hidden{display:none!important}
+.side-panel #sideAdmin:not(.hidden){display:block!important}
+/* Keep each window's single native close button clickable above its content. */
+.modal-head{position:relative!important;z-index:5!important}
+.modal-head .close,.support-widget-close{position:relative!important;z-index:100100!important;flex:0 0 40px!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
+.modal-head .close{width:40px!important;height:40px!important;min-width:40px!important}
+#shopGlobalClose{display:none!important}
+/* 8 bag tiles: visual polish only; existing stock, package price and checkout logic are untouched. */
+#bagCategoryView .mini-bag-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;max-width:760px!important;margin:18px auto!important}
+#bagCategoryView .mini-bag{position:relative!important;overflow:hidden!important;min-width:0!important;transform-style:preserve-3d!important;animation:diamondBagFloat 3.2s ease-in-out infinite!important;border:1px solid rgba(224,198,255,.55)!important;background:radial-gradient(circle at 50% 0%,#65409a,#26163f 72%)!important;box-shadow:0 12px 28px rgba(12,5,26,.4),inset 0 1px rgba(255,255,255,.22)!important}
+#bagCategoryView .mini-bag:nth-child(even){animation-delay:.35s!important}
+#bagCategoryView .mini-bag:before{content:'';position:absolute;inset:-40% -80%;z-index:2;pointer-events:none;background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.34) 50%,transparent 58%);transform:translateX(-55%) rotate(12deg);animation:diamondBagShine 3.8s ease-in-out infinite}
+#bagCategoryView .mini-bag img{display:block!important;width:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;transform:translateZ(8px)!important}
+#bagCategoryView .mini-bag-num{position:absolute!important;top:9px!important;left:9px!important;z-index:3!important;width:30px!important;height:30px!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#8d55e8!important;color:#fff!important;font-weight:900!important;border:1px solid #fff!important;box-shadow:0 3px 12px #120a20!important}
+#bagCategoryView .mini-bag-open{position:relative!important;z-index:3!important;margin-top:8px!important;border-radius:10px!important;font-weight:900!important}
+#bagCategoryView .mini-bag:active{transform:scale(.97) rotateY(8deg)!important}
+@keyframes diamondBagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes diamondBagShine{0%,35%{transform:translateX(-75%) rotate(12deg)}75%,100%{transform:translateX(75%) rotate(12deg)}}
+@media(prefers-reduced-motion:reduce){#bagCategoryView .mini-bag,#bagCategoryView .mini-bag:before{animation:none!important}}
+</style>
+<script id="shopcenavn-final-functional-fixes">
+(function(){
+  const $=id=>document.getElementById(id);
+  window.openSupportFromMenu=function(){
+    if(typeof window.openCustomerSupport==='function')window.openCustomerSupport();
+    const s=typeof window.currentUser==='function'?window.currentUser():null;
+    if(!s){if(typeof window.openAuth==='function')window.openAuth(false);return;}
+    const input=$('customerSupportInput');
+    if(input){input.value='Khách hàng đã mở mục Chăm sóc khách hàng và cần được hỗ trợ.';window.sendCustomerSupportMessage?.();}
+  };
+  // Enforce the original auth-driven admin visibility after every auth refresh.
+  const originalRefresh=window.refreshAuthUI;
+  if(typeof originalRefresh==='function'&&!originalRefresh.__adminVisibilityGuard){
+    const wrapped=function(){const out=originalRefresh.apply(this,arguments);const s=typeof window.getSession==='function'?window.getSession():null;const admin=!!(s&&s.admin);const item=$('sideAdmin');if(item)item.classList.toggle('hidden',!admin);return out;};
+    wrapped.__adminVisibilityGuard=true;window.refreshAuthUI=wrapped;
+  }
+  // Ensure native close controls stay on top after modal contents are re-rendered.
+  const raiseClose=()=>document.querySelectorAll('.modal-head .close,.support-widget-close').forEach(b=>{b.style.zIndex='100100';b.style.pointerEvents='auto';b.style.visibility='visible'});
+  raiseClose();
+  document.addEventListener('click',e=>{if(e.target.closest('.menu-btn,.modal-head .close,.support-widget-close'))setTimeout(raiseClose,0)},true);
+})();
+</script>
