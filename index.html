@@ -14,8 +14,6 @@
 @media(max-width:370px){.brand{font-size:10px}.packageGrid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.balanceBtn{display:none}}
 .logoBox img{display:block}.logoBox img:not([src]){display:none}
 </style>
-
-<!-- Authentication and wallet are handled by the Cloudflare Worker backend. -->
 </head>
 <body>
 <div class="splash" id="splash"><div class="splashInner"><div class="splashMark">TTM</div><div style="font-weight:850;letter-spacing:-.4px">TRUNG TÂM THƯƠNG MẠI</div><div class="spinner"></div><small id="splashStatus">Đang khởi tạo giao diện...</small></div></div>
@@ -52,36 +50,46 @@
 <div class="featureBand"><b>Quy định:</b> Chỉ đăng tải tài khoản được phép chuyển giao/cho thuê theo điều khoản của nhà phát hành. Không chia sẻ tài khoản trái phép.</div>
 <div id="allRentSections"></div>
 </section>
-<section class="view" id="wallet"><div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Số dư và lịch sử được lưu tập trung trên máy chủ.</p></div><div class="twoCol"><div class="panel"><h3>Số dư hiện tại</h3><div id="walletBalance" style="font-size:30px;font-weight:850;margin:12px 0">— đ</div><div class="field"><label>Số tiền muốn nạp</label><input id="topupAmount" type="number" min="10000" step="1000" placeholder="Ví dụ: 100000"></div><button class="btn primary" style="width:100%" onclick="requestTopup()">Gửi yêu cầu nạp tiền</button><div class="callout" style="margin-top:13px">Yêu cầu sẽ chờ Admin xác nhận. Không tự động cộng tiền khi khách gửi yêu cầu.</div></div><div class="panel"><h3>Lịch sử giao dịch</h3><div id="transactionsList" class="empty">Đăng nhập để xem lịch sử.</div></div></div></section>
-<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng của tôi</h1><p>Lịch sử đơn hàng được lưu theo tài khoản.</p></div><div id="ordersList" class="empty">Đăng nhập để xem đơn hàng.</div></section>
-<section class="view" id="login"><div class="pageHead"><div class="eyebrow">Account access</div><h1>Đăng nhập</h1><p>Dùng tên tài khoản và mật khẩu. Không cần Gmail.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="loginMessage">Nhập tên tài khoản và mật khẩu đã đăng ký.</div><div class="field"><label>Tên tài khoản</label><input id="loginUsername" autocomplete="username" placeholder="Ví dụ: phong123"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"></div><button class="btn primary" style="width:100%" onclick="loginUser()">Đăng nhập</button><p class="muted" style="margin:17px 0 0;text-align:center">Chưa có tài khoản? <a href="#register" onclick="go('register');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng ký ngay</a></p></div></section>
-<section class="view" id="register"><div class="pageHead"><div class="eyebrow">Create account</div><h1>Đăng ký tài khoản</h1><p>Tạo tài khoản bằng tên đăng nhập, không cần email hoặc số điện thoại.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="registerMessage">Tên tài khoản từ 3–24 ký tự, chỉ dùng chữ thường, số và dấu gạch dưới. Mật khẩu tối thiểu 8 ký tự.</div><div class="field"><label>Tên hiển thị</label><input id="registerDisplay" maxlength="40" placeholder="Tên hiển thị"></div><div class="field"><label>Tên tài khoản</label><input id="registerUsername" autocomplete="username" maxlength="24" placeholder="Ví dụ: phong123"></div><div class="field"><label>Mật khẩu</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 8 ký tự"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu"></div><button class="btn primary" style="width:100%" onclick="registerUser()">Tạo tài khoản</button><p class="muted" style="margin:17px 0 0;text-align:center">Đã có tài khoản? <a href="#login" onclick="go('login');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng nhập</a></p></div></section>
-<section class="view" id="admin"><div class="pageHead"><div class="eyebrow">Admin center</div><h1>Quản trị</h1><p>Khu vực chỉ tài khoản có quyền Admin mới thao tác được.</p></div><div class="panel" style="max-width:720px;margin-bottom:16px"><h3>Kích hoạt Admin lần đầu</h3><p class="muted">Chỉ dùng một lần cho tài khoản đang đăng nhập. Nhập mã bí mật đã tạo trong Cloudflare Worker Secrets.</p><div class="field"><label>Mã thiết lập Admin</label><input id="bootstrapSecret" type="password" placeholder="Nhập ADMIN_BOOTSTRAP_SECRET"></div><button class="btn primary" onclick="bootstrapAdmin()">Kích hoạt tài khoản này làm Admin</button></div><div class="panel" style="max-width:720px;margin-bottom:16px"><h3>Cộng / trừ tiền khách</h3><div class="field"><label>Tên tài khoản khách</label><input id="adjustUsername" placeholder="username"></div><div class="field"><label>Số tiền (cộng số dương, trừ số âm)</label><input id="adjustAmount" type="number" placeholder="Ví dụ: 50000 hoặc -20000"></div><div class="field"><label>Lý do</label><input id="adjustNote" maxlength="120" placeholder="Điều chỉnh số dư"></div><button class="btn primary" onclick="adminAdjust()">Xác nhận điều chỉnh</button></div><div class="panel" style="max-width:720px"><h3>Yêu cầu nạp tiền chờ duyệt</h3><button class="btn light" onclick="loadAdmin()">Làm mới danh sách</button><div id="adminTopups" class="empty" style="margin-top:12px">Chưa tải danh sách.</div></div></section>
+<section class="view" id="wallet"><div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Số dư và lịch sử được đồng bộ trực tiếp với kho lưu trữ chung.</p></div><div class="twoCol"><div class="panel"><h3>Số dư hiện tại</h3><div id="walletBalance" style="font-size:30px;font-weight:850;margin:12px 0">— đ</div><div class="field"><label>Số tiền muốn nạp</label><input id="topupAmount" type="number" min="10000" step="1000" placeholder="Ví dụ: 100000"></div><button class="btn primary" style="width:100%" onclick="requestTopup()">Gửi yêu cầu nạp tiền</button><div class="callout" style="margin-top:13px">Yêu cầu sẽ chờ Admin xác nhận. Không tự động cộng tiền khi khách gửi yêu cầu.</div></div><div class="panel"><h3>Lịch sử giao dịch</h3><div id="transactionsList" class="empty">Đăng nhập để xem lịch sử.</div></div></div></section>
+<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng của tôi</h1><p>Lịch sử đơn hàng được lưu theo tài khoản trên toàn hệ thống.</p></div><div id="ordersList" class="empty">Đăng nhập để xem đơn hàng.</div></section>
+<section class="view" id="login"><div class="pageHead"><div class="eyebrow">Account access</div><h1>Đăng nhập</h1><p>Dùng tên tài khoản và mật khẩu. Đồng bộ toàn bộ tài khoản từ web cũ.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="loginMessage">Nhập tên tài khoản và mật khẩu đã đăng ký.</div><div class="field"><label>Tên tài khoản</label><input id="loginUsername" autocomplete="username" placeholder="Ví dụ: phong9"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"></div><button class="btn primary" style="width:100%" onclick="loginUser()">Đăng nhập</button><p class="muted" style="margin:17px 0 0;text-align:center">Chưa có tài khoản? <a href="#register" onclick="go('register');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng ký ngay</a></p></div></section>
+<section class="view" id="register"><div class="pageHead"><div class="eyebrow">Create account</div><h1>Đăng ký tài khoản</h1><p>Tạo tài khoản bằng tên đăng nhập, dùng chung cho cả web cũ và Trung tâm thương mại.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="registerMessage">Tên tài khoản từ 3–32 ký tự, chỉ dùng chữ thường, số và dấu chấm/gạch dưới/gạch ngang. Mật khẩu tối thiểu 6 ký tự.</div><div class="field"><label>Tên hiển thị</label><input id="registerDisplay" maxlength="40" placeholder="Tên hiển thị"></div><div class="field"><label>Tên tài khoản</label><input id="registerUsername" autocomplete="username" maxlength="32" placeholder="Ví dụ: phong9"></div><div class="field"><label>Mật khẩu</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu"></div><button class="btn primary" style="width:100%" onclick="registerUser()">Tạo tài khoản</button><p class="muted" style="margin:17px 0 0;text-align:center">Đã có tài khoản? <a href="#login" onclick="go('login');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng nhập</a></p></div></section>
+<section class="view" id="admin">
+  <div class="pageHead">
+    <div class="eyebrow">Admin center</div>
+    <h1>Quản trị hệ thống</h1>
+    <p id="adminStatusBanner">Khu vực chỉ tài khoản có quyền Admin mới thao tác được.</p>
+  </div>
+  <div class="panel" style="max-width:720px;margin-bottom:16px">
+    <h3>Cộng / trừ tiền thành viên</h3>
+    <div class="field"><label>Tên tài khoản khách</label><input id="adjustUsername" placeholder="Ví dụ: phong9"></div>
+    <div class="field"><label>Số tiền (cộng số dương, trừ số âm)</label><input id="adjustAmount" type="number" placeholder="Ví dụ: 50000 hoặc -20000"></div>
+    <div class="field"><label>Lý do</label><input id="adjustNote" maxlength="120" placeholder="Điều chỉnh số dư"></div>
+    <button class="btn primary" onclick="adminAdjust()">Xác nhận điều chỉnh</button>
+  </div>
+  <div class="panel" style="max-width:720px;margin-bottom:16px">
+    <h3>Yêu cầu nạp tiền (Firebase chung)</h3>
+    <button class="btn light" onclick="loadAdmin()">Làm mới danh sách</button>
+    <div id="adminTopups" class="empty" style="margin-top:12px">Đang tải danh sách...</div>
+  </div>
+  <div class="panel" style="max-width:720px">
+    <h3>Đơn hàng / Yêu cầu dịch vụ từ khách</h3>
+    <button class="btn light" onclick="loadAdmin()">Làm mới đơn hàng</button>
+    <div id="adminOrders" class="empty" style="margin-top:12px">Đang tải đơn hàng...</div>
+  </div>
+</section>
 <section class="view" id="support"><div class="pageHead"><div class="eyebrow">Customer care</div><h1>Hỗ trợ khách hàng</h1><p>Gửi yêu cầu hỗ trợ sau khi đăng nhập và kết nối máy chủ.</p></div><div class="panel" style="max-width:620px"><div class="field"><label>Chủ đề</label><select disabled><option>Chọn nội dung cần hỗ trợ</option><option>Đơn hàng</option><option>Nạp tiền</option><option>Thuê tài khoản</option></select></div><div class="field"><label>Nội dung</label><input placeholder="Mô tả vấn đề..." disabled></div><button class="btn primary" disabled style="opacity:.45">Gửi yêu cầu</button><div class="callout" style="margin-top:15px">Biểu mẫu sẽ được mở khi có kho dữ liệu để lưu yêu cầu tập trung.</div></div></section>
 </main>
-<footer class="footer"><b>TRUNG TÂM THƯƠNG MẠI</b><span>Nền tảng dịch vụ số · Bản dựng giao diện</span><span>© 2026</span></footer>
-<nav class="bottomNav"><button onclick="go('home')"><b>⌂</b>Trang chủ</button><button onclick="go('buff')"><b>▦</b>Dịch vụ</button><button onclick="go('wallet')"><b>＋</b>Nạp tiền</button><button onclick="go('orders')"><b>▤</b>Đơn hàng</button><button onclick="go('login')"><b>◉</b>Đăng nhập</button></nav>
+<footer class="footer"><b>TRUNG TÂM THƯƠNG MẠI</b><span>Nền tảng dịch vụ số · Đồng bộ lưu trữ</span><span>© 2026</span></footer>
+<nav class="bottomNav"><button onclick="go('home')"><b>⌂</b>Trang chủ</button><button onclick="go('buff')"><b>▦</b>Dịch vụ</button><button onclick="go('wallet')"><b>＋</b>Nạp tiền</button><button onclick="go('orders')"><b>▤</b>Đơn hàng</button><button id="bottomAuthBtn" onclick="go('login')"><b>◉</b><span id="bottomAuthText">Đăng nhập</span></button></nav>
 </div>
 <div class="drawerBack" id="drawerBack" onclick="if(event.target===this)drawer(false)"><aside class="drawer"><div class="drawerHead"><div class="brand">TRUNG TÂM THƯƠNG MẠI<small>ĐIỀU HƯỚNG</small></div><button class="iconBtn" onclick="drawer(false)">×</button></div>
 <div class="drawerLabel">TRANG CHÍNH</div><button class="nav active" onclick="go('home')">⌂　Trang chủ</button><button class="nav" onclick="go('buff')">▦　Dịch vụ buff</button><button class="nav" onclick="openPlatform('Facebook')">f　Facebook</button><button class="nav" onclick="openPlatform('YouTube')">▶　YouTube</button><button class="nav" onclick="openPlatform('TikTok')">♪　TikTok</button><button class="nav" onclick="go('rent')">◷　Thuê tài khoản game</button>
-<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div><button class="nav" onclick="go('wallet')">＋　Nạp tiền</button><button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button><button class="nav" onclick="go('login')">◉　Đăng nhập</button><button class="nav" onclick="go('register')">＋　Đăng ký tài khoản</button><button class="nav" onclick="go('admin')">⚙　Quản trị</button><button class="nav" onclick="logoutUser()">↪　Đăng xuất</button><button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
-<div class="modalBack" id="productModal"><div class="modal"><h2 id="modalTitle">Chi tiết gói</h2><p id="modalText"></p><div class="callout">Đây là bản dựng giao diện. Chức năng tạo đơn sẽ chỉ được mở sau khi kết nối lưu trữ tập trung, xác thực người dùng và quy trình xử lý của Admin.</div><div class="modalActions"><button class="btn light" onclick="closeProduct()">Đóng</button><button class="btn primary" onclick="closeProduct();go('login')">Đăng nhập</button></div></div></div>
+<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div><button class="nav" onclick="go('wallet')">＋　Nạp tiền</button><button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button><button class="nav" id="navLoginBtn" onclick="go('login')">◉　Đăng nhập</button><button class="nav" id="navRegisterBtn" onclick="go('register')">＋　Đăng ký tài khoản</button><button class="nav" id="navAdminBtn" style="display:none" onclick="go('admin')">⚙　Quản trị (Admin)</button><button class="nav" id="navLogoutBtn" style="display:none" onclick="logoutUser()">↪　Đăng xuất</button><button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
+<div class="modalBack" id="productModal"><div class="modal"><h2 id="modalTitle">Chi tiết gói</h2><p id="modalText"></p><div class="callout" id="modalCallout">Vui lòng đăng nhập tài khoản để gửi yêu cầu dịch vụ hoặc thuê tài khoản.</div><div class="field" id="modalNoteWrap" style="display:none"><label>Link / ID / Ghi chú yêu cầu</label><input id="modalOrderNote" placeholder="Nhập link bài viết, ID game hoặc ghi chú..."></div><div class="modalActions"><button class="btn light" onclick="closeProduct()">Đóng</button><button class="btn primary" id="modalPrimaryBtn" onclick="handleModalPrimary()">Đăng nhập</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
-const API_BASE = ""; // Giữ API Worker cho các chức năng quản trị hiện có.
-async function api(path, options={}) {
-  const res = await fetch(API_BASE + "/api" + path, {
-    method: options.method || "GET",
-    headers: {"Content-Type":"application/json"},
-    credentials: "same-origin",
-    body: options.body ? JSON.stringify(options.body) : undefined
-  });
-  const data = await res.json().catch(() => ({error:"Máy chủ trả dữ liệu không hợp lệ"}));
-  if (!res.ok) throw new Error(data.error || "Có lỗi xảy ra");
-  return data;
-}
-
-/* ==================== PHẦN LƯU TRỮ DÙNG CHUNG TỪ index.html ==================== */
+/* ==================== LƯU TRỮ DÙNG CHUNG VỚI WEB CŨ (index.html) ==================== */
 const ADMIN_USERNAME = 'phong23112007';
 const ADMIN_PASSWORD = 'Muathu12345';
 
@@ -124,8 +132,9 @@ let firebaseDB = null;
 let firebaseSyncReady = false;
 let isAdmin = false;
 let currentAccount = null;
+let selectedPackage = null;
 
-const asUsers = value => Array.isArray(value)
+const asArray = value => Array.isArray(value)
   ? value.filter(Boolean)
   : (value && typeof value === 'object' ? Object.values(value).filter(Boolean) : []);
 
@@ -172,33 +181,22 @@ function normalizeLogin(v) {
   return String(v || '').trim().toLowerCase().replace(/\s+/g, '');
 }
 
-function getUsers() {
-  return asUsers(read(STORAGE.users, []));
-}
-
-function saveUsersLocal(users) {
-  writeLocal(STORAGE.users, asUsers(users));
-}
-
-function getOrders() {
-  return read(STORAGE.orders, []);
-}
-
-function getDeposits() {
-  return read(STORAGE.deposits, []);
-}
-
-function getSettings() {
-  return read(STORAGE.settings, {});
-}
-
-function getSession() {
-  return read(STORAGE.session, null);
-}
+function getUsers() { return asArray(read(STORAGE.users, [])); }
+function saveUsersLocal(users) { writeLocal(STORAGE.users, asArray(users)); }
+function getOrders() { return asArray(read(STORAGE.orders, [])); }
+function getDeposits() { return asArray(read(STORAGE.deposits, [])); }
+function getSettings() { return read(STORAGE.settings, {}); }
+function getSession() { return read(STORAGE.session, null); }
 
 function currentUser() {
   const s = getSession();
   return s && s.uid ? s : null;
+}
+
+function checkIsAdmin(sessionOrUser) {
+  const target = sessionOrUser || currentUser();
+  if (!target) return false;
+  return !!(target.admin === true || target.uid === 'admin' || normalizeLogin(target.username) === ADMIN_USERNAME);
 }
 
 function getBalance(userId) {
@@ -207,31 +205,32 @@ function getBalance(userId) {
   return Number(u?.balance || 0);
 }
 
-function setBalance(userId, value) {
+function setBalance(userId, value, noteText) {
   if (!userId || userId === 'admin') return;
   const users = getUsers();
   const u = users.find(x => String(x.uid) === String(userId));
   if (!u) return;
-  u.balance = Math.max(0, Number(value) || 0);
+  const oldBal = Number(u.balance || 0);
+  const newBal = Math.max(0, Number(value) || 0);
+  const delta = newBal - oldBal;
+  u.balance = newBal;
+  if (noteText) {
+    if (!Array.isArray(u.transactionHistory)) u.transactionHistory = [];
+    u.transactionHistory.push({
+      id: rid(),
+      type: delta >= 0 ? 'credit' : 'debit',
+      amount: delta,
+      note: noteText,
+      createdAt: Date.now()
+    });
+  }
   write(STORAGE.users, users);
-}
-
-function deductBalance(userId, amount) {
-  const b = getBalance(userId);
-  const n = Number(amount || 0);
-  if (b < n) return false;
-  setBalance(userId, b - n);
-  return true;
-}
-
-function refundBalance(userId, amount) {
-  setBalance(userId, getBalance(userId) + Number(amount || 0));
 }
 
 async function readUsersFromFirebase() {
   if (!(firebaseDB && firebaseSyncReady)) return null;
   const snap = await firebaseDB.ref('shopcenavn/users').once('value');
-  return asUsers(snap.val());
+  return asArray(snap.val());
 }
 
 async function transactUsers(mutator) {
@@ -245,28 +244,61 @@ async function transactUsers(mutator) {
   const ref = firebaseDB.ref('shopcenavn/users');
   let callbackResult;
   const tx = await ref.transaction(current => {
-    const users = asUsers(current);
+    const users = asArray(current);
     callbackResult = mutator(users);
     if (callbackResult === undefined) return;
     return users;
-  });
+  }, undefined, false);
   if (!tx.committed) {
-    return { committed: false, users: asUsers(tx.snapshot.val()), result: callbackResult };
+    return { committed: false, users: asArray(tx.snapshot.val()), result: callbackResult };
   }
-  const users = asUsers(tx.snapshot.val());
+  const users = asArray(tx.snapshot.val());
   saveUsersLocal(users);
   return { committed: true, users, result: callbackResult };
 }
 
 function setAccountUI(user) {
   currentAccount = user || null;
+  const adminFlag = checkIsAdmin(user);
+  isAdmin = adminFlag;
+
   const ub = document.getElementById("userButton");
-  if (ub) ub.textContent = user ? (user.username || "U").slice(0, 1).toUpperCase() : "U";
-  const bal = user ? (user.admin ? 0 : getBalance(user.uid) || Number(user.balance || 0)) : 0;
+  if (ub) {
+    ub.textContent = user ? (user.username || "U").slice(0, 1).toUpperCase() : "U";
+    ub.onclick = () => go(user ? (adminFlag ? 'admin' : 'wallet') : 'login');
+    ub.title = user ? (adminFlag ? 'Admin: ' + user.username : user.username) : 'Đăng nhập';
+  }
+
+  const bal = user ? (adminFlag ? 0 : getBalance(user.uid) || Number(user.balance || 0)) : 0;
   const hb = document.getElementById("headerBalance");
-  if (hb) hb.textContent = money(bal);
+  if (hb) hb.textContent = adminFlag ? "ADMIN" : money(bal);
   const wb = document.getElementById("walletBalance");
-  if (wb) wb.textContent = user ? money(bal) : "— đ";
+  if (wb) wb.textContent = user ? (adminFlag ? "Tài khoản Quản trị" : money(bal)) : "— đ";
+
+  // Ẩn/hiện nút trong menu drawer theo trạng thái đăng nhập & quyền Admin
+  const navAdmin = document.getElementById("navAdminBtn");
+  const navLogout = document.getElementById("navLogoutBtn");
+  const navLogin = document.getElementById("navLoginBtn");
+  const navReg = document.getElementById("navRegisterBtn");
+  if (navAdmin) navAdmin.style.display = adminFlag ? "block" : "none";
+  if (navLogout) navLogout.style.display = user ? "block" : "none";
+  if (navLogin) navLogin.style.display = user ? "none" : "block";
+  if (navReg) navReg.style.display = user ? "none" : "block";
+
+  const bottomBtn = document.getElementById("bottomAuthBtn");
+  const bottomTxt = document.getElementById("bottomAuthText");
+  if (bottomBtn && bottomTxt) {
+    if (adminFlag) {
+      bottomTxt.textContent = "Quản trị";
+      bottomBtn.onclick = () => go('admin');
+    } else if (user) {
+      bottomTxt.textContent = user.username;
+      bottomBtn.onclick = () => go('wallet');
+    } else {
+      bottomTxt.textContent = "Đăng nhập";
+      bottomBtn.onclick = () => go('login');
+    }
+  }
 }
 
 function firebaseErrorMessage(error) {
@@ -299,6 +331,8 @@ function initFirebaseSync() {
         if (snap.exists()) {
           localStorage.setItem(STORAGE[k], JSON.stringify(snap.val()));
           refreshAccount();
+          if (document.getElementById("orders")?.classList.contains("active")) loadOrders();
+          if (document.getElementById("admin")?.classList.contains("active") && isAdmin) loadAdmin();
         } else if (k === 'settings' || k === 'logs' || k === 'activities') {
           ref.set(readLocal(STORAGE[k], [])).catch(() => {});
         }
@@ -306,11 +340,11 @@ function initFirebaseSync() {
     });
 
     const msg = document.getElementById("loginMessage");
-    if (msg) msg.textContent = "Đã kết nối bộ lưu trữ tài khoản. Nhập tên tài khoản và mật khẩu.";
+    if (msg) msg.textContent = "Đã kết nối bộ lưu trữ chung với web cũ. Nhập tài khoản và mật khẩu.";
     refreshAccount();
   } catch (e) {
     firebaseSyncReady = false;
-    setAccountUI(null);
+    refreshAccount();
     const msg = document.getElementById("loginMessage");
     if (msg) msg.textContent = firebaseErrorMessage(e);
     console.warn('Firebase init failed; LocalStorage active:', e);
@@ -328,16 +362,19 @@ async function refreshAccount() {
     setAccountUI(null);
     return;
   }
+  // Tài khoản Admin chính thức
   if (session.uid === 'admin' && normalizeLogin(session.username) === ADMIN_USERNAME) {
     isAdmin = true;
-    setAccountUI(session);
+    setAccountUI({ ...session, admin: true });
     return;
   }
+  // Tài khoản đồng bộ từ kho chung (ví dụ: phong9)
   const users = getUsers();
-  const user = users.find(x => String(x.uid) === String(session.uid));
+  const user = users.find(x => String(x.uid) === String(session.uid) || normalizeLogin(x.username) === normalizeLogin(session.username));
   if (user) {
-    isAdmin = false;
-    setAccountUI(user);
+    const adminRole = checkIsAdmin(user) || session.admin === true;
+    isAdmin = adminRole;
+    setAccountUI({ ...user, admin: adminRole });
     if (document.getElementById("wallet")?.classList.contains("active")) {
       await loadWallet();
     }
@@ -345,6 +382,9 @@ async function refreshAccount() {
     localStorage.removeItem(STORAGE.session);
     isAdmin = false;
     setAccountUI(null);
+  } else {
+    // Giữ session tạm trong lúc Firebase đang tải xong snapshot đầu tiên
+    setAccountUI(session);
   }
 }
 
@@ -436,6 +476,7 @@ async function loginUser() {
     if (pass.length < 6) throw new Error("Mật khẩu tối thiểu 6 ký tự");
     if (button) { button.disabled = true; button.textContent = "Đang đăng nhập..."; }
 
+    // 1. Đăng nhập tài khoản Admin mặc định (phong23112007 / Muathu12345)
     if (login === ADMIN_USERNAME) {
       if (pass !== ADMIN_PASSWORD) throw new Error("Sai tên đăng nhập hoặc mật khẩu");
       const session = { uid: 'admin', username: ADMIN_USERNAME, name: 'Quản trị viên', admin: true, createdAt: Date.now() };
@@ -445,21 +486,31 @@ async function loginUser() {
       if (box) box.textContent = "Đăng nhập quản trị thành công.";
       document.getElementById("loginPassword").value = "";
       toast("Đăng nhập Admin thành công");
-      go("home");
+      go("admin");
       return;
     }
 
-    const users = (firebaseDB && firebaseSyncReady) ? (await readUsersFromFirebase() || []) : getUsers();
+    // 2. Đăng nhập tất cả tài khoản từ kho lưu trữ chung với web cũ (ví dụ: phong9)
+    let users = (firebaseDB && firebaseSyncReady) ? (await readUsersFromFirebase() || []) : [];
+    if (!users.length) users = getUsers();
+
     const user = users.find(item => normalizeLogin(item.username) === login && String(item.password || '') === pass);
     if (!user) throw new Error("Sai tên đăng nhập hoặc mật khẩu");
 
-    const session = { uid: user.uid, username: user.username, name: user.name || user.username, admin: false, createdAt: user.createdAt || Date.now() };
+    const hasAdminRole = checkIsAdmin(user);
+    const session = {
+      uid: user.uid,
+      username: user.username,
+      name: user.name || user.username,
+      admin: hasAdminRole,
+      createdAt: user.createdAt || Date.now()
+    };
     write(STORAGE.session, session);
-    isAdmin = false;
-    setAccountUI(user);
+    isAdmin = hasAdminRole;
+    setAccountUI({ ...user, admin: hasAdminRole });
     if (box) box.textContent = "Đăng nhập thành công.";
     document.getElementById("loginPassword").value = "";
-    toast("Đăng nhập thành công");
+    toast("Chào mừng " + (user.name || user.username));
     go("home");
     await loadWallet();
   } catch (error) {
@@ -490,9 +541,10 @@ async function loadWallet() {
     return;
   }
   try {
-    const users = (firebaseDB && firebaseSyncReady) ? (await readUsersFromFirebase() || []) : getUsers();
-    const user = users.find(x => String(x.uid) === String(session.uid));
-    if (!user && session.uid !== 'admin') throw new Error("Không tìm thấy tài khoản trong kho dữ liệu.");
+    let users = (firebaseDB && firebaseSyncReady) ? (await readUsersFromFirebase() || []) : [];
+    if (!users.length) users = getUsers();
+    const user = users.find(x => String(x.uid) === String(session.uid) || normalizeLogin(x.username) === normalizeLogin(session.username));
+    if (!user && !checkIsAdmin(session)) throw new Error("Không tìm thấy tài khoản trong kho dữ liệu.");
     setAccountUI(user || session);
     const transactions = Array.isArray(user?.transactionHistory) ? user.transactionHistory.slice().reverse() : [];
     if (list) {
@@ -537,31 +589,137 @@ async function requestTopup() {
     console.error(error);
   }
 }
-/* ==================== KẾT THÚC PHẦN LƯU TRỮ TỪ index.html ==================== */
 
-async function bootstrapAdmin(){
-  const secret=document.getElementById('bootstrapSecret').value;
-  try{await api('/admin/bootstrap',{method:'POST',body:{secret}});toast('Đã cấp quyền Admin');await refreshAccount();await loadAdmin()}
-  catch(e){toast(e.message)}
+async function loadOrders() {
+  const session = currentUser();
+  const host = document.getElementById("ordersList");
+  if (!host) return;
+  if (!session?.uid) {
+    host.className = "empty";
+    host.textContent = "Đăng nhập để xem đơn hàng.";
+    return;
+  }
+  const allOrders = getOrders();
+  const mine = checkIsAdmin(session)
+    ? allOrders.slice().reverse()
+    : allOrders.filter(o => String(o.uid) === String(session.uid) || normalizeLogin(o.username) === normalizeLogin(session.username)).reverse();
+
+  if (!mine.length) {
+    host.className = "empty";
+    host.textContent = "Chưa có đơn hàng nào.";
+    return;
+  }
+  host.className = "";
+  host.innerHTML = mine.map(o => `
+    <div class="panel" style="padding:16px;margin:10px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <b>${escapeHtml(o.title || o.name || "Đơn hàng dịch vụ")}</b>
+        <span class="pill">${escapeHtml(o.status || "Đang xử lý")}</span>
+      </div>
+      <div class="muted" style="margin-top:6px">Mã đơn: <b>${escapeHtml(o.id)}</b> · ${new Date(o.createdAt || Date.now()).toLocaleString("vi-VN")}</div>
+      ${o.note ? `<div class="muted" style="margin-top:4px">Ghi chú / Link: ${escapeHtml(o.note)}</div>` : ""}
+    </div>
+  `).join("");
 }
-async function adminAdjust(){
-  const username=document.getElementById('adjustUsername').value.trim();
-  const amount=Number(document.getElementById('adjustAmount').value);
-  const note=document.getElementById('adjustNote').value.trim();
-  try{await api('/admin/balance',{method:'POST',body:{username,amount,note}});toast('Đã điều chỉnh số dư');await loadAdmin()}
-  catch(e){toast(e.message)}
+
+/* ==================== QUẢN TRỊ ADMIN TRỰC TIẾP TRÊN FIREBASE ==================== */
+async function adminAdjust() {
+  if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền thao tác."); return; }
+  const username = normalizeLogin(document.getElementById('adjustUsername').value);
+  const amount = Number(document.getElementById('adjustAmount').value);
+  const note = document.getElementById('adjustNote').value.trim() || "Admin điều chỉnh số dư";
+  if (!username) { toast("Nhập tên tài khoản khách."); return; }
+  if (!Number.isFinite(amount) || amount === 0) { toast("Nhập số tiền khác 0."); return; }
+
+  const users = getUsers();
+  const target = users.find(u => normalizeLogin(u.username) === username);
+  if (!target) { toast("Không tìm thấy tài khoản: " + username); return; }
+
+  setBalance(target.uid, Number(target.balance || 0) + amount, note);
+  document.getElementById('adjustAmount').value = "";
+  toast(`Đã ${amount >= 0 ? 'cộng' : 'trừ'} ${money(Math.abs(amount))} cho ${target.username}`);
 }
-async function loadAdmin(){
-  const host=document.getElementById('adminTopups');if(!host)return;
-  try{
-    const d=await api('/admin/topups');host.className='';
-    host.innerHTML=d.topups.length?d.topups.map(t=>`<div class="panel" style="padding:12px;margin:8px 0"><b>${escapeHtml(t.username)}</b> · ${money(t.amount)}<div class="muted">${escapeHtml(t.status)} · ${new Date(t.created_at).toLocaleString('vi-VN')}</div>${t.status==='pending'?`<button class="btn primary" style="margin-top:8px" onclick="approveTopup('${t.id}')">Duyệt cộng tiền</button>`:''}</div>`).join(''):'<div class="empty">Không có yêu cầu nạp tiền.</div>';
-  }catch(e){host.className='empty';host.textContent=e.message}
+
+async function loadAdmin() {
+  const banner = document.getElementById('adminStatusBanner');
+  if (!checkIsAdmin()) {
+    if (banner) banner.textContent = "Bạn chưa đăng nhập bằng tài khoản Quản trị viên.";
+    return;
+  }
+  if (banner) banner.textContent = "Đang quản trị với tài khoản: " + currentUser().username;
+
+  const host = document.getElementById('adminTopups');
+  if (host) {
+    const deposits = getDeposits().slice().reverse();
+    if (!deposits.length) {
+      host.className = 'empty';
+      host.textContent = 'Không có yêu cầu nạp tiền.';
+    } else {
+      host.className = '';
+      host.innerHTML = deposits.map(t => `
+        <div class="panel" style="padding:12px;margin:8px 0">
+          <b>${escapeHtml(t.username)}</b> · ${money(t.amount)}
+          <div class="muted">${escapeHtml(t.status)} · ${new Date(t.createdAt || Date.now()).toLocaleString('vi-VN')}</div>
+          ${t.status === 'pending' ? `
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn primary" onclick="approveTopup('${t.id}', true)">Duyệt cộng tiền</button>
+              <button class="btn light" onclick="approveTopup('${t.id}', false)">Từ chối</button>
+            </div>` : ''}
+        </div>
+      `).join('');
+    }
+  }
+
+  const orderHost = document.getElementById('adminOrders');
+  if (orderHost) {
+    const orders = getOrders().slice().reverse();
+    if (!orders.length) {
+      orderHost.className = 'empty';
+      orderHost.textContent = 'Chưa có đơn hàng nào.';
+    } else {
+      orderHost.className = '';
+      orderHost.innerHTML = orders.map(o => `
+        <div class="panel" style="padding:12px;margin:8px 0">
+          <b>${escapeHtml(o.title || o.name || 'Yêu cầu')}</b> — Khách: <b>${escapeHtml(o.username)}</b>
+          <div class="muted">Trạng thái: ${escapeHtml(o.status || 'pending')} · ${new Date(o.createdAt || Date.now()).toLocaleString('vi-VN')}</div>
+          ${o.note ? `<div class="muted">Ghi chú: ${escapeHtml(o.note)}</div>` : ''}
+          ${o.status === 'pending' ? `<button class="btn primary" style="margin-top:8px" onclick="completeOrder('${o.id}')">Đánh dấu hoàn thành</button>` : ''}
+        </div>
+      `).join('');
+    }
+  }
 }
-async function approveTopup(id){
-  try{await api('/admin/topups/approve',{method:'POST',body:{id}});toast('Đã duyệt yêu cầu nạp');await loadAdmin()}
-  catch(e){toast(e.message)}
+
+async function approveTopup(id, approve = true) {
+  if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền duyệt."); return; }
+  const deposits = getDeposits();
+  const d = deposits.find(x => String(x.id) === String(id));
+  if (!d || d.status !== 'pending') return;
+
+  d.status = approve ? 'approved' : 'rejected';
+  d.reviewedAt = Date.now();
+  write(STORAGE.deposits, deposits);
+
+  if (approve) {
+    setBalance(d.uid, getBalance(d.uid) + Number(d.amount || 0), "Duyệt nạp tiền #" + d.id);
+    toast("Đã duyệt cộng " + money(d.amount) + " cho " + d.username);
+  } else {
+    toast("Đã từ chối yêu cầu nạp của " + d.username);
+  }
+  loadAdmin();
 }
+
+async function completeOrder(id) {
+  if (!checkIsAdmin()) return;
+  const orders = getOrders();
+  const o = orders.find(x => String(x.id) === String(id));
+  if (!o) return;
+  o.status = 'completed';
+  write(STORAGE.orders, orders);
+  toast("Đã hoàn thành đơn " + o.id);
+  loadAdmin();
+}
+
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const platformData={
  Facebook:{icon:'https://cdn.simpleicons.org/facebook/0866FF',items:[['Gói tăng theo dõi trang','Theo dõi','Tư vấn phát triển cộng đồng và chiến dịch tiếp cận người quan tâm thật.','Liên hệ'],['Gói tăng tương tác bài viết','Tương tác','Tư vấn nội dung và quảng bá tương tác minh bạch.','Liên hệ'],['Gói quảng bá bài viết','Quảng bá','Hỗ trợ thiết lập chiến dịch tiếp cận đúng đối tượng.','Liên hệ']]},
@@ -571,12 +729,75 @@ const rentalData={
  'FC Mobile':[['Tài khoản FC Mobile','Thông tin đội hình, máy chủ và thời hạn thuê sẽ được Admin xác nhận.','Theo gói'],['Gói thuê FC Mobile','Thời hạn thuê và điều kiện sử dụng hiển thị trước khi đặt.','Theo thời hạn']],
  'TFT':[['Tài khoản TFT','Thông tin máy chủ, cấp độ và thời hạn thuê được xác nhận trước.','Theo gói'],['Gói thuê TFT','Gói thuê theo thời hạn và điều kiện công bố.','Theo thời hạn']],
  'Game khác':[['Tài khoản game khác','Danh mục game khác sẽ được cập nhật trong kho.','Theo gói'],['Gói thuê game khác','Thời hạn, điều kiện và giá được xác nhận theo từng game.','Theo thời hạn']]}
-function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));drawer(false);document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});if(id==='buff')renderBuff();if(id==='rent')renderRent();if(id==='wallet')loadWallet();if(id==='admin')loadAdmin()}
+
+function go(id){
+  if (id === 'admin' && !checkIsAdmin()) {
+    toast("Chỉ tài khoản Admin mới truy cập được trang Quản trị.");
+    id = 'login';
+  }
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  drawer(false);
+  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='buff')renderBuff();
+  if(id==='rent')renderRent();
+  if(id==='wallet')loadWallet();
+  if(id==='orders')loadOrders();
+  if(id==='admin')loadAdmin();
+}
 function drawer(open){document.getElementById('drawerBack').style.display=open?'block':'none'}
 function openPlatform(p){go('buff');document.getElementById('allBuffSections').scrollIntoView({behavior:'smooth'})}
 function renderBuff(){let host=document.getElementById('allBuffSections');host.innerHTML=Object.entries(platformData).map(([name,d])=>`<section class="section"><div class="sectionHead"><div><div class="eyebrow">Nền tảng</div><h2>${name}</h2></div><span class="pill">${d.items.length} gói dịch vụ</span></div><div class="packageGrid">${d.items.map(x=>`<article class="package"><div class="packageTop"><div class="logoBox"><img src="${d.icon}" alt="Logo ứng dụng ${name}"></div><div><h3>${x[0]}</h3><span class="pill">${x[1]}</span></div></div><p class="desc">${x[2]}</p><div class="price">${x[3]}</div><button class="btn light" onclick="productDetail('${x[0]}','${x[2]}')">Xem chi tiết →</button></article>`).join('')}</div></section>`).join('')}
 function renderRent(){let host=document.getElementById('allRentSections');host.innerHTML=Object.entries(rentalData).map(([name,items])=>`<section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản</div><h2>${name}</h2></div><span class="pill">${items.length} lựa chọn</span></div><div class="packageGrid">${items.map(x=>`<article class="package"><div class="packageTop"><div class="logoBox"><img src="${name==='FC Mobile'?'https://cdn.simpleicons.org/ea/111111':name==='TFT'?'https://cdn.simpleicons.org/riotgames/D32936':'https://cdn.simpleicons.org/steam/111111'}" alt="Logo ${name}"></div><div><h3>${x[0]}</h3><span class="pill">Thuê tài khoản</span></div></div><p class="desc">${x[1]}</p><div class="price">${x[2]}</div><button class="btn light" onclick="productDetail('${x[0]}','${x[1]}')">Xem chi tiết →</button></article>`).join('')}</div></section>`).join('')}
-function productDetail(name,desc){document.getElementById('modalTitle').textContent=name;document.getElementById('modalText').textContent=desc;document.getElementById('productModal').style.display='flex'}
+
+function productDetail(name, desc) {
+  selectedPackage = { name, desc };
+  document.getElementById('modalTitle').textContent = name;
+  document.getElementById('modalText').textContent = desc;
+  const user = currentUser();
+  const callout = document.getElementById('modalCallout');
+  const noteWrap = document.getElementById('modalNoteWrap');
+  const primaryBtn = document.getElementById('modalPrimaryBtn');
+
+  if (user && user.uid) {
+    callout.textContent = "Đang đăng nhập với tài khoản: " + user.username + ". Nhập thông tin/link bên dưới và gửi yêu cầu để Admin tiếp nhận xử lý.";
+    noteWrap.style.display = "block";
+    document.getElementById('modalOrderNote').value = "";
+    primaryBtn.textContent = "Gửi yêu cầu đặt đơn";
+  } else {
+    callout.textContent = "Vui lòng đăng nhập tài khoản để gửi yêu cầu dịch vụ hoặc thuê tài khoản.";
+    noteWrap.style.display = "none";
+    primaryBtn.textContent = "Đăng nhập";
+  }
+  document.getElementById('productModal').style.display = 'flex';
+}
+
+function handleModalPrimary() {
+  const user = currentUser();
+  if (!user || !user.uid) {
+    closeProduct();
+    go('login');
+    return;
+  }
+  if (!selectedPackage) return;
+  const note = document.getElementById('modalOrderNote').value.trim();
+  const orders = getOrders();
+  orders.push({
+    id: 'ORD-' + Date.now().toString().slice(-6),
+    uid: user.uid,
+    username: user.username,
+    title: selectedPackage.name,
+    desc: selectedPackage.desc,
+    note,
+    status: 'pending',
+    createdAt: Date.now()
+  });
+  write(STORAGE.orders, orders);
+  closeProduct();
+  toast("Đã gửi yêu cầu: " + selectedPackage.name);
+  go('orders');
+}
+
 function closeProduct(){document.getElementById('productModal').style.display='none'}
 function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splashStatus').textContent='Đã tải giao diện';setTimeout(()=>document.getElementById('splash').classList.add('hide'),350)},650)});
