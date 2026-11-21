@@ -410,14 +410,19 @@ body.standaloneTab .main{padding:20px 18px 56px}
       <div class="field"><label>Chọn game</label><select id="accGameSelect"></select></div>
       <div class="field"><label>Hình thức</label><select id="accModeSelect" onchange="toggleAdminAccMode()"><option value="sell">Bán đứt tài khoản</option><option value="rent">Cho thuê tài khoản</option></select></div>
       <div class="field"><label>Tiêu đề acc</label><input id="accTitle" placeholder="Ví dụ: Acc Rank Cao Thủ - Full Tướng & Skin SS"></div>
-      <div class="twoCol" style="gap:10px;margin:0">
-        <div class="field" style="margin:6px 0"><label>Rank / Bậc hạng</label><input id="accRank" placeholder="Ví dụ: Cao Thủ / Siêu Sao"></div>
-        <div class="field" style="margin:6px 0"><label>Tướng / Cầu thủ / OVR</label><input id="accHeroes" placeholder="Ví dụ: 115 Tướng / OVR 106"></div>
-      </div>
-      <div class="twoCol" style="gap:10px;margin:0">
-        <div class="field" style="margin:6px 0"><label>Trang phục / Vật phẩm nổi bật</label><input id="accSkins" placeholder="Ví dụ: 240 Skin, 3 Tuyệt Sắc"></div>
-        <div class="field" style="margin:6px 0"><label>Loại đăng nhập / Liên kết</label><input id="accLoginType" placeholder="Ví dụ: Trắng thông tin / Garena"></div>
-      </div>
+      <details style="border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0;background:var(--soft)">
+        <summary style="font-size:12px;font-weight:750;cursor:pointer;color:var(--blue)">
+          + Thêm thông số tùy game (Rank, Tướng, Skin, Liên kết — Bấm để mở)
+        </summary>
+        <div class="twoCol" style="gap:10px;margin-top:8px">
+          <div class="field" style="margin:4px 0"><label>Rank / Bậc hạng</label><input id="accRank" placeholder="Bỏ trống nếu không cần"></div>
+          <div class="field" style="margin:4px 0"><label>Tướng / Cầu thủ / OVR</label><input id="accHeroes" placeholder="Bỏ trống nếu không cần"></div>
+        </div>
+        <div class="twoCol" style="gap:10px;margin:0">
+          <div class="field" style="margin:4px 0"><label>Trang phục / Vật phẩm</label><input id="accSkins" placeholder="Bỏ trống nếu không cần"></div>
+          <div class="field" style="margin:4px 0"><label>Loại đăng nhập / Liên kết</label><input id="accLoginType" placeholder="Bỏ trống nếu không cần"></div>
+        </div>
+      </details>
       <div class="field"><label id="accPriceLabel">Giá bán (VNĐ)</label><input id="accPrice" type="number" min="1000" step="1000" placeholder="Ví dụ: 150000"></div>
       <div class="field" id="accRentHoursWrap" style="display:none"><label>Thời hạn thuê (giờ)</label><input id="accRentHours" type="number" min="1" value="24" placeholder="Ví dụ: 24"></div>
       <div class="field">
@@ -724,12 +729,18 @@ function readLocal(key, fallback) {
   }
 }
 
+let memoryCacheFallback = {};
 function writeLocal(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  memoryCacheFallback[key] = value;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn('Bộ nhớ trình duyệt đầy, tự động lưu qua Firebase & RAM:', e);
+  }
 }
 
 function read(key, fallback) {
-  return readLocal(key, fallback);
+  return memoryCacheFallback[key] !== undefined ? memoryCacheFallback[key] : readLocal(key, fallback);
 }
 
 function write(key, value) {
@@ -1697,14 +1708,14 @@ function closeLightbox() {
 function buildAccSpecsHtml(acc) {
   const isRent = acc.mode === 'rent';
   const specs = [
-    acc.rank ? `🏆 Rank: ${escapeHtml(acc.rank)}` : '',
+    acc.rank ? `🏆 ${escapeHtml(acc.rank)}` : '',
     acc.heroes ? `⚔️ ${escapeHtml(acc.heroes)}` : '',
     acc.skins ? `✨ ${escapeHtml(acc.skins)}` : '',
     acc.loginType ? `🔐 ${escapeHtml(acc.loginType)}` : '',
-    isRent ? `⏱ Thời hạn: ${Number(acc.rentHours || 24)} giờ` : '🛡 Giao full thông tin',
-    '⚡ Trả TK/MK tự động'
+    isRent ? `⏱ ${Number(acc.rentHours || 24)}h` : ''
   ].filter(Boolean);
-  return `<div class="modernAccSpecs" style="margin:10px 0">${specs.map(s => `<span class="specChip">${s}</span>`).join('')}</div>`;
+  if (!specs.length) return '';
+  return `<div class="modernAccSpecs" style="margin:8px 0">${specs.map(s => `<span class="specChip">${s}</span>`).join('')}</div>`;
 }
 
 function openGameAccountModal(accId, initialSlide = 0) {
@@ -1902,7 +1913,7 @@ async function handleAdminImageFiles(event) {
   toast(`Đang xử lý ${files.length} ảnh...`);
   for (const f of files) {
     try {
-      const dataUrl = await compressImageFile(f, 880, 0.72);
+      const dataUrl = await compressImageFile(f, 640, 0.56);
       pendingAdminImages.push(dataUrl);
     } catch (_) {}
   }
