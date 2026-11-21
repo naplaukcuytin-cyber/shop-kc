@@ -8,9 +8,18 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
-:root{--ink:#171923;--muted:#737887;--line:#e9ebf0;--bg:#fff;--soft:#f6f7fa;--blue:#315efb;--blue2:#edf1ff;--green:#159568;--shadow:0 12px 36px rgba(20,30,60,.07);--r:20px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1220px;margin:auto;min-height:100vh}.top{height:72px;position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:14px}.menuBtn,.iconBtn{height:42px;width:42px;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:20px;color:var(--ink)}.brand{font-weight:850;font-size:15px;letter-spacing:-.35px;line-height:1.15}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.7px;margin-top:5px;font-weight:750}.spacer{flex:1}.balanceBtn{border:1px solid var(--line);border-radius:14px;background:#fff;padding:8px 13px;text-align:left;color:var(--muted);font-size:10px}.balanceBtn b{display:block;color:var(--ink);font-size:13px;margin-top:3px}.userBtn{height:42px;width:42px;border:0;border-radius:14px;background:#eaf0ff;color:var(--blue);font-weight:850}.main{padding:28px 24px 80px}.view{display:none;animation:fade .22s ease}.view.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:850;color:var(--blue)}h1,h2,h3,p{margin-top:0}.hero{min-height:330px;border:1px solid #e8ecf7;border-radius:28px;padding:44px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:30px;background:radial-gradient(circle at 82% 45%,#e8edff 0,transparent 32%),linear-gradient(120deg,#fbfcff,#fff 65%);overflow:hidden}.hero h1{font-size:clamp(36px,5.5vw,62px);letter-spacing:-2.8px;line-height:1.02;margin:14px 0}.hero p{max-width:540px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:24px}.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:750}.primary{background:var(--blue);color:white;box-shadow:0 7px 16px #315efb2b}.light{background:white;border:1px solid var(--line);color:var(--ink)}.heroVisual{height:230px;display:grid;place-items:center;position:relative}.heroOrb{height:190px;width:190px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#e8edff);box-shadow:inset 0 0 0 1px #dfe6ff,0 25px 60px #405cbd1a;position:relative}.heroOrb:before,.heroOrb:after{content:"";position:absolute;inset:-15px;border:1px solid #dce4ff;border-radius:50%}.heroOrb:after{inset:-30px;border-style:dashed}.heroOrb strong{font-size:36px;letter-spacing:-2px;color:var(--blue)}.floatTag{position:absolute;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:11px 14px;border-radius:14px;font-size:12px;font-weight:750}.tagA{top:18px;left:5px}.tagB{right:0;bottom:20px}.section{margin-top:38px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:17px}.sectionHead h2{font-size:23px;letter-spacing:-.8px;margin:6px 0 0}.muted{color:var(--muted);font-size:13px;line-height:1.6}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.tile{border:1px solid var(--line);border-radius:20px;padding:20px;background:#fff;text-align:left;transition:.18s;min-width:0}.tile:hover,.package:hover{box-shadow:var(--shadow);transform:translateY(-2px)}.tileTop{display:flex;align-items:center;gap:13px}.logoBox{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:var(--soft);flex:none}.logoBox img{width:29px;height:29px;object-fit:contain}.tile h3{font-size:16px;margin:0 0 4px}.tile p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}.tileFoot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:12px;font-weight:750;color:var(--blue)}.arrow{font-size:18px}.gameLogo{font-size:25px}.packageGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.package{border:1px solid var(--line);border-radius:19px;padding:18px;background:#fff;transition:.18s}.packageTop{display:flex;align-items:center;gap:11px}.package h3{font-size:15px;margin:0 0 4px}.package .desc{font-size:12px;color:var(--muted);line-height:1.55;margin:14px 0}.price{font-size:19px;font-weight:850;letter-spacing:-.5px}.price small{font-size:11px;color:var(--muted);font-weight:500}.package .btn{width:100%;margin-top:15px}.pill{display:inline-flex;border-radius:99px;background:var(--blue2);color:var(--blue);padding:6px 9px;font-size:10px;font-weight:800}.pageHead{margin:5px 0 24px}.pageHead h1{font-size:34px;letter-spacing:-1.4px;margin:8px 0}.pageHead p{color:var(--muted);font-size:14px;line-height:1.6;max-width:680px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;font-size:12px;font-weight:700}.tab.active{background:var(--ink);border-color:var(--ink);color:white}.featureBand{border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:#fafbff;color:#606779;font-size:12px;line-height:1.65;margin:18px 0}.featureBand b{color:var(--ink)}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:20px;padding:22px}.panel h3{font-size:17px;margin-bottom:8px}.field{margin:15px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;outline:none}.field input:focus,.field select:focus{border-color:var(--blue)}.methodGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.method{border:1px solid var(--line);border-radius:13px;padding:13px;background:white;text-align:left;font-size:12px;font-weight:700}.method.active{border-color:var(--blue);background:var(--blue2);color:var(--blue)}.callout{border:1px solid #e4eaff;background:#f7f9ff;border-radius:14px;padding:14px;font-size:12px;line-height:1.65;color:#606b85}.empty{border:1px dashed #d9dde6;border-radius:18px;padding:34px;text-align:center;color:var(--muted);font-size:13px}.drawerBack,.modalBack{display:none;position:fixed;inset:0;background:#10182b66;z-index:40}.drawer{height:100%;width:min(340px,88vw);background:#fff;padding:22px;overflow:auto;box-shadow:12px 0 45px #0002}.drawerHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.drawerLabel{font-size:10px;letter-spacing:1.6px;color:#9aa0ad;font-weight:850;margin:22px 10px 8px}.nav{display:block;width:100%;border:0;background:white;text-align:left;border-radius:12px;padding:13px 12px;font-size:13px;font-weight:700;color:#333846;margin:3px 0}.nav:hover,.nav.active{background:var(--blue2);color:var(--blue)}.modalBack{align-items:center;justify-content:center;padding:16px}.modal{background:#fff;width:min(470px,100%);border-radius:23px;padding:23px;max-height:88vh;overflow:auto;box-shadow:0 25px 80px #0003}.modal h2{font-size:21px;margin:0 0 8px}.modal p{font-size:13px;color:var(--muted);line-height:1.6}.modalActions{display:flex;gap:9px;margin-top:17px}.modalActions button{flex:1}.toast{position:fixed;z-index:80;left:50%;bottom:28px;transform:translate(-50%,15px);opacity:0;background:#191c25;color:white;border-radius:12px;padding:12px 17px;font-size:12px;transition:.2s;pointer-events:none;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.bottomNav{display:none}.footer{border-top:1px solid var(--line);padding:24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.splash{position:fixed;inset:0;z-index:100;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .35s,visibility .35s}.splash.hide{opacity:0;visibility:hidden}.splashInner{text-align:center;padding:25px}.splashMark{width:70px;height:70px;border-radius:23px;margin:0 auto 20px;background:#edf1ff;color:var(--blue);display:grid;place-items:center;font-size:22px;font-weight:900;letter-spacing:-1px}.spinner{width:24px;height:24px;border:2px solid #e5e9f3;border-top-color:var(--blue);border-radius:50%;margin:22px auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.splash small{color:var(--muted);font-size:11px}.adminHint{font-size:11px;color:#8a5260;margin-top:12px;line-height:1.5}
-@media(max-width:760px){.top{height:64px;padding:0 12px;gap:9px}.brand{font-size:12px}.brand small{font-size:8px;letter-spacing:1.2px}.main{padding:17px 13px 100px}.hero{padding:27px 21px;min-height:0;grid-template-columns:1fr;border-radius:22px}.hero h1{font-size:39px}.hero p{font-size:13px}.heroVisual{display:none}.tiles{grid-template-columns:repeat(2,1fr);gap:9px}.tile{padding:14px}.logoBox{width:43px;height:43px}.logoBox img{width:25px;height:25px}.tile h3{font-size:13px}.tile p{font-size:10px}.tileFoot{margin-top:14px}.packageGrid{grid-template-columns:1fr 1fr;gap:9px}.package{padding:13px}.package h3{font-size:13px}.package .desc{font-size:11px}.price{font-size:16px}.pageHead h1{font-size:29px}.twoCol{grid-template-columns:1fr}.sectionHead h2{font-size:20px}.balanceBtn{padding:7px 9px;font-size:9px}.balanceBtn b{font-size:11px}.userBtn{width:37px;height:37px}.menuBtn{width:38px;height:38px}.bottomNav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));justify-content:space-around}.bottomNav button{border:0;background:none;color:var(--muted);font-size:9px;display:grid;justify-items:center;gap:3px}.bottomNav b{font-size:18px}.footer{padding-bottom:85px}.methodGrid{grid-template-columns:1fr 1fr}}
+:root{--ink:#171923;--muted:#737887;--line:#e9ebf0;--bg:#fff;--soft:#f6f7fa;--blue:#315efb;--blue2:#edf1ff;--green:#159568;--red:#d14343;--shadow:0 12px 36px rgba(20,30,60,.07);--r:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1220px;margin:auto;min-height:100vh}.top{height:72px;position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:14px}.menuBtn,.iconBtn{height:42px;width:42px;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:20px;color:var(--ink)}.brand{font-weight:850;font-size:15px;letter-spacing:-.35px;line-height:1.15}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.7px;margin-top:5px;font-weight:750}.spacer{flex:1}.balanceBtn{border:1px solid var(--line);border-radius:14px;background:#fff;padding:8px 13px;text-align:left;color:var(--muted);font-size:10px}.balanceBtn b{display:block;color:var(--ink);font-size:13px;margin-top:3px}.userBtn{height:42px;width:42px;border:0;border-radius:14px;background:#eaf0ff;color:var(--blue);font-weight:850}.main{padding:28px 24px 80px}.view{display:none;animation:fade .22s ease}.view.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:850;color:var(--blue)}h1,h2,h3,p{margin-top:0}.hero{min-height:330px;border:1px solid #e8ecf7;border-radius:28px;padding:44px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:30px;background:radial-gradient(circle at 82% 45%,#e8edff 0,transparent 32%),linear-gradient(120deg,#fbfcff,#fff 65%);overflow:hidden}.hero h1{font-size:clamp(36px,5.5vw,62px);letter-spacing:-2.8px;line-height:1.02;margin:14px 0}.hero p{max-width:540px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:24px}.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:750}.primary{background:var(--blue);color:white;box-shadow:0 7px 16px #315efb2b}.light{background:white;border:1px solid var(--line);color:var(--ink)}.heroVisual{height:230px;display:grid;place-items:center;position:relative}.heroOrb{height:190px;width:190px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#e8edff);box-shadow:inset 0 0 0 1px #dfe6ff,0 25px 60px #405cbd1a;position:relative}.heroOrb:before,.heroOrb:after{content:"";position:absolute;inset:-15px;border:1px solid #dce4ff;border-radius:50%}.heroOrb:after{inset:-30px;border-style:dashed}.heroOrb strong{font-size:36px;letter-spacing:-2px;color:var(--blue)}.floatTag{position:absolute;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:11px 14px;border-radius:14px;font-size:12px;font-weight:750}.tagA{top:18px;left:5px}.tagB{right:0;bottom:20px}.section{margin-top:38px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:17px;flex-wrap:wrap}.sectionHead h2{font-size:23px;letter-spacing:-.8px;margin:6px 0 0}.muted{color:var(--muted);font-size:13px;line-height:1.6}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.tile{border:1px solid var(--line);border-radius:20px;padding:20px;background:#fff;text-align:left;transition:.18s;min-width:0}.tile:hover,.package:hover{box-shadow:var(--shadow);transform:translateY(-2px)}.tileTop{display:flex;align-items:center;gap:13px}.logoBox{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:var(--soft);flex:none}.logoBox img{width:29px;height:29px;object-fit:contain}.tile h3{font-size:16px;margin:0 0 4px}.tile p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}.tileFoot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:12px;font-weight:750;color:var(--blue)}.arrow{font-size:18px}.gameLogo{font-size:25px}.packageGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.package{border:1px solid var(--line);border-radius:19px;padding:18px;background:#fff;transition:.18s;display:flex;flex-direction:column}.packageTop{display:flex;align-items:center;gap:11px}.package h3{font-size:15px;margin:0 0 4px}.package .desc{font-size:12px;color:var(--muted);line-height:1.55;margin:14px 0;flex:1}.price{font-size:19px;font-weight:850;letter-spacing:-.5px}.price small{font-size:11px;color:var(--muted);font-weight:500}.package .btn{width:100%;margin-top:15px}.pill{display:inline-flex;border-radius:99px;background:var(--blue2);color:var(--blue);padding:6px 9px;font-size:10px;font-weight:800}.pill.ok{background:#e7f8f1;color:var(--green)}.pill.warn{background:#fff3e6;color:#c96a08}.pill.sold{background:#fdecec;color:var(--red)}.pageHead{margin:5px 0 24px}.pageHead h1{font-size:34px;letter-spacing:-1.4px;margin:8px 0}.pageHead p{color:var(--muted);font-size:14px;line-height:1.6;max-width:680px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;font-size:12px;font-weight:700;color:var(--ink);transition:.15s}.tab.active{background:var(--ink);border-color:var(--ink);color:white}.featureBand{border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:#fafbff;color:#606779;font-size:12px;line-height:1.65;margin:18px 0}.featureBand b{color:var(--ink)}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:20px;padding:22px;background:#fff}.panel h3{font-size:17px;margin-bottom:8px}.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;outline:none;color:var(--ink)}.field textarea{min-height:74px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}.callout{border:1px solid #e4eaff;background:#f7f9ff;border-radius:14px;padding:14px;font-size:12px;line-height:1.65;color:#606b85}.empty{border:1px dashed #d9dde6;border-radius:18px;padding:34px;text-align:center;color:var(--muted);font-size:13px}.drawerBack,.modalBack{display:none;position:fixed;inset:0;background:#10182b66;z-index:40}.drawer{height:100%;width:min(340px,88vw);background:#fff;padding:22px;overflow:auto;box-shadow:12px 0 45px #0002}.drawerHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.drawerLabel{font-size:10px;letter-spacing:1.6px;color:#9aa0ad;font-weight:850;margin:22px 10px 8px}.nav{display:block;width:100%;border:0;background:white;text-align:left;border-radius:12px;padding:13px 12px;font-size:13px;font-weight:700;color:#333846;margin:3px 0}.nav:hover,.nav.active{background:var(--blue2);color:var(--blue)}.modalBack{align-items:center;justify-content:center;padding:16px}.modal{background:#fff;width:min(490px,100%);border-radius:23px;padding:24px;max-height:88vh;overflow:auto;box-shadow:0 25px 80px #0003}.modal h2{font-size:21px;margin:0 0 8px}.modal p{font-size:13px;color:var(--muted);line-height:1.6}.modalActions{display:flex;gap:9px;margin-top:17px;flex-wrap:wrap}.modalActions button{flex:1}.credBox{margin-top:12px;border:1px solid #ccebd8;background:#f2fbf6;border-radius:14px;padding:13px;font-size:12px;line-height:1.7;color:#114e38}.credBox code{display:block;background:#fff;border:1px solid #d5efe0;padding:8px 10px;border-radius:9px;margin-top:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#171923;word-break:break-all}.toast{position:fixed;z-index:80;left:50%;bottom:28px;transform:translate(-50%,15px);opacity:0;background:#191c25;color:white;border-radius:12px;padding:12px 17px;font-size:12px;transition:.2s;pointer-events:none;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.bottomNav{display:none}.footer{border-top:1px solid var(--line);padding:24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.splash{position:fixed;inset:0;z-index:100;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .35s,visibility .35s}.splash.hide{opacity:0;visibility:hidden}.splashInner{text-align:center;padding:25px}.splashMark{width:70px;height:70px;border-radius:23px;margin:0 auto 20px;background:#edf1ff;color:var(--blue);display:grid;place-items:center;font-size:22px;font-weight:900;letter-spacing:-1px}.spinner{width:24px;height:24px;border:2px solid #e5e9f3;border-top-color:var(--blue);border-radius:50%;margin:22px auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.splash small{color:var(--muted);font-size:11px}
+
+/* ==================== GIAO DIỆN TAB MỚI HIỆN ĐẠI ==================== */
+body.standaloneTab .top,body.standaloneTab .bottomNav,body.standaloneTab .footer,body.standaloneTab #drawerBack{display:none!important}
+body.standaloneTab .main{padding:20px 18px 56px}
+.tabBarTop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(120deg,#f7f9ff,#fff 68%);margin-bottom:22px;flex-wrap:wrap;box-shadow:0 8px 24px rgba(20,30,60,.04)}
+.tabBarLeft{display:flex;align-items:center;gap:12px}
+.tabBadge{height:38px;padding:0 12px;border-radius:12px;background:var(--blue2);color:var(--blue);font-size:11px;font-weight:850;display:inline-flex;align-items:center;gap:6px;letter-spacing:.4px}
+.tabBarRight{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+@media(max-width:760px){.top{height:64px;padding:0 12px;gap:9px}.brand{font-size:12px}.brand small{font-size:8px;letter-spacing:1.2px}.main{padding:17px 13px 100px}.hero{padding:27px 21px;min-height:0;grid-template-columns:1fr;border-radius:22px}.hero h1{font-size:39px}.hero p{font-size:13px}.heroVisual{display:none}.tiles{grid-template-columns:repeat(2,1fr);gap:9px}.tile{padding:14px}.logoBox{width:43px;height:43px}.logoBox img{width:25px;height:25px}.tile h3{font-size:13px}.tile p{font-size:10px}.tileFoot{margin-top:14px}.packageGrid{grid-template-columns:1fr 1fr;gap:9px}.package{padding:13px}.package h3{font-size:13px}.package .desc{font-size:11px}.price{font-size:16px}.pageHead h1{font-size:29px}.twoCol{grid-template-columns:1fr}.sectionHead h2{font-size:20px}.balanceBtn{padding:7px 9px;font-size:9px}.balanceBtn b{font-size:11px}.userBtn{width:37px;height:37px}.menuBtn{width:38px;height:38px}.bottomNav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));justify-content:space-around}.bottomNav button{border:0;background:none;color:var(--muted);font-size:9px;display:grid;justify-items:center;gap:3px}.bottomNav b{font-size:18px}.footer{padding-bottom:85px}}
 @media(max-width:370px){.brand{font-size:10px}.packageGrid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.balanceBtn{display:none}}
 .logoBox img{display:block}.logoBox img:not([src]){display:none}
 </style>
@@ -27,69 +36,142 @@
 </header>
 <main class="main">
 <section class="view active" id="home">
- <div class="hero"><div><div class="eyebrow">Digital service marketplace</div><h1>Dịch vụ số.<br>Gọn gàng hơn.</h1><p>Một điểm đến cho các dịch vụ Facebook, YouTube, TikTok và khu vực tài khoản game. Chọn đúng nhu cầu, xem rõ thông tin trước khi gửi yêu cầu.</p><button class="btn primary" onclick="go('buff')">Khám phá dịch vụ&nbsp; →</button> <button class="btn light" onclick="go('rent')">Thuê tài khoản</button></div><div class="heroVisual"><div class="heroOrb"><strong>TTM</strong></div><div class="floatTag tagA">✦ Dịch vụ online</div><div class="floatTag tagB">◷ Thuê tài khoản</div></div></div>
- <section class="section"><div class="sectionHead"><div><div class="eyebrow">Danh mục chính</div><h2>Chọn khu vực bạn cần</h2></div></div><div class="tiles">
- <button class="tile" onclick="openPlatform('Facebook')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/facebook/0866FF" alt="Facebook"></div><div><h3>Facebook</h3><p>Dịch vụ tăng trưởng & quảng bá</p></div></div><div class="tileFoot">Xem dịch vụ <span class="arrow">↗</span></div></button>
- <button class="tile" onclick="openPlatform('YouTube')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/youtube/FF0033" alt="YouTube"></div><div><h3>YouTube</h3><p>Dịch vụ kênh & nội dung</p></div></div><div class="tileFoot">Xem dịch vụ <span class="arrow">↗</span></div></button>
- <button class="tile" onclick="openPlatform('TikTok')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/tiktok/111111" alt="TikTok"></div><div><h3>TikTok</h3><p>Dịch vụ video & livestream</p></div></div><div class="tileFoot">Xem dịch vụ <span class="arrow">↗</span></div></button>
+ <div class="hero"><div><div class="eyebrow">Digital service marketplace</div><h1>Dịch vụ số.<br>Gọn gàng hơn.</h1><p>Một điểm đến cho các dịch vụ Facebook, YouTube, TikTok và khu vực bán/thuê tài khoản game. Tính giá tự động, trừ ví minh bạch, mở tab riêng gọn đẹp.</p><button class="btn primary" onclick="openInNewTab('buff')">Mở tab Dịch vụ ↗</button> <button class="btn light" onclick="openInNewTab('rent')">Mở tab Kho Game ↗</button></div><div class="heroVisual"><div class="heroOrb"><strong>TTM</strong></div><div class="floatTag tagA">✦ Mắt xem & Theo dõi</div><div class="floatTag tagB">◷ Bán & Thuê Acc Game</div></div></div>
+
+ <section class="section"><div class="sectionHead"><div><div class="eyebrow">Danh mục chính</div><h2>Dịch vụ mắt xem, theo dõi & tương tác</h2></div><button class="btn light" onclick="openInNewTab('buff')">Mở tab riêng ↗</button></div><div class="tiles">
+ <button class="tile" onclick="openInNewTab('buff','Facebook')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/facebook/0866FF" alt="Facebook"></div><div><h3>Facebook</h3><p>Theo dõi, mắt live & tương tác</p></div></div><div class="tileFoot">Mở tab mới <span class="arrow">↗</span></div></button>
+ <button class="tile" onclick="openInNewTab('buff','YouTube')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/youtube/FF0033" alt="YouTube"></div><div><h3>YouTube</h3><p>Sub kênh, view video & mắt live</p></div></div><div class="tileFoot">Mở tab mới <span class="arrow">↗</span></div></button>
+ <button class="tile" onclick="openInNewTab('buff','TikTok')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/tiktok/111111" alt="TikTok"></div><div><h3>TikTok</h3><p>Mắt livestream, tim & follow</p></div></div><div class="tileFoot">Mở tab mới <span class="arrow">↗</span></div></button>
  </div></section>
- <section class="section"><div class="sectionHead"><div><div class="eyebrow">Khu vực riêng</div><h2>Thuê tài khoản game</h2><p class="muted" style="margin:5px 0 0">Tách biệt hoàn toàn với danh mục dịch vụ buff.</p></div><button class="btn light" onclick="go('rent')">Khám phá →</button></div><div class="tiles">
- <button class="tile" onclick="go('rent','FC Mobile')"><div class="tileTop"><div class="logoBox"><span class="gameLogo">⚽</span></div><div><h3>FC Mobile</h3><p>Tài khoản game cho thuê</p></div></div><div class="tileFoot">Xem kho <span class="arrow">↗</span></div></button>
- <button class="tile" onclick="go('rent','TFT')"><div class="tileTop"><div class="logoBox"><span class="gameLogo">♟</span></div><div><h3>TFT</h3><p>Tài khoản game cho thuê</p></div></div><div class="tileFoot">Xem kho <span class="arrow">↗</span></div></button>
- <button class="tile" onclick="go('rent','Game khác')"><div class="tileTop"><div class="logoBox"><span class="gameLogo">🎮</span></div><div><h3>Game khác</h3><p>Mở rộng nhiều tựa game</p></div></div><div class="tileFoot">Xem kho <span class="arrow">↗</span></div></button>
- </div></section>
- <section class="section"><div class="sectionHead"><div><div class="eyebrow">Minh bạch & an toàn</div><h2>Trải nghiệm rõ ràng</h2></div></div><div class="tiles"><div class="tile"><div class="eyebrow">01</div><h3 style="margin-top:12px">Thông tin minh bạch</h3><p class="muted">Mỗi gói có mô tả, điều kiện và giá riêng.</p></div><div class="tile"><div class="eyebrow">02</div><h3 style="margin-top:12px">Theo dõi yêu cầu</h3><p class="muted">Đơn hàng được tiếp nhận và cập nhật trạng thái.</p></div><div class="tile"><div class="eyebrow">03</div><h3 style="margin-top:12px">Hỗ trợ khách hàng</h3><p class="muted">Có khu vực gửi yêu cầu khi cần trợ giúp.</p></div></div></section>
+
+ <section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản game</div><h2>Bán & Thuê tài khoản game</h2><p class="muted" style="margin:5px 0 0">Admin đăng acc bán hoặc cho thuê; khách thanh toán ví là nhận TK/MK ngay.</p></div><button class="btn light" onclick="openInNewTab('rent')">Mở tab Kho Game ↗</button></div><div class="tiles" id="homeGameTiles"></div></section>
+
+ <section class="section"><div class="sectionHead"><div><div class="eyebrow">Minh bạch & an toàn</div><h2>Vận hành chủ động</h2></div></div><div class="tiles"><div class="tile"><div class="eyebrow">01</div><h3 style="margin-top:12px">Tự tính tiền & trừ ví</h3><p class="muted">Nhập số lượng hoặc chọn gói thuê/mua acc, hệ thống tính giá và trừ ví tức thì.</p></div><div class="tile"><div class="eyebrow">02</div><h3 style="margin-top:12px">Trả TK/MK ngay lập tức</h3><p class="muted">Mua/thuê acc game xong hiển thị ngay thông tin đăng nhập & hạn thuê trong đơn hàng.</p></div><div class="tile"><div class="eyebrow">03</div><h3 style="margin-top:12px">Quản trị toàn diện</h3><p class="muted">Thêm game mới, đăng acc bán/thuê, chỉnh giá buff và duyệt nạp/đơn ngay trong Admin.</p></div></div></section>
 </section>
+
 <section class="view" id="buff">
-<div class="pageHead"><div class="eyebrow">Online services</div><h1>Dịch vụ online</h1><p>Tất cả dịch vụ Facebook, YouTube và TikTok được hiển thị ngay tại đây, chia rõ từng nền tảng và từng loại dịch vụ.</p></div>
-<div class="featureBand"><b>Lưu ý:</b> Chỉ cung cấp hoạt động quảng bá và tăng trưởng hợp lệ, có sự đồng ý của chủ tài khoản/kênh. Không nhận mật khẩu, mã OTP hoặc thông tin khôi phục tài khoản. Không cam kết tương tác giả hoặc kết quả không xác thực.</div>
+<div class="pageHead"><div class="eyebrow">Online services</div><h1>Dịch vụ mắt xem, theo dõi & tương tác</h1><p>Chọn nền tảng và gói dịch vụ, nhập số lượng để hệ thống tự tính tổng tiền và trừ trực tiếp vào ví của bạn.</p></div>
+<div class="featureBand"><b>Lưu ý:</b> Chỉ cung cấp hoạt động quảng bá và tăng trưởng hợp lệ, có sự đồng ý của chủ tài khoản/kênh. Không nhận mật khẩu hoặc mã OTP mạng xã hội.</div>
+<div class="tabs" id="buffPlatformTabs"></div>
 <div id="allBuffSections"></div>
 </section>
+
 <section class="view" id="rent">
-<div class="pageHead"><div class="eyebrow">Account rental</div><h1>Thuê tài khoản game</h1><p>Tất cả nhóm tài khoản game được hiển thị ngay bên dưới. Mỗi gói có thời hạn, quyền sử dụng và điều kiện bàn giao rõ ràng.</p></div>
-<div class="featureBand"><b>Quy định:</b> Chỉ đăng tải tài khoản được phép chuyển giao/cho thuê theo điều khoản của nhà phát hành. Không chia sẻ tài khoản trái phép.</div>
+<div class="pageHead"><div class="eyebrow">Game account store</div><h1>Kho bán & thuê tài khoản game</h1><p>Tự động mở rộng theo danh sách game đang có trên hệ thống và tài khoản do Admin đăng bán/cho thuê.</p></div>
+<div class="featureBand"><b>Quy định:</b> Khi mua hoặc thuê thành công, hệ thống tự động trừ số dư ví và cấp ngay tài khoản/mật khẩu trong mục Đơn hàng.</div>
+<div class="tabs" id="rentGameTabs"></div>
 <div id="allRentSections"></div>
 </section>
+
 <section class="view" id="wallet"><div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Số dư và lịch sử được đồng bộ trực tiếp với kho lưu trữ chung.</p></div><div class="twoCol"><div class="panel"><h3>Số dư hiện tại</h3><div id="walletBalance" style="font-size:30px;font-weight:850;margin:12px 0">— đ</div><div class="field"><label>Số tiền muốn nạp</label><input id="topupAmount" type="number" min="10000" step="1000" placeholder="Ví dụ: 100000"></div><button class="btn primary" style="width:100%" onclick="requestTopup()">Gửi yêu cầu nạp tiền</button><div class="callout" style="margin-top:13px">Yêu cầu sẽ chờ Admin xác nhận. Không tự động cộng tiền khi khách gửi yêu cầu.</div></div><div class="panel"><h3>Lịch sử giao dịch</h3><div id="transactionsList" class="empty">Đăng nhập để xem lịch sử.</div></div></div></section>
-<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng của tôi</h1><p>Lịch sử đơn hàng được lưu theo tài khoản trên toàn hệ thống.</p></div><div id="ordersList" class="empty">Đăng nhập để xem đơn hàng.</div></section>
+
+<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng & Tài khoản đã nhận</h1><p>Xem trạng thái đơn buff, thời hạn thuê và thông tin tài khoản game đã thanh toán.</p></div><div id="ordersList" class="empty">Đăng nhập để xem đơn hàng.</div></section>
+
 <section class="view" id="login"><div class="pageHead"><div class="eyebrow">Account access</div><h1>Đăng nhập</h1><p>Dùng tên tài khoản và mật khẩu. Đồng bộ toàn bộ tài khoản từ web cũ.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="loginMessage">Nhập tên tài khoản và mật khẩu đã đăng ký.</div><div class="field"><label>Tên tài khoản</label><input id="loginUsername" autocomplete="username" placeholder="Ví dụ: phong9"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"></div><button class="btn primary" style="width:100%" onclick="loginUser()">Đăng nhập</button><p class="muted" style="margin:17px 0 0;text-align:center">Chưa có tài khoản? <a href="#register" onclick="go('register');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng ký ngay</a></p></div></section>
+
 <section class="view" id="register"><div class="pageHead"><div class="eyebrow">Create account</div><h1>Đăng ký tài khoản</h1><p>Tạo tài khoản bằng tên đăng nhập, dùng chung cho cả web cũ và Trung tâm thương mại.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="registerMessage">Tên tài khoản từ 3–32 ký tự, chỉ dùng chữ thường, số và dấu chấm/gạch dưới/gạch ngang. Mật khẩu tối thiểu 6 ký tự.</div><div class="field"><label>Tên hiển thị</label><input id="registerDisplay" maxlength="40" placeholder="Tên hiển thị"></div><div class="field"><label>Tên tài khoản</label><input id="registerUsername" autocomplete="username" maxlength="32" placeholder="Ví dụ: phong9"></div><div class="field"><label>Mật khẩu</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu"></div><button class="btn primary" style="width:100%" onclick="registerUser()">Tạo tài khoản</button><p class="muted" style="margin:17px 0 0;text-align:center">Đã có tài khoản? <a href="#login" onclick="go('login');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng nhập</a></p></div></section>
+
 <section class="view" id="admin">
   <div class="pageHead">
     <div class="eyebrow">Admin center</div>
     <h1>Quản trị hệ thống</h1>
     <p id="adminStatusBanner">Khu vực chỉ tài khoản có quyền Admin mới thao tác được.</p>
   </div>
-  <div class="panel" style="max-width:720px;margin-bottom:16px">
-    <h3>Cộng / trừ tiền thành viên</h3>
-    <div class="field"><label>Tên tài khoản khách</label><input id="adjustUsername" placeholder="Ví dụ: phong9"></div>
-    <div class="field"><label>Số tiền (cộng số dương, trừ số âm)</label><input id="adjustAmount" type="number" placeholder="Ví dụ: 50000 hoặc -20000"></div>
-    <div class="field"><label>Lý do</label><input id="adjustNote" maxlength="120" placeholder="Điều chỉnh số dư"></div>
-    <button class="btn primary" onclick="adminAdjust()">Xác nhận điều chỉnh</button>
+
+  <div class="twoCol" style="margin-bottom:16px">
+    <div class="panel">
+      <h3>Thêm danh mục game mới</h3>
+      <p class="muted">Khách bán game gì thì thêm game đó vào đây, hệ thống tự tạo khu vực & tab cho game đó.</p>
+      <div class="field"><label>Tên game mới</label><input id="newGameName" placeholder="Ví dụ: Free Fire, Liên Quân, Valorant..."></div>
+      <div class="field"><label>Biểu tượng (Emoji)</label><input id="newGameEmoji" maxlength="4" placeholder="Ví dụ: 🔥 hoặc ⚔️"></div>
+      <div class="field"><label>Mô tả ngắn</label><input id="newGameDesc" placeholder="Bán & cho thuê tài khoản..."></div>
+      <button class="btn primary" onclick="addGameCatalog()">Thêm game vào hệ thống</button>
+      <div id="adminGameList" style="margin-top:14px"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Đăng bán / Cho thuê Acc Game</h3>
+      <p class="muted">Khách thanh toán xong sẽ trừ tiền ví và tự động trả Tài khoản / Mật khẩu ngay.</p>
+      <div class="field"><label>Chọn game</label><select id="accGameSelect"></select></div>
+      <div class="field"><label>Hình thức</label><select id="accModeSelect" onchange="toggleAdminAccMode()"><option value="sell">Bán đứt tài khoản</option><option value="rent">Cho thuê tài khoản</option></select></div>
+      <div class="field"><label>Tiêu đề / Thông tin acc</label><input id="accTitle" placeholder="Ví dụ: Acc Rank Cao Thủ - Full tướng"></div>
+      <div class="field"><label id="accPriceLabel">Giá bán (VNĐ)</label><input id="accPrice" type="number" min="1000" step="1000" placeholder="Ví dụ: 150000"></div>
+      <div class="field" id="accRentHoursWrap" style="display:none"><label>Thời hạn thuê (giờ)</label><input id="accRentHours" type="number" min="1" value="24" placeholder="Ví dụ: 24"></div>
+      <div class="field"><label>Tài khoản game (trả tự động cho khách)</label><input id="accUsername" placeholder="Tên đăng nhập / ID game"></div>
+      <div class="field"><label>Mật khẩu game (trả tự động cho khách)</label><input id="accPassword" placeholder="Mật khẩu / thông tin đăng nhập"></div>
+      <div class="field"><label>Ghi chú / Điều kiện bàn giao</label><input id="accNote" placeholder="Ví dụ: Không đổi mật khẩu khi thuê"></div>
+      <button class="btn primary" onclick="createGameAccount()">Đăng lên kho game</button>
+    </div>
   </div>
-  <div class="panel" style="max-width:720px;margin-bottom:16px">
+
+  <div class="twoCol" style="margin-bottom:16px">
+    <div class="panel">
+      <h3>Chỉnh đơn giá dịch vụ buff</h3>
+      <p class="muted">Cập nhật giá cho từng đơn vị (1 mắt xem, 1 follow, 1 view/sub...).</p>
+      <div class="field"><label>Chọn gói dịch vụ</label><select id="buffEditSelect" onchange="fillBuffEditForm()"></select></div>
+      <div class="field"><label>Đơn giá (VNĐ / 1 đơn vị)</label><input id="buffEditPrice" type="number" min="1" step="1"></div>
+      <div class="field"><label>Số lượng tối thiểu</label><input id="buffEditMin" type="number" min="1" step="1"></div>
+      <div class="field"><label>Mô tả gói</label><input id="buffEditDesc"></div>
+      <button class="btn primary" onclick="saveBuffPackage()">Lưu cập nhật gói</button>
+    </div>
+
+    <div class="panel">
+      <h3>Cộng / trừ tiền thành viên</h3>
+      <div class="field"><label>Tên tài khoản khách</label><input id="adjustUsername" placeholder="Ví dụ: phong9"></div>
+      <div class="field"><label>Số tiền (cộng số dương, trừ số âm)</label><input id="adjustAmount" type="number" placeholder="Ví dụ: 50000 hoặc -20000"></div>
+      <div class="field"><label>Lý do</label><input id="adjustNote" maxlength="120" placeholder="Điều chỉnh số dư"></div>
+      <button class="btn primary" onclick="adminAdjust()">Xác nhận điều chỉnh</button>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:16px">
+    <h3>Kho Acc Game đang mở bán / cho thuê</h3>
+    <div id="adminInventoryList" class="empty">Đang tải kho acc...</div>
+  </div>
+
+  <div class="panel" style="margin-bottom:16px">
     <h3>Yêu cầu nạp tiền (Firebase chung)</h3>
     <button class="btn light" onclick="loadAdmin()">Làm mới danh sách</button>
     <div id="adminTopups" class="empty" style="margin-top:12px">Đang tải danh sách...</div>
   </div>
-  <div class="panel" style="max-width:720px">
+
+  <div class="panel">
     <h3>Đơn hàng / Yêu cầu dịch vụ từ khách</h3>
     <button class="btn light" onclick="loadAdmin()">Làm mới đơn hàng</button>
     <div id="adminOrders" class="empty" style="margin-top:12px">Đang tải đơn hàng...</div>
   </div>
 </section>
-<section class="view" id="support"><div class="pageHead"><div class="eyebrow">Customer care</div><h1>Hỗ trợ khách hàng</h1><p>Gửi yêu cầu hỗ trợ sau khi đăng nhập và kết nối máy chủ.</p></div><div class="panel" style="max-width:620px"><div class="field"><label>Chủ đề</label><select disabled><option>Chọn nội dung cần hỗ trợ</option><option>Đơn hàng</option><option>Nạp tiền</option><option>Thuê tài khoản</option></select></div><div class="field"><label>Nội dung</label><input placeholder="Mô tả vấn đề..." disabled></div><button class="btn primary" disabled style="opacity:.45">Gửi yêu cầu</button><div class="callout" style="margin-top:15px">Biểu mẫu sẽ được mở khi có kho dữ liệu để lưu yêu cầu tập trung.</div></div></section>
+
+<section class="view" id="support"><div class="pageHead"><div class="eyebrow">Customer care</div><h1>Hỗ trợ khách hàng</h1><p>Gửi yêu cầu hỗ trợ sau khi đăng nhập và kết nối máy chủ.</p></div><div class="panel" style="max-width:620px"><div class="field"><label>Chủ đề</label><select disabled><option>Chọn nội dung cần hỗ trợ</option><option>Đơn hàng</option><option>Nạp tiền</option><option>Bán / Thuê tài khoản</option></select></div><div class="field"><label>Nội dung</label><input placeholder="Mô tả vấn đề..." disabled></div><button class="btn primary" disabled style="opacity:.45">Gửi yêu cầu</button><div class="callout" style="margin-top:15px">Biểu mẫu sẽ được mở khi có kho dữ liệu để lưu yêu cầu tập trung.</div></div></section>
 </main>
 <footer class="footer"><b>TRUNG TÂM THƯƠNG MẠI</b><span>Nền tảng dịch vụ số · Đồng bộ lưu trữ</span><span>© 2026</span></footer>
 <nav class="bottomNav"><button onclick="go('home')"><b>⌂</b>Trang chủ</button><button onclick="go('buff')"><b>▦</b>Dịch vụ</button><button onclick="go('wallet')"><b>＋</b>Nạp tiền</button><button onclick="go('orders')"><b>▤</b>Đơn hàng</button><button id="bottomAuthBtn" onclick="go('login')"><b>◉</b><span id="bottomAuthText">Đăng nhập</span></button></nav>
 </div>
+
 <div class="drawerBack" id="drawerBack" onclick="if(event.target===this)drawer(false)"><aside class="drawer"><div class="drawerHead"><div class="brand">TRUNG TÂM THƯƠNG MẠI<small>ĐIỀU HƯỚNG</small></div><button class="iconBtn" onclick="drawer(false)">×</button></div>
-<div class="drawerLabel">TRANG CHÍNH</div><button class="nav active" onclick="go('home')">⌂　Trang chủ</button><button class="nav" onclick="go('buff')">▦　Dịch vụ buff</button><button class="nav" onclick="openPlatform('Facebook')">f　Facebook</button><button class="nav" onclick="openPlatform('YouTube')">▶　YouTube</button><button class="nav" onclick="openPlatform('TikTok')">♪　TikTok</button><button class="nav" onclick="go('rent')">◷　Thuê tài khoản game</button>
-<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div><button class="nav" onclick="go('wallet')">＋　Nạp tiền</button><button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button><button class="nav" id="navLoginBtn" onclick="go('login')">◉　Đăng nhập</button><button class="nav" id="navRegisterBtn" onclick="go('register')">＋　Đăng ký tài khoản</button><button class="nav" id="navAdminBtn" style="display:none" onclick="go('admin')">⚙　Quản trị (Admin)</button><button class="nav" id="navLogoutBtn" style="display:none" onclick="logoutUser()">↪　Đăng xuất</button><button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
-<div class="modalBack" id="productModal"><div class="modal"><h2 id="modalTitle">Chi tiết gói</h2><p id="modalText"></p><div class="callout" id="modalCallout">Vui lòng đăng nhập tài khoản để gửi yêu cầu dịch vụ hoặc thuê tài khoản.</div><div class="field" id="modalNoteWrap" style="display:none"><label>Link / ID / Ghi chú yêu cầu</label><input id="modalOrderNote" placeholder="Nhập link bài viết, ID game hoặc ghi chú..."></div><div class="modalActions"><button class="btn light" onclick="closeProduct()">Đóng</button><button class="btn primary" id="modalPrimaryBtn" onclick="handleModalPrimary()">Đăng nhập</button></div></div></div>
+<div class="drawerLabel">TRANG CHÍNH</div>
+<button class="nav active" onclick="go('home')">⌂　Trang chủ</button>
+<button class="nav" onclick="go('buff')">▦　Dịch vụ buff</button>
+<button class="nav" onclick="openInNewTab('buff')">↗　Mở tab Dịch vụ riêng</button>
+<button class="nav" onclick="openPlatform('Facebook')">f　Facebook</button>
+<button class="nav" onclick="openPlatform('YouTube')">▶　YouTube</button>
+<button class="nav" onclick="openPlatform('TikTok')">♪　TikTok</button>
+<button class="nav" onclick="go('rent')">◷　Kho bán & thuê acc game</button>
+<button class="nav" onclick="openInNewTab('rent')">↗　Mở tab Kho Game riêng</button>
+<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div>
+<button class="nav" onclick="go('wallet')">＋　Nạp tiền</button>
+<button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button>
+<button class="nav" id="navLoginBtn" onclick="go('login')">◉　Đăng nhập</button>
+<button class="nav" id="navRegisterBtn" onclick="go('register')">＋　Đăng ký tài khoản</button>
+<button class="nav" id="navAdminBtn" style="display:none" onclick="go('admin')">⚙　Quản trị (Admin)</button>
+<button class="nav" id="navLogoutBtn" style="display:none" onclick="logoutUser()">↪　Đăng xuất</button>
+<button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
+
+<div class="modalBack" id="productModal"><div class="modal" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
+
 <script>
-/* ==================== LƯU TRỮ DÙNG CHUNG VỚI WEB CŨ (index.html) ==================== */
+/* ==================== LƯU TRỮ DÙNG CHUNG VỚI WEB CŨ ==================== */
 const ADMIN_USERNAME = 'phong23112007';
 const ADMIN_PASSWORD = 'Muathu12345';
 
@@ -128,11 +210,46 @@ const firebaseConfig = {
   databaseURL: 'https://shop-kc-default-rtdb.firebaseio.com'
 };
 
+const DEFAULT_BUFF_DATA = {
+  Facebook: {
+    icon: 'https://cdn.simpleicons.org/facebook/0866FF',
+    items: [
+      { id: 'fb_follow', name: 'Gói tăng theo dõi trang', tag: 'Theo dõi', desc: 'Tư vấn phát triển cộng đồng và chiến dịch tiếp cận người quan tâm thật.', unitLabel: 'follow', price: 60, minQty: 50 },
+      { id: 'fb_like', name: 'Gói tăng tương tác bài viết', tag: 'Tương tác', desc: 'Tư vấn nội dung và quảng bá tương tác minh bạch cho bài đăng.', unitLabel: 'tương tác', price: 45, minQty: 50 },
+      { id: 'fb_live_eye', name: 'Gói tăng mắt livestream Facebook', tag: 'Mắt xem', desc: 'Hỗ trợ duy trì mắt xem phiên phát trực tiếp theo thời lượng.', unitLabel: 'mắt', price: 35, minQty: 20 }
+    ]
+  },
+  YouTube: {
+    icon: 'https://cdn.simpleicons.org/youtube/FF0033',
+    items: [
+      { id: 'yt_sub', name: 'Gói phát triển người đăng ký', tag: 'Theo dõi', desc: 'Tư vấn tối ưu kênh và phát triển người đăng ký phù hợp.', unitLabel: 'sub', price: 120, minQty: 50 },
+      { id: 'yt_view', name: 'Gói quảng bá lượt xem video', tag: 'Lượt xem', desc: 'Quảng bá video tới người xem phù hợp chủ đề kênh.', unitLabel: 'view', price: 35, minQty: 100 },
+      { id: 'yt_live_eye', name: 'Gói tăng mắt livestream YouTube', tag: 'Mắt xem', desc: 'Hỗ trợ mắt xem cho buổi phát trực tiếp của kênh.', unitLabel: 'mắt', price: 40, minQty: 20 }
+    ]
+  },
+  TikTok: {
+    icon: 'https://cdn.simpleicons.org/tiktok/111111',
+    items: [
+      { id: 'tt_follow', name: 'Gói tăng theo dõi TikTok', tag: 'Theo dõi', desc: 'Tư vấn nội dung và chiến dịch phát triển cộng đồng thật.', unitLabel: 'follow', price: 70, minQty: 50 },
+      { id: 'tt_view', name: 'Gói quảng bá lượt xem video', tag: 'Lượt xem', desc: 'Hỗ trợ phân phối nội dung tới nhóm người xem phù hợp.', unitLabel: 'view', price: 15, minQty: 500 },
+      { id: 'tt_live_eye', name: 'Gói quảng bá mắt xem livestream', tag: 'Mắt xem', desc: 'Hỗ trợ mắt xem cho phiên livestream TikTok.', unitLabel: 'mắt', price: 30, minQty: 20 },
+      { id: 'tt_heart', name: 'Gói tăng tương tác nội dung', tag: 'Tương tác', desc: 'Tối ưu nội dung và chiến dịch tương tác minh bạch.', unitLabel: 'tim', price: 25, minQty: 100 }
+    ]
+  }
+};
+
+const DEFAULT_GAMES = [
+  { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile' },
+  { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý' },
+  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác' }
+];
+
 let firebaseDB = null;
 let firebaseSyncReady = false;
 let isAdmin = false;
 let currentAccount = null;
-let selectedPackage = null;
+let activeBuffPlatform = 'ALL';
+let activeRentGame = 'ALL';
 
 const asArray = value => Array.isArray(value)
   ? value.filter(Boolean)
@@ -165,28 +282,51 @@ function write(key, value) {
   }
 }
 
-function uid() {
-  return 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
-}
-
-function rid() {
-  return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
-}
-
-function money(v) {
-  return Number(v || 0).toLocaleString('vi-VN') + ' đ';
-}
-
-function normalizeLogin(v) {
-  return String(v || '').trim().toLowerCase().replace(/\s+/g, '');
-}
+function uid() { return 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+function rid() { return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9); }
+function money(v) { return Number(v || 0).toLocaleString('vi-VN') + ' đ'; }
+function normalizeLogin(v) { return String(v || '').trim().toLowerCase().replace(/\s+/g, ''); }
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 function getUsers() { return asArray(read(STORAGE.users, [])); }
 function saveUsersLocal(users) { writeLocal(STORAGE.users, asArray(users)); }
 function getOrders() { return asArray(read(STORAGE.orders, [])); }
 function getDeposits() { return asArray(read(STORAGE.deposits, [])); }
-function getSettings() { return read(STORAGE.settings, {}); }
+function getSettings() { return read(STORAGE.settings, {}) || {}; }
 function getSession() { return read(STORAGE.session, null); }
+
+function getGamesCatalog() {
+  const s = getSettings();
+  const customGames = asArray(s.gamesCatalog);
+  return customGames.length ? customGames : DEFAULT_GAMES.slice();
+}
+
+function getBuffCatalog() {
+  const s = getSettings();
+  if (!s.buffCatalog || typeof s.buffCatalog !== 'object') return JSON.parse(JSON.stringify(DEFAULT_BUFF_DATA));
+  const merged = {};
+  Object.keys(DEFAULT_BUFF_DATA).forEach(plat => {
+    const savedPlat = s.buffCatalog[plat];
+    merged[plat] = {
+      icon: DEFAULT_BUFF_DATA[plat].icon,
+      items: asArray(savedPlat?.items).length ? asArray(savedPlat.items) : DEFAULT_BUFF_DATA[plat].items.slice()
+    };
+  });
+  return merged;
+}
+
+function getGameAccounts() {
+  const inv = read(STORAGE.inventory, {});
+  if (Array.isArray(inv)) return inv.filter(x => x && x.kind === 'game_account');
+  return asArray(inv?.gameAccounts);
+}
+
+function saveGameAccounts(list) {
+  const inv = read(STORAGE.inventory, {});
+  const base = (inv && typeof inv === 'object' && !Array.isArray(inv)) ? inv : {};
+  base.gameAccounts = asArray(list);
+  write(STORAGE.inventory, base);
+}
 
 function currentUser() {
   const s = getSession();
@@ -275,7 +415,6 @@ function setAccountUI(user) {
   const wb = document.getElementById("walletBalance");
   if (wb) wb.textContent = user ? (adminFlag ? "Tài khoản Quản trị" : money(bal)) : "— đ";
 
-  // Ẩn/hiện nút trong menu drawer theo trạng thái đăng nhập & quyền Admin
   const navAdmin = document.getElementById("navAdminBtn");
   const navLogout = document.getElementById("navLogoutBtn");
   const navLogin = document.getElementById("navLoginBtn");
@@ -331,10 +470,13 @@ function initFirebaseSync() {
         if (snap.exists()) {
           localStorage.setItem(STORAGE[k], JSON.stringify(snap.val()));
           refreshAccount();
+          renderHomeGames();
+          renderBuff();
+          renderRent();
           if (document.getElementById("orders")?.classList.contains("active")) loadOrders();
           if (document.getElementById("admin")?.classList.contains("active") && isAdmin) loadAdmin();
         } else if (k === 'settings' || k === 'logs' || k === 'activities') {
-          ref.set(readLocal(STORAGE[k], [])).catch(() => {});
+          ref.set(readLocal(STORAGE[k], {})).catch(() => {});
         }
       }, () => {});
     });
@@ -362,13 +504,11 @@ async function refreshAccount() {
     setAccountUI(null);
     return;
   }
-  // Tài khoản Admin chính thức
   if (session.uid === 'admin' && normalizeLogin(session.username) === ADMIN_USERNAME) {
     isAdmin = true;
     setAccountUI({ ...session, admin: true });
     return;
   }
-  // Tài khoản đồng bộ từ kho chung (ví dụ: phong9)
   const users = getUsers();
   const user = users.find(x => String(x.uid) === String(session.uid) || normalizeLogin(x.username) === normalizeLogin(session.username));
   if (user) {
@@ -383,7 +523,6 @@ async function refreshAccount() {
     isAdmin = false;
     setAccountUI(null);
   } else {
-    // Giữ session tạm trong lúc Firebase đang tải xong snapshot đầu tiên
     setAccountUI(session);
   }
 }
@@ -476,7 +615,6 @@ async function loginUser() {
     if (pass.length < 6) throw new Error("Mật khẩu tối thiểu 6 ký tự");
     if (button) { button.disabled = true; button.textContent = "Đang đăng nhập..."; }
 
-    // 1. Đăng nhập tài khoản Admin mặc định (phong23112007 / Muathu12345)
     if (login === ADMIN_USERNAME) {
       if (pass !== ADMIN_PASSWORD) throw new Error("Sai tên đăng nhập hoặc mật khẩu");
       const session = { uid: 'admin', username: ADMIN_USERNAME, name: 'Quản trị viên', admin: true, createdAt: Date.now() };
@@ -490,7 +628,6 @@ async function loginUser() {
       return;
     }
 
-    // 2. Đăng nhập tất cả tài khoản từ kho lưu trữ chung với web cũ (ví dụ: phong9)
     let users = (firebaseDB && firebaseSyncReady) ? (await readUsersFromFirebase() || []) : [];
     if (!users.length) users = getUsers();
 
@@ -590,39 +727,401 @@ async function requestTopup() {
   }
 }
 
-async function loadOrders() {
-  const session = currentUser();
-  const host = document.getElementById("ordersList");
-  if (!host) return;
-  if (!session?.uid) {
-    host.className = "empty";
-    host.textContent = "Đăng nhập để xem đơn hàng.";
-    return;
-  }
-  const allOrders = getOrders();
-  const mine = checkIsAdmin(session)
-    ? allOrders.slice().reverse()
-    : allOrders.filter(o => String(o.uid) === String(session.uid) || normalizeLogin(o.username) === normalizeLogin(session.username)).reverse();
+/* ==================== ĐẶT DỊCH VỤ BUFF (TÍNH TIỀN & TRỪ VÍ) ==================== */
+function openBuffOrderModal(platform, itemId) {
+  const catalog = getBuffCatalog();
+  const item = (catalog[platform]?.items || []).find(i => i.id === itemId);
+  if (!item) return;
 
-  if (!mine.length) {
-    host.className = "empty";
-    host.textContent = "Chưa có đơn hàng nào.";
+  const user = currentUser();
+  const box = document.getElementById("modalBox");
+  const minQty = Number(item.minQty || 10);
+  const price = Number(item.price || 0);
+
+  if (!user || !user.uid) {
+    box.innerHTML = `
+      <span class="pill">${escapeHtml(platform)} · ${escapeHtml(item.tag)}</span>
+      <h2 style="margin-top:10px">${escapeHtml(item.name)}</h2>
+      <p>${escapeHtml(item.desc)}</p>
+      <div class="callout">Đơn giá: <b>${money(price)} / 1 ${escapeHtml(item.unitLabel || 'đơn vị')}</b> · Tối thiểu ${minQty}. Vui lòng đăng nhập để đặt dịch vụ và trừ ví tự động.</div>
+      <div class="modalActions">
+        <button class="btn light" onclick="closeProduct()">Đóng</button>
+        <button class="btn primary" onclick="closeProduct();go('login')">Đăng nhập</button>
+      </div>
+    `;
+    document.getElementById("productModal").style.display = "flex";
     return;
   }
-  host.className = "";
-  host.innerHTML = mine.map(o => `
-    <div class="panel" style="padding:16px;margin:10px 0">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-        <b>${escapeHtml(o.title || o.name || "Đơn hàng dịch vụ")}</b>
-        <span class="pill">${escapeHtml(o.status || "Đang xử lý")}</span>
-      </div>
-      <div class="muted" style="margin-top:6px">Mã đơn: <b>${escapeHtml(o.id)}</b> · ${new Date(o.createdAt || Date.now()).toLocaleString("vi-VN")}</div>
-      ${o.note ? `<div class="muted" style="margin-top:4px">Ghi chú / Link: ${escapeHtml(o.note)}</div>` : ""}
+
+  const bal = checkIsAdmin(user) ? Infinity : getBalance(user.uid);
+  box.innerHTML = `
+    <span class="pill">${escapeHtml(platform)} · ${escapeHtml(item.tag)}</span>
+    <h2 style="margin-top:10px">${escapeHtml(item.name)}</h2>
+    <p>${escapeHtml(item.desc)}</p>
+    <div class="callout">
+      Đơn giá: <b>${money(price)} / 1 ${escapeHtml(item.unitLabel || 'đơn vị')}</b> · Tối thiểu: <b>${minQty}</b><br>
+      Số dư ví của bạn: <b>${checkIsAdmin(user) ? 'ADMIN' : money(bal)}</b>
     </div>
-  `).join("");
+    <div class="field">
+      <label>Link bài viết / kênh / livestream</label>
+      <input id="buffTargetLink" placeholder="Nhập link mục tiêu...">
+    </div>
+    <div class="field">
+      <label>Số lượng (tối thiểu ${minQty} ${escapeHtml(item.unitLabel || 'đơn vị')})</label>
+      <input id="buffQtyInput" type="number" min="${minQty}" step="1" value="${minQty}" oninput="updateBuffTotal(${price}, ${minQty})">
+    </div>
+    <div class="callout" id="buffTotalPreview">Thành tiền: <b>${money(price * minQty)}</b></div>
+    <div class="modalActions">
+      <button class="btn light" onclick="closeProduct()">Hủy</button>
+      <button class="btn primary" onclick="submitBuffOrder('${escapeHtml(platform)}', '${escapeHtml(item.id)}')">Thanh toán & Đặt đơn</button>
+    </div>
+  `;
+  document.getElementById("productModal").style.display = "flex";
 }
 
-/* ==================== QUẢN TRỊ ADMIN TRỰC TIẾP TRÊN FIREBASE ==================== */
+function updateBuffTotal(price, minQty) {
+  const qty = Math.max(0, Number(document.getElementById("buffQtyInput")?.value || 0));
+  const total = qty * Number(price || 0);
+  const el = document.getElementById("buffTotalPreview");
+  if (el) {
+    const warn = qty < minQty ? ` <span style="color:var(--red)">(Tối thiểu ${minQty})</span>` : '';
+    el.innerHTML = `Thành tiền: <b>${money(total)}</b>${warn}`;
+  }
+}
+
+function submitBuffOrder(platform, itemId) {
+  const user = currentUser();
+  if (!user || !user.uid) { toast("Vui lòng đăng nhập."); return; }
+  const catalog = getBuffCatalog();
+  const item = (catalog[platform]?.items || []).find(i => i.id === itemId);
+  if (!item) return;
+
+  const link = (document.getElementById("buffTargetLink")?.value || "").trim();
+  const qty = Number(document.getElementById("buffQtyInput")?.value || 0);
+  const minQty = Number(item.minQty || 1);
+  const total = qty * Number(item.price || 0);
+
+  if (!link) { toast("Nhập link mục tiêu trước khi đặt."); return; }
+  if (!Number.isFinite(qty) || qty < minQty) { toast("Số lượng tối thiểu là " + minQty); return; }
+
+  const adminActor = checkIsAdmin(user);
+  if (!adminActor) {
+    const bal = getBalance(user.uid);
+    if (bal < total) {
+      toast("Số dư ví không đủ. Cần " + money(total));
+      return;
+    }
+    setBalance(user.uid, bal - total, `Đặt ${item.name} (${qty} ${item.unitLabel || 'đơn vị'})`);
+  }
+
+  const orders = getOrders();
+  const orderId = 'BUFF-' + Date.now().toString().slice(-6);
+  orders.push({
+    id: orderId,
+    type: 'buff',
+    uid: user.uid,
+    username: user.username,
+    platform,
+    title: `${item.name} (${qty} ${item.unitLabel || 'đơn vị'})`,
+    qty,
+    amount: total,
+    note: link,
+    status: 'pending',
+    createdAt: Date.now()
+  });
+  write(STORAGE.orders, orders);
+  closeProduct();
+  refreshAccount();
+  toast("Đã trừ ví và tạo đơn " + orderId);
+  go("orders");
+}
+
+/* ==================== MUA / THUÊ ACC GAME (TRỪ VÍ & TRẢ TK/MK NGAY) ==================== */
+function openGameAccountModal(accId) {
+  const acc = getGameAccounts().find(a => String(a.id) === String(accId));
+  if (!acc) return;
+  const isRent = acc.mode === 'rent';
+  const available = acc.status === 'available';
+  const user = currentUser();
+  const box = document.getElementById("modalBox");
+
+  if (!available) {
+    box.innerHTML = `
+      <span class="pill sold">${isRent ? 'Đang cho thuê' : 'Đã bán'}</span>
+      <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
+      <p>${escapeHtml(acc.note || 'Tài khoản hiện không còn khả dụng.')}</p>
+      <div class="modalActions"><button class="btn primary" onclick="closeProduct()">Đóng</button></div>
+    `;
+    document.getElementById("productModal").style.display = "flex";
+    return;
+  }
+
+  if (!user || !user.uid) {
+    box.innerHTML = `
+      <span class="pill">${escapeHtml(acc.gameName)} · ${isRent ? 'Thuê ' + acc.rentHours + 'h' : 'Bán đứt'}</span>
+      <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
+      <p>${escapeHtml(acc.note || 'Thanh toán xong hệ thống sẽ cấp ngay Tài khoản & Mật khẩu.')}</p>
+      <div class="callout">Giá: <b>${money(acc.price)}</b>. Vui lòng đăng nhập để thanh toán và nhận thông tin tài khoản ngay.</div>
+      <div class="modalActions">
+        <button class="btn light" onclick="closeProduct()">Đóng</button>
+        <button class="btn primary" onclick="closeProduct();go('login')">Đăng nhập</button>
+      </div>
+    `;
+    document.getElementById("productModal").style.display = "flex";
+    return;
+  }
+
+  const bal = checkIsAdmin(user) ? Infinity : getBalance(user.uid);
+  box.innerHTML = `
+    <span class="pill ok">Sẵn sàng · ${escapeHtml(acc.gameName)}</span>
+    <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
+    <p>${escapeHtml(acc.note || 'Thông tin đăng nhập sẽ hiển thị ngay sau khi thanh toán thành công.')}</p>
+    <div class="callout">
+      Hình thức: <b>${isRent ? 'Thuê tài khoản (' + Number(acc.rentHours || 24) + ' giờ)' : 'Mua đứt tài khoản'}</b><br>
+      Chi phí: <b>${money(acc.price)}</b> · Ví của bạn: <b>${checkIsAdmin(user) ? 'ADMIN' : money(bal)}</b>
+    </div>
+    <div class="modalActions">
+      <button class="btn light" onclick="closeProduct()">Hủy</button>
+      <button class="btn primary" onclick="buyOrRentGameAccount('${escapeHtml(acc.id)}')">${isRent ? 'Thuê & Nhận TK/MK ngay' : 'Mua & Nhận TK/MK ngay'}</button>
+    </div>
+  `;
+  document.getElementById("productModal").style.display = "flex";
+}
+
+function buyOrRentGameAccount(accId) {
+  const user = currentUser();
+  if (!user || !user.uid) { toast("Vui lòng đăng nhập."); return; }
+
+  const list = getGameAccounts();
+  const acc = list.find(a => String(a.id) === String(accId));
+  if (!acc || acc.status !== 'available') { toast("Tài khoản đã được người khác đặt."); closeProduct(); renderRent(); return; }
+
+  const price = Number(acc.price || 0);
+  const adminActor = checkIsAdmin(user);
+  if (!adminActor) {
+    const bal = getBalance(user.uid);
+    if (bal < price) {
+      toast("Số dư ví không đủ. Cần " + money(price));
+      return;
+    }
+    setBalance(user.uid, bal - price, `${acc.mode === 'rent' ? 'Thuê' : 'Mua'} acc ${acc.gameName}: ${acc.title}`);
+  }
+
+  const isRent = acc.mode === 'rent';
+  const rentHours = Number(acc.rentHours || 24);
+  const now = Date.now();
+  const expiresAt = isRent ? now + rentHours * 3600000 : null;
+
+  acc.status = isRent ? 'rented' : 'sold';
+  acc.buyerUsername = user.username;
+  acc.expiresAt = expiresAt;
+  saveGameAccounts(list);
+
+  const orders = getOrders();
+  orders.push({
+    id: 'ACC-' + now.toString().slice(-6),
+    type: 'game_account',
+    uid: user.uid,
+    username: user.username,
+    gameName: acc.gameName,
+    mode: acc.mode,
+    title: `${isRent ? 'Thuê' : 'Mua'} acc ${acc.gameName} - ${acc.title}`,
+    amount: price,
+    credentials: {
+      username: acc.accUsername,
+      password: acc.accPassword,
+      note: acc.note || '',
+      expiresAt
+    },
+    status: 'delivered',
+    createdAt: now
+  });
+  write(STORAGE.orders, orders);
+
+  refreshAccount();
+  renderRent();
+
+  const box = document.getElementById("modalBox");
+  box.innerHTML = `
+    <span class="pill ok">Đã cấp tài khoản tự động</span>
+    <h2 style="margin-top:10px">Thông tin tài khoản ${escapeHtml(acc.gameName)}</h2>
+    <p>Đã trừ ${money(price)} và lưu thông tin vào mục <b>Đơn hàng của tôi</b>.</p>
+    <div class="credBox">
+      <div><b>Gói:</b> ${escapeHtml(acc.title)}</div>
+      ${isRent ? `<div><b>Hết hạn thuê:</b> ${new Date(expiresAt).toLocaleString('vi-VN')}</div>` : ''}
+      <code>Tài khoản: ${escapeHtml(acc.accUsername)}\nMật khẩu: ${escapeHtml(acc.accPassword)}</code>
+      ${acc.note ? `<div style="margin-top:8px"><b>Lưu ý:</b> ${escapeHtml(acc.note)}</div>` : ''}
+    </div>
+    <div class="modalActions">
+      <button class="btn light" onclick="closeProduct();go('orders')">Xem trong Đơn hàng</button>
+      <button class="btn primary" onclick="closeProduct()">Hoàn tất</button>
+    </div>
+  `;
+}
+
+/* ==================== QUẢN TRỊ ADMIN (THÊM GAME, ĐĂNG ACC, GIÁ BUFF) ==================== */
+function toggleAdminAccMode() {
+  const mode = document.getElementById("accModeSelect")?.value;
+  const wrap = document.getElementById("accRentHoursWrap");
+  const label = document.getElementById("accPriceLabel");
+  if (wrap) wrap.style.display = mode === 'rent' ? 'block' : 'none';
+  if (label) label.textContent = mode === 'rent' ? 'Giá thuê (VNĐ)' : 'Giá bán đứt (VNĐ)';
+}
+
+function addGameCatalog() {
+  if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền thêm game."); return; }
+  const name = (document.getElementById("newGameName")?.value || "").trim();
+  const icon = (document.getElementById("newGameEmoji")?.value || "🎮").trim() || "🎮";
+  const desc = (document.getElementById("newGameDesc")?.value || "").trim() || ("Bán & cho thuê tài khoản " + name);
+  if (!name) { toast("Nhập tên game."); return; }
+
+  const settings = getSettings();
+  const list = getGamesCatalog();
+  if (list.some(g => g.name.toLowerCase() === name.toLowerCase())) {
+    toast("Game này đã có trong danh sách.");
+    return;
+  }
+  list.push({
+    id: 'game_' + Date.now().toString(36),
+    name,
+    icon,
+    desc
+  });
+  settings.gamesCatalog = list;
+  write(STORAGE.settings, settings);
+  document.getElementById("newGameName").value = "";
+  document.getElementById("newGameDesc").value = "";
+  toast("Đã thêm game: " + name);
+  renderHomeGames();
+  renderRent();
+  loadAdmin();
+}
+
+function removeGameCatalog(gameName) {
+  if (!checkIsAdmin()) return;
+  const settings = getSettings();
+  const next = getGamesCatalog().filter(g => g.name !== gameName);
+  settings.gamesCatalog = next.length ? next : DEFAULT_GAMES.slice();
+  write(STORAGE.settings, settings);
+  toast("Đã cập nhật danh sách game");
+  renderHomeGames();
+  renderRent();
+  loadAdmin();
+}
+
+function createGameAccount() {
+  if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền đăng acc."); return; }
+  const gameName = document.getElementById("accGameSelect")?.value || "FC Mobile";
+  const mode = document.getElementById("accModeSelect")?.value || "sell";
+  const title = (document.getElementById("accTitle")?.value || "").trim();
+  const price = Number(document.getElementById("accPrice")?.value || 0);
+  const rentHours = Math.max(1, Number(document.getElementById("accRentHours")?.value || 24));
+  const accUsername = (document.getElementById("accUsername")?.value || "").trim();
+  const accPassword = (document.getElementById("accPassword")?.value || "").trim();
+  const note = (document.getElementById("accNote")?.value || "").trim();
+
+  if (!title) { toast("Nhập tiêu đề / mô tả acc."); return; }
+  if (!Number.isFinite(price) || price <= 0) { toast("Nhập giá hợp lệ."); return; }
+  if (!accUsername || !accPassword) { toast("Nhập đầy đủ Tài khoản và Mật khẩu game."); return; }
+
+  const list = getGameAccounts();
+  list.push({
+    id: 'gacc_' + Date.now().toString(36),
+    kind: 'game_account',
+    gameName,
+    mode,
+    title,
+    price,
+    rentHours,
+    accUsername,
+    accPassword,
+    note,
+    status: 'available',
+    createdAt: Date.now()
+  });
+  saveGameAccounts(list);
+
+  document.getElementById("accTitle").value = "";
+  document.getElementById("accPrice").value = "";
+  document.getElementById("accUsername").value = "";
+  document.getElementById("accPassword").value = "";
+  document.getElementById("accNote").value = "";
+  toast("Đã đăng tài khoản game lên kho");
+  renderRent();
+  loadAdmin();
+}
+
+function relistGameAccount(accId) {
+  if (!checkIsAdmin()) return;
+  const list = getGameAccounts();
+  const acc = list.find(a => String(a.id) === String(accId));
+  if (!acc) return;
+  acc.status = 'available';
+  acc.buyerUsername = null;
+  acc.expiresAt = null;
+  saveGameAccounts(list);
+  toast("Đã mở bán/thuê lại tài khoản");
+  renderRent();
+  loadAdmin();
+}
+
+function deleteGameAccount(accId) {
+  if (!checkIsAdmin()) return;
+  const next = getGameAccounts().filter(a => String(a.id) !== String(accId));
+  saveGameAccounts(next);
+  toast("Đã xóa tài khoản khỏi kho");
+  renderRent();
+  loadAdmin();
+}
+
+function populateBuffEditSelect() {
+  const sel = document.getElementById("buffEditSelect");
+  if (!sel) return;
+  const catalog = getBuffCatalog();
+  const opts = [];
+  Object.entries(catalog).forEach(([plat, d]) => {
+    (d.items || []).forEach(it => {
+      opts.push(`<option value="${escapeHtml(plat)}::${escapeHtml(it.id)}">[${escapeHtml(plat)}] ${escapeHtml(it.name)}</option>`);
+    });
+  });
+  sel.innerHTML = opts.join("");
+  fillBuffEditForm();
+}
+
+function fillBuffEditForm() {
+  const val = document.getElementById("buffEditSelect")?.value || "";
+  const [plat, id] = val.split("::");
+  const item = (getBuffCatalog()[plat]?.items || []).find(i => i.id === id);
+  if (!item) return;
+  document.getElementById("buffEditPrice").value = Number(item.price || 0);
+  document.getElementById("buffEditMin").value = Number(item.minQty || 1);
+  document.getElementById("buffEditDesc").value = item.desc || "";
+}
+
+function saveBuffPackage() {
+  if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền sửa giá."); return; }
+  const val = document.getElementById("buffEditSelect")?.value || "";
+  const [plat, id] = val.split("::");
+  const price = Number(document.getElementById("buffEditPrice")?.value || 0);
+  const minQty = Math.max(1, Number(document.getElementById("buffEditMin")?.value || 1));
+  const desc = (document.getElementById("buffEditDesc")?.value || "").trim();
+
+  if (!plat || !id || !Number.isFinite(price) || price <= 0) { toast("Giá gói không hợp lệ."); return; }
+
+  const settings = getSettings();
+  const catalog = getBuffCatalog();
+  const item = (catalog[plat]?.items || []).find(i => i.id === id);
+  if (!item) return;
+
+  item.price = price;
+  item.minQty = minQty;
+  if (desc) item.desc = desc;
+  settings.buffCatalog = catalog;
+  write(STORAGE.settings, settings);
+  toast("Đã cập nhật đơn giá gói " + item.name);
+  renderBuff();
+}
+
 async function adminAdjust() {
   if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền thao tác."); return; }
   const username = normalizeLogin(document.getElementById('adjustUsername').value);
@@ -647,6 +1146,44 @@ async function loadAdmin() {
     return;
   }
   if (banner) banner.textContent = "Đang quản trị với tài khoản: " + currentUser().username;
+
+  const games = getGamesCatalog();
+  const accGameSel = document.getElementById("accGameSelect");
+  if (accGameSel) {
+    accGameSel.innerHTML = games.map(g => `<option value="${escapeHtml(g.name)}">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</option>`).join("");
+  }
+  const gameListHost = document.getElementById("adminGameList");
+  if (gameListHost) {
+    gameListHost.innerHTML = games.map(g => `
+      <span class="pill" style="margin:4px 6px 0 0">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)} ${games.length > 1 ? `<button style="border:0;background:none;color:var(--red);font-weight:900;margin-left:4px" onclick="removeGameCatalog('${escapeHtml(g.name)}')">×</button>` : ''}</span>
+    `).join("");
+  }
+
+  populateBuffEditSelect();
+
+  const invHost = document.getElementById("adminInventoryList");
+  if (invHost) {
+    const accs = getGameAccounts().slice().reverse();
+    if (!accs.length) {
+      invHost.className = "empty";
+      invHost.textContent = "Chưa có tài khoản game nào trong kho.";
+    } else {
+      invHost.className = "";
+      invHost.innerHTML = accs.map(a => `
+        <div class="panel" style="padding:12px;margin:8px 0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+            <b>[${escapeHtml(a.gameName)}] ${escapeHtml(a.title)}</b>
+            <span class="pill ${a.status === 'available' ? 'ok' : (a.status === 'rented' ? 'warn' : 'sold')}">${a.status === 'available' ? 'Sẵn sàng' : (a.status === 'rented' ? 'Đang thuê' : 'Đã bán')}</span>
+          </div>
+          <div class="muted" style="margin-top:4px">${a.mode === 'rent' ? 'Thuê ' + Number(a.rentHours || 24) + 'h' : 'Bán đứt'} · ${money(a.price)} · TK: <b>${escapeHtml(a.accUsername)}</b> / MK: <b>${escapeHtml(a.accPassword)}</b>${a.buyerUsername ? ' · Khách: <b>' + escapeHtml(a.buyerUsername) + '</b>' : ''}</div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            ${a.status !== 'available' ? `<button class="btn light" onclick="relistGameAccount('${escapeHtml(a.id)}')">Mở lại kho (đã đổi MK)</button>` : ''}
+            <button class="btn light" style="color:var(--red)" onclick="deleteGameAccount('${escapeHtml(a.id)}')">Xóa</button>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
 
   const host = document.getElementById('adminTopups');
   if (host) {
@@ -680,9 +1217,9 @@ async function loadAdmin() {
       orderHost.className = '';
       orderHost.innerHTML = orders.map(o => `
         <div class="panel" style="padding:12px;margin:8px 0">
-          <b>${escapeHtml(o.title || o.name || 'Yêu cầu')}</b> — Khách: <b>${escapeHtml(o.username)}</b>
+          <b>${escapeHtml(o.title || o.name || 'Yêu cầu')}</b> — Khách: <b>${escapeHtml(o.username)}</b> ${o.amount ? '· ' + money(o.amount) : ''}
           <div class="muted">Trạng thái: ${escapeHtml(o.status || 'pending')} · ${new Date(o.createdAt || Date.now()).toLocaleString('vi-VN')}</div>
-          ${o.note ? `<div class="muted">Ghi chú: ${escapeHtml(o.note)}</div>` : ''}
+          ${o.note ? `<div class="muted">Link / Ghi chú: ${escapeHtml(o.note)}</div>` : ''}
           ${o.status === 'pending' ? `<button class="btn primary" style="margin-top:8px" onclick="completeOrder('${o.id}')">Đánh dấu hoàn thành</button>` : ''}
         </div>
       `).join('');
@@ -720,15 +1257,200 @@ async function completeOrder(id) {
   loadAdmin();
 }
 
-function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-const platformData={
- Facebook:{icon:'https://cdn.simpleicons.org/facebook/0866FF',items:[['Gói tăng theo dõi trang','Theo dõi','Tư vấn phát triển cộng đồng và chiến dịch tiếp cận người quan tâm thật.','Liên hệ'],['Gói tăng tương tác bài viết','Tương tác','Tư vấn nội dung và quảng bá tương tác minh bạch.','Liên hệ'],['Gói quảng bá bài viết','Quảng bá','Hỗ trợ thiết lập chiến dịch tiếp cận đúng đối tượng.','Liên hệ']]},
- YouTube:{icon:'https://cdn.simpleicons.org/youtube/FF0033',items:[['Gói phát triển người đăng ký','Theo dõi','Tư vấn tối ưu kênh và phát triển khán giả phù hợp.','Liên hệ'],['Gói quảng bá lượt xem video','Lượt xem','Quảng bá video tới người xem phù hợp, không cam kết lượt xem giả.','Liên hệ'],['Gói quảng bá livestream','Livestream','Tư vấn thiết lập và quảng bá sự kiện livestream.','Liên hệ']]},
- TikTok:{icon:'https://cdn.simpleicons.org/tiktok/111111',items:[['Gói tăng theo dõi TikTok','Theo dõi','Tư vấn nội dung và chiến dịch phát triển cộng đồng thật.','Liên hệ'],['Gói quảng bá lượt xem video','Lượt xem','Hỗ trợ phân phối nội dung tới nhóm người xem phù hợp.','Liên hệ'],['Gói quảng bá mắt xem livestream','Livestream','Tư vấn truyền thông cho phiên livestream.','Liên hệ'],['Gói tăng tương tác nội dung','Tương tác','Tối ưu nội dung và chiến dịch tương tác minh bạch.','Liên hệ']]}}
-const rentalData={
- 'FC Mobile':[['Tài khoản FC Mobile','Thông tin đội hình, máy chủ và thời hạn thuê sẽ được Admin xác nhận.','Theo gói'],['Gói thuê FC Mobile','Thời hạn thuê và điều kiện sử dụng hiển thị trước khi đặt.','Theo thời hạn']],
- 'TFT':[['Tài khoản TFT','Thông tin máy chủ, cấp độ và thời hạn thuê được xác nhận trước.','Theo gói'],['Gói thuê TFT','Gói thuê theo thời hạn và điều kiện công bố.','Theo thời hạn']],
- 'Game khác':[['Tài khoản game khác','Danh mục game khác sẽ được cập nhật trong kho.','Theo gói'],['Gói thuê game khác','Thời hạn, điều kiện và giá được xác nhận theo từng game.','Theo thời hạn']]}
+async function loadOrders() {
+  const session = currentUser();
+  const host = document.getElementById("ordersList");
+  if (!host) return;
+  if (!session?.uid) {
+    host.className = "empty";
+    host.textContent = "Đăng nhập để xem đơn hàng.";
+    return;
+  }
+  const allOrders = getOrders();
+  const mine = checkIsAdmin(session)
+    ? allOrders.slice().reverse()
+    : allOrders.filter(o => String(o.uid) === String(session.uid) || normalizeLogin(o.username) === normalizeLogin(session.username)).reverse();
+
+  if (!mine.length) {
+    host.className = "empty";
+    host.textContent = "Chưa có đơn hàng nào.";
+    return;
+  }
+  host.className = "";
+  host.innerHTML = mine.map(o => `
+    <div class="panel" style="padding:16px;margin:10px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <b>${escapeHtml(o.title || o.name || "Đơn hàng dịch vụ")}</b>
+        <span class="pill ${o.status === 'delivered' || o.status === 'completed' ? 'ok' : ''}">${escapeHtml(o.status === 'delivered' ? 'Đã cấp TK/MK' : (o.status === 'completed' ? 'Hoàn thành' : 'Đang xử lý'))}</span>
+      </div>
+      <div class="muted" style="margin-top:6px">Mã đơn: <b>${escapeHtml(o.id)}</b>${o.amount ? ' · Tổng tiền: <b>' + money(o.amount) + '</b>' : ''} · ${new Date(o.createdAt || Date.now()).toLocaleString("vi-VN")}</div>
+      ${o.note ? `<div class="muted" style="margin-top:4px">Link / Ghi chú: ${escapeHtml(o.note)}</div>` : ""}
+      ${o.credentials ? `
+        <div class="credBox">
+          <div><b>Thông tin tài khoản game đã cấp:</b></div>
+          ${o.credentials.expiresAt ? `<div><b>Hết hạn thuê:</b> ${new Date(o.credentials.expiresAt).toLocaleString('vi-VN')}</div>` : ''}
+          <code>Tài khoản: ${escapeHtml(o.credentials.username)}\nMật khẩu: ${escapeHtml(o.credentials.password)}</code>
+          ${o.credentials.note ? `<div style="margin-top:6px">${escapeHtml(o.credentials.note)}</div>` : ''}
+        </div>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+/* ==================== HIỂN THỊ DANH MỤC, MỞ TAB MỚI ĐẸP ==================== */
+function renderHomeGames() {
+  const host = document.getElementById("homeGameTiles");
+  if (!host) return;
+  const games = getGamesCatalog();
+  host.innerHTML = games.map(g => `
+    <button class="tile" onclick="openInNewTab('rent','${escapeHtml(g.name)}')">
+      <div class="tileTop">
+        <div class="logoBox"><span class="gameLogo">${escapeHtml(g.icon || '🎮')}</span></div>
+        <div><h3>${escapeHtml(g.name)}</h3><p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p></div>
+      </div>
+      <div class="tileFoot">Mở tab ${escapeHtml(g.name)} <span class="arrow">↗</span></div>
+    </button>
+  `).join("");
+}
+
+function renderBuff() {
+  const catalog = getBuffCatalog();
+  const tabsHost = document.getElementById("buffPlatformTabs");
+  const platforms = Object.keys(catalog);
+
+  if (tabsHost) {
+    tabsHost.innerHTML = [
+      `<button class="tab ${activeBuffPlatform === 'ALL' ? 'active' : ''}" onclick="selectBuffPlatform('ALL')">Tất cả (${platforms.length})</button>`,
+      ...platforms.map(p => `<button class="tab ${activeBuffPlatform === p ? 'active' : ''}" onclick="selectBuffPlatform('${escapeHtml(p)}')">${escapeHtml(p)}</button>`)
+    ].join("");
+  }
+
+  const host = document.getElementById('allBuffSections');
+  if (!host) return;
+  const entries = Object.entries(catalog).filter(([name]) => activeBuffPlatform === 'ALL' || activeBuffPlatform === name);
+
+  host.innerHTML = entries.map(([name, d]) => `
+    <section class="section">
+      <div class="sectionHead">
+        <div><div class="eyebrow">Nền tảng</div><h2>${escapeHtml(name)}</h2></div>
+        <span class="pill">${(d.items || []).length} gói dịch vụ</span>
+      </div>
+      <div class="packageGrid">
+        ${(d.items || []).map(x => `
+          <article class="package">
+            <div class="packageTop">
+              <div class="logoBox"><img src="${d.icon}" alt="Logo ${escapeHtml(name)}"></div>
+              <div><h3>${escapeHtml(x.name)}</h3><span class="pill">${escapeHtml(x.tag)}</span></div>
+            </div>
+            <p class="desc">${escapeHtml(x.desc)}</p>
+            <div class="price">${money(x.price)} <small>/ 1 ${escapeHtml(x.unitLabel || 'đơn vị')} · Tối thiểu ${Number(x.minQty || 1)}</small></div>
+            <button class="btn primary" onclick="openBuffOrderModal('${escapeHtml(name)}','${escapeHtml(x.id)}')">Đặt dịch vụ & Tính tiền →</button>
+          </article>
+        `).join('')}
+      </div>
+    </section>
+  `).join('');
+}
+
+function selectBuffPlatform(plat) {
+  activeBuffPlatform = plat;
+  renderBuff();
+}
+
+function renderRent() {
+  const games = getGamesCatalog();
+  const accs = getGameAccounts();
+  const tabsHost = document.getElementById("rentGameTabs");
+
+  if (tabsHost) {
+    tabsHost.innerHTML = [
+      `<button class="tab ${activeRentGame === 'ALL' ? 'active' : ''}" onclick="selectRentGame('ALL')">Tất cả game (${games.length})</button>`,
+      ...games.map(g => `<button class="tab ${activeRentGame === g.name ? 'active' : ''}" onclick="selectRentGame('${escapeHtml(g.name)}')">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</button>`)
+    ].join("");
+  }
+
+  const host = document.getElementById('allRentSections');
+  if (!host) return;
+  const visibleGames = games.filter(g => activeRentGame === 'ALL' || activeRentGame === g.name);
+
+  host.innerHTML = visibleGames.map(g => {
+    const items = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase());
+    return `
+      <section class="section">
+        <div class="sectionHead">
+          <div><div class="eyebrow">Kho tài khoản</div><h2>${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</h2></div>
+          <span class="pill">${items.length} tài khoản</span>
+        </div>
+        ${items.length ? `
+          <div class="packageGrid">
+            ${items.map(a => {
+              const isRent = a.mode === 'rent';
+              const avail = a.status === 'available';
+              const badgeCls = avail ? 'ok' : (a.status === 'rented' ? 'warn' : 'sold');
+              const badgeTxt = avail ? (isRent ? 'Cho thuê' : 'Đang bán') : (a.status === 'rented' ? 'Đang thuê' : 'Đã bán');
+              return `
+                <article class="package">
+                  <div class="packageTop">
+                    <div class="logoBox"><span class="gameLogo">${escapeHtml(g.icon || '🎮')}</span></div>
+                    <div><h3>${escapeHtml(a.title)}</h3><span class="pill ${badgeCls}">${badgeTxt}</span></div>
+                  </div>
+                  <p class="desc">${escapeHtml(a.note || 'Thanh toán xong tự động hiển thị Tài khoản & Mật khẩu.')}</p>
+                  <div class="price">${money(a.price)} <small>${isRent ? '/ ' + Number(a.rentHours || 24) + ' giờ thuê' : '/ mua đứt'}</small></div>
+                  <button class="btn ${avail ? 'primary' : 'light'}" onclick="openGameAccountModal('${escapeHtml(a.id)}')">${avail ? (isRent ? 'Thuê ngay →' : 'Mua ngay →') : 'Xem trạng thái'}</button>
+                </article>
+              `;
+            }).join('')}
+          </div>
+        ` : `<div class="empty">Chưa có tài khoản ${escapeHtml(g.name)} nào trong kho. Admin có thể đăng thêm ở trang Quản trị.</div>`}
+      </section>
+    `;
+  }).join('');
+}
+
+function selectRentGame(gameName) {
+  activeRentGame = gameName;
+  renderRent();
+}
+
+function openInNewTab(viewName, filterVal) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("tab", viewName);
+  if (filterVal) url.searchParams.set("filter", filterVal);
+  else url.searchParams.delete("filter");
+  window.open(url.toString(), "_blank", "noopener");
+}
+
+function mountStandaloneTabBannerIfNeeded() {
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get("tab");
+  const filter = params.get("filter");
+  if (!tab || !document.getElementById(tab)) return;
+
+  document.body.classList.add("standaloneTab");
+  const main = document.querySelector("main.main");
+  const bar = document.createElement("div");
+  bar.className = "tabBarTop";
+  const labelMap = { buff: "Dịch vụ Mắt xem & Theo dõi", rent: "Kho Bán & Thuê Acc Game", wallet: "Ví tài khoản", orders: "Đơn hàng của tôi", admin: "Quản trị hệ thống" };
+  bar.innerHTML = `
+    <div class="tabBarLeft">
+      <span class="tabBadge">↗ TAB RIÊNG</span>
+      <div>
+        <div style="font-weight:850;font-size:14px">${escapeHtml(labelMap[tab] || 'Trung Tâm Thương Mại')}</div>
+        <div class="muted" style="font-size:11px">Đồng bộ trực tiếp với tài khoản & kho dữ liệu hiện tại</div>
+      </div>
+    </div>
+    <div class="tabBarRight">
+      <button class="btn light" style="padding:9px 13px;font-size:12px" onclick="go('wallet')">Ví</button>
+      <button class="btn light" style="padding:9px 13px;font-size:12px" onclick="go('orders')">Đơn hàng</button>
+      <button class="btn primary" style="padding:9px 13px;font-size:12px" onclick="go('home')">Trang chủ</button>
+    </div>
+  `;
+  main.prepend(bar);
+
+  if (tab === 'buff' && filter) activeBuffPlatform = filter;
+  if (tab === 'rent' && filter) activeRentGame = filter;
+  go(tab);
+}
 
 function go(id){
   if (id === 'admin' && !checkIsAdmin()) {
@@ -739,6 +1461,7 @@ function go(id){
   drawer(false);
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
   window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='home')renderHomeGames();
   if(id==='buff')renderBuff();
   if(id==='rent')renderRent();
   if(id==='wallet')loadWallet();
@@ -746,62 +1469,16 @@ function go(id){
   if(id==='admin')loadAdmin();
 }
 function drawer(open){document.getElementById('drawerBack').style.display=open?'block':'none'}
-function openPlatform(p){go('buff');document.getElementById('allBuffSections').scrollIntoView({behavior:'smooth'})}
-function renderBuff(){let host=document.getElementById('allBuffSections');host.innerHTML=Object.entries(platformData).map(([name,d])=>`<section class="section"><div class="sectionHead"><div><div class="eyebrow">Nền tảng</div><h2>${name}</h2></div><span class="pill">${d.items.length} gói dịch vụ</span></div><div class="packageGrid">${d.items.map(x=>`<article class="package"><div class="packageTop"><div class="logoBox"><img src="${d.icon}" alt="Logo ứng dụng ${name}"></div><div><h3>${x[0]}</h3><span class="pill">${x[1]}</span></div></div><p class="desc">${x[2]}</p><div class="price">${x[3]}</div><button class="btn light" onclick="productDetail('${x[0]}','${x[2]}')">Xem chi tiết →</button></article>`).join('')}</div></section>`).join('')}
-function renderRent(){let host=document.getElementById('allRentSections');host.innerHTML=Object.entries(rentalData).map(([name,items])=>`<section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản</div><h2>${name}</h2></div><span class="pill">${items.length} lựa chọn</span></div><div class="packageGrid">${items.map(x=>`<article class="package"><div class="packageTop"><div class="logoBox"><img src="${name==='FC Mobile'?'https://cdn.simpleicons.org/ea/111111':name==='TFT'?'https://cdn.simpleicons.org/riotgames/D32936':'https://cdn.simpleicons.org/steam/111111'}" alt="Logo ${name}"></div><div><h3>${x[0]}</h3><span class="pill">Thuê tài khoản</span></div></div><p class="desc">${x[1]}</p><div class="price">${x[2]}</div><button class="btn light" onclick="productDetail('${x[0]}','${x[1]}')">Xem chi tiết →</button></article>`).join('')}</div></section>`).join('')}
-
-function productDetail(name, desc) {
-  selectedPackage = { name, desc };
-  document.getElementById('modalTitle').textContent = name;
-  document.getElementById('modalText').textContent = desc;
-  const user = currentUser();
-  const callout = document.getElementById('modalCallout');
-  const noteWrap = document.getElementById('modalNoteWrap');
-  const primaryBtn = document.getElementById('modalPrimaryBtn');
-
-  if (user && user.uid) {
-    callout.textContent = "Đang đăng nhập với tài khoản: " + user.username + ". Nhập thông tin/link bên dưới và gửi yêu cầu để Admin tiếp nhận xử lý.";
-    noteWrap.style.display = "block";
-    document.getElementById('modalOrderNote').value = "";
-    primaryBtn.textContent = "Gửi yêu cầu đặt đơn";
-  } else {
-    callout.textContent = "Vui lòng đăng nhập tài khoản để gửi yêu cầu dịch vụ hoặc thuê tài khoản.";
-    noteWrap.style.display = "none";
-    primaryBtn.textContent = "Đăng nhập";
-  }
-  document.getElementById('productModal').style.display = 'flex';
-}
-
-function handleModalPrimary() {
-  const user = currentUser();
-  if (!user || !user.uid) {
-    closeProduct();
-    go('login');
-    return;
-  }
-  if (!selectedPackage) return;
-  const note = document.getElementById('modalOrderNote').value.trim();
-  const orders = getOrders();
-  orders.push({
-    id: 'ORD-' + Date.now().toString().slice(-6),
-    uid: user.uid,
-    username: user.username,
-    title: selectedPackage.name,
-    desc: selectedPackage.desc,
-    note,
-    status: 'pending',
-    createdAt: Date.now()
-  });
-  write(STORAGE.orders, orders);
-  closeProduct();
-  toast("Đã gửi yêu cầu: " + selectedPackage.name);
-  go('orders');
-}
-
+function openPlatform(p){activeBuffPlatform = p; go('buff'); document.getElementById('allBuffSections').scrollIntoView({behavior:'smooth'})}
 function closeProduct(){document.getElementById('productModal').style.display='none'}
 function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splashStatus').textContent='Đã tải giao diện';setTimeout(()=>document.getElementById('splash').classList.add('hide'),350)},650)});
-renderBuff();renderRent();initAccountStorage();
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splashStatus').textContent='Đã tải giao diện';setTimeout(()=>document.getElementById('splash').classList.add('hide'),350)},500)});
+
+renderHomeGames();
+renderBuff();
+renderRent();
+initAccountStorage();
+mountStandaloneTabBannerIfNeeded();
 </script>
 </body>
 </html>
