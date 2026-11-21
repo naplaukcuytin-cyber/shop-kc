@@ -201,6 +201,88 @@ body.standaloneTab .main{padding:20px 18px 56px}
   .modernAccGrid{grid-template-columns:1fr;gap:14px}
 }
 
+
+/* Thanh tìm kiếm + nút Lọc thu gọn mặc định */
+.rentCompactSearchRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.rentCompactSearchRow .storeInput {
+  flex: 1;
+}
+.filterToggleBtn {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: .15s;
+}
+.filterToggleBtn:hover,
+.filterToggleBtn.active {
+  border-color: var(--blue);
+  background: var(--blue2);
+  color: var(--blue);
+}
+.filterPanelCollapsible {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.filterPanelCollapsible.open {
+  display: flex;
+}
+
+/* Danh mục game thu gọn nằm phía trên khi Admin đã đăng acc */
+.compactCatBar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+.compactCatBar::-webkit-scrollbar {
+  display: none;
+}
+.compactCatPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: .15s;
+}
+.compactCatPill:hover,
+.compactCatPill.active {
+  border-color: var(--blue);
+  background: var(--blue2);
+  color: var(--blue);
+}
+.compactCatPill img {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
 </style>
 </head>
 <body>
@@ -601,7 +683,7 @@ function getGameCoverUrl(game) {
 const DEFAULT_GAMES = [
   { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile', coverImage: '' },
   { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý', coverImage: '' },
-  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác', coverImage: '' }
+  { id: 'free_fire', name: 'Free Fire', icon: '🔥', desc: 'Bán & cho thuê tài khoản Free Fire (FF)', coverImage: '' }
 ];
 
 let firebaseDB = null;
@@ -666,7 +748,20 @@ function getSession() { return read(STORAGE.session, null); }
 function getGamesCatalog() {
   const s = getSettings();
   const customGames = asArray(s.gamesCatalog);
-  return customGames.length ? customGames : DEFAULT_GAMES.slice();
+  const list = customGames.length ? customGames : DEFAULT_GAMES.slice();
+  return list.map(g => {
+    if (String(g.name || '').trim().toLowerCase() === 'game khác') {
+      return {
+        ...g,
+        id: 'free_fire',
+        name: 'Free Fire',
+        icon: '🔥',
+        desc: 'Bán & cho thuê tài khoản Free Fire (FF)',
+        coverImage: ''
+      };
+    }
+    return g;
+  });
 }
 
 function getBuffCatalog() {
@@ -2349,6 +2444,16 @@ function renderModernAccCard(a, gameIcon) {
   `;
 }
 
+let rentFilterOpen = false;
+
+function toggleRentFilterPanel() {
+  rentFilterOpen = !rentFilterOpen;
+  const panel = document.getElementById('rentFilterCollapsible');
+  const btn = document.getElementById('rentFilterToggleBtn');
+  if (panel) panel.classList.toggle('open', rentFilterOpen);
+  if (btn) btn.classList.toggle('active', rentFilterOpen);
+}
+
 function renderRent() {
   const games = getGamesCatalog();
   const accs = getGameAccounts();
@@ -2365,7 +2470,9 @@ function renderRent() {
   if (!host) return;
 
   let filtered = accs.filter(a => {
-    if (activeRentGame !== 'ALL' && String(a.gameName).toLowerCase() !== String(activeRentGame).toLowerCase()) return false;
+    const rawGame = String(a.gameName || '').trim().toLowerCase();
+    const gName = rawGame === 'game khác' ? 'free fire' : rawGame;
+    if (activeRentGame !== 'ALL' && gName !== String(activeRentGame).toLowerCase()) return false;
     if (rentFilterMode !== 'ALL' && a.mode !== rentFilterMode) return false;
     if (!matchesPriceFilter(a.price, rentFilterPrice)) return false;
     if (rentOnlyAvailable && a.status !== 'available') return false;
@@ -2388,67 +2495,96 @@ function renderRent() {
   const iconMap = {};
   games.forEach(g => { iconMap[String(g.name).toLowerCase()] = g.icon || '🎮'; });
 
+  const hasActiveFilters = rentFilterMode !== 'ALL' || rentFilterPrice !== 'ALL' || rentSortBy !== 'newest' || rentOnlyAvailable;
+
   const toolbarHtml = `
     <div class="storeToolbar">
-      <div class="storeToolbarTop">
-        <input class="storeInput" type="search" value="${escapeHtml(rentSearchQuery)}" placeholder="🔍 Tìm mã acc, OVR, tướng, skin, từ khóa..." oninput="rentSearchQuery=this.value;renderRent()">
-        <select class="storeSelect" onchange="rentFilterMode=this.value;renderRent()">
-          <option value="ALL" ${rentFilterMode === 'ALL' ? 'selected' : ''}>Hình thức: Tất cả (Bán & Thuê)</option>
-          <option value="sell" ${rentFilterMode === 'sell' ? 'selected' : ''}>Chỉ Acc Bán đứt</option>
-          <option value="rent" ${rentFilterMode === 'rent' ? 'selected' : ''}>Chỉ Acc Cho thuê</option>
-        </select>
-        <select class="storeSelect" onchange="rentFilterPrice=this.value;renderRent()">
-          <option value="ALL" ${rentFilterPrice === 'ALL' ? 'selected' : ''}>Mức giá: Tất cả mức giá</option>
-          <option value="UNDER_50" ${rentFilterPrice === 'UNDER_50' ? 'selected' : ''}>Dưới 50.000 đ</option>
-          <option value="50_200" ${rentFilterPrice === '50_200' ? 'selected' : ''}>Từ 50.000 đ – 200.000 đ</option>
-          <option value="200_500" ${rentFilterPrice === '200_500' ? 'selected' : ''}>Từ 200.000 đ – 500.000 đ</option>
-          <option value="OVER_500" ${rentFilterPrice === 'OVER_500' ? 'selected' : ''}>Trên 500.000 đ</option>
-        </select>
-        <select class="storeSelect" onchange="rentSortBy=this.value;renderRent()">
-          <option value="newest" ${rentSortBy === 'newest' ? 'selected' : ''}>Sắp xếp: Mới đăng nhất</option>
-          <option value="price_asc" ${rentSortBy === 'price_asc' ? 'selected' : ''}>Giá: Thấp → Cao</option>
-          <option value="price_desc" ${rentSortBy === 'price_desc' ? 'selected' : ''}>Giá: Cao → Thấp</option>
-        </select>
-        <button type="button" class="storeResetBtn" onclick="resetRentFilters()">↻ Đặt lại</button>
+      <div class="rentCompactSearchRow">
+        <input class="storeInput" type="search" value="${escapeHtml(rentSearchQuery)}" placeholder="🔍 Tìm mã acc, trang phục, tướng, từ khóa..." oninput="rentSearchQuery=this.value;renderRent()">
+        <button type="button" id="rentFilterToggleBtn" class="filterToggleBtn ${rentFilterOpen || hasActiveFilters ? 'active' : ''}" onclick="toggleRentFilterPanel()">
+          ⚙ Lọc${hasActiveFilters ? ' •' : ''}
+        </button>
       </div>
-      <div class="storePricePills">
-        <span class="lbl">Chọn nhanh giá:</span>
-        <button type="button" class="priceChip ${rentFilterPrice === 'ALL' ? 'active' : ''}" onclick="setRentPricePreset('ALL')">Tất cả</button>
-        <button type="button" class="priceChip ${rentFilterPrice === 'UNDER_50' ? 'active' : ''}" onclick="setRentPricePreset('UNDER_50')">Dưới 50K</button>
-        <button type="button" class="priceChip ${rentFilterPrice === '50_200' ? 'active' : ''}" onclick="setRentPricePreset('50_200')">50K – 200K</button>
-        <button type="button" class="priceChip ${rentFilterPrice === '200_500' ? 'active' : ''}" onclick="setRentPricePreset('200_500')">200K – 500K</button>
-        <button type="button" class="priceChip ${rentFilterPrice === 'OVER_500' ? 'active' : ''}" onclick="setRentPricePreset('OVER_500')">Trên 500K</button>
-        <label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:750;color:var(--ink);cursor:pointer">
-          <input type="checkbox" ${rentOnlyAvailable ? 'checked' : ''} onchange="rentOnlyAvailable=this.checked;renderRent()"> Chỉ hiện acc sẵn sàng
-        </label>
+      <div id="rentFilterCollapsible" class="filterPanelCollapsible ${rentFilterOpen ? 'open' : ''}">
+        <div class="storeToolbarTop" style="grid-template-columns:1fr 1fr 1fr auto">
+          <select class="storeSelect" onchange="rentFilterMode=this.value;renderRent()">
+            <option value="ALL" ${rentFilterMode === 'ALL' ? 'selected' : ''}>Hình thức: Tất cả (Bán & Thuê)</option>
+            <option value="sell" ${rentFilterMode === 'sell' ? 'selected' : ''}>Chỉ Acc Bán đứt</option>
+            <option value="rent" ${rentFilterMode === 'rent' ? 'selected' : ''}>Chỉ Acc Cho thuê</option>
+          </select>
+          <select class="storeSelect" onchange="rentFilterPrice=this.value;renderRent()">
+            <option value="ALL" ${rentFilterPrice === 'ALL' ? 'selected' : ''}>Mức giá: Tất cả mức giá</option>
+            <option value="UNDER_50" ${rentFilterPrice === 'UNDER_50' ? 'selected' : ''}>Dưới 50.000 đ</option>
+            <option value="50_200" ${rentFilterPrice === '50_200' ? 'selected' : ''}>Từ 50.000 đ – 200.000 đ</option>
+            <option value="200_500" ${rentFilterPrice === '200_500' ? 'selected' : ''}>Từ 200.000 đ – 500.000 đ</option>
+            <option value="OVER_500" ${rentFilterPrice === 'OVER_500' ? 'selected' : ''}>Trên 500.000 đ</option>
+          </select>
+          <select class="storeSelect" onchange="rentSortBy=this.value;renderRent()">
+            <option value="newest" ${rentSortBy === 'newest' ? 'selected' : ''}>Sắp xếp: Mới đăng nhất</option>
+            <option value="price_asc" ${rentSortBy === 'price_asc' ? 'selected' : ''}>Giá: Thấp → Cao</option>
+            <option value="price_desc" ${rentSortBy === 'price_desc' ? 'selected' : ''}>Giá: Cao → Thấp</option>
+          </select>
+          <button type="button" class="storeResetBtn" onclick="resetRentFilters()">↻ Đặt lại</button>
+        </div>
+        <div class="storePricePills">
+          <span class="lbl">Chọn nhanh giá:</span>
+          <button type="button" class="priceChip ${rentFilterPrice === 'ALL' ? 'active' : ''}" onclick="setRentPricePreset('ALL')">Tất cả</button>
+          <button type="button" class="priceChip ${rentFilterPrice === 'UNDER_50' ? 'active' : ''}" onclick="setRentPricePreset('UNDER_50')">Dưới 50K</button>
+          <button type="button" class="priceChip ${rentFilterPrice === '50_200' ? 'active' : ''}" onclick="setRentPricePreset('50_200')">50K – 200K</button>
+          <button type="button" class="priceChip ${rentFilterPrice === '200_500' ? 'active' : ''}" onclick="setRentPricePreset('200_500')">200K – 500K</button>
+          <button type="button" class="priceChip ${rentFilterPrice === 'OVER_500' ? 'active' : ''}" onclick="setRentPricePreset('OVER_500')">Trên 500K</button>
+          <label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:750;color:var(--ink);cursor:pointer">
+            <input type="checkbox" ${rentOnlyAvailable ? 'checked' : ''} onchange="rentOnlyAvailable=this.checked;renderRent()"> Chỉ hiện acc sẵn sàng
+          </label>
+        </div>
       </div>
     </div>
   `;
 
-  const categoryBannerHtml = activeRentGame === 'ALL' ? `
-    <div class="gameCategoryGrid" style="margin-bottom:24px">
-      ${games.map(g => {
-        const cover = getGameCoverUrl(g);
-        const fb = getGameFallbackCover(g);
-        return `
-          <button type="button" class="gameCatCard" onclick="selectRentGame('${escapeHtml(g.name)}')">
-            <div class="gameCatThumb">
+  const categoryBannerHtml = activeRentGame === 'ALL' ? (
+    accs.length > 0 ? `
+      <div class="compactCatBar">
+        ${games.map(g => {
+          const cover = getGameCoverUrl(g);
+          const fb = getGameFallbackCover(g);
+          const count = accs.filter(a => {
+            const rawGame = String(a.gameName || '').trim().toLowerCase();
+            const gName = rawGame === 'game khác' ? 'free fire' : rawGame;
+            return gName === String(g.name).toLowerCase();
+          }).length;
+          return `
+            <button type="button" class="compactCatPill" onclick="selectRentGame('${escapeHtml(g.name)}')">
               <img src="${escapeHtml(cover)}" onerror="this.onerror=null;this.src='${fb}'" alt="${escapeHtml(g.name)}">
-            </div>
-            <div class="gameCatBody">
-              <div class="gameCatTitle"><span style="font-size:19px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
-              <p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p>
-              <div class="gameCatFoot"><span>Lọc riêng kho ${escapeHtml(g.name)}</span><span>→</span></div>
-            </div>
-          </button>
-        `;
-      }).join('')}
-    </div>
-  ` : '';
+              <span>${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)} (${count})</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    ` : `
+      <div class="gameCategoryGrid" style="margin-bottom:24px">
+        ${games.map(g => {
+          const cover = getGameCoverUrl(g);
+          const fb = getGameFallbackCover(g);
+          return `
+            <button type="button" class="gameCatCard" onclick="selectRentGame('${escapeHtml(g.name)}')">
+              <div class="gameCatThumb">
+                <img src="${escapeHtml(cover)}" onerror="this.onerror=null;this.src='${fb}'" alt="${escapeHtml(g.name)}">
+              </div>
+              <div class="gameCatBody">
+                <div class="gameCatTitle"><span style="font-size:19px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
+                <p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p>
+                <div class="gameCatFoot"><span>Lọc riêng kho ${escapeHtml(g.name)}</span><span>→</span></div>
+              </div>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    `
+  ) : '';
 
   host.innerHTML = `
-    ${toolbarHtml}
     ${categoryBannerHtml}
+    ${toolbarHtml}
     <section class="section" style="margin-top:10px">
       <div class="sectionHead">
         <div>
