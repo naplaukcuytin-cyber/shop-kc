@@ -9,7 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
 :root{--ink:#171923;--muted:#737887;--line:#e9ebf0;--bg:#fff;--soft:#f6f7fa;--blue:#315efb;--blue2:#edf1ff;--green:#159568;--red:#d14343;--shadow:0 12px 36px rgba(20,30,60,.07);--r:20px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1220px;margin:auto;min-height:100vh}.top{height:72px;position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:14px}.menuBtn,.iconBtn{height:42px;width:42px;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:20px;color:var(--ink)}.brand{font-weight:850;font-size:15px;letter-spacing:-.35px;line-height:1.15}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.7px;margin-top:5px;font-weight:750}.spacer{flex:1}.balanceBtn{border:1px solid var(--line);border-radius:14px;background:#fff;padding:8px 13px;text-align:left;color:var(--muted);font-size:10px}.balanceBtn b{display:block;color:var(--ink);font-size:13px;margin-top:3px}.userBtn{height:42px;width:42px;border:0;border-radius:14px;background:#eaf0ff;color:var(--blue);font-weight:850}.main{padding:28px 24px 80px}.view{display:none;animation:fade .22s ease}.view.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:850;color:var(--blue)}h1,h2,h3,p{margin-top:0}.hero{min-height:330px;border:1px solid #e8ecf7;border-radius:28px;padding:44px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:30px;background:radial-gradient(circle at 82% 45%,#e8edff 0,transparent 32%),linear-gradient(120deg,#fbfcff,#fff 65%);overflow:hidden}.hero h1{font-size:clamp(36px,5.5vw,62px);letter-spacing:-2.8px;line-height:1.02;margin:14px 0}.hero p{max-width:540px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:24px}.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:750}.primary{background:var(--blue);color:white;box-shadow:0 7px 16px #315efb2b}.light{background:white;border:1px solid var(--line);color:var(--ink)}.heroVisual{height:230px;display:grid;place-items:center;position:relative}.heroOrb{height:190px;width:190px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#e8edff);box-shadow:inset 0 0 0 1px #dfe6ff,0 25px 60px #405cbd1a;position:relative}.heroOrb:before,.heroOrb:after{content:"";position:absolute;inset:-15px;border:1px solid #dce4ff;border-radius:50%}.heroOrb:after{inset:-30px;border-style:dashed}.heroOrb strong{font-size:36px;letter-spacing:-2px;color:var(--blue)}.floatTag{position:absolute;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:11px 14px;border-radius:14px;font-size:12px;font-weight:750}.tagA{top:18px;left:5px}.tagB{right:0;bottom:20px}.section{margin-top:38px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:17px;flex-wrap:wrap}.sectionHead h2{font-size:23px;letter-spacing:-.8px;margin:6px 0 0}.muted{color:var(--muted);font-size:13px;line-height:1.6}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.tile{border:1px solid var(--line);border-radius:20px;padding:20px;background:#fff;text-align:left;transition:.18s;min-width:0}.tile:hover,.package:hover{box-shadow:var(--shadow);transform:translateY(-2px)}.tileTop{display:flex;align-items:center;gap:13px}.logoBox{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:var(--soft);flex:none}.logoBox img{width:29px;height:29px;object-fit:contain}.tile h3{font-size:16px;margin:0 0 4px}.tile p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}.tileFoot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:12px;font-weight:750;color:var(--blue)}.arrow{font-size:18px}.gameLogo{font-size:25px}.packageGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.package{border:1px solid var(--line);border-radius:19px;padding:18px;background:#fff;transition:.18s;display:flex;flex-direction:column}.packageTop{display:flex;align-items:center;gap:11px}.package h3{font-size:15px;margin:0 0 4px}.package .desc{font-size:12px;color:var(--muted);line-height:1.55;margin:14px 0;flex:1}.price{font-size:19px;font-weight:850;letter-spacing:-.5px}.price small{font-size:11px;color:var(--muted);font-weight:500}.package .btn{width:100%;margin-top:15px}.pill{display:inline-flex;border-radius:99px;background:var(--blue2);color:var(--blue);padding:6px 9px;font-size:10px;font-weight:800}.pill.ok{background:#e7f8f1;color:var(--green)}.pill.warn{background:#fff3e6;color:#c96a08}.pill.sold{background:#fdecec;color:var(--red)}.pageHead{margin:5px 0 24px}.pageHead h1{font-size:34px;letter-spacing:-1.4px;margin:8px 0}.pageHead p{color:var(--muted);font-size:14px;line-height:1.6;max-width:680px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;font-size:12px;font-weight:700;color:var(--ink);transition:.15s}.tab.active{background:var(--ink);border-color:var(--ink);color:white}.featureBand{border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:#fafbff;color:#606779;font-size:12px;line-height:1.65;margin:18px 0}.featureBand b{color:var(--ink)}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:20px;padding:22px;background:#fff}.panel h3{font-size:17px;margin-bottom:8px}.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;outline:none;color:var(--ink)}.field textarea{min-height:74px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}.callout{border:1px solid #e4eaff;background:#f7f9ff;border-radius:14px;padding:14px;font-size:12px;line-height:1.65;color:#606b85}.empty{border:1px dashed #d9dde6;border-radius:18px;padding:34px;text-align:center;color:var(--muted);font-size:13px}.drawerBack,.modalBack{display:none;position:fixed;inset:0;background:#10182b66;z-index:40}.drawer{height:100%;width:min(340px,88vw);background:#fff;padding:22px;overflow:auto;box-shadow:12px 0 45px #0002}.drawerHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.drawerLabel{font-size:10px;letter-spacing:1.6px;color:#9aa0ad;font-weight:850;margin:22px 10px 8px}.nav{display:block;width:100%;border:0;background:white;text-align:left;border-radius:12px;padding:13px 12px;font-size:13px;font-weight:700;color:#333846;margin:3px 0}.nav:hover,.nav.active{background:var(--blue2);color:var(--blue)}.modalBack{align-items:center;justify-content:center;padding:16px}.modal{background:#fff;width:min(490px,100%);border-radius:23px;padding:24px;max-height:88vh;overflow:auto;box-shadow:0 25px 80px #0003}.modal h2{font-size:21px;margin:0 0 8px}.modal p{font-size:13px;color:var(--muted);line-height:1.6}.modalActions{display:flex;gap:9px;margin-top:17px;flex-wrap:wrap}.modalActions button{flex:1}.credBox{margin-top:12px;border:1px solid #ccebd8;background:#f2fbf6;border-radius:14px;padding:13px;font-size:12px;line-height:1.7;color:#114e38}.credBox code{display:block;background:#fff;border:1px solid #d5efe0;padding:8px 10px;border-radius:9px;margin-top:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#171923;word-break:break-all}.toast{position:fixed;z-index:80;left:50%;bottom:28px;transform:translate(-50%,15px);opacity:0;background:#191c25;color:white;border-radius:12px;padding:12px 17px;font-size:12px;transition:.2s;pointer-events:none;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.bottomNav{display:none}.footer{border-top:1px solid var(--line);padding:24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.splash{position:fixed;inset:0;z-index:100;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .35s,visibility .35s}.splash.hide{opacity:0;visibility:hidden}.splashInner{text-align:center;padding:25px}.splashMark{width:70px;height:70px;border-radius:23px;margin:0 auto 20px;background:#edf1ff;color:var(--blue);display:grid;place-items:center;font-size:22px;font-weight:900;letter-spacing:-1px}.spinner{width:24px;height:24px;border:2px solid #e5e9f3;border-top-color:var(--blue);border-radius:50%;margin:22px auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.splash small{color:var(--muted);font-size:11px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1220px;margin:auto;min-height:100vh}.top{height:72px;position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:14px}.menuBtn,.iconBtn{height:42px;width:42px;border:1px solid var(--line);background:#fff;border-radius:14px;font-size:20px;color:var(--ink)}.brand{font-weight:850;font-size:15px;letter-spacing:-.35px;line-height:1.15}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.7px;margin-top:5px;font-weight:750}.spacer{flex:1}.balanceBtn{border:1px solid var(--line);border-radius:14px;background:#fff;padding:8px 13px;text-align:left;color:var(--muted);font-size:10px}.balanceBtn b{display:block;color:var(--ink);font-size:13px;margin-top:3px}.userBtn{height:42px;width:42px;border:0;border-radius:14px;background:#eaf0ff;color:var(--blue);font-weight:850}.main{padding:28px 24px 80px}.view{display:none;animation:fade .22s ease}.view.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:850;color:var(--blue)}h1,h2,h3,p{margin-top:0}.hero{min-height:330px;border:1px solid #e8ecf7;border-radius:28px;padding:44px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:30px;background:radial-gradient(circle at 82% 45%,#e8edff 0,transparent 32%),linear-gradient(120deg,#fbfcff,#fff 65%);overflow:hidden}.hero h1{font-size:clamp(36px,5.5vw,62px);letter-spacing:-2.8px;line-height:1.02;margin:14px 0}.hero p{max-width:540px;color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:24px}.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:750}.primary{background:var(--blue);color:white;box-shadow:0 7px 16px #315efb2b}.light{background:white;border:1px solid var(--line);color:var(--ink)}.heroVisual{height:230px;display:grid;place-items:center;position:relative}.heroOrb{height:190px;width:190px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#e8edff);box-shadow:inset 0 0 0 1px #dfe6ff,0 25px 60px #405cbd1a;position:relative}.heroOrb:before,.heroOrb:after{content:"";position:absolute;inset:-15px;border:1px solid #dce4ff;border-radius:50%}.heroOrb:after{inset:-30px;border-style:dashed}.heroOrb strong{font-size:36px;letter-spacing:-2px;color:var(--blue)}.floatTag{position:absolute;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:11px 14px;border-radius:14px;font-size:12px;font-weight:750}.tagA{top:18px;left:5px}.tagB{right:0;bottom:20px}.section{margin-top:38px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:17px;flex-wrap:wrap}.sectionHead h2{font-size:23px;letter-spacing:-.8px;margin:6px 0 0}.muted{color:var(--muted);font-size:13px;line-height:1.6}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.tile{border:1px solid var(--line);border-radius:20px;padding:20px;background:#fff;text-align:left;transition:.18s;min-width:0}.tile:hover,.package:hover{box-shadow:var(--shadow);transform:translateY(-2px)}.tileTop{display:flex;align-items:center;gap:13px}.logoBox{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:var(--soft);flex:none}.logoBox img{width:29px;height:29px;object-fit:contain}.tile h3{font-size:16px;margin:0 0 4px}.tile p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}.tileFoot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:12px;font-weight:750;color:var(--blue)}.arrow{font-size:18px}.gameLogo{font-size:25px}.packageGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.package{border:1px solid var(--line);border-radius:19px;padding:18px;background:#fff;transition:.18s;display:flex;flex-direction:column}.packageTop{display:flex;align-items:center;gap:11px}.package h3{font-size:15px;margin:0 0 4px}.package .desc{font-size:12px;color:var(--muted);line-height:1.55;margin:14px 0;flex:1}.price{font-size:19px;font-weight:850;letter-spacing:-.5px}.price small{font-size:11px;color:var(--muted);font-weight:500}.package .btn{width:100%;margin-top:15px}.pill{display:inline-flex;border-radius:99px;background:var(--blue2);color:var(--blue);padding:6px 9px;font-size:10px;font-weight:800}.pill.ok{background:#e7f8f1;color:var(--green)}.pill.warn{background:#fff3e6;color:#c96a08}.pill.sold{background:#fdecec;color:var(--red)}.pageHead{margin:5px 0 24px}.pageHead h1{font-size:34px;letter-spacing:-1.4px;margin:8px 0}.pageHead p{color:var(--muted);font-size:14px;line-height:1.6;max-width:680px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;font-size:12px;font-weight:700;color:var(--ink);transition:.15s}.tab.active{background:var(--ink);border-color:var(--ink);color:white}.featureBand{border:1px solid var(--line);border-radius:18px;padding:16px 18px;background:#fafbff;color:#606779;font-size:12px;line-height:1.65;margin:18px 0}.featureBand b{color:var(--ink)}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:20px;padding:22px;background:#fff}.panel h3{font-size:17px;margin-bottom:8px}.field{margin:14px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;outline:none;color:var(--ink)}.field textarea{min-height:74px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}.callout{border:1px solid #e4eaff;background:#f7f9ff;border-radius:14px;padding:14px;font-size:12px;line-height:1.65;color:#606b85}.empty{border:1px dashed #d9dde6;border-radius:18px;padding:34px;text-align:center;color:var(--muted);font-size:13px}.drawerBack,.modalBack{display:none;position:fixed;inset:0;background:#10182b66;z-index:40}.drawer{height:100%;width:min(340px,88vw);background:#fff;padding:22px;overflow:auto;box-shadow:12px 0 45px #0002}.drawerHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.drawerLabel{font-size:10px;letter-spacing:1.6px;color:#9aa0ad;font-weight:850;margin:22px 10px 8px}.nav{display:block;width:100%;border:0;background:white;text-align:left;border-radius:12px;padding:13px 12px;font-size:13px;font-weight:700;color:#333846;margin:3px 0}.nav:hover,.nav.active{background:var(--blue2);color:var(--blue)}.modalBack{align-items:center;justify-content:center;padding:16px}.modal{background:#fff;width:min(540px,100%);border-radius:23px;padding:24px;max-height:90vh;overflow:auto;box-shadow:0 25px 80px #0003}.modal h2{font-size:21px;margin:0 0 8px}.modal p{font-size:13px;color:var(--muted);line-height:1.6}.modalActions{display:flex;gap:9px;margin-top:17px;flex-wrap:wrap}.modalActions button{flex:1}.credBox{margin-top:12px;border:1px solid #ccebd8;background:#f2fbf6;border-radius:14px;padding:13px;font-size:12px;line-height:1.7;color:#114e38}.credBox code{display:block;background:#fff;border:1px solid #d5efe0;padding:8px 10px;border-radius:9px;margin-top:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#171923;word-break:break-all}.toast{position:fixed;z-index:80;left:50%;bottom:28px;transform:translate(-50%,15px);opacity:0;background:#191c25;color:white;border-radius:12px;padding:12px 17px;font-size:12px;transition:.2s;pointer-events:none;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.bottomNav{display:none}.footer{border-top:1px solid var(--line);padding:24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.splash{position:fixed;inset:0;z-index:100;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .35s,visibility .35s}.splash.hide{opacity:0;visibility:hidden}.splashInner{text-align:center;padding:25px}.splashMark{width:70px;height:70px;border-radius:23px;margin:0 auto 20px;background:#edf1ff;color:var(--blue);display:grid;place-items:center;font-size:22px;font-weight:900;letter-spacing:-1px}.spinner{width:24px;height:24px;border:2px solid #e5e9f3;border-top-color:var(--blue);border-radius:50%;margin:22px auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.splash small{color:var(--muted);font-size:11px}
 
 /* ==================== GIAO DIỆN TAB MỚI HIỆN ĐẠI ==================== */
 body.standaloneTab .top,body.standaloneTab .bottomNav,body.standaloneTab .footer,body.standaloneTab #drawerBack{display:none!important}
@@ -18,6 +18,41 @@ body.standaloneTab .main{padding:20px 18px 56px}
 .tabBarLeft{display:flex;align-items:center;gap:12px}
 .tabBadge{height:38px;padding:0 12px;border-radius:12px;background:var(--blue2);color:var(--blue);font-size:11px;font-weight:850;display:inline-flex;align-items:center;gap:6px;letter-spacing:.4px}
 .tabBarRight{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ==================== GALLERY ẢNH ACC GAME HIỆN ĐẠI ==================== */
+.accCover{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:var(--soft);margin-bottom:13px;border:1px solid var(--line);cursor:zoom-in}
+.accCover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .28s ease}
+.accCover:hover img{transform:scale(1.03)}
+.accPhotoBadge{position:absolute;right:9px;bottom:9px;background:rgba(15,20,35,.72);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:750;padding:4px 9px;border-radius:99px}
+.accThumbsCard{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:-4px 0 11px;scrollbar-width:none}
+.accThumbsCard::-webkit-scrollbar{display:none}
+.accThumbsCard img{width:46px;height:34px;object-fit:cover;border-radius:8px;border:1.5px solid var(--line);flex:none;cursor:pointer;transition:.15s}
+.accThumbsCard img:hover{border-color:var(--blue);transform:translateY(-1px)}
+
+.galleryBox{margin:0 0 14px}
+.galleryMain{position:relative;width:100%;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#0f1320;border:1px solid var(--line);cursor:zoom-in}
+.galleryMain img{width:100%;height:100%;object-fit:cover;display:block}
+.galleryZoomHint{position:absolute;right:10px;bottom:10px;background:rgba(15,20,35,.72);backdrop-filter:blur(8px);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;pointer-events:none}
+.galleryStrip{display:flex;gap:8px;overflow-x:auto;padding:9px 2px 3px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.galleryThumb{width:68px;height:48px;border-radius:10px;overflow:hidden;border:2px solid transparent;flex:none;padding:0;background:var(--soft);scroll-snap-align:start;opacity:.72;transition:.15s}
+.galleryThumb.active{border-color:var(--blue);opacity:1;box-shadow:0 4px 12px rgba(49,94,251,.22)}
+.galleryThumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+.lightboxBack{display:none;position:fixed;inset:0;z-index:95;background:rgba(10,14,24,.94);backdrop-filter:blur(10px);align-items:center;justify-content:center;flex-direction:column;padding:16px}
+.lightboxStage{position:relative;width:100%;max-width:960px;height:74vh;display:flex;align-items:center;justify-content:center}
+.lightboxStage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lbBtn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.14);color:#fff;font-size:20px;display:grid;place-items:center}
+.lbPrev{left:8px}.lbNext{right:8px}
+.lbClose{position:fixed;top:18px;right:18px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.15);color:#fff;font-size:22px;display:grid;place-items:center;z-index:96}
+.lbCounter{color:#d7deee;font-size:12px;font-weight:750;margin-top:10px}
+.lbStrip{display:flex;gap:8px;overflow-x:auto;max-width:94vw;padding:10px 4px}
+.lbStrip img{width:58px;height:42px;object-fit:cover;border-radius:8px;border:2px solid transparent;opacity:.55;cursor:pointer;flex:none}
+.lbStrip img.active{border-color:#fff;opacity:1}
+
+.adminImgPreview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.adminImgItem{position:relative;width:66px;height:48px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.adminImgItem img{width:100%;height:100%;object-fit:cover}
+.adminImgItem button{position:absolute;top:2px;right:2px;width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;font-size:11px;line-height:1;padding:0}
 
 @media(max-width:760px){.top{height:64px;padding:0 12px;gap:9px}.brand{font-size:12px}.brand small{font-size:8px;letter-spacing:1.2px}.main{padding:17px 13px 100px}.hero{padding:27px 21px;min-height:0;grid-template-columns:1fr;border-radius:22px}.hero h1{font-size:39px}.hero p{font-size:13px}.heroVisual{display:none}.tiles{grid-template-columns:repeat(2,1fr);gap:9px}.tile{padding:14px}.logoBox{width:43px;height:43px}.logoBox img{width:25px;height:25px}.tile h3{font-size:13px}.tile p{font-size:10px}.tileFoot{margin-top:14px}.packageGrid{grid-template-columns:1fr 1fr;gap:9px}.package{padding:13px}.package h3{font-size:13px}.package .desc{font-size:11px}.price{font-size:16px}.pageHead h1{font-size:29px}.twoCol{grid-template-columns:1fr}.sectionHead h2{font-size:20px}.balanceBtn{padding:7px 9px;font-size:9px}.balanceBtn b{font-size:11px}.userBtn{width:37px;height:37px}.menuBtn{width:38px;height:38px}.bottomNav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));justify-content:space-around}.bottomNav button{border:0;background:none;color:var(--muted);font-size:9px;display:grid;justify-items:center;gap:3px}.bottomNav b{font-size:18px}.footer{padding-bottom:85px}}
 @media(max-width:370px){.brand{font-size:10px}.packageGrid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.balanceBtn{display:none}}
@@ -46,7 +81,7 @@ body.standaloneTab .main{padding:20px 18px 56px}
 
  <section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản game</div><h2>Bán & Thuê tài khoản game</h2><p class="muted" style="margin:5px 0 0">Admin đăng acc bán hoặc cho thuê; khách thanh toán ví là nhận TK/MK ngay.</p></div><button class="btn light" onclick="openInNewTab('rent')">Mở tab Kho Game ↗</button></div><div class="tiles" id="homeGameTiles"></div></section>
 
- <section class="section"><div class="sectionHead"><div><div class="eyebrow">Minh bạch & an toàn</div><h2>Vận hành chủ động</h2></div></div><div class="tiles"><div class="tile"><div class="eyebrow">01</div><h3 style="margin-top:12px">Tự tính tiền & trừ ví</h3><p class="muted">Nhập số lượng hoặc chọn gói thuê/mua acc, hệ thống tính giá và trừ ví tức thì.</p></div><div class="tile"><div class="eyebrow">02</div><h3 style="margin-top:12px">Trả TK/MK ngay lập tức</h3><p class="muted">Mua/thuê acc game xong hiển thị ngay thông tin đăng nhập & hạn thuê trong đơn hàng.</p></div><div class="tile"><div class="eyebrow">03</div><h3 style="margin-top:12px">Quản trị toàn diện</h3><p class="muted">Thêm game mới, đăng acc bán/thuê, chỉnh giá buff và duyệt nạp/đơn ngay trong Admin.</p></div></div></section>
+ <section class="section"><div class="sectionHead"><div><div class="eyebrow">Minh bạch & an toàn</div><h2>Vận hành chủ động</h2></div></div><div class="tiles"><div class="tile"><div class="eyebrow">01</div><h3 style="margin-top:12px">Tự tính tiền & trừ ví</h3><p class="muted">Nhập số lượng hoặc chọn gói thuê/mua acc, hệ thống tính giá và trừ ví tức thì.</p></div><div class="tile"><div class="eyebrow">02</div><h3 style="margin-top:12px">Trả TK/MK ngay lập tức</h3><p class="muted">Mua/thuê acc game xong hiển thị ngay thông tin đăng nhập & hạn thuê trong đơn hàng.</p></div><div class="tile"><div class="eyebrow">03</div><h3 style="margin-top:12px">Quản trị toàn diện</h3><p class="muted">Thêm game mới, đăng acc bán/thuê kèm ảnh chi tiết, chỉnh giá buff ngay trong Admin.</p></div></div></section>
 </section>
 
 <section class="view" id="buff">
@@ -57,7 +92,7 @@ body.standaloneTab .main{padding:20px 18px 56px}
 </section>
 
 <section class="view" id="rent">
-<div class="pageHead"><div class="eyebrow">Game account store</div><h1>Kho bán & thuê tài khoản game</h1><p>Tự động mở rộng theo danh sách game đang có trên hệ thống và tài khoản do Admin đăng bán/cho thuê.</p></div>
+<div class="pageHead"><div class="eyebrow">Game account store</div><h1>Kho bán & thuê tài khoản game</h1><p>Xem ảnh đội hình/trang bị chi tiết, chạm vào ảnh để phóng to toàn màn hình. Thanh toán xong nhận TK/MK ngay.</p></div>
 <div class="featureBand"><b>Quy định:</b> Khi mua hoặc thuê thành công, hệ thống tự động trừ số dư ví và cấp ngay tài khoản/mật khẩu trong mục Đơn hàng.</div>
 <div class="tabs" id="rentGameTabs"></div>
 <div id="allRentSections"></div>
@@ -91,12 +126,18 @@ body.standaloneTab .main{padding:20px 18px 56px}
 
     <div class="panel">
       <h3>Đăng bán / Cho thuê Acc Game</h3>
-      <p class="muted">Khách thanh toán xong sẽ trừ tiền ví và tự động trả Tài khoản / Mật khẩu ngay.</p>
+      <p class="muted">Chọn ảnh chính + nhiều ảnh phụ từ máy (tự nén nhẹ) hoặc dán link ảnh.</p>
       <div class="field"><label>Chọn game</label><select id="accGameSelect"></select></div>
       <div class="field"><label>Hình thức</label><select id="accModeSelect" onchange="toggleAdminAccMode()"><option value="sell">Bán đứt tài khoản</option><option value="rent">Cho thuê tài khoản</option></select></div>
       <div class="field"><label>Tiêu đề / Thông tin acc</label><input id="accTitle" placeholder="Ví dụ: Acc Rank Cao Thủ - Full tướng"></div>
       <div class="field"><label id="accPriceLabel">Giá bán (VNĐ)</label><input id="accPrice" type="number" min="1000" step="1000" placeholder="Ví dụ: 150000"></div>
       <div class="field" id="accRentHoursWrap" style="display:none"><label>Thời hạn thuê (giờ)</label><input id="accRentHours" type="number" min="1" value="24" placeholder="Ví dụ: 24"></div>
+      <div class="field">
+        <label>Ảnh acc game (Ảnh đầu tiên là ảnh chính, các ảnh sau là ảnh phụ)</label>
+        <input id="accImageFiles" type="file" accept="image/*" multiple onchange="handleAdminImageFiles(event)">
+        <div class="adminImgPreview" id="adminImgPreview"></div>
+      </div>
+      <div class="field"><label>Hoặc dán thêm URL ảnh (mỗi dòng 1 link)</label><textarea id="accImageUrls" placeholder="https://...&#10;https://..."></textarea></div>
       <div class="field"><label>Tài khoản game (trả tự động cho khách)</label><input id="accUsername" placeholder="Tên đăng nhập / ID game"></div>
       <div class="field"><label>Mật khẩu game (trả tự động cho khách)</label><input id="accPassword" placeholder="Mật khẩu / thông tin đăng nhập"></div>
       <div class="field"><label>Ghi chú / Điều kiện bàn giao</label><input id="accNote" placeholder="Ví dụ: Không đổi mật khẩu khi thuê"></div>
@@ -167,7 +208,19 @@ body.standaloneTab .main{padding:20px 18px 56px}
 <button class="nav" id="navLogoutBtn" style="display:none" onclick="logoutUser()">↪　Đăng xuất</button>
 <button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
 
-<div class="modalBack" id="productModal"><div class="modal" id="modalBox"></div></div>
+<div class="modalBack" id="productModal" onclick="if(event.target===this)closeProduct()"><div class="modal" id="modalBox"></div></div>
+
+<div class="lightboxBack" id="imageLightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lbClose" onclick="closeLightbox()" aria-label="Đóng">×</button>
+  <div class="lightboxStage">
+    <button class="lbBtn lbPrev" onclick="stepLightbox(-1)" aria-label="Ảnh trước">‹</button>
+    <img id="lbMainImg" src="" alt="Xem ảnh phóng to">
+    <button class="lbBtn lbNext" onclick="stepLightbox(1)" aria-label="Ảnh sau">›</button>
+  </div>
+  <div class="lbCounter" id="lbCounter">1 / 1</div>
+  <div class="lbStrip" id="lbStrip"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -250,6 +303,9 @@ let isAdmin = false;
 let currentAccount = null;
 let activeBuffPlatform = 'ALL';
 let activeRentGame = 'ALL';
+let pendingAdminImages = [];
+let activeGalleryImages = [];
+let activeGalleryIdx = 0;
 
 const asArray = value => Array.isArray(value)
   ? value.filter(Boolean)
@@ -326,6 +382,12 @@ function saveGameAccounts(list) {
   const base = (inv && typeof inv === 'object' && !Array.isArray(inv)) ? inv : {};
   base.gameAccounts = asArray(list);
   write(STORAGE.inventory, base);
+}
+
+function getAccImages(acc) {
+  const imgs = asArray(acc?.images).map(s => String(s || '').trim()).filter(Boolean);
+  if (!imgs.length && acc?.mainImage) imgs.push(String(acc.mainImage).trim());
+  return imgs;
 }
 
 function currentUser() {
@@ -836,28 +898,119 @@ function submitBuffOrder(platform, itemId) {
   go("orders");
 }
 
+/* ==================== GALLERY & LIGHTBOX ẢNH ACC GAME ==================== */
+function renderGalleryHtml(images, accId) {
+  if (!images || !images.length) return '';
+  return `
+    <div class="galleryBox">
+      <div class="galleryMain" onclick="openLightboxByAcc('${escapeHtml(accId)}', activeGalleryIdx)">
+        <img id="galleryMainImg" src="${escapeHtml(images[0])}" alt="Ảnh chính tài khoản">
+        <span class="galleryZoomHint">🔍 Chạm để phóng to (${images.length} ảnh)</span>
+      </div>
+      ${images.length > 1 ? `
+        <div class="galleryStrip" id="galleryStrip">
+          ${images.map((src, idx) => `
+            <button type="button" class="galleryThumb ${idx === 0 ? 'active' : ''}" onclick="selectGallerySlide(${idx})" aria-label="Ảnh ${idx + 1}">
+              <img src="${escapeHtml(src)}" alt="Ảnh phụ ${idx + 1}">
+            </button>
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function selectGallerySlide(idx) {
+  if (!activeGalleryImages.length) return;
+  activeGalleryIdx = Math.max(0, Math.min(idx, activeGalleryImages.length - 1));
+  const mainImg = document.getElementById("galleryMainImg");
+  if (mainImg) mainImg.src = activeGalleryImages[activeGalleryIdx];
+  document.querySelectorAll("#galleryStrip .galleryThumb").forEach((btn, i) => {
+    btn.classList.toggle("active", i === activeGalleryIdx);
+  });
+}
+
+function openLightboxByAcc(accId, startIdx = 0) {
+  const acc = getGameAccounts().find(a => String(a.id) === String(accId));
+  const imgs = getAccImages(acc);
+  if (!imgs.length) return;
+  openLightbox(imgs, startIdx);
+}
+
+function openLightbox(images, startIdx = 0) {
+  activeGalleryImages = images.slice();
+  activeGalleryIdx = Math.max(0, Math.min(startIdx, activeGalleryImages.length - 1));
+  const lb = document.getElementById("imageLightbox");
+  if (!lb) return;
+  lb.style.display = "flex";
+  updateLightboxView();
+}
+
+function updateLightboxView() {
+  if (!activeGalleryImages.length) return;
+  const img = document.getElementById("lbMainImg");
+  const counter = document.getElementById("lbCounter");
+  const strip = document.getElementById("lbStrip");
+  if (img) img.src = activeGalleryImages[activeGalleryIdx];
+  if (counter) counter.textContent = `${activeGalleryIdx + 1} / ${activeGalleryImages.length}`;
+  if (strip) {
+    strip.innerHTML = activeGalleryImages.map((src, i) => `
+      <img src="${escapeHtml(src)}" class="${i === activeGalleryIdx ? 'active' : ''}" onclick="activeGalleryIdx=${i};updateLightboxView()" alt="Ảnh ${i + 1}">
+    `).join("");
+  }
+}
+
+function stepLightbox(dir) {
+  if (!activeGalleryImages.length) return;
+  activeGalleryIdx = (activeGalleryIdx + dir + activeGalleryImages.length) % activeGalleryImages.length;
+  updateLightboxView();
+}
+
+function closeLightbox() {
+  const lb = document.getElementById("imageLightbox");
+  if (lb) lb.style.display = "none";
+}
+
+(function bindLightboxSwipe() {
+  let startX = 0;
+  const stage = document.querySelector(".lightboxStage");
+  if (!stage) return;
+  stage.addEventListener("touchstart", e => { startX = e.changedTouches[0]?.clientX || 0; }, { passive: true });
+  stage.addEventListener("touchend", e => {
+    const dx = (e.changedTouches[0]?.clientX || 0) - startX;
+    if (Math.abs(dx) > 40) stepLightbox(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
 /* ==================== MUA / THUÊ ACC GAME (TRỪ VÍ & TRẢ TK/MK NGAY) ==================== */
-function openGameAccountModal(accId) {
+function openGameAccountModal(accId, initialSlide = 0) {
   const acc = getGameAccounts().find(a => String(a.id) === String(accId));
   if (!acc) return;
   const isRent = acc.mode === 'rent';
   const available = acc.status === 'available';
   const user = currentUser();
   const box = document.getElementById("modalBox");
+  const images = getAccImages(acc);
+  activeGalleryImages = images.slice();
+  activeGalleryIdx = Math.max(0, Math.min(initialSlide, Math.max(0, images.length - 1)));
+  const galleryHtml = renderGalleryHtml(images, acc.id);
 
   if (!available) {
     box.innerHTML = `
+      ${galleryHtml}
       <span class="pill sold">${isRent ? 'Đang cho thuê' : 'Đã bán'}</span>
       <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
       <p>${escapeHtml(acc.note || 'Tài khoản hiện không còn khả dụng.')}</p>
       <div class="modalActions"><button class="btn primary" onclick="closeProduct()">Đóng</button></div>
     `;
     document.getElementById("productModal").style.display = "flex";
+    if (initialSlide > 0) selectGallerySlide(initialSlide);
     return;
   }
 
   if (!user || !user.uid) {
     box.innerHTML = `
+      ${galleryHtml}
       <span class="pill">${escapeHtml(acc.gameName)} · ${isRent ? 'Thuê ' + acc.rentHours + 'h' : 'Bán đứt'}</span>
       <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
       <p>${escapeHtml(acc.note || 'Thanh toán xong hệ thống sẽ cấp ngay Tài khoản & Mật khẩu.')}</p>
@@ -868,11 +1021,13 @@ function openGameAccountModal(accId) {
       </div>
     `;
     document.getElementById("productModal").style.display = "flex";
+    if (initialSlide > 0) selectGallerySlide(initialSlide);
     return;
   }
 
   const bal = checkIsAdmin(user) ? Infinity : getBalance(user.uid);
   box.innerHTML = `
+    ${galleryHtml}
     <span class="pill ok">Sẵn sàng · ${escapeHtml(acc.gameName)}</span>
     <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
     <p>${escapeHtml(acc.note || 'Thông tin đăng nhập sẽ hiển thị ngay sau khi thanh toán thành công.')}</p>
@@ -886,6 +1041,7 @@ function openGameAccountModal(accId) {
     </div>
   `;
   document.getElementById("productModal").style.display = "flex";
+  if (initialSlide > 0) selectGallerySlide(initialSlide);
 }
 
 function buyOrRentGameAccount(accId) {
@@ -959,7 +1115,59 @@ function buyOrRentGameAccount(accId) {
   `;
 }
 
-/* ==================== QUẢN TRỊ ADMIN (THÊM GAME, ĐĂNG ACC, GIÁ BUFF) ==================== */
+/* ==================== QUẢN TRỊ ADMIN (THÊM GAME, ĐĂNG ACC + ẢNH, GIÁ BUFF) ==================== */
+function compressImageFile(file, maxW = 960, quality = 0.78) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleAdminImageFiles(event) {
+  const files = Array.from(event.target?.files || []);
+  if (!files.length) return;
+  for (const f of files.slice(0, 8)) {
+    try {
+      const dataUrl = await compressImageFile(f);
+      pendingAdminImages.push(dataUrl);
+    } catch (_) {}
+  }
+  event.target.value = "";
+  renderAdminImagePreview();
+}
+
+function removePendingAdminImage(idx) {
+  pendingAdminImages.splice(idx, 1);
+  renderAdminImagePreview();
+}
+
+function renderAdminImagePreview() {
+  const box = document.getElementById("adminImgPreview");
+  if (!box) return;
+  box.innerHTML = pendingAdminImages.map((src, idx) => `
+    <div class="adminImgItem" title="${idx === 0 ? 'Ảnh chính' : 'Ảnh phụ ' + idx}">
+      <img src="${src}" alt="Preview ${idx + 1}">
+      <button type="button" onclick="removePendingAdminImage(${idx})">×</button>
+    </div>
+  `).join("");
+}
+
 function toggleAdminAccMode() {
   const mode = document.getElementById("accModeSelect")?.value;
   const wrap = document.getElementById("accRentHoursWrap");
@@ -1019,6 +1227,11 @@ function createGameAccount() {
   const accUsername = (document.getElementById("accUsername")?.value || "").trim();
   const accPassword = (document.getElementById("accPassword")?.value || "").trim();
   const note = (document.getElementById("accNote")?.value || "").trim();
+  const urlLines = (document.getElementById("accImageUrls")?.value || "")
+    .split(/\r?\n/)
+    .map(s => s.trim())
+    .filter(Boolean);
+  const images = [...pendingAdminImages, ...urlLines];
 
   if (!title) { toast("Nhập tiêu đề / mô tả acc."); return; }
   if (!Number.isFinite(price) || price <= 0) { toast("Nhập giá hợp lệ."); return; }
@@ -1033,6 +1246,7 @@ function createGameAccount() {
     title,
     price,
     rentHours,
+    images,
     accUsername,
     accPassword,
     note,
@@ -1043,9 +1257,13 @@ function createGameAccount() {
 
   document.getElementById("accTitle").value = "";
   document.getElementById("accPrice").value = "";
+  document.getElementById("accImageUrls").value = "";
   document.getElementById("accUsername").value = "";
   document.getElementById("accPassword").value = "";
   document.getElementById("accNote").value = "";
+  pendingAdminImages = [];
+  renderAdminImagePreview();
+
   toast("Đã đăng tài khoản game lên kho");
   renderRent();
   loadAdmin();
@@ -1169,19 +1387,22 @@ async function loadAdmin() {
       invHost.textContent = "Chưa có tài khoản game nào trong kho.";
     } else {
       invHost.className = "";
-      invHost.innerHTML = accs.map(a => `
-        <div class="panel" style="padding:12px;margin:8px 0">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-            <b>[${escapeHtml(a.gameName)}] ${escapeHtml(a.title)}</b>
-            <span class="pill ${a.status === 'available' ? 'ok' : (a.status === 'rented' ? 'warn' : 'sold')}">${a.status === 'available' ? 'Sẵn sàng' : (a.status === 'rented' ? 'Đang thuê' : 'Đã bán')}</span>
+      invHost.innerHTML = accs.map(a => {
+        const imgs = getAccImages(a);
+        return `
+          <div class="panel" style="padding:12px;margin:8px 0">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+              <b>[${escapeHtml(a.gameName)}] ${escapeHtml(a.title)} (${imgs.length} ảnh)</b>
+              <span class="pill ${a.status === 'available' ? 'ok' : (a.status === 'rented' ? 'warn' : 'sold')}">${a.status === 'available' ? 'Sẵn sàng' : (a.status === 'rented' ? 'Đang thuê' : 'Đã bán')}</span>
+            </div>
+            <div class="muted" style="margin-top:4px">${a.mode === 'rent' ? 'Thuê ' + Number(a.rentHours || 24) + 'h' : 'Bán đứt'} · ${money(a.price)} · TK: <b>${escapeHtml(a.accUsername)}</b> / MK: <b>${escapeHtml(a.accPassword)}</b>${a.buyerUsername ? ' · Khách: <b>' + escapeHtml(a.buyerUsername) + '</b>' : ''}</div>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+              ${a.status !== 'available' ? `<button class="btn light" onclick="relistGameAccount('${escapeHtml(a.id)}')">Mở lại kho (đã đổi MK)</button>` : ''}
+              <button class="btn light" style="color:var(--red)" onclick="deleteGameAccount('${escapeHtml(a.id)}')">Xóa</button>
+            </div>
           </div>
-          <div class="muted" style="margin-top:4px">${a.mode === 'rent' ? 'Thuê ' + Number(a.rentHours || 24) + 'h' : 'Bán đứt'} · ${money(a.price)} · TK: <b>${escapeHtml(a.accUsername)}</b> / MK: <b>${escapeHtml(a.accPassword)}</b>${a.buyerUsername ? ' · Khách: <b>' + escapeHtml(a.buyerUsername) + '</b>' : ''}</div>
-          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-            ${a.status !== 'available' ? `<button class="btn light" onclick="relistGameAccount('${escapeHtml(a.id)}')">Mở lại kho (đã đổi MK)</button>` : ''}
-            <button class="btn light" style="color:var(--red)" onclick="deleteGameAccount('${escapeHtml(a.id)}')">Xóa</button>
-          </div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
     }
   }
 
@@ -1388,15 +1609,28 @@ function renderRent() {
               const avail = a.status === 'available';
               const badgeCls = avail ? 'ok' : (a.status === 'rented' ? 'warn' : 'sold');
               const badgeTxt = avail ? (isRent ? 'Cho thuê' : 'Đang bán') : (a.status === 'rented' ? 'Đang thuê' : 'Đã bán');
+              const imgs = getAccImages(a);
+              const coverHtml = imgs.length ? `
+                <div class="accCover" onclick="openLightboxByAcc('${escapeHtml(a.id)}', 0)">
+                  <img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(a.title)}">
+                  <span class="accPhotoBadge">🖼 ${imgs.length} ảnh</span>
+                </div>
+                ${imgs.length > 1 ? `
+                  <div class="accThumbsCard">
+                    ${imgs.slice(1).map((src, idx) => `<img src="${escapeHtml(src)}" alt="Ảnh phụ ${idx + 1}" onclick="openLightboxByAcc('${escapeHtml(a.id)}', ${idx + 1})">`).join('')}
+                  </div>
+                ` : ''}
+              ` : '';
               return `
                 <article class="package">
+                  ${coverHtml}
                   <div class="packageTop">
                     <div class="logoBox"><span class="gameLogo">${escapeHtml(g.icon || '🎮')}</span></div>
                     <div><h3>${escapeHtml(a.title)}</h3><span class="pill ${badgeCls}">${badgeTxt}</span></div>
                   </div>
                   <p class="desc">${escapeHtml(a.note || 'Thanh toán xong tự động hiển thị Tài khoản & Mật khẩu.')}</p>
                   <div class="price">${money(a.price)} <small>${isRent ? '/ ' + Number(a.rentHours || 24) + ' giờ thuê' : '/ mua đứt'}</small></div>
-                  <button class="btn ${avail ? 'primary' : 'light'}" onclick="openGameAccountModal('${escapeHtml(a.id)}')">${avail ? (isRent ? 'Thuê ngay →' : 'Mua ngay →') : 'Xem trạng thái'}</button>
+                  <button class="btn ${avail ? 'primary' : 'light'}" onclick="openGameAccountModal('${escapeHtml(a.id)}')">${avail ? (isRent ? 'Xem & Thuê ngay →' : 'Xem & Mua ngay →') : 'Xem chi tiết'}</button>
                 </article>
               `;
             }).join('')}
@@ -1420,6 +1654,35 @@ function openInNewTab(viewName, filterVal) {
   window.open(url.toString(), "_blank", "noopener");
 }
 
+function updateStandaloneBannerText(viewId) {
+  const titleEl = document.getElementById("standaloneTabTitle");
+  if (!titleEl) return;
+  const labelMap = {
+    home: "Trang chủ — Trung Tâm Thương Mại",
+    buff: "Dịch vụ Mắt xem & Theo dõi",
+    rent: "Kho Bán & Thuê Acc Game",
+    wallet: "Ví tài khoản",
+    orders: "Đơn hàng của tôi",
+    admin: "Quản trị hệ thống",
+    login: "Đăng nhập tài khoản",
+    register: "Đăng ký tài khoản"
+  };
+  titleEl.textContent = labelMap[viewId] || "Trung Tâm Thương Mại";
+}
+
+function returnToMainHomeFromTab() {
+  document.body.classList.remove("standaloneTab");
+  const bar = document.getElementById("standaloneTabBar");
+  if (bar) bar.remove();
+  try {
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("tab");
+    cleanUrl.searchParams.delete("filter");
+    window.history.replaceState({}, "", cleanUrl.toString());
+  } catch (_) {}
+  go("home");
+}
+
 function mountStandaloneTabBannerIfNeeded() {
   const params = new URLSearchParams(window.location.search);
   const tab = params.get("tab");
@@ -1430,19 +1693,19 @@ function mountStandaloneTabBannerIfNeeded() {
   const main = document.querySelector("main.main");
   const bar = document.createElement("div");
   bar.className = "tabBarTop";
-  const labelMap = { buff: "Dịch vụ Mắt xem & Theo dõi", rent: "Kho Bán & Thuê Acc Game", wallet: "Ví tài khoản", orders: "Đơn hàng của tôi", admin: "Quản trị hệ thống" };
+  bar.id = "standaloneTabBar";
   bar.innerHTML = `
     <div class="tabBarLeft">
       <span class="tabBadge">↗ TAB RIÊNG</span>
       <div>
-        <div style="font-weight:850;font-size:14px">${escapeHtml(labelMap[tab] || 'Trung Tâm Thương Mại')}</div>
+        <div id="standaloneTabTitle" style="font-weight:850;font-size:14px">Trung Tâm Thương Mại</div>
         <div class="muted" style="font-size:11px">Đồng bộ trực tiếp với tài khoản & kho dữ liệu hiện tại</div>
       </div>
     </div>
     <div class="tabBarRight">
       <button class="btn light" style="padding:9px 13px;font-size:12px" onclick="go('wallet')">Ví</button>
       <button class="btn light" style="padding:9px 13px;font-size:12px" onclick="go('orders')">Đơn hàng</button>
-      <button class="btn primary" style="padding:9px 13px;font-size:12px" onclick="go('home')">Trang chủ</button>
+      <button class="btn primary" style="padding:9px 13px;font-size:12px" onclick="returnToMainHomeFromTab()">← Về Trang chủ đầy đủ</button>
     </div>
   `;
   main.prepend(bar);
@@ -1460,6 +1723,7 @@ function go(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   drawer(false);
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+  updateStandaloneBannerText(id);
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='home')renderHomeGames();
   if(id==='buff')renderBuff();
