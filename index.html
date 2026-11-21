@@ -129,7 +129,7 @@ body.standaloneTab .main{padding:20px 18px 56px}
 </section>
 
 <section class="view" id="wallet">
-  <div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Chọn mệnh giá nạp, bấm <b>Nạp ngay</b> để mở mã QR & STK chuyển khoản, sau đó gửi yêu cầu để Admin duyệt cộng tiền.</p></div>
+  <div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Chọn mệnh giá nạp hoặc nhập số tiền, bấm <b>Nạp ngay</b> để chuyển sang tab chuyển khoản.</p></div>
   <div class="twoCol">
     <div class="panel">
       <h3>Số dư hiện tại</h3>
@@ -145,23 +145,33 @@ body.standaloneTab .main{padding:20px 18px 56px}
       </div>
       <div class="field"><label>Hoặc nhập số tiền muốn nạp (tối thiểu 10.000đ)</label><input id="topupAmount" type="number" min="10000" step="1000" placeholder="Ví dụ: 50000" oninput="onTopupAmountInput()"></div>
       <button type="button" class="btn greenBtn" style="width:100%" onclick="revealPaymentSection()">Nạp ngay</button>
-
-      <div class="bankCard" id="paymentInfoCard" style="display:none">
-        <div class="eyebrow" style="margin-bottom:6px">Thông tin chuyển khoản & mã QR</div>
-        <div class="bankRow"><span>Số tài khoản</span><b id="displayStkText">PSP2621916400000092</b></div>
-        <div class="bankRow"><span>Chủ tài khoản</span><b id="displayAcctName">TRUONG VAN PHONG</b></div>
-        <div class="bankRow"><span>Số tiền cần chuyển</span><b id="displayTopupAmount" style="color:var(--green)">0 đ</b></div>
-        <div class="bankRow"><span>Nội dung CK gợi ý</span><b id="displayTransferNote">NAP [TÊN TÀI KHOẢN]</b></div>
-        <div class="qrBox" id="qrDisplayBox">
-          <img src="qr_banking.png.jpg" alt="Mã QR chuyển khoản" onclick="openLightbox(['qr_banking.png.jpg'], 0)" style="cursor:zoom-in">
-          <div class="muted" style="font-size:11px;margin-top:6px">Chạm vào mã QR để phóng to</div>
-        </div>
-        <button type="button" class="btn primary" style="width:100%;margin-top:12px" onclick="requestTopup()">Tôi đã chuyển khoản — Gửi yêu cầu duyệt</button>
-      </div>
-
-      <div class="callout" style="margin-top:13px">Chọn mệnh giá hoặc nhập số tiền, sau đó bấm <b>Nạp ngay</b> màu xanh phía trên để hiện mã QR & thông tin thanh toán.</div>
+      <div class="callout" style="margin-top:13px">Khi bấm <b>Nạp ngay</b>, hệ thống sẽ chuyển hẳn sang tab <b>Chuyển khoản</b> để hiển thị mã QR & thông tin thanh toán.</div>
     </div>
     <div class="panel"><h3>Lịch sử giao dịch</h3><div id="transactionsList" class="empty">Đăng nhập để xem lịch sử.</div></div>
+  </div>
+</section>
+
+<section class="view" id="transfer">
+  <div class="pageHead">
+    <div class="eyebrow">Bank transfer</div>
+    <h1>Chuyển khoản nạp tiền</h1>
+    <p>Quét mã QR hoặc chuyển khoản đúng thông tin bên dưới, sau đó bấm xác nhận để gửi yêu cầu lên Admin duyệt.</p>
+  </div>
+  <div class="panel" style="max-width:620px">
+    <div class="bankCard" id="paymentInfoCard" style="margin-top:0">
+      <div class="eyebrow" style="margin-bottom:6px">Thông tin chuyển khoản & mã QR</div>
+      <div class="bankRow"><span>Số tài khoản</span><b id="displayStkText">PSP2621916400000092</b></div>
+      <div class="bankRow"><span>Chủ tài khoản</span><b id="displayAcctName">TRUONG VAN PHONG</b></div>
+      <div class="bankRow"><span>Số tiền cần chuyển</span><b id="displayTopupAmount" style="color:var(--green)">0 đ</b></div>
+      <div class="bankRow"><span>Nội dung CK gợi ý</span><b id="displayTransferNote">NAP [TÊN TÀI KHOẢN]</b></div>
+      <div class="qrBox" id="qrDisplayBox">
+        <img src="qr_banking.png.jpg" alt="Mã QR chuyển khoản" onclick="openLightbox(['qr_banking.png.jpg'], 0)" style="cursor:zoom-in">
+        <div class="muted" style="font-size:11px;margin-top:6px">Chạm vào mã QR để phóng to</div>
+      </div>
+      <button type="button" class="btn primary" style="width:100%;margin-top:14px" onclick="requestTopup()">Tôi đã chuyển khoản — Gửi yêu cầu duyệt</button>
+      <button type="button" class="btn light" style="width:100%;margin-top:9px" onclick="go('wallet')">← Quay lại chọn số tiền</button>
+    </div>
+    <div class="callout" style="margin-top:13px">Yêu cầu sẽ chờ Admin xác nhận. Không tự động cộng tiền khi khách gửi yêu cầu.</div>
   </div>
 </section>
 
@@ -845,6 +855,7 @@ const DEFAULT_PAYMENT_INFO = {
   qrImage: 'qr_banking.png.jpg'
 };
 let pendingQrImage = '';
+let pendingTopupAmount = 0;
 
 function getPaymentInfo() {
   const s = getSettings();
@@ -857,6 +868,7 @@ function getPaymentInfo() {
 }
 
 function selectTopupPreset(amount, btnEl) {
+  pendingTopupAmount = Number(amount || 0);
   const input = document.getElementById("topupAmount");
   if (input) input.value = amount;
   document.querySelectorAll("#topupPresets .presetBtn").forEach(b => b.classList.remove("active"));
@@ -866,6 +878,7 @@ function selectTopupPreset(amount, btnEl) {
 
 function onTopupAmountInput() {
   const val = Number(document.getElementById("topupAmount")?.value || 0);
+  pendingTopupAmount = val;
   document.querySelectorAll("#topupPresets .presetBtn").forEach(b => {
     const btnAmt = Number(b.textContent.replace(/[^\d]/g, ''));
     b.classList.toggle("active", btnAmt === val);
@@ -880,18 +893,15 @@ function revealPaymentSection() {
     go("login");
     return;
   }
-  const amount = Number(document.getElementById("topupAmount")?.value || 0);
+  const amount = Number(document.getElementById("topupAmount")?.value || pendingTopupAmount || 0);
   if (!Number.isSafeInteger(amount) || amount < 10000) {
     toast("Vui lòng chọn mệnh giá hoặc nhập số tiền tối thiểu 10.000đ.");
     document.getElementById("topupAmount")?.focus();
     return;
   }
+  pendingTopupAmount = amount;
   refreshPaymentGuide();
-  const card = document.getElementById("paymentInfoCard");
-  if (card) {
-    card.style.display = "block";
-    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
+  go("transfer");
 }
 
 function refreshPaymentGuide() {
@@ -902,7 +912,8 @@ function refreshPaymentGuide() {
   const noteEl = document.getElementById("displayTransferNote");
   const qrBox = document.getElementById("qrDisplayBox");
   const u = currentUser();
-  const amt = Number(document.getElementById("topupAmount")?.value || 0);
+  const inputVal = Number(document.getElementById("topupAmount")?.value || 0);
+  const amt = inputVal >= 1000 ? inputVal : Number(pendingTopupAmount || 0);
   const tag = u?.username ? u.username.toUpperCase() : "TAIKHOAN";
 
   if (stkEl) stkEl.textContent = info.stk;
@@ -1106,7 +1117,7 @@ async function loadWallet() {
 
 async function requestTopup() {
   const session = currentUser();
-  const amount = Number(document.getElementById("topupAmount").value);
+  const amount = Number(document.getElementById("topupAmount")?.value || pendingTopupAmount || 0);
   if (!session?.uid) { toast("Đăng nhập trước khi nạp tiền."); go("login"); return; }
   if (!Number.isSafeInteger(amount) || amount < 10000) { toast("Số tiền nạp tối thiểu là 10.000đ."); return; }
   try {
@@ -1125,11 +1136,11 @@ async function requestTopup() {
     const deposits = getDeposits();
     deposits.push(request);
     write(STORAGE.deposits, deposits);
-    document.getElementById("topupAmount").value = "";
+    pendingTopupAmount = 0;
+    if (document.getElementById("topupAmount")) document.getElementById("topupAmount").value = "";
     document.querySelectorAll("#topupPresets .presetBtn").forEach(b => b.classList.remove("active"));
-    const card = document.getElementById("paymentInfoCard");
-    if (card) card.style.display = "none";
     toast("Đã gửi yêu cầu nạp tiền. Chờ Admin xác nhận.");
+    go("wallet");
   } catch (error) {
     toast(firebaseErrorMessage(error));
     console.error(error);
@@ -2092,6 +2103,7 @@ function go(id){
   if(id==='buff')renderBuff();
   if(id==='rent')renderRent();
   if(id==='wallet'){loadWallet();refreshPaymentGuide();}
+  if(id==='transfer'){refreshPaymentGuide();}
   if(id==='support')loadSupport();
   if(id==='orders')loadOrders();
   if(id==='admin')loadAdmin();
