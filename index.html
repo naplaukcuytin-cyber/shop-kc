@@ -19,6 +19,21 @@ body.standaloneTab .main{padding:20px 18px 56px}
 .tabBadge{height:38px;padding:0 12px;border-radius:12px;background:var(--blue2);color:var(--blue);font-size:11px;font-weight:850;display:inline-flex;align-items:center;gap:6px;letter-spacing:.4px}
 .tabBarRight{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
+/* ==================== THẺ DANH MỤC GAME CÓ ẢNH BÌA ==================== */
+.gameCategoryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.gameCatCard{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#fff;text-align:left;padding:0;transition:.2s;display:flex;flex-direction:column;cursor:pointer}
+.gameCatCard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#cdd8ff}
+.gameCatThumb{position:relative;width:100%;aspect-ratio:16/9;background:#0f172a;overflow:hidden}
+.gameCatThumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+.gameCatCard:hover .gameCatThumb img{transform:scale(1.04)}
+.gameCatCount{position:absolute;top:11px;right:11px;background:rgba(15,23,42,.78);backdrop-filter:blur(8px);color:#fff;font-size:11px;font-weight:800;padding:5px 10px;border-radius:99px}
+.gameCatBody{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.gameCatTitle{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.gameCatTitle h3{margin:0;font-size:17px;font-weight:850;color:var(--ink)}
+.gameCatBody p{margin:0 0 14px;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+.gameCatFoot{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:var(--blue);padding-top:10px;border-top:1px solid var(--line)}
+@media(max-width:760px){.gameCategoryGrid{grid-template-columns:1fr;gap:12px}}
+
 /* ==================== GALLERY ẢNH ACC GAME HIỆN ĐẠI ==================== */
 .accCover{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:var(--soft);margin-bottom:13px;border:1px solid var(--line);cursor:zoom-in}
 .accCover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .28s ease}
@@ -129,7 +144,7 @@ body.standaloneTab .main{padding:20px 18px 56px}
  <button class="tile" onclick="openPlatform('TikTok')"><div class="tileTop"><div class="logoBox"><img src="https://cdn.simpleicons.org/tiktok/111111" alt="TikTok"></div><div><h3>TikTok</h3><p>Mắt livestream, tim & follow</p></div></div><div class="tileFoot">Khám phá <span class="arrow">→</span></div></button>
  </div></section>
 
- <section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản game</div><h2>Bán & Thuê tài khoản game</h2><p class="muted" style="margin:5px 0 0">Admin đăng acc bán hoặc cho thuê; khách thanh toán ví là nhận TK/MK ngay.</p></div><button class="btn light" onclick="go('rent')">Xem tất cả →</button></div><div class="tiles" id="homeGameTiles"></div></section>
+ <section class="section"><div class="sectionHead"><div><div class="eyebrow">Kho tài khoản game</div><h2>Bán & Thuê tài khoản game</h2><p class="muted" style="margin:5px 0 0">Admin đăng acc bán hoặc cho thuê; khách thanh toán ví là nhận TK/MK ngay.</p></div><button class="btn light" onclick="selectRentGame('ALL');go('rent')">Xem tất cả →</button></div><div class="tiles" id="homeGameTiles"></div></section>
 
  <section class="section"><div class="sectionHead"><div><div class="eyebrow">Minh bạch & an toàn</div><h2>Vận hành chủ động</h2></div></div><div class="tiles"><div class="tile"><div class="eyebrow">01</div><h3 style="margin-top:12px">Tự tính tiền & trừ ví</h3><p class="muted">Nhập số lượng hoặc chọn gói thuê/mua acc, hệ thống tính giá và trừ ví tức thì.</p></div><div class="tile"><div class="eyebrow">02</div><h3 style="margin-top:12px">Trả TK/MK ngay lập tức</h3><p class="muted">Mua/thuê acc game xong hiển thị ngay thông tin đăng nhập & hạn thuê trong đơn hàng.</p></div><div class="tile"><div class="eyebrow">03</div><h3 style="margin-top:12px">Quản trị toàn diện</h3><p class="muted">Thêm game mới, đăng acc bán/thuê kèm ảnh chi tiết, chỉnh giá buff ngay trong Admin.</p></div></div></section>
 </section>
@@ -222,6 +237,8 @@ body.standaloneTab .main{padding:20px 18px 56px}
       <div class="field"><label>Tên game mới</label><input id="newGameName" placeholder="Ví dụ: Free Fire, Liên Quân, Valorant..."></div>
       <div class="field"><label>Biểu tượng (Emoji)</label><input id="newGameEmoji" maxlength="4" placeholder="Ví dụ: 🔥 hoặc ⚔️"></div>
       <div class="field"><label>Mô tả ngắn</label><input id="newGameDesc" placeholder="Bán & cho thuê tài khoản..."></div>
+      <div class="field"><label>Ảnh bìa mục game (chọn từ máy hoặc để trống dùng ảnh mặc định)</label><input id="newGameCoverFile" type="file" accept="image/*" onchange="handleNewGameCoverFile(event)"></div>
+      <div class="field"><label>Hoặc dán link ảnh bìa game</label><input id="newGameCoverUrl" placeholder="https://..."></div>
       <button class="btn primary" onclick="addGameCatalog()">Thêm game vào hệ thống</button>
       <div id="adminGameList" style="margin-top:14px"></div>
     </div>
@@ -457,10 +474,31 @@ const DEFAULT_BUFF_DATA = {
   }
 };
 
+const GAME_COVER_SVGS = {
+  'fc mobile': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g1' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#062c1e'/><stop offset='50%' stop-color='#0f6b46'/><stop offset='100%' stop-color='#19b372'/></linearGradient></defs><rect width='800' height='450' fill='url(#g1)'/><circle cx='650' cy='90' r='160' fill='rgba(255,255,255,0.08)'/><rect x='40' y='40' width='720' height='370' rx='24' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='3'/><circle cx='400' cy='225' r='70' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='3'/><text x='56' y='115' fill='#a7f3d0' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>EA SPORTS</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='74' font-weight='900'>FC MOBILE</text><text x='56' y='270' fill='#d1fae5' font-family='sans-serif' font-size='26' font-weight='600'>KHO TÀI KHOẢN ĐỘI HÌNH &amp; VIP</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#064e3b' font-family='sans-serif' font-size='20' font-weight='800'>MUA &amp; THUÊ ACC</text></svg>`),
+  'tft': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g2' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#17153b'/><stop offset='55%' stop-color='#2e236c'/><stop offset='100%' stop-color='#6c48c5'/></linearGradient></defs><rect width='800' height='450' fill='url(#g2)'/><polygon points='620,60 740,180 620,300 500,180' fill='rgba(250,204,21,0.16)' stroke='#facc15' stroke-width='3'/><polygon points='620,110 690,180 620,250 550,180' fill='rgba(250,204,21,0.22)'/><text x='56' y='115' fill='#fde047' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>TEAMFIGHT TACTICS</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='78' font-weight='900'>TFT</text><text x='56' y='270' fill='#e9d5ff' font-family='sans-serif' font-size='26' font-weight='600'>ĐẤU TRƯỜNG CHÂN LÝ · LINH THÚ</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#facc15'/><text x='166' y='346' text-anchor='middle' fill='#1e1b4b' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
+  'free fire': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g3' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#450a0a'/><stop offset='55%' stop-color='#b91c1c'/><stop offset='100%' stop-color='#f97316'/></linearGradient></defs><rect width='800' height='450' fill='url(#g3)'/><circle cx='660' cy='220' r='150' fill='rgba(255,255,255,0.1)'/><text x='56' y='115' fill='#fed7aa' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>GARENA SURVIVAL</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='74' font-weight='900'>FREE FIRE</text><text x='56' y='270' fill='#ffedd5' font-family='sans-serif' font-size='26' font-weight='600'>ACC SÚNG NÂNG CẤP · SKIN HIẾM</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#9a3412' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
+  'liên quân': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g4' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0c1e3e'/><stop offset='55%' stop-color='#1d4ed8'/><stop offset='100%' stop-color='#06b6d4'/></linearGradient></defs><rect width='800' height='450' fill='url(#g4)'/><circle cx='650' cy='210' r='145' fill='rgba(255,255,255,0.1)'/><text x='56' y='115' fill='#bae6fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>ARENA OF VALOR</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='68' font-weight='900'>LIÊN QUÂN</text><text x='56' y='270' fill='#e0f2fe' font-family='sans-serif' font-size='26' font-weight='600'>FULL TƯỚNG · TRANG PHỤC SSS</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
+  'other': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g5' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#111827'/><stop offset='55%' stop-color='#1e3a8a'/><stop offset='100%' stop-color='#315efb'/></linearGradient></defs><rect width='800' height='450' fill='url(#g5)'/><circle cx='650' cy='225' r='145' fill='rgba(255,255,255,0.08)'/><text x='56' y='115' fill='#93c5fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>GAME STORE</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='68' font-weight='900'>GAME KHÁC</text><text x='56' y='270' fill='#dbeafe' font-family='sans-serif' font-size='26' font-weight='600'>TỔNG HỢP TÀI KHOẢN GAME HOT</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`)
+};
+
+function getGameCoverUrl(game) {
+  if (game && game.coverImage) return game.coverImage;
+  const key = String(game?.name || '').trim().toLowerCase();
+  if (GAME_COVER_SVGS[key]) return GAME_COVER_SVGS[key];
+  if (key.includes('fc')) return GAME_COVER_SVGS['fc mobile'];
+  if (key.includes('tft') || key.includes('đấu trường')) return GAME_COVER_SVGS['tft'];
+  if (key.includes('free fire') || key === 'ff') return GAME_COVER_SVGS['free fire'];
+  if (key.includes('liên quân') || key.includes('lq')) return GAME_COVER_SVGS['liên quân'];
+  const label = String(game?.name || 'GAME').toUpperCase().replace(/[<>&'"]/g, '');
+  const sub = String(game?.desc || 'Bán & cho thuê tài khoản').replace(/[<>&'"]/g, '');
+  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='gc' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0f172a'/><stop offset='55%' stop-color='#1d4ed8'/><stop offset='100%' stop-color='#2563eb'/></linearGradient></defs><rect width='800' height='450' fill='url(#gc)'/><circle cx='660' cy='210' r='150' fill='rgba(255,255,255,0.09)'/><text x='56' y='115' fill='#93c5fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>KHO TÀI KHOẢN</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='64' font-weight='900'>${label}</text><text x='56' y='270' fill='#dbeafe' font-family='sans-serif' font-size='25' font-weight='600'>${sub}</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>CHỌN GAME →</text></svg>`);
+}
+
 const DEFAULT_GAMES = [
-  { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile' },
-  { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý' },
-  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác' }
+  { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile', coverImage: GAME_COVER_SVGS['fc mobile'] },
+  { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý', coverImage: GAME_COVER_SVGS['tft'] },
+  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác', coverImage: GAME_COVER_SVGS['other'] }
 ];
 
 let firebaseDB = null;
@@ -1624,11 +1662,25 @@ function toggleAdminAccMode() {
   if (label) label.textContent = mode === 'rent' ? 'Giá thuê (VNĐ)' : 'Giá bán đứt (VNĐ)';
 }
 
+let pendingNewGameCover = "";
+async function handleNewGameCoverFile(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  try {
+    pendingNewGameCover = await compressImageFile(file, 800, 0.82);
+    toast("Đã chọn ảnh bìa game");
+  } catch (_) {
+    toast("Không đọc được ảnh bìa.");
+  }
+  event.target.value = "";
+}
+
 function addGameCatalog() {
   if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền thêm game."); return; }
   const name = (document.getElementById("newGameName")?.value || "").trim();
   const icon = (document.getElementById("newGameEmoji")?.value || "🎮").trim() || "🎮";
   const desc = (document.getElementById("newGameDesc")?.value || "").trim() || ("Bán & cho thuê tài khoản " + name);
+  const coverUrl = (document.getElementById("newGameCoverUrl")?.value || "").trim();
   if (!name) { toast("Nhập tên game."); return; }
 
   const settings = getSettings();
@@ -1637,16 +1689,20 @@ function addGameCatalog() {
     toast("Game này đã có trong danh sách.");
     return;
   }
-  list.push({
+  const newGameObj = {
     id: 'game_' + Date.now().toString(36),
     name,
     icon,
     desc
-  });
+  };
+  newGameObj.coverImage = pendingNewGameCover || coverUrl || getGameCoverUrl(newGameObj);
+  list.push(newGameObj);
   settings.gamesCatalog = list;
   write(STORAGE.settings, settings);
   document.getElementById("newGameName").value = "";
   document.getElementById("newGameDesc").value = "";
+  if (document.getElementById("newGameCoverUrl")) document.getElementById("newGameCoverUrl").value = "";
+  pendingNewGameCover = "";
   toast("Đã thêm game: " + name);
   renderHomeGames();
   renderRent();
@@ -1983,19 +2039,36 @@ async function loadOrders() {
 }
 
 /* ==================== HIỂN THỊ DANH MỤC, MỞ TAB MỚI ĐẸP ==================== */
+function openGameStoreSection(gameName) {
+  activeRentGame = gameName;
+  go('rent');
+  const sec = document.getElementById('allRentSections');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+}
+
 function renderHomeGames() {
   const host = document.getElementById("homeGameTiles");
   if (!host) return;
   const games = getGamesCatalog();
-  host.innerHTML = games.map(g => `
-    <button class="tile" onclick="openInNewTab('rent','${escapeHtml(g.name)}')">
-      <div class="tileTop">
-        <div class="logoBox"><span class="gameLogo">${escapeHtml(g.icon || '🎮')}</span></div>
-        <div><h3>${escapeHtml(g.name)}</h3><p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p></div>
-      </div>
-      <div class="tileFoot">Xem ${escapeHtml(g.name)} <span class="arrow">→</span></div>
-    </button>
-  `).join("");
+  const accs = getGameAccounts();
+  host.className = "gameCategoryGrid";
+  host.innerHTML = games.map(g => {
+    const cover = getGameCoverUrl(g);
+    const count = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase() && a.status === 'available').length;
+    return `
+      <button type="button" class="gameCatCard" onclick="openGameStoreSection('${escapeHtml(g.name)}')">
+        <div class="gameCatThumb">
+          <img src="${escapeHtml(cover)}" alt="${escapeHtml(g.name)}">
+          <span class="gameCatCount">${count} acc sẵn sàng</span>
+        </div>
+        <div class="gameCatBody">
+          <div class="gameCatTitle"><span style="font-size:20px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
+          <p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p>
+          <div class="gameCatFoot"><span>Vào khu bán &amp; thuê ${escapeHtml(g.name)}</span><span>→</span></div>
+        </div>
+      </button>
+    `;
+  }).join("");
 }
 
 function renderBuff() {
@@ -2056,14 +2129,53 @@ function renderRent() {
 
   const host = document.getElementById('allRentSections');
   if (!host) return;
-  const visibleGames = games.filter(g => activeRentGame === 'ALL' || activeRentGame === g.name);
 
-  host.innerHTML = visibleGames.map(g => {
-    const items = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase());
-    return `
-      <section class="section">
+  if (activeRentGame === 'ALL') {
+    host.innerHTML = `
+      <section class="section" style="margin-top:16px">
         <div class="sectionHead">
-          <div><div class="eyebrow">Kho tài khoản</div><h2>${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</h2></div>
+          <div><div class="eyebrow">Danh sách mục game</div><h2>Chọn game muốn mua hoặc thuê tài khoản</h2></div>
+          <span class="pill">${games.length} mục game</span>
+        </div>
+        <div class="gameCategoryGrid">
+          ${games.map(g => {
+            const cover = getGameCoverUrl(g);
+            const totalItems = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase()).length;
+            const availItems = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase() && a.status === 'available').length;
+            return `
+              <button type="button" class="gameCatCard" onclick="selectRentGame('${escapeHtml(g.name)}')">
+                <div class="gameCatThumb">
+                  <img src="${escapeHtml(cover)}" alt="${escapeHtml(g.name)}">
+                  <span class="gameCatCount">${availItems}/${totalItems} acc sẵn sàng</span>
+                </div>
+                <div class="gameCatBody">
+                  <div class="gameCatTitle"><span style="font-size:20px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
+                  <p>${escapeHtml(g.desc || 'Bán & cho thuê tài khoản')}</p>
+                  <div class="gameCatFoot"><span>Nhấn để xem acc ${escapeHtml(g.name)}</span><span>→</span></div>
+                </div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </section>
+    `;
+    return;
+  }
+
+  const selectedGames = games.filter(g => String(g.name).toLowerCase() === String(activeRentGame).toLowerCase());
+  host.innerHTML = selectedGames.map(g => {
+    const items = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase());
+    const cover = getGameCoverUrl(g);
+    return `
+      <section class="section" style="margin-top:16px">
+        <div style="margin-bottom:14px">
+          <button type="button" class="btn light" style="padding:9px 14px;font-size:12px" onclick="selectRentGame('ALL')">← Quay lại tất cả game</button>
+        </div>
+        <div class="sectionHead">
+          <div style="display:flex;align-items:center;gap:12px">
+            <img src="${escapeHtml(cover)}" alt="${escapeHtml(g.name)}" style="width:74px;height:46px;object-fit:cover;border-radius:12px;border:1px solid var(--line)">
+            <div><div class="eyebrow">Khu bán &amp; thuê tài khoản</div><h2>${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</h2></div>
+          </div>
           <span class="pill">${items.length} tài khoản</span>
         </div>
         ${items.length ? `
