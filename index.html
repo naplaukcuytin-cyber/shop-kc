@@ -133,29 +133,47 @@ function setAccountUI(user) {
 }
 function firebaseErrorMessage(error) {
   const code = String(error?.code || "");
-  if (code.includes("PERMISSION_DENIED") || code.includes("permission-denied")) {
-    return "Firebase từ chối truy cập. Kiểm tra Realtime Database Rules tại dự án shop-kc.";
+  const message = String(error?.message || "");
+  if (code.includes("PERMISSION_DENIED") || code.includes("permission-denied") ||
+      /permission_denied|permission denied/i.test(message)) {
+    return "Firebase từ chối quyền đọc/ghi. Cần kiểm tra Realtime Database Rules của dự án shop-kc.";
   }
   if (!navigator.onLine) return "Thiết bị đang mất kết nối Internet.";
-  return "Không kết nối được kho tài khoản Firebase. Kiểm tra Database URL và Rules.";
+  if (/SDK chưa tải/i.test(message)) return message;
+  if (/network|failed to fetch|unavailable/i.test(message)) {
+    return "Không tải được Firebase. Kiểm tra mạng hoặc Safari đang chặn kết nối Firebase.";
+  }
+  return message || "Không kết nối được kho tài khoản Firebase. Kiểm tra Database URL và Rules.";
 }
 async function initAccountStorage() {
   try {
-    if (!window.firebase) throw new Error("Firebase SDK chưa tải");
-    if (!firebase.apps.length) firebase.initializeApp(legacyFirebaseConfig);
-    accountFirebase = firebase.database();
+    // Match the legacy site's initialization: mark the database client ready
+    // after SDK/app initialization. Do not block the login UI on an initial
+    // read; a denied read is reported by loginUser with the actual Firebase error.
+    if (!window.firebase || !window.firebase.initializeApp || !window.firebase.database) {
+      throw new Error("Firebase SDK chưa tải. Hãy kiểm tra kết nối mạng hoặc chặn nội dung của Safari.");
+    }
+    const existingApp = firebase.apps && firebase.apps.find(app =>
+      app.options && app.options.projectId === legacyFirebaseConfig.projectId
+    );
+    if (!existingApp) firebase.initializeApp(legacyFirebaseConfig);
+    accountFirebase = firebase.database(existingApp || undefined);
     accountUsersRef = accountFirebase.ref("shopcenavn/users");
     accountDepositsRef = accountFirebase.ref("shopcenavn/deposits");
-    await accountUsersRef.once("value");
     accountFirebaseReady = true;
-    await refreshAccount();
+    const msg = document.getElementById("loginMessage");
+    if (msg) msg.textContent = "Đã kết nối bộ lưu trữ tài khoản. Nhập tên tài khoản và mật khẩu.";
+    refreshAccount().catch(error => {
+      console.warn("Không thể khôi phục phiên Firebase:", error);
+      const loginMessage = document.getElementById("loginMessage");
+      if (loginMessage) loginMessage.textContent = firebaseErrorMessage(error);
+    });
   } catch (error) {
     accountFirebaseReady = false;
     setAccountUI(null);
-    const msg = firebaseErrorMessage(error);
-    const loginMessage = document.getElementById("loginMessage");
-    if (loginMessage) loginMessage.textContent = msg;
-    console.error("Firebase account storage:", error);
+    const msg = document.getElementById("loginMessage");
+    if (msg) msg.textContent = firebaseErrorMessage(error);
+    console.error("Firebase account storage initialization:", error);
   }
 }
 async function refreshAccount() {
@@ -176,8 +194,10 @@ async function refreshAccount() {
     setAccountUI(user);
     await loadWallet();
   } catch (error) {
-    console.error(error);
+    console.error("Khôi phục phiên đăng nhập:", error);
     setAccountUI(null);
+    const box = document.getElementById("loginMessage");
+    if (box) box.textContent = firebaseErrorMessage(error);
   }
 }
 async function registerUser() {
