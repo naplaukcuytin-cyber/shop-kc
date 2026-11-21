@@ -553,31 +553,55 @@ const DEFAULT_BUFF_DATA = {
   }
 };
 
-const GAME_COVER_SVGS = {
-  'fc mobile': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g1' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#062c1e'/><stop offset='50%' stop-color='#0f6b46'/><stop offset='100%' stop-color='#19b372'/></linearGradient></defs><rect width='800' height='450' fill='url(#g1)'/><circle cx='650' cy='90' r='160' fill='rgba(255,255,255,0.08)'/><rect x='40' y='40' width='720' height='370' rx='24' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='3'/><circle cx='400' cy='225' r='70' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='3'/><text x='56' y='115' fill='#a7f3d0' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>EA SPORTS</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='74' font-weight='900'>FC MOBILE</text><text x='56' y='270' fill='#d1fae5' font-family='sans-serif' font-size='26' font-weight='600'>KHO TÀI KHOẢN ĐỘI HÌNH &amp; VIP</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#064e3b' font-family='sans-serif' font-size='20' font-weight='800'>MUA &amp; THUÊ ACC</text></svg>`),
-  'tft': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g2' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#17153b'/><stop offset='55%' stop-color='#2e236c'/><stop offset='100%' stop-color='#6c48c5'/></linearGradient></defs><rect width='800' height='450' fill='url(#g2)'/><polygon points='620,60 740,180 620,300 500,180' fill='rgba(250,204,21,0.16)' stroke='#facc15' stroke-width='3'/><polygon points='620,110 690,180 620,250 550,180' fill='rgba(250,204,21,0.22)'/><text x='56' y='115' fill='#fde047' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>TEAMFIGHT TACTICS</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='78' font-weight='900'>TFT</text><text x='56' y='270' fill='#e9d5ff' font-family='sans-serif' font-size='26' font-weight='600'>ĐẤU TRƯỜNG CHÂN LÝ · LINH THÚ</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#facc15'/><text x='166' y='346' text-anchor='middle' fill='#1e1b4b' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
-  'free fire': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g3' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#450a0a'/><stop offset='55%' stop-color='#b91c1c'/><stop offset='100%' stop-color='#f97316'/></linearGradient></defs><rect width='800' height='450' fill='url(#g3)'/><circle cx='660' cy='220' r='150' fill='rgba(255,255,255,0.1)'/><text x='56' y='115' fill='#fed7aa' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>GARENA SURVIVAL</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='74' font-weight='900'>FREE FIRE</text><text x='56' y='270' fill='#ffedd5' font-family='sans-serif' font-size='26' font-weight='600'>ACC SÚNG NÂNG CẤP · SKIN HIẾM</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#9a3412' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
-  'liên quân': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g4' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0c1e3e'/><stop offset='55%' stop-color='#1d4ed8'/><stop offset='100%' stop-color='#06b6d4'/></linearGradient></defs><rect width='800' height='450' fill='url(#g4)'/><circle cx='650' cy='210' r='145' fill='rgba(255,255,255,0.1)'/><text x='56' y='115' fill='#bae6fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>ARENA OF VALOR</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='68' font-weight='900'>LIÊN QUÂN</text><text x='56' y='270' fill='#e0f2fe' font-family='sans-serif' font-size='26' font-weight='600'>FULL TƯỚNG · TRANG PHỤC SSS</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`),
-  'other': "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='g5' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#111827'/><stop offset='55%' stop-color='#1e3a8a'/><stop offset='100%' stop-color='#315efb'/></linearGradient></defs><rect width='800' height='450' fill='url(#g5)'/><circle cx='650' cy='225' r='145' fill='rgba(255,255,255,0.08)'/><text x='56' y='115' fill='#93c5fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>GAME STORE</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='68' font-weight='900'>GAME KHÁC</text><text x='56' y='270' fill='#dbeafe' font-family='sans-serif' font-size='26' font-weight='600'>TỔNG HỢP TÀI KHOẢN GAME HOT</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>XEM KHO ACC →</text></svg>`)
+const GAME_REAL_COVERS = {
+  'fc mobile': 'fcmobile.jpg',
+  'tft': 'tft.jpg',
+  'free fire': 'freefire.jpg',
+  'liên quân': 'lienquan.jpg',
+  'other': 'gamekhac.jpg'
 };
 
-function getGameCoverUrl(game) {
-  if (game && game.coverImage) return game.coverImage;
+function makeFallbackCover(title, sub, c1, c2) {
+  return "data:image/svg+xml;utf8," + encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'>` +
+    `<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>` +
+    `<stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/>` +
+    `</linearGradient></defs><rect width='800' height='450' fill='url(#g)'/>` +
+    `<circle cx='660' cy='210' r='150' fill='rgba(255,255,255,0.08)'/>` +
+    `<text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='64' font-weight='900'>${title}</text>` +
+    `<text x='56' y='270' fill='#dbeafe' font-family='sans-serif' font-size='25' font-weight='600'>${sub}</text></svg>`
+  );
+}
+
+function getGameFallbackCover(game) {
   const key = String(game?.name || '').trim().toLowerCase();
-  if (GAME_COVER_SVGS[key]) return GAME_COVER_SVGS[key];
-  if (key.includes('fc')) return GAME_COVER_SVGS['fc mobile'];
-  if (key.includes('tft') || key.includes('đấu trường')) return GAME_COVER_SVGS['tft'];
-  if (key.includes('free fire') || key === 'ff') return GAME_COVER_SVGS['free fire'];
-  if (key.includes('liên quân') || key.includes('lq')) return GAME_COVER_SVGS['liên quân'];
+  if (key.includes('fc')) return makeFallbackCover('FC MOBILE', 'Bán & cho thuê tài khoản', '#062c1e', '#19b372');
+  if (key.includes('tft') || key.includes('đấu trường')) return makeFallbackCover('TFT', 'Đấu Trường Chân Lý', '#17153b', '#6c48c5');
+  if (key.includes('free fire') || key === 'ff') return makeFallbackCover('FREE FIRE', 'Kho tài khoản Free Fire', '#450a0a', '#f97316');
+  if (key.includes('liên quân') || key.includes('lq')) return makeFallbackCover('LIÊN QUÂN', 'Kho tài khoản Liên Quân', '#0c1e3e', '#06b6d4');
   const label = String(game?.name || 'GAME').toUpperCase().replace(/[<>&'"]/g, '');
   const sub = String(game?.desc || 'Bán & cho thuê tài khoản').replace(/[<>&'"]/g, '');
-  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'><defs><linearGradient id='gc' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0f172a'/><stop offset='55%' stop-color='#1d4ed8'/><stop offset='100%' stop-color='#2563eb'/></linearGradient></defs><rect width='800' height='450' fill='url(#gc)'/><circle cx='660' cy='210' r='150' fill='rgba(255,255,255,0.09)'/><text x='56' y='115' fill='#93c5fd' font-family='sans-serif' font-size='22' font-weight='800' letter-spacing='4'>KHO TÀI KHOẢN</text><text x='56' y='215' fill='#ffffff' font-family='sans-serif' font-size='64' font-weight='900'>${label}</text><text x='56' y='270' fill='#dbeafe' font-family='sans-serif' font-size='25' font-weight='600'>${sub}</text><rect x='56' y='315' width='220' height='48' rx='14' fill='#ffffff'/><text x='166' y='346' text-anchor='middle' fill='#1e3a8a' font-family='sans-serif' font-size='20' font-weight='800'>CHỌN GAME →</text></svg>`);
+  return makeFallbackCover(label, sub, '#0f172a', '#2563eb');
+}
+
+function getGameCoverUrl(game) {
+  if (game && game.coverImage && !String(game.coverImage).startsWith('data:image/svg+xml')) {
+    return game.coverImage;
+  }
+  const key = String(game?.name || '').trim().toLowerCase();
+  if (GAME_REAL_COVERS[key]) return GAME_REAL_COVERS[key];
+  if (key.includes('fc')) return GAME_REAL_COVERS['fc mobile'];
+  if (key.includes('tft') || key.includes('đấu trường')) return GAME_REAL_COVERS['tft'];
+  if (key.includes('free fire') || key === 'ff') return GAME_REAL_COVERS['free fire'];
+  if (key.includes('liên quân') || key.includes('lq')) return GAME_REAL_COVERS['liên quân'];
+  if (key.includes('khác') || key.includes('other')) return GAME_REAL_COVERS['other'];
+  return getGameFallbackCover(game);
 }
 
 const DEFAULT_GAMES = [
-  { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile', coverImage: GAME_COVER_SVGS['fc mobile'] },
-  { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý', coverImage: GAME_COVER_SVGS['tft'] },
-  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác', coverImage: GAME_COVER_SVGS['other'] }
+  { id: 'fc_mobile', name: 'FC Mobile', icon: '⚽', desc: 'Bán & cho thuê tài khoản FC Mobile', coverImage: '' },
+  { id: 'tft', name: 'TFT', icon: '♟', desc: 'Bán & cho thuê tài khoản Đấu Trường Chân Lý', coverImage: '' },
+  { id: 'other_game', name: 'Game khác', icon: '🎮', desc: 'Kho tài khoản các tựa game khác', coverImage: '' }
 ];
 
 let firebaseDB = null;
@@ -659,98 +683,12 @@ function getBuffCatalog() {
   return merged;
 }
 
-function makeSampleAccSvg(title, sub, badge, c1, c2) {
-  return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 600'><defs><linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='${c1}'/><stop offset='100%' stop-color='${c2}'/></linearGradient></defs><rect width='960' height='600' fill='url(#bg)'/><circle cx='800' cy='120' r='210' fill='rgba(255,255,255,0.07)'/><circle cx='140' cy='520' r='180' fill='rgba(255,255,255,0.05)'/><rect x='36' y='36' width='888' height='528' rx='26' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='2.5'/><rect x='64' y='68' width='220' height='40' rx='12' fill='rgba(255,255,255,0.16)'/><text x='174' y='94' text-anchor='middle' fill='#ffffff' font-family='sans-serif' font-size='16' font-weight='800'>${badge}</text><text x='64' y='245' fill='#ffffff' font-family='sans-serif' font-size='48' font-weight='900'>${title}</text><text x='64' y='305' fill='rgba(255,255,255,0.86)' font-family='sans-serif' font-size='26' font-weight='600'>${sub}</text><rect x='64' y='365' width='832' height='145' rx='18' fill='rgba(15,23,42,0.42)' stroke='rgba(255,255,255,0.15)'/><text x='96' y='422' fill='#93c5fd' font-family='sans-serif' font-size='18' font-weight='800'>CHI TIẾT ĐỘI HÌNH &amp; TRANG BỊ</text><text x='96' y='468' fill='#ffffff' font-family='sans-serif' font-size='22' font-weight='700'>Bấm vào ảnh để phóng to xem toàn màn hình · Giao TK/MK tự động</text></svg>`);
-}
-
-const SAMPLE_GAME_ACCOUNTS = [
-  {
-    id: 'sample_fc_01',
-    kind: 'game_account',
-    gameName: 'FC Mobile',
-    mode: 'sell',
-    title: 'Acc FC Mobile OVR 112 Full Icon Huyền Thoại · Trắng Thông Tin',
-    price: 350000,
-    rentHours: 24,
-    images: [
-      makeSampleAccSvg('OVR 112 · FULL ICON', 'Đội hình chính · Gullit, R9, Maldini', 'FC MOBILE · #FC01', '#064e3b', '#059669'),
-      makeSampleAccSvg('KHO CẦU THỦ DỰ BỊ', 'Nhiều thẻ +5 vàng & nguyên liệu nâng cấp', 'ẢNH CHI TIẾT 2/3', '#0f172a', '#1e3a8a'),
-      makeSampleAccSvg('TÀI NGUYÊN & ĐÁ QUÝ', '45.000 Gems + 850M Coins sẵn trong acc', 'ẢNH CHI TIẾT 3/3', '#1e1b4b', '#4338ca')
-    ],
-    accUsername: 'demo_fcmobile_01',
-    accPassword: 'DemoPassword@123',
-    note: 'Trắng thông tin, đổi mật khẩu ngay sau khi mua · OVR 112 · Rank Huyền Thoại',
-    status: 'available',
-    isSample: true,
-    createdAt: Date.now() - 3600000
-  },
-  {
-    id: 'sample_fc_02',
-    kind: 'game_account',
-    gameName: 'FC Mobile',
-    mode: 'rent',
-    title: 'Thuê Acc FC Mobile OVR 114 Trải Nghiệm Đội Hình Tỷ Phú',
-    price: 35000,
-    rentHours: 24,
-    images: [
-      makeSampleAccSvg('THUÊ ACC OVR 114', 'Trải nghiệm siêu đội hình 24 giờ cực mượt', 'FC MOBILE · #FC02', '#7c2d12', '#ea580c'),
-      makeSampleAccSvg('SƠ ĐỒ 4-3-3 TẤN CÔNG', 'Full chỉ số tốc độ & sút xoáy', 'ẢNH CHI TIẾT 2/2', '#1e293b', '#0f766e')
-    ],
-    accUsername: 'rent_fcmobile_02',
-    accPassword: 'RentPass@24h',
-    note: 'Thuê 24h · Vui lòng không đổi mật khẩu hoặc phá đội hình trong thời gian thuê',
-    status: 'available',
-    isSample: true,
-    createdAt: Date.now() - 7200000
-  },
-  {
-    id: 'sample_tft_01',
-    kind: 'game_account',
-    gameName: 'TFT',
-    mode: 'sell',
-    title: 'Acc TFT Sở Hữu Linh Thú Tí Nị Hàng Hiệu + Sàn Đấu Thần Thoại',
-    price: 180000,
-    rentHours: 24,
-    images: [
-      makeSampleAccSvg('TFT · TÍ NỊ HÀNG HIỆU', 'Sàn đấu Thần Thoại + Chưởng lực VIP', 'TFT · #TFT01', '#2e1065', '#7c3aed'),
-      makeSampleAccSvg('BỘ SƯU TẬP LINH THÚ', 'Hơn 45 Linh thú 3 sao cực hiếm', 'ẢNH CHI TIẾT 2/2', '#172554', '#2563eb')
-    ],
-    accUsername: 'demo_tft_vip01',
-    accPassword: 'TftPass@2026',
-    note: 'Sạch thông tin · Đổi được email & mật khẩu Riot ngay lập tức',
-    status: 'available',
-    isSample: true,
-    createdAt: Date.now() - 10800000
-  },
-  {
-    id: 'sample_tft_02',
-    kind: 'game_account',
-    gameName: 'TFT',
-    mode: 'rent',
-    title: 'Thuê Acc TFT Full Tí Nị & Sàn Đấu Đẹp Leo Rank',
-    price: 20000,
-    rentHours: 12,
-    images: [
-      makeSampleAccSvg('THUÊ ACC TFT VIP', 'Full Linh thú Tí Nị · Leo rank cực cháy', 'TFT · #TFT02', '#312e81', '#4f46e5')
-    ],
-    accUsername: 'rent_tft_02',
-    accPassword: 'RentTft@12h',
-    note: 'Thuê 12 giờ · Đăng nhập Riot Client chơi ngay',
-    status: 'available',
-    isSample: true,
-    createdAt: Date.now() - 14400000
-  }
-];
-
 function getGameAccounts() {
   const inv = read(STORAGE.inventory, {});
   const raw = Array.isArray(inv)
-    ? inv.filter(x => x && x.kind === 'game_account')
-    : asArray(inv?.gameAccounts);
-  if (raw.length) return raw;
-  const s = getSettings();
-  if (s.hideSampleAccounts) return [];
-  return SAMPLE_GAME_ACCOUNTS.slice();
+    ? inv.filter(x => x && x.kind === 'game_account' && !x.isSample)
+    : asArray(inv?.gameAccounts).filter(x => x && !x.isSample);
+  return raw;
 }
 
 function saveGameAccounts(list) {
@@ -1904,6 +1842,30 @@ function removeGameCatalog(gameName) {
   loadAdmin();
 }
 
+async function changeGameCover(gameName, event) {
+  if (!checkIsAdmin()) return;
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  try {
+    const dataUrl = await compressImageFile(file, 960, 0.84);
+    const settings = getSettings();
+    const list = getGamesCatalog();
+    const target = list.find(g => g.name === gameName);
+    if (target) {
+      target.coverImage = dataUrl;
+      settings.gamesCatalog = list;
+      write(STORAGE.settings, settings);
+      toast("Đã cập nhật ảnh bìa cho " + gameName);
+      renderHomeGames();
+      renderRent();
+      loadAdmin();
+    }
+  } catch (_) {
+    toast("Không đọc được ảnh.");
+  }
+  event.target.value = "";
+}
+
 function createGameAccount() {
   if (!checkIsAdmin()) { toast("Chỉ Admin mới có quyền đăng acc."); return; }
   const gameName = document.getElementById("accGameSelect")?.value || "FC Mobile";
@@ -2066,7 +2028,16 @@ async function loadAdmin() {
   const gameListHost = document.getElementById("adminGameList");
   if (gameListHost) {
     gameListHost.innerHTML = games.map(g => `
-      <span class="pill" style="margin:4px 6px 0 0">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)} ${games.length > 1 ? `<button style="border:0;background:none;color:var(--red);font-weight:900;margin-left:4px" onclick="removeGameCatalog('${escapeHtml(g.name)}')">×</button>` : ''}</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;margin-top:6px">
+        <span style="font-size:12px;font-weight:750">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label class="btn light" style="padding:5px 10px;font-size:11px;cursor:pointer">
+            Đổi ảnh bìa
+            <input type="file" accept="image/*" style="display:none" onchange="changeGameCover('${escapeHtml(g.name)}', event)">
+          </label>
+          ${games.length > 1 ? `<button class="btn light" style="padding:5px 9px;font-size:11px;color:var(--red)" onclick="removeGameCatalog('${escapeHtml(g.name)}')">Xóa</button>` : ''}
+        </div>
+      </div>
     `).join("");
   }
 
@@ -2239,16 +2210,14 @@ function renderHomeGames() {
   const host = document.getElementById("homeGameTiles");
   if (!host) return;
   const games = getGamesCatalog();
-  const accs = getGameAccounts();
   host.className = "gameCategoryGrid";
   host.innerHTML = games.map(g => {
     const cover = getGameCoverUrl(g);
-    const count = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase() && a.status === 'available').length;
+    const fb = getGameFallbackCover(g);
     return `
       <button type="button" class="gameCatCard" onclick="openGameStoreSection('${escapeHtml(g.name)}')">
         <div class="gameCatThumb">
-          <img src="${escapeHtml(cover)}" alt="${escapeHtml(g.name)}">
-          <span class="gameCatCount">${count} acc sẵn sàng</span>
+          <img src="${escapeHtml(cover)}" onerror="this.onerror=null;this.src='${fb}'" alt="${escapeHtml(g.name)}">
         </div>
         <div class="gameCatBody">
           <div class="gameCatTitle"><span style="font-size:20px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
@@ -2387,18 +2356,14 @@ function renderRent() {
 
   if (tabsHost) {
     tabsHost.innerHTML = [
-      `<button class="tab ${activeRentGame === 'ALL' ? 'active' : ''}" onclick="selectRentGame('ALL')">Tất cả acc (${accs.length})</button>`,
-      ...games.map(g => {
-        const cnt = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase()).length;
-        return `<button class="tab ${activeRentGame === g.name ? 'active' : ''}" onclick="selectRentGame('${escapeHtml(g.name)}')">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)} (${cnt})</button>`;
-      })
+      `<button class="tab ${activeRentGame === 'ALL' ? 'active' : ''}" onclick="selectRentGame('ALL')">Tất cả game</button>`,
+      ...games.map(g => `<button class="tab ${activeRentGame === g.name ? 'active' : ''}" onclick="selectRentGame('${escapeHtml(g.name)}')">${escapeHtml(g.icon || '🎮')} ${escapeHtml(g.name)}</button>`)
     ].join("");
   }
 
   const host = document.getElementById('allRentSections');
   if (!host) return;
 
-  // Lọc danh sách acc theo game, hình thức (mua/thuê), khoảng giá, từ khóa & sắp xếp
   let filtered = accs.filter(a => {
     if (activeRentGame !== 'ALL' && String(a.gameName).toLowerCase() !== String(activeRentGame).toLowerCase()) return false;
     if (rentFilterMode !== 'ALL' && a.mode !== rentFilterMode) return false;
@@ -2464,12 +2429,11 @@ function renderRent() {
     <div class="gameCategoryGrid" style="margin-bottom:24px">
       ${games.map(g => {
         const cover = getGameCoverUrl(g);
-        const availItems = accs.filter(a => String(a.gameName).toLowerCase() === String(g.name).toLowerCase() && a.status === 'available').length;
+        const fb = getGameFallbackCover(g);
         return `
           <button type="button" class="gameCatCard" onclick="selectRentGame('${escapeHtml(g.name)}')">
             <div class="gameCatThumb">
-              <img src="${escapeHtml(cover)}" alt="${escapeHtml(g.name)}">
-              <span class="gameCatCount">${availItems} acc sẵn sàng</span>
+              <img src="${escapeHtml(cover)}" onerror="this.onerror=null;this.src='${fb}'" alt="${escapeHtml(g.name)}">
             </div>
             <div class="gameCatBody">
               <div class="gameCatTitle"><span style="font-size:19px">${escapeHtml(g.icon || '🎮')}</span><h3>${escapeHtml(g.name)}</h3></div>
@@ -2488,10 +2452,9 @@ function renderRent() {
     <section class="section" style="margin-top:10px">
       <div class="sectionHead">
         <div>
-          <div class="eyebrow">${activeRentGame === 'ALL' ? 'Toàn bộ kho tài khoản' : 'Danh mục đang chọn'}</div>
+          <div class="eyebrow">${activeRentGame === 'ALL' ? 'Kho tài khoản' : 'Danh mục đang chọn'}</div>
           <h2>${activeRentGame === 'ALL' ? 'Danh sách Acc Bán & Cho Thuê' : escapeHtml(activeRentGame)}</h2>
         </div>
-        <span class="pill ok">Tìm thấy ${filtered.length} tài khoản</span>
       </div>
       ${filtered.length ? `
         <div class="modernAccGrid">
@@ -2499,8 +2462,10 @@ function renderRent() {
         </div>
       ` : `
         <div class="empty">
-          Không tìm thấy tài khoản nào khớp với bộ lọc hiện tại.<br>
-          <button type="button" class="btn light" style="margin-top:12px" onclick="resetRentFilters()">Xóa bộ lọc để xem tất cả acc</button>
+          ${accs.length === 0
+            ? 'Hiện chưa có tài khoản nào được đăng trong mục này. Vui lòng quay lại sau khi Admin cập nhật kho.'
+            : 'Không tìm thấy tài khoản nào khớp với bộ lọc hiện tại.<br><button type="button" class="btn light" style="margin-top:12px" onclick="resetRentFilters()">Xóa bộ lọc để xem tất cả acc</button>'
+          }
         </div>
       `}
     </section>
