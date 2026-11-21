@@ -406,18 +406,28 @@ body.standaloneTab .main{padding:20px 18px 56px}
 
     <div class="panel">
       <h3>Đăng bán / Cho thuê Acc Game</h3>
-      <p class="muted">Chọn ảnh chính + nhiều ảnh phụ từ máy (tự nén nhẹ) hoặc dán link ảnh.</p>
+      <p class="muted">Hỗ trợ đăng không giới hạn số lượng ảnh chi tiết (tự động nén nhẹ để tải nhanh).</p>
       <div class="field"><label>Chọn game</label><select id="accGameSelect"></select></div>
       <div class="field"><label>Hình thức</label><select id="accModeSelect" onchange="toggleAdminAccMode()"><option value="sell">Bán đứt tài khoản</option><option value="rent">Cho thuê tài khoản</option></select></div>
-      <div class="field"><label>Tiêu đề / Thông tin acc</label><input id="accTitle" placeholder="Ví dụ: Acc Rank Cao Thủ - Full tướng"></div>
+      <div class="field"><label>Tiêu đề acc</label><input id="accTitle" placeholder="Ví dụ: Acc Rank Cao Thủ - Full Tướng & Skin SS"></div>
+      <div class="twoCol" style="gap:10px;margin:0">
+        <div class="field" style="margin:6px 0"><label>Rank / Bậc hạng</label><input id="accRank" placeholder="Ví dụ: Cao Thủ / Siêu Sao"></div>
+        <div class="field" style="margin:6px 0"><label>Tướng / Cầu thủ / OVR</label><input id="accHeroes" placeholder="Ví dụ: 115 Tướng / OVR 106"></div>
+      </div>
+      <div class="twoCol" style="gap:10px;margin:0">
+        <div class="field" style="margin:6px 0"><label>Trang phục / Vật phẩm nổi bật</label><input id="accSkins" placeholder="Ví dụ: 240 Skin, 3 Tuyệt Sắc"></div>
+        <div class="field" style="margin:6px 0"><label>Loại đăng nhập / Liên kết</label><input id="accLoginType" placeholder="Ví dụ: Trắng thông tin / Garena"></div>
+      </div>
       <div class="field"><label id="accPriceLabel">Giá bán (VNĐ)</label><input id="accPrice" type="number" min="1000" step="1000" placeholder="Ví dụ: 150000"></div>
       <div class="field" id="accRentHoursWrap" style="display:none"><label>Thời hạn thuê (giờ)</label><input id="accRentHours" type="number" min="1" value="24" placeholder="Ví dụ: 24"></div>
       <div class="field">
-        <label>Ảnh acc game (Ảnh đầu tiên là ảnh chính, các ảnh sau là ảnh phụ)</label>
+        <label>Ảnh acc game (Chọn bao nhiêu ảnh tùy ý — Ảnh đầu là ảnh chính)</label>
         <input id="accImageFiles" type="file" accept="image/*" multiple onchange="handleAdminImageFiles(event)">
+        <div class="muted" id="adminImgCountLabel" style="font-size:11px;margin-top:5px">Đã chọn: 0 ảnh</div>
         <div class="adminImgPreview" id="adminImgPreview"></div>
       </div>
       <div class="field"><label>Hoặc dán thêm URL ảnh (mỗi dòng 1 link)</label><textarea id="accImageUrls" placeholder="https://...&#10;https://..."></textarea></div>
+      <div class="field"><label>Mô tả chi tiết tài khoản</label><textarea id="accDetailDesc" placeholder="Nhập thông tin chi tiết về ngọc, đồ, thẻ cầu thủ, lịch sử nạp..."></textarea></div>
       <div class="field"><label>Tài khoản game (trả tự động cho khách)</label><input id="accUsername" placeholder="Tên đăng nhập / ID game"></div>
       <div class="field"><label>Mật khẩu game (trả tự động cho khách)</label><input id="accPassword" placeholder="Mật khẩu / thông tin đăng nhập"></div>
       <div class="field"><label>Ghi chú / Điều kiện bàn giao</label><input id="accNote" placeholder="Ví dụ: Không đổi mật khẩu khi thuê"></div>
@@ -1684,6 +1694,19 @@ function closeLightbox() {
 })();
 
 /* ==================== MUA / THUÊ ACC GAME (TRỪ VÍ & TRẢ TK/MK NGAY) ==================== */
+function buildAccSpecsHtml(acc) {
+  const isRent = acc.mode === 'rent';
+  const specs = [
+    acc.rank ? `🏆 Rank: ${escapeHtml(acc.rank)}` : '',
+    acc.heroes ? `⚔️ ${escapeHtml(acc.heroes)}` : '',
+    acc.skins ? `✨ ${escapeHtml(acc.skins)}` : '',
+    acc.loginType ? `🔐 ${escapeHtml(acc.loginType)}` : '',
+    isRent ? `⏱ Thời hạn: ${Number(acc.rentHours || 24)} giờ` : '🛡 Giao full thông tin',
+    '⚡ Trả TK/MK tự động'
+  ].filter(Boolean);
+  return `<div class="modernAccSpecs" style="margin:10px 0">${specs.map(s => `<span class="specChip">${s}</span>`).join('')}</div>`;
+}
+
 function openGameAccountModal(accId, initialSlide = 0) {
   const acc = getGameAccounts().find(a => String(a.id) === String(accId));
   if (!acc) return;
@@ -1696,13 +1719,18 @@ function openGameAccountModal(accId, initialSlide = 0) {
   activeGalleryImages = images.slice();
   activeGalleryIdx = Math.max(0, Math.min(initialSlide, Math.max(0, images.length - 1)));
   const galleryHtml = renderGalleryHtml(images, acc.id);
+  const specsHtml = buildAccSpecsHtml(acc);
+  const descHtml = acc.detailDesc ? `<p style="white-space:pre-line;margin:8px 0">${escapeHtml(acc.detailDesc)}</p>` : '';
+  const noteHtml = `<p class="muted" style="margin:6px 0">${escapeHtml(acc.note || 'Thanh toán xong hệ thống sẽ cấp ngay Tài khoản & Mật khẩu.')}</p>`;
 
   if (!available) {
     box.innerHTML = `
       ${galleryHtml}
       <span class="pill sold">${isRent ? 'Đang cho thuê' : 'Đã bán'}</span>
       <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
-      <p>${escapeHtml(acc.note || 'Tài khoản hiện không còn khả dụng.')}</p>
+      ${specsHtml}
+      ${descHtml}
+      ${noteHtml}
       <div class="modalActions"><button class="btn primary" onclick="closeProduct()">Đóng</button></div>
     `;
     document.getElementById("productModal").style.display = "flex";
@@ -1715,7 +1743,9 @@ function openGameAccountModal(accId, initialSlide = 0) {
       ${galleryHtml}
       <span class="pill">${escapeHtml(acc.gameName)} · ${isRent ? 'Thuê ' + acc.rentHours + 'h' : 'Bán đứt'}</span>
       <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
-      <p>${escapeHtml(acc.note || 'Thanh toán xong hệ thống sẽ cấp ngay Tài khoản & Mật khẩu.')}</p>
+      ${specsHtml}
+      ${descHtml}
+      ${noteHtml}
       <div class="callout">Giá: <b>${money(acc.price)}</b>. Vui lòng đăng nhập để thanh toán và nhận thông tin tài khoản ngay.</div>
       <div class="modalActions">
         <button class="btn light" onclick="closeProduct()">Đóng</button>
@@ -1727,94 +1757,119 @@ function openGameAccountModal(accId, initialSlide = 0) {
     return;
   }
 
-  const bal = checkIsAdmin(user) ? Infinity : getBalance(user.uid);
+  const isAdmin = checkIsAdmin(user);
+  const bal = isAdmin ? Infinity : Number(getBalance(user.uid) || 0);
+  const price = Number(acc.price || 0);
+  const enough = isAdmin || bal >= price;
+
   box.innerHTML = `
     ${galleryHtml}
     <span class="pill ok">Sẵn sàng · ${escapeHtml(acc.gameName)}</span>
     <h2 style="margin-top:10px">${escapeHtml(acc.title)}</h2>
-    <p>${escapeHtml(acc.note || 'Thông tin đăng nhập sẽ hiển thị ngay sau khi thanh toán thành công.')}</p>
-    <div class="callout">
+    ${specsHtml}
+    ${descHtml}
+    ${noteHtml}
+    <div class="callout" style="${!enough ? 'border-color:rgba(220,38,38,.35);background:rgba(220,38,38,.06)' : ''}">
       Hình thức: <b>${isRent ? 'Thuê tài khoản (' + Number(acc.rentHours || 24) + ' giờ)' : 'Mua đứt tài khoản'}</b><br>
-      Chi phí: <b>${money(acc.price)}</b> · Ví của bạn: <b>${checkIsAdmin(user) ? 'ADMIN' : money(bal)}</b>
+      Chi phí: <b>${money(price)}</b> · Ví của bạn: <b style="color:${enough ? 'inherit' : 'var(--red)'}">${isAdmin ? 'ADMIN' : money(bal)}</b>
+      ${!enough ? `<div style="color:var(--red);font-weight:750;margin-top:6px">Số dư ví không đủ (còn thiếu ${money(price - bal)}). Vui lòng nạp thêm tiền trước khi mua!</div>` : ''}
     </div>
     <div class="modalActions">
       <button class="btn light" onclick="closeProduct()">Hủy</button>
-      <button class="btn primary" onclick="buyOrRentGameAccount('${escapeHtml(acc.id)}')">${isRent ? 'Thuê & Nhận TK/MK ngay' : 'Mua & Nhận TK/MK ngay'}</button>
+      ${enough
+        ? `<button class="btn primary" onclick="buyOrRentGameAccount('${escapeHtml(acc.id)}')">${isRent ? 'Thuê & Nhận TK/MK ngay' : 'Mua & Nhận TK/MK ngay'}</button>`
+        : `<button class="btn primary" onclick="closeProduct();go('wallet')">Nạp tiền ngay →</button>`
+      }
     </div>
   `;
   document.getElementById("productModal").style.display = "flex";
   if (initialSlide > 0) selectGallerySlide(initialSlide);
 }
 
+let isBuyingAcc = false;
 function buyOrRentGameAccount(accId) {
+  if (isBuyingAcc) return;
   const user = currentUser();
-  if (!user || !user.uid) { toast("Vui lòng đăng nhập."); return; }
+  if (!user || !user.uid) { toast("Vui lòng đăng nhập."); closeProduct(); go("login"); return; }
 
   const list = getGameAccounts();
   const acc = list.find(a => String(a.id) === String(accId));
   if (!acc || acc.status !== 'available') { toast("Tài khoản đã được người khác đặt."); closeProduct(); renderRent(); return; }
 
   const price = Number(acc.price || 0);
+  if (!Number.isFinite(price) || price <= 0) { toast("Giá tài khoản không hợp lệ."); return; }
+
   const adminActor = checkIsAdmin(user);
   if (!adminActor) {
-    const bal = getBalance(user.uid);
+    const bal = Number(getBalance(user.uid) || 0);
     if (bal < price) {
-      toast("Số dư ví không đủ. Cần " + money(price));
+      toast(`Số dư ví không đủ (Cần ${money(price)}, ví có ${money(bal)}). Vui lòng nạp thêm tiền!`);
+      closeProduct();
+      go("wallet");
       return;
     }
+    isBuyingAcc = true;
     setBalance(user.uid, bal - price, `${acc.mode === 'rent' ? 'Thuê' : 'Mua'} acc ${acc.gameName}: ${acc.title}`);
+  } else {
+    isBuyingAcc = true;
   }
 
-  const isRent = acc.mode === 'rent';
-  const rentHours = Number(acc.rentHours || 24);
-  const now = Date.now();
-  const expiresAt = isRent ? now + rentHours * 3600000 : null;
+  try {
+    const isRent = acc.mode === 'rent';
+    const rentHours = Number(acc.rentHours || 24);
+    const now = Date.now();
+    const expiresAt = isRent ? now + rentHours * 3600000 : null;
 
-  acc.status = isRent ? 'rented' : 'sold';
-  acc.buyerUsername = user.username;
-  acc.expiresAt = expiresAt;
-  saveGameAccounts(list);
+    acc.status = isRent ? 'rented' : 'sold';
+    acc.buyerUid = user.uid;
+    acc.buyerUsername = user.username;
+    acc.soldAt = now;
+    acc.expiresAt = expiresAt;
+    saveGameAccounts(list);
 
-  const orders = getOrders();
-  orders.push({
-    id: 'ACC-' + now.toString().slice(-6),
-    type: 'game_account',
-    uid: user.uid,
-    username: user.username,
-    gameName: acc.gameName,
-    mode: acc.mode,
-    title: `${isRent ? 'Thuê' : 'Mua'} acc ${acc.gameName} - ${acc.title}`,
-    amount: price,
-    credentials: {
-      username: acc.accUsername,
-      password: acc.accPassword,
-      note: acc.note || '',
-      expiresAt
-    },
-    status: 'delivered',
-    createdAt: now
-  });
-  write(STORAGE.orders, orders);
+    const orders = getOrders();
+    orders.push({
+      id: 'ACC-' + now.toString().slice(-6),
+      type: 'game_account',
+      uid: user.uid,
+      username: user.username,
+      gameName: acc.gameName,
+      mode: acc.mode,
+      title: `${isRent ? 'Thuê' : 'Mua'} acc ${acc.gameName} - ${acc.title}`,
+      amount: price,
+      credentials: {
+        username: acc.accUsername,
+        password: acc.accPassword,
+        note: acc.note || '',
+        expiresAt
+      },
+      status: 'delivered',
+      createdAt: now
+    });
+    write(STORAGE.orders, orders);
 
-  refreshAccount();
-  renderRent();
+    refreshAccount();
+    renderRent();
 
-  const box = document.getElementById("modalBox");
-  box.innerHTML = `
-    <span class="pill ok">Đã cấp tài khoản tự động</span>
-    <h2 style="margin-top:10px">Thông tin tài khoản ${escapeHtml(acc.gameName)}</h2>
-    <p>Đã trừ ${money(price)} và lưu thông tin vào mục <b>Đơn hàng của tôi</b>.</p>
-    <div class="credBox">
-      <div><b>Gói:</b> ${escapeHtml(acc.title)}</div>
-      ${isRent ? `<div><b>Hết hạn thuê:</b> ${new Date(expiresAt).toLocaleString('vi-VN')}</div>` : ''}
-      <code>Tài khoản: ${escapeHtml(acc.accUsername)}\nMật khẩu: ${escapeHtml(acc.accPassword)}</code>
-      ${acc.note ? `<div style="margin-top:8px"><b>Lưu ý:</b> ${escapeHtml(acc.note)}</div>` : ''}
-    </div>
-    <div class="modalActions">
-      <button class="btn light" onclick="closeProduct();go('orders')">Xem trong Đơn hàng</button>
-      <button class="btn primary" onclick="closeProduct()">Hoàn tất</button>
-    </div>
-  `;
+    const box = document.getElementById("modalBox");
+    box.innerHTML = `
+      <span class="pill ok">Đã cấp tài khoản tự động</span>
+      <h2 style="margin-top:10px">Thông tin tài khoản ${escapeHtml(acc.gameName)}</h2>
+      <p>Đã trừ ${money(price)} và lưu thông tin vào mục <b>Đơn hàng của tôi</b>.</p>
+      <div class="credBox">
+        <div><b>Gói:</b> ${escapeHtml(acc.title)}</div>
+        ${isRent ? `<div><b>Hết hạn thuê:</b> ${new Date(expiresAt).toLocaleString('vi-VN')}</div>` : ''}
+        <code>Tài khoản: ${escapeHtml(acc.accUsername)}\nMật khẩu: ${escapeHtml(acc.accPassword)}</code>
+        ${acc.note ? `<div style="margin-top:8px"><b>Lưu ý:</b> ${escapeHtml(acc.note)}</div>` : ''}
+      </div>
+      <div class="modalActions">
+        <button class="btn light" onclick="closeProduct();go('orders')">Xem trong Đơn hàng</button>
+        <button class="btn primary" onclick="closeProduct()">Hoàn tất</button>
+      </div>
+    `;
+  } finally {
+    isBuyingAcc = false;
+  }
 }
 
 /* ==================== QUẢN TRỊ ADMIN (THÊM GAME, ĐĂNG ACC + ẢNH, GIÁ BUFF) ==================== */
@@ -1844,14 +1899,16 @@ function compressImageFile(file, maxW = 960, quality = 0.78) {
 async function handleAdminImageFiles(event) {
   const files = Array.from(event.target?.files || []);
   if (!files.length) return;
-  for (const f of files.slice(0, 8)) {
+  toast(`Đang xử lý ${files.length} ảnh...`);
+  for (const f of files) {
     try {
-      const dataUrl = await compressImageFile(f);
+      const dataUrl = await compressImageFile(f, 880, 0.72);
       pendingAdminImages.push(dataUrl);
     } catch (_) {}
   }
   event.target.value = "";
   renderAdminImagePreview();
+  toast(`Đã tải xong ${pendingAdminImages.length} ảnh`);
 }
 
 function removePendingAdminImage(idx) {
@@ -1861,6 +1918,8 @@ function removePendingAdminImage(idx) {
 
 function renderAdminImagePreview() {
   const box = document.getElementById("adminImgPreview");
+  const countLbl = document.getElementById("adminImgCountLabel");
+  if (countLbl) countLbl.textContent = `Đã chọn: ${pendingAdminImages.length} ảnh`;
   if (!box) return;
   box.innerHTML = pendingAdminImages.map((src, idx) => `
     <div class="adminImgItem" title="${idx === 0 ? 'Ảnh chính' : 'Ảnh phụ ' + idx}">
@@ -1966,6 +2025,11 @@ function createGameAccount() {
   const gameName = document.getElementById("accGameSelect")?.value || "FC Mobile";
   const mode = document.getElementById("accModeSelect")?.value || "sell";
   const title = (document.getElementById("accTitle")?.value || "").trim();
+  const rank = (document.getElementById("accRank")?.value || "").trim();
+  const heroes = (document.getElementById("accHeroes")?.value || "").trim();
+  const skins = (document.getElementById("accSkins")?.value || "").trim();
+  const loginType = (document.getElementById("accLoginType")?.value || "").trim();
+  const detailDesc = (document.getElementById("accDetailDesc")?.value || "").trim();
   const price = Number(document.getElementById("accPrice")?.value || 0);
   const rentHours = Math.max(1, Number(document.getElementById("accRentHours")?.value || 24));
   const accUsername = (document.getElementById("accUsername")?.value || "").trim();
@@ -1977,7 +2041,7 @@ function createGameAccount() {
     .filter(Boolean);
   const images = [...pendingAdminImages, ...urlLines];
 
-  if (!title) { toast("Nhập tiêu đề / mô tả acc."); return; }
+  if (!title) { toast("Nhập tiêu đề acc."); return; }
   if (!Number.isFinite(price) || price <= 0) { toast("Nhập giá hợp lệ."); return; }
   if (!accUsername || !accPassword) { toast("Nhập đầy đủ Tài khoản và Mật khẩu game."); return; }
 
@@ -1988,6 +2052,11 @@ function createGameAccount() {
     gameName,
     mode,
     title,
+    rank,
+    heroes,
+    skins,
+    loginType,
+    detailDesc,
     price,
     rentHours,
     images,
@@ -1999,16 +2068,14 @@ function createGameAccount() {
   });
   saveGameAccounts(list);
 
-  document.getElementById("accTitle").value = "";
-  document.getElementById("accPrice").value = "";
-  document.getElementById("accImageUrls").value = "";
-  document.getElementById("accUsername").value = "";
-  document.getElementById("accPassword").value = "";
-  document.getElementById("accNote").value = "";
+  ["accTitle", "accRank", "accHeroes", "accSkins", "accLoginType", "accDetailDesc", "accPrice", "accImageUrls", "accUsername", "accPassword", "accNote"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
   pendingAdminImages = [];
   renderAdminImagePreview();
 
-  toast("Đã đăng tài khoản game lên kho");
+  toast(`Đã đăng acc kèm ${images.length} ảnh lên kho game`);
   renderRent();
   loadAdmin();
 }
@@ -2422,11 +2489,8 @@ function renderModernAccCard(a, gameIcon) {
       ` : ''}
       <div class="modernAccBody">
         <h3 class="modernAccTitle">${escapeHtml(a.title)}</h3>
-        <div class="modernAccSpecs">
-          <span class="specChip">${isRent ? '⏱ Thời hạn: ' + Number(a.rentHours || 24) + ' giờ' : '🛡 Giao full thông tin'}</span>
-          <span class="specChip">⚡ Trả TK/MK tự động</span>
-        </div>
-        <p class="modernAccNote">${escapeHtml(a.note || 'Thanh toán xong tự động hiển thị Tài khoản & Mật khẩu ngay trong đơn hàng.')}</p>
+        ${buildAccSpecsHtml(a)}
+        <p class="modernAccNote">${escapeHtml(a.detailDesc || a.note || 'Thanh toán xong tự động hiển thị Tài khoản & Mật khẩu ngay trong đơn hàng.')}</p>
         <div class="modernAccFooter">
           <div class="modernPriceBox">
             <span class="modernPriceLabel">${isRent ? 'Giá thuê trọn gói' : 'Giá bán đứt'}</span>
@@ -2434,7 +2498,7 @@ function renderModernAccCard(a, gameIcon) {
           </div>
           <div class="modernAccBtns">
             <button type="button" class="btnViewFull" onclick="openGameAccountModal('${escapeHtml(a.id)}')" title="Xem chi tiết & ảnh lớn">Chi tiết</button>
-            <button type="button" class="btnActionAcc ${isRent ? 'rent' : ''} ${!avail ? 'disabled' : ''}" onclick="openGameAccountModal('${escapeHtml(a.id)}')">
+            <button type="button" class="btnActionAcc ${isRent ? 'rent' : ''} ${!avail ? 'disabled' : ''}" ${!avail ? 'disabled' : ''} onclick="openGameAccountModal('${escapeHtml(a.id)}')">
               ${avail ? (isRent ? 'Thuê ngay' : 'Mua ngay') : 'Hết hàng'}
             </button>
           </div>
