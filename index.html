@@ -12,29 +12,7 @@
 @media(max-width:370px){.brand{font-size:10px}.packageGrid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.balanceBtn{display:none}}
 .logoBox img{display:block}.logoBox img:not([src]){display:none}\n</style>
 
-<!-- Firebase configuration only: extracted from the uploaded old website.
-     No old SHOPCENAVN UI, admin code, storage paths, or business logic is imported. -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCt2ExrDINqixjs3bfEewOviB4ICTfrSEs",
-  authDomain: "shop-kc.firebaseapp.com",
-  databaseURL: "https://shop-kc-default-rtdb.firebaseio.com",
-  projectId: "shop-kc",
-  storageBucket: "shop-kc.firebasestorage.app",
-  messagingSenderId: "1073242689799",
-  appId: "1:1073242689799:web:41d0dc7795eb74a93df5a2",
-  measurementId: "G-Q9VN7NZHR0"
-};
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-const firebaseApp = firebase.app();
-const firebaseDB = firebase.database();
-</script>
-
+<!-- Authentication and wallet are handled by the Cloudflare Worker backend. -->
 </head>
 <body>
 <div class="splash" id="splash"><div class="splashInner"><div class="splashMark">TTM</div><div style="font-weight:850;letter-spacing:-.4px">TRUNG TÂM THƯƠNG MẠI</div><div class="spinner"></div><small id="splashStatus">Đang khởi tạo giao diện...</small></div></div>
@@ -43,8 +21,8 @@ const firebaseDB = firebase.database();
  <button class="menuBtn" onclick="drawer(true)" aria-label="Mở menu">☰</button>
  <div class="brand">TRUNG TÂM THƯƠNG MẠI<small>DỊCH VỤ SỐ · GAME · ONLINE</small></div>
  <div class="spacer"></div>
- <button class="balanceBtn" onclick="go('wallet')">VÍ TÀI KHOẢN<b>Chưa khả dụng · Nạp tiền</b></button>
- <button class="userBtn" onclick="go('login')">U</button>
+ <button class="balanceBtn" onclick="go('wallet')">VÍ TÀI KHOẢN<b id="headerBalance">0 đ</b></button>
+ <button class="userBtn" id="userButton" onclick="go('login')">U</button>
 </header>
 <main class="main">
 <section class="view active" id="home">
@@ -71,29 +49,11 @@ const firebaseDB = firebase.database();
 <div class="featureBand"><b>Quy định:</b> Chỉ đăng tải tài khoản được phép chuyển giao/cho thuê theo điều khoản của nhà phát hành. Không chia sẻ tài khoản trái phép.</div>
 <div id="allRentSections"></div>
 </section>
-<section class="view" id="wallet"><div class="pageHead"><div class="eyebrow">Wallet</div><h1>Nạp tiền</h1><p>Ví và thanh toán sẽ chỉ hoạt động sau khi cấu hình kho lưu trữ tập trung và xác thực giao dịch.</p></div><div class="twoCol"><div class="panel"><h3>Tạo yêu cầu nạp tiền</h3><div class="callout">Hệ thống lưu trữ chưa được cấu hình. Chức năng nạp tiền đang khóa để tránh thất lạc giao dịch hoặc cộng sai số dư.</div><div class="field"><label>Số tiền muốn nạp</label><input type="number" placeholder="Ví dụ: 100.000" disabled></div><div class="field"><label>Phương thức</label><div class="methodGrid"><button class="method" disabled>▦　QR ngân hàng</button><button class="method" disabled>▤　Chuyển khoản</button></div></div><button class="btn primary" style="width:100%;opacity:.45" disabled>Chưa khả dụng</button></div><div class="panel"><h3>Lịch sử nạp tiền</h3><div class="empty">Chưa thể tải lịch sử.<br>Đang chờ kết nối kho dữ liệu tập trung.</div></div></div></section>
-<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng của tôi</h1><p>Trạng thái đơn hàng được đồng bộ từ máy chủ sau khi kết nối lưu trữ.</p></div><div class="empty">Chưa kết nối hệ thống lưu trữ.<br>Không lưu đơn hàng trên riêng thiết bị này.</div></section>
-<section class="view" id="login">
-<div class="pageHead"><div class="eyebrow">Account access</div><h1>Đăng nhập</h1><p>Đăng nhập bằng tài khoản đã đăng ký để quản lý đơn hàng và sử dụng dịch vụ.</p></div>
-<div class="panel" style="max-width:560px">
- <div class="callout"><b>Đăng nhập đang tạm khóa.</b> Hệ thống chưa kết nối kho lưu trữ tập trung nên chưa thể xác minh tài khoản an toàn. Khi hoàn tất backend, trang này sẽ hoạt động trên mọi thiết bị.</div>
- <div class="field"><label>Tên đăng nhập hoặc email</label><input placeholder="Nhập tên đăng nhập hoặc email" disabled></div>
- <div class="field"><label>Mật khẩu</label><input type="password" placeholder="Nhập mật khẩu" disabled></div>
- <button class="btn primary" style="width:100%;opacity:.45" disabled>Đăng nhập</button>
- <p class="muted" style="margin:17px 0 0;text-align:center">Chưa có tài khoản? <a href="#register" onclick="go('register');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng ký ngay</a></p>
-</div></section>
-<section class="view" id="register">
-<div class="pageHead"><div class="eyebrow">Create account</div><h1>Đăng ký tài khoản</h1><p>Tạo tài khoản để theo dõi đơn hàng, lịch sử nạp và các dịch vụ đã sử dụng.</p></div>
-<div class="panel" style="max-width:560px">
- <div class="callout"><b>Đăng ký đang tạm khóa.</b> Chức năng sẽ được mở khi kho lưu trữ tập trung và xác thực tài khoản được cấu hình. Không lưu thông tin đăng ký trên riêng iPhone.</div>
- <div class="field"><label>Tên hiển thị</label><input placeholder="Nhập tên hiển thị" disabled></div>
- <div class="field"><label>Email hoặc số điện thoại</label><input placeholder="Nhập email hoặc số điện thoại" disabled></div>
- <div class="field"><label>Tên đăng nhập</label><input placeholder="Tạo tên đăng nhập" disabled></div>
- <div class="field"><label>Mật khẩu</label><input type="password" placeholder="Tạo mật khẩu" disabled></div>
- <div class="field"><label>Nhập lại mật khẩu</label><input type="password" placeholder="Nhập lại mật khẩu" disabled></div>
- <button class="btn primary" style="width:100%;opacity:.45" disabled>Tạo tài khoản</button>
- <p class="muted" style="margin:17px 0 0;text-align:center">Đã có tài khoản? <a href="#login" onclick="go('login');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng nhập</a></p>
-</div></section>
+<section class="view" id="wallet"><div class="pageHead"><div class="eyebrow">Wallet</div><h1>Ví của tôi</h1><p>Số dư và lịch sử được lưu tập trung trên máy chủ.</p></div><div class="twoCol"><div class="panel"><h3>Số dư hiện tại</h3><div id="walletBalance" style="font-size:30px;font-weight:850;margin:12px 0">— đ</div><div class="field"><label>Số tiền muốn nạp</label><input id="topupAmount" type="number" min="10000" step="1000" placeholder="Ví dụ: 100000"></div><button class="btn primary" style="width:100%" onclick="requestTopup()">Gửi yêu cầu nạp tiền</button><div class="callout" style="margin-top:13px">Yêu cầu sẽ chờ Admin xác nhận. Không tự động cộng tiền khi khách gửi yêu cầu.</div></div><div class="panel"><h3>Lịch sử giao dịch</h3><div id="transactionsList" class="empty">Đăng nhập để xem lịch sử.</div></div></div></section>
+<section class="view" id="orders"><div class="pageHead"><div class="eyebrow">Order center</div><h1>Đơn hàng của tôi</h1><p>Lịch sử đơn hàng được lưu theo tài khoản.</p></div><div id="ordersList" class="empty">Đăng nhập để xem đơn hàng.</div></section>
+<section class="view" id="login"><div class="pageHead"><div class="eyebrow">Account access</div><h1>Đăng nhập</h1><p>Dùng tên tài khoản và mật khẩu. Không cần Gmail.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="loginMessage">Nhập tên tài khoản và mật khẩu đã đăng ký.</div><div class="field"><label>Tên tài khoản</label><input id="loginUsername" autocomplete="username" placeholder="Ví dụ: phong123"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"></div><button class="btn primary" style="width:100%" onclick="loginUser()">Đăng nhập</button><p class="muted" style="margin:17px 0 0;text-align:center">Chưa có tài khoản? <a href="#register" onclick="go('register');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng ký ngay</a></p></div></section>
+<section class="view" id="register"><div class="pageHead"><div class="eyebrow">Create account</div><h1>Đăng ký tài khoản</h1><p>Tạo tài khoản bằng tên đăng nhập, không cần email hoặc số điện thoại.</p></div><div class="panel" style="max-width:560px"><div class="callout" id="registerMessage">Tên tài khoản từ 3–24 ký tự, chỉ dùng chữ thường, số và dấu gạch dưới. Mật khẩu tối thiểu 8 ký tự.</div><div class="field"><label>Tên hiển thị</label><input id="registerDisplay" maxlength="40" placeholder="Tên hiển thị"></div><div class="field"><label>Tên tài khoản</label><input id="registerUsername" autocomplete="username" maxlength="24" placeholder="Ví dụ: phong123"></div><div class="field"><label>Mật khẩu</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Tối thiểu 8 ký tự"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu"></div><button class="btn primary" style="width:100%" onclick="registerUser()">Tạo tài khoản</button><p class="muted" style="margin:17px 0 0;text-align:center">Đã có tài khoản? <a href="#login" onclick="go('login');return false" style="color:var(--blue);font-weight:800;text-decoration:none">Đăng nhập</a></p></div></section>
+<section class="view" id="admin"><div class="pageHead"><div class="eyebrow">Admin center</div><h1>Quản trị</h1><p>Khu vực chỉ tài khoản có quyền Admin mới thao tác được.</p></div><div class="panel" style="max-width:720px;margin-bottom:16px"><h3>Kích hoạt Admin lần đầu</h3><p class="muted">Chỉ dùng một lần cho tài khoản đang đăng nhập. Nhập mã bí mật đã tạo trong Cloudflare Worker Secrets.</p><div class="field"><label>Mã thiết lập Admin</label><input id="bootstrapSecret" type="password" placeholder="Nhập ADMIN_BOOTSTRAP_SECRET"></div><button class="btn primary" onclick="bootstrapAdmin()">Kích hoạt tài khoản này làm Admin</button></div><div class="panel" style="max-width:720px;margin-bottom:16px"><h3>Cộng / trừ tiền khách</h3><div class="field"><label>Tên tài khoản khách</label><input id="adjustUsername" placeholder="username"></div><div class="field"><label>Số tiền (cộng số dương, trừ số âm)</label><input id="adjustAmount" type="number" placeholder="Ví dụ: 50000 hoặc -20000"></div><div class="field"><label>Lý do</label><input id="adjustNote" maxlength="120" placeholder="Điều chỉnh số dư"></div><button class="btn primary" onclick="adminAdjust()">Xác nhận điều chỉnh</button></div><div class="panel" style="max-width:720px"><h3>Yêu cầu nạp tiền chờ duyệt</h3><button class="btn light" onclick="loadAdmin()">Làm mới danh sách</button><div id="adminTopups" class="empty" style="margin-top:12px">Chưa tải danh sách.</div></div></section>
 <section class="view" id="support"><div class="pageHead"><div class="eyebrow">Customer care</div><h1>Hỗ trợ khách hàng</h1><p>Gửi yêu cầu hỗ trợ sau khi đăng nhập và kết nối máy chủ.</p></div><div class="panel" style="max-width:620px"><div class="field"><label>Chủ đề</label><select disabled><option>Chọn nội dung cần hỗ trợ</option><option>Đơn hàng</option><option>Nạp tiền</option><option>Thuê tài khoản</option></select></div><div class="field"><label>Nội dung</label><input placeholder="Mô tả vấn đề..." disabled></div><button class="btn primary" disabled style="opacity:.45">Gửi yêu cầu</button><div class="callout" style="margin-top:15px">Biểu mẫu sẽ được mở khi có kho dữ liệu để lưu yêu cầu tập trung.</div></div></section>
 </main>
 <footer class="footer"><b>TRUNG TÂM THƯƠNG MẠI</b><span>Nền tảng dịch vụ số · Bản dựng giao diện</span><span>© 2026</span></footer>
@@ -101,10 +61,27 @@ const firebaseDB = firebase.database();
 </div>
 <div class="drawerBack" id="drawerBack" onclick="if(event.target===this)drawer(false)"><aside class="drawer"><div class="drawerHead"><div class="brand">TRUNG TÂM THƯƠNG MẠI<small>ĐIỀU HƯỚNG</small></div><button class="iconBtn" onclick="drawer(false)">×</button></div>
 <div class="drawerLabel">TRANG CHÍNH</div><button class="nav active" onclick="go('home')">⌂　Trang chủ</button><button class="nav" onclick="go('buff')">▦　Dịch vụ buff</button><button class="nav" onclick="openPlatform('Facebook')">f　Facebook</button><button class="nav" onclick="openPlatform('YouTube')">▶　YouTube</button><button class="nav" onclick="openPlatform('TikTok')">♪　TikTok</button><button class="nav" onclick="go('rent')">◷　Thuê tài khoản game</button>
-<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div><button class="nav" onclick="go('wallet')">＋　Nạp tiền</button><button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button><button class="nav" onclick="go('login')">◉　Đăng nhập</button><button class="nav" onclick="go('register')">＋　Đăng ký tài khoản</button><button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
+<div class="drawerLabel">TÀI KHOẢN & GIAO DỊCH</div><button class="nav" onclick="go('wallet')">＋　Nạp tiền</button><button class="nav" onclick="go('orders')">▤　Lịch sử đơn hàng</button><button class="nav" onclick="go('login')">◉　Đăng nhập</button><button class="nav" onclick="go('register')">＋　Đăng ký tài khoản</button><button class="nav" onclick="go('admin')">⚙　Quản trị</button><button class="nav" onclick="logoutUser()">↪　Đăng xuất</button><button class="nav" onclick="go('support')">?　Hỗ trợ khách hàng</button></aside></div>
 <div class="modalBack" id="productModal"><div class="modal"><h2 id="modalTitle">Chi tiết gói</h2><p id="modalText"></p><div class="callout">Đây là bản dựng giao diện. Chức năng tạo đơn sẽ chỉ được mở sau khi kết nối lưu trữ tập trung, xác thực người dùng và quy trình xử lý của Admin.</div><div class="modalActions"><button class="btn light" onclick="closeProduct()">Đóng</button><button class="btn primary" onclick="closeProduct();go('login')">Đăng nhập</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
+const API_BASE = ""; // Worker + website are deployed on the same Cloudflare domain.
+async function api(path, options={}){const res=await fetch(API_BASE+"/api"+path,{method:options.method||"GET",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:options.body?JSON.stringify(options.body):undefined});const data=await res.json().catch(()=>({error:"Máy chủ trả dữ liệu không hợp lệ"}));if(!res.ok)throw new Error(data.error||"Có lỗi xảy ra");return data}
+let currentAccount=null;
+const money=n=>new Intl.NumberFormat('vi-VN').format(Number(n||0))+' đ';
+function setAccountUI(me){currentAccount=me||null;const ub=document.getElementById('userButton');if(ub)ub.textContent=me?(me.username||'U').slice(0,1).toUpperCase():'U';const hb=document.getElementById('headerBalance');if(hb)hb.textContent=money(me?.balance||0);const wb=document.getElementById('walletBalance');if(wb)wb.textContent=money(me?.balance||0);}
+async function refreshAccount(){try{const d=await api('/me');setAccountUI(d.user);if(d.user)await loadWallet()}catch(e){setAccountUI(null)}}
+async function registerUser(){const username=document.getElementById('registerUsername').value.trim().toLowerCase(),displayName=document.getElementById('registerDisplay').value.trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;const box=document.getElementById('registerMessage');try{if(password!==password2)throw Error('Hai mật khẩu không khớp');await api('/register',{method:'POST',body:{username,displayName,password}});box.textContent='Tạo tài khoản thành công. Mày có thể đăng nhập ngay.';toast('Đăng ký thành công');go('login');document.getElementById('loginUsername').value=username}catch(e){box.textContent=e.message;toast(e.message)}}
+async function loginUser(){const username=document.getElementById('loginUsername').value.trim().toLowerCase(),password=document.getElementById('loginPassword').value;try{const d=await api('/login',{method:'POST',body:{username,password}});setAccountUI(d.user);toast('Đăng nhập thành công');go('home');await loadWallet()}catch(e){document.getElementById('loginMessage').textContent=e.message;toast(e.message)}}
+async function logoutUser(){try{await api('/logout',{method:'POST'});setAccountUI(null);toast('Đã đăng xuất')}catch(e){toast(e.message)}}
+async function loadWallet(){try{const d=await api('/wallet');document.getElementById('walletBalance').textContent=money(d.balance);document.getElementById('headerBalance').textContent=money(d.balance);const list=document.getElementById('transactionsList');list.className='';list.innerHTML=d.transactions.length?d.transactions.map(t=>`<div class="panel" style="padding:12px;margin:8px 0"><b>${escapeHtml(t.description)}</b><div style="font-size:12px;color:var(--muted)">${new Date(t.created_at).toLocaleString('vi-VN')}</div><strong style="color:${t.amount>=0?'#159568':'#d14343'}">${t.amount>=0?'+':''}${money(t.amount)}</strong></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>'}catch(e){toast(e.message)}}
+async function requestTopup(){const amount=Number(document.getElementById('topupAmount').value);try{await api('/topups',{method:'POST',body:{amount}});toast('Đã gửi yêu cầu. Chờ Admin duyệt.');document.getElementById('topupAmount').value='';await loadWallet()}catch(e){toast(e.message)}}
+
+async function bootstrapAdmin(){const secret=document.getElementById('bootstrapSecret').value;try{await api('/admin/bootstrap',{method:'POST',body:{secret}});toast('Đã cấp quyền Admin');await refreshAccount();await loadAdmin()}catch(e){toast(e.message)}}
+async function adminAdjust(){const username=document.getElementById('adjustUsername').value.trim(),amount=Number(document.getElementById('adjustAmount').value),note=document.getElementById('adjustNote').value.trim();try{await api('/admin/balance',{method:'POST',body:{username,amount,note}});toast('Đã điều chỉnh số dư');await loadAdmin()}catch(e){toast(e.message)}}
+async function loadAdmin(){const host=document.getElementById('adminTopups');if(!host)return;try{const d=await api('/admin/topups');host.className='';host.innerHTML=d.topups.length?d.topups.map(t=>`<div class="panel" style="padding:12px;margin:8px 0"><b>${escapeHtml(t.username)}</b> · ${money(t.amount)}<div class="muted">${escapeHtml(t.status)} · ${new Date(t.created_at).toLocaleString('vi-VN')}</div>${t.status==='pending'?`<button class="btn primary" style="margin-top:8px" onclick="approveTopup('${t.id}')">Duyệt cộng tiền</button>`:''}</div>`).join(''):'<div class="empty">Không có yêu cầu nạp tiền.</div>'}catch(e){host.className='empty';host.textContent=e.message}}
+async function approveTopup(id){try{await api('/admin/topups/approve',{method:'POST',body:{id}});toast('Đã duyệt yêu cầu nạp');await loadAdmin()}catch(e){toast(e.message)}}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const platformData={
  Facebook:{icon:'https://cdn.simpleicons.org/facebook/0866FF',items:[['Gói tăng theo dõi trang','Theo dõi','Tư vấn phát triển cộng đồng và chiến dịch tiếp cận người quan tâm thật.','Liên hệ'],['Gói tăng tương tác bài viết','Tương tác','Tư vấn nội dung và quảng bá tương tác minh bạch.','Liên hệ'],['Gói quảng bá bài viết','Quảng bá','Hỗ trợ thiết lập chiến dịch tiếp cận đúng đối tượng.','Liên hệ']]},
  YouTube:{icon:'https://cdn.simpleicons.org/youtube/FF0033',items:[['Gói phát triển người đăng ký','Theo dõi','Tư vấn tối ưu kênh và phát triển khán giả phù hợp.','Liên hệ'],['Gói quảng bá lượt xem video','Lượt xem','Quảng bá video tới người xem phù hợp, không cam kết lượt xem giả.','Liên hệ'],['Gói quảng bá livestream','Livestream','Tư vấn thiết lập và quảng bá sự kiện livestream.','Liên hệ']]},
@@ -113,7 +90,7 @@ const rentalData={
  'FC Mobile':[['Tài khoản FC Mobile','Thông tin đội hình, máy chủ và thời hạn thuê sẽ được Admin xác nhận.','Theo gói'],['Gói thuê FC Mobile','Thời hạn thuê và điều kiện sử dụng hiển thị trước khi đặt.','Theo thời hạn']],
  'TFT':[['Tài khoản TFT','Thông tin máy chủ, cấp độ và thời hạn thuê được xác nhận trước.','Theo gói'],['Gói thuê TFT','Gói thuê theo thời hạn và điều kiện công bố.','Theo thời hạn']],
  'Game khác':[['Tài khoản game khác','Danh mục game khác sẽ được cập nhật trong kho.','Theo gói'],['Gói thuê game khác','Thời hạn, điều kiện và giá được xác nhận theo từng game.','Theo thời hạn']]}
-function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));drawer(false);document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});if(id==='buff')renderBuff();if(id==='rent')renderRent()}
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));drawer(false);document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});if(id==='buff')renderBuff();if(id==='rent')renderRent();if(id==='admin')loadAdmin()}
 function drawer(open){document.getElementById('drawerBack').style.display=open?'block':'none'}
 function openPlatform(p){go('buff');document.getElementById('allBuffSections').scrollIntoView({behavior:'smooth'})}
 function renderBuff(){let host=document.getElementById('allBuffSections');host.innerHTML=Object.entries(platformData).map(([name,d])=>`<section class="section"><div class="sectionHead"><div><div class="eyebrow">Nền tảng</div><h2>${name}</h2></div><span class="pill">${d.items.length} gói dịch vụ</span></div><div class="packageGrid">${d.items.map(x=>`<article class="package"><div class="packageTop"><div class="logoBox"><img src="${d.icon}" alt="Logo ứng dụng ${name}"></div><div><h3>${x[0]}</h3><span class="pill">${x[1]}</span></div></div><p class="desc">${x[2]}</p><div class="price">${x[3]}</div><button class="btn light" onclick="productDetail('${x[0]}','${x[2]}')">Xem chi tiết →</button></article>`).join('')}</div></section>`).join('')}
@@ -122,7 +99,7 @@ function productDetail(name,desc){document.getElementById('modalTitle').textCont
 function closeProduct(){document.getElementById('productModal').style.display='none'}
 function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splashStatus').textContent='Đã tải giao diện';setTimeout(()=>document.getElementById('splash').classList.add('hide'),350)},650)});
-renderBuff();renderRent();
+renderBuff();renderRent();refreshAccount();
 </script>
 </body>
 </html>
